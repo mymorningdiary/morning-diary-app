@@ -1,4 +1,5 @@
 import { Colors } from '@/constants/colors';
+import { FontStyles } from '@/constants/fonts';
 import { Theme } from '@react-navigation/native';
 
 export type Nullable<T> = T | null; // null을 허용하는 타입
@@ -41,3 +42,16 @@ export type MDTheme = Theme & {
     inversion: string;
   };
 };
+
+export type FontFamily = {
+  fontFamily:
+    | 'Pretendard-Bold'
+    | 'Pretendard-SemiBold'
+    | 'Pretendard-Medium'
+    | 'Pretendard-Regular'
+    | 'Roboto-Regular'
+    | 'Inter-Regular';
+  fontWeight: 700 | 600 | 500 | 400 | 400 | 400;
+};
+
+export type Typography = keyof typeof FontStyles;

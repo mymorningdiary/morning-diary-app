@@ -1,4 +1,4 @@
-import { Colors } from '@/constants/Colors';
+import { Colors } from '@/constants/colors';
 import { FontStyles } from '@/constants/fonts';
 import { Theme } from '@react-navigation/native';
 

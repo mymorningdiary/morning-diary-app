@@ -12,6 +12,7 @@ export default function RootLayout() {
       <Stack>
         <Stack.Screen name="index" />
         <Stack.Screen name="detail" options={{ headerShown: true }} />
+        <Stack.Screen name="login" options={{ headerShown: true }} />
       </Stack>
     </ThemeProvider>
   );

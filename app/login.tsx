@@ -5,13 +5,14 @@ import { MDColors } from '@/types/types';
 import { TouchableOpacity, Image, StyleSheet } from 'react-native';
 import { login } from '@react-native-kakao/user';
 import { useAuth } from '@/hooks';
+import { useEffect } from 'react';
 
 export default function LoginScreen() {
   const colors = useThemeColor();
   const styles = screenStyles({ colors });
   const router = useRouter();
 
-  const { loginWithKakao } = useAuth();
+  const { loginWithKakao, isExistUser } = useAuth();
 
   const handleKakaoLogin = async () => {
     try {
@@ -21,6 +22,16 @@ export default function LoginScreen() {
       console.error('Error logging in:', error);
     }
   };
+
+  useEffect(() => {
+    if (isExistUser === null) return;
+
+    if (isExistUser) {
+      router.push('/main');
+    } else {
+      router.push('/onboarding');
+    }
+  }, [isExistUser, router]);
 
   return (
     <MDView style={styles.container}>
@@ -50,7 +61,6 @@ export default function LoginScreen() {
               onPress={() => {
                 console.log('개인정보 처리방침 화면으로 이동');
                 // TODO: 개인정보 처리방침 화면으로 이동
-                router.push('/detail');
               }}>
               <MDText type="caption1Regular" style={styles.linkText}>
                 {`개인정보 처리방침`}

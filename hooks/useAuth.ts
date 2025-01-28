@@ -19,11 +19,13 @@ export const useAuth = () => {
   useEffect(() => {
     const { code, data } = loginResponse ?? {};
 
+    console.log(loginResponse);
+
     if (code === 2000 && data !== undefined) {
       SessionManager.setSessionInfo({ accessToken: data.token });
       setIsExistUser(data.flag);
     }
   }, [loginResponse]);
 
-  return { loginWithKakao, isLoginLoading, loginError };
+  return { loginWithKakao, isLoginLoading, loginError, isExistUser };
 };

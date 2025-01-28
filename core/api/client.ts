@@ -42,11 +42,11 @@ export class ApiClient {
       }
 
       const res = await response.json();
-      // console.log('[API Response]', {
-      //   url,
-      //   status: response.status,
-      //   res,
-      // });
+      console.log('[API Response]', {
+        url,
+        status: response.status,
+        res,
+      });
 
       return res;
     } catch (error) {

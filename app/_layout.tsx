@@ -21,8 +21,9 @@ export default function RootLayout() {
       <QueryClientProvider client={queryClient}>
         <Stack>
           <Stack.Screen name="index" />
-          <Stack.Screen name="detail" options={{ headerShown: true }} />
           <Stack.Screen name="login" options={{ headerShown: true }} />
+          <Stack.Screen name="main" options={{ headerShown: true }} />
+          <Stack.Screen name="onboarding" options={{ headerShown: true }} />
         </Stack>
       </QueryClientProvider>
     </ThemeProvider>

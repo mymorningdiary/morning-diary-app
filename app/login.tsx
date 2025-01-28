@@ -4,17 +4,19 @@ import { useThemeColor } from '@/hooks/useThemeColor';
 import { MDColors } from '@/types/types';
 import { TouchableOpacity, Image, StyleSheet } from 'react-native';
 import { login } from '@react-native-kakao/user';
+import { useAuth } from '@/hooks';
 
 export default function LoginScreen() {
   const colors = useThemeColor();
   const styles = screenStyles({ colors });
   const router = useRouter();
 
+  const { loginWithKakao } = useAuth();
+
   const handleKakaoLogin = async () => {
     try {
       const user = await login();
-      console.log('kakao user', user);
-      // loginMutation.mutate({ accessToken: user.accessToken });
+      loginWithKakao({ accessToken: user.accessToken });
     } catch (error) {
       console.error('Error logging in:', error);
     }

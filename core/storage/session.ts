@@ -25,23 +25,27 @@ export class SessionManager {
     };
   }
 
-  public static async setSessionInfo(
-    token: string,
-    refreshToken: string,
-    expiredAt: number,
-  ): Promise<void> {
+  public static async setSessionInfo({
+    accessToken,
+    refreshToken,
+    expiredAt,
+  }: {
+    accessToken: string;
+    refreshToken?: string;
+    expiredAt?: number;
+  }): Promise<void> {
     await Promise.all([
-      AsyncStorage.setItem(StorageKey.ACCESS_TOKEN, token),
-      AsyncStorage.setItem(StorageKey.REFRESH_TOKEN, refreshToken),
-      AsyncStorage.setItem(StorageKey.EXPIRED_AT, expiredAt.toString()),
+      AsyncStorage.setItem(StorageKey.ACCESS_TOKEN, accessToken),
+      // AsyncStorage.setItem(StorageKey.REFRESH_TOKEN, refreshToken),
+      // AsyncStorage.setItem(StorageKey.EXPIRED_AT, expiredAt.toString()),
     ]);
   }
 
   public static async clearSessionInfo(): Promise<void> {
     await Promise.all([
       AsyncStorage.removeItem(StorageKey.ACCESS_TOKEN),
-      AsyncStorage.removeItem(StorageKey.REFRESH_TOKEN),
-      AsyncStorage.removeItem(StorageKey.EXPIRED_AT),
+      // AsyncStorage.removeItem(StorageKey.REFRESH_TOKEN),
+      // AsyncStorage.removeItem(StorageKey.EXPIRED_AT),
     ]);
   }
 

@@ -21,7 +21,7 @@ export const useApiQuery = <T>(
   });
 };
 
-export const useApiMutation = <T>(
+export const useApiMutation = <T, V = void>(
   info: {
     path: string;
   },
@@ -33,9 +33,9 @@ export const useApiMutation = <T>(
   const { path } = info;
   const { requiresAuth, mutationOptions } = options ?? {};
 
-  return useMutation<T>({
-    mutationFn: (variables: any) =>
-      ApiClient.post<T>(path, variables, {
+  return useMutation<T, Error, V>({
+    mutationFn: (requestBody: V) =>
+      ApiClient.post<T>(path, requestBody, {
         requiresAuth: requiresAuth,
       }),
     ...mutationOptions,

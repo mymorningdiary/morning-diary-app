@@ -3,6 +3,7 @@ import { useRouter } from 'expo-router';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { MDColors } from '@/types/types';
 import { TouchableOpacity, Image, StyleSheet } from 'react-native';
+import { login } from '@react-native-kakao/user';
 
 export default function LoginScreen() {
   const colors = useThemeColor();
@@ -11,8 +12,8 @@ export default function LoginScreen() {
 
   const handleKakaoLogin = async () => {
     try {
-      // const user = await login();
-      // console.log('kakao user', user);
+      const user = await login();
+      console.log('kakao user', user);
       // loginMutation.mutate({ accessToken: user.accessToken });
     } catch (error) {
       console.error('Error logging in:', error);

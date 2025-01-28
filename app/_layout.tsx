@@ -4,13 +4,13 @@ import { ThemeProvider } from '@react-navigation/native';
 import { Stack } from 'expo-router';
 import { useEffect } from 'react';
 import { useColorScheme } from 'react-native';
-import { getKeyHashAndroid } from '@react-native-kakao/core';
+import { initializeKakaoSDK } from '@react-native-kakao/core';
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
 
   useEffect(() => {
-    getKeyHashAndroid().then(console.log);
+    initializeKakaoSDK('162f6841f726fc6ff11498b56b4030aa');
   }, []);
 
   return (

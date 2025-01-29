@@ -13,14 +13,12 @@ export class ApiClient {
   private constructor() {} // NOTE: new SessionManager()와 같은 방식으로 클래스의 인스턴스를 생성하는 것을 막음. Static Utility Class 패턴
 
   private static async request<T>(url: string, options: RequestOptions): Promise<T> {
-    // console.log('[API Request]', {
-    //   url,
-    //   method: options.method,
-    //   requiresAuth: options.requiresAuth,
-    //   retry: options.retry,
-    // });
-
     const { requiresAuth = false, retry = { count: 0, delay: 1000 }, ...fetchOptions } = options;
+
+    console.log('[API Request]', {
+      url,
+      options,
+    });
 
     try {
       const response = await this.fetchWithRetry(
@@ -43,14 +41,14 @@ export class ApiClient {
         throw new Error(`HTTP Error: ${response.status}`);
       }
 
-      const data = await response.json();
-      // console.log('[API Response]', {
-      //   url,
-      //   status: response.status,
-      //   data,
-      // });
+      const res = await response.json();
+      console.log('[API Response]', {
+        url,
+        status: response.status,
+        res,
+      });
 
-      return data;
+      return res;
     } catch (error) {
       console.error('[API Request Failed]', {
         url,
@@ -96,6 +94,7 @@ export class ApiClient {
       }
 
       await new Promise((resolve) => setTimeout(resolve, delay));
+
       return this.fetchWithRetry(fn, retries - 1, delay * 2);
     }
   }
@@ -105,17 +104,17 @@ export class ApiClient {
     const response = await ApiClient.post<SessionInfo>('/auth/refresh', {
       refreshToken,
     });
-    await SessionManager.setSessionInfo(
-      response.accessToken!,
-      response.refreshToken!,
-      response.expiredAt!,
-    );
+    await SessionManager.setSessionInfo({ accessToken: response.accessToken! });
+
     return response;
   }
 
   static async get<T>(path: string, options?: RequestOptions): Promise<T> {
     return this.request<T>(`${API_CONFIG.baseUrl}${path}`, {
       method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
       ...options,
     });
   }
@@ -123,6 +122,9 @@ export class ApiClient {
   static async post<T>(path: string, body: any, options?: RequestOptions): Promise<T> {
     return this.request<T>(`${API_CONFIG.baseUrl}${path}`, {
       method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
       body: JSON.stringify(body),
       ...options,
     });

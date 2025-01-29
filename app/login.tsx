@@ -27,9 +27,9 @@ export default function LoginScreen() {
     if (isExistUser === null) return;
 
     if (isExistUser) {
-      router.push('/main');
+      router.replace('/main');
     } else {
-      router.push('/onboarding');
+      router.replace('/onboarding');
     }
   }, [isExistUser, router]);
 

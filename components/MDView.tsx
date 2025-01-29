@@ -1,5 +1,4 @@
 import { View, type ViewProps } from 'react-native';
-
 import { useThemeColor } from '@/hooks';
 
 type MDViewProps = ViewProps & {

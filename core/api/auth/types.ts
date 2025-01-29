@@ -9,6 +9,6 @@ export type PostKakaoLoginResponse = BaseApiResponse & {
     token: string;
     goalPage: number;
     alarmTime: string;
-    flag: boolean;
+    isExistUser: boolean;
   };
 };

@@ -1,5 +1,5 @@
 import { useThemeColor } from '@/hooks';
-import { MDColors, Typography } from '@/types/types';
+import { MDColors, Typography } from '@/types';
 import {
   Image,
   ImageSourcePropType,

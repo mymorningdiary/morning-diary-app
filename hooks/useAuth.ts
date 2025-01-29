@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useApiMutation } from './useApi';
+import { SessionManager } from '@/core/storage';
 import { Auth } from '@/core/api';
-import { SessionManager } from '@/core/storage/session';
-import { Nullable } from '@/types/types';
+import { Nullable } from '@/types';
 
 export const useAuth = () => {
   const {
@@ -23,7 +23,7 @@ export const useAuth = () => {
 
     if (code === 2000 && data !== undefined) {
       SessionManager.setSessionInfo({ accessToken: data.token });
-      setIsExistUser(data.flag);
+      setIsExistUser(data.isExistUser);
     }
   }, [loginResponse]);
 

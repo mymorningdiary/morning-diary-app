@@ -106,6 +106,7 @@ const screenStyles = ({ colors }: { colors: MDColors }) =>
       padding: 20,
     },
     logoContainer: {
+      width: '100%',
       flex: 1,
       alignItems: 'center',
       justifyContent: 'center',

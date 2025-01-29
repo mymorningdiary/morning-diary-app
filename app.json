@@ -4,7 +4,7 @@
     "slug": "morning-diary",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/img-logo-login.png",
+    "icon": "./assets/images/ic-app.png",
     "scheme": "morningdiary",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
@@ -16,7 +16,7 @@
     "android": {
       "displayName": "아침일기",
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/adaptive-icon.png",
+        "foregroundImage": "./assets/images/ic-adaptive-app.png",
         "backgroundColor": "#ffffff"
       },
       "package": "com.mymorningdiary.morningdiary"
@@ -31,7 +31,7 @@
       [
         "expo-splash-screen",
         {
-          "image": "./assets/images/splash-icon.png",
+          "image": "./assets/images/img-splash.png",
           "imageWidth": 200,
           "resizeMode": "contain",
           "backgroundColor": "#ffffff"

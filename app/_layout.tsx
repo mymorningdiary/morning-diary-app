@@ -1,31 +1,44 @@
 import { MDDarkTheme } from '@/constants/theme';
 import { MDLightTheme } from '@/constants/theme';
 import { ThemeProvider } from '@react-navigation/native';
-import { SplashScreen, Stack } from 'expo-router';
-import { useEffect, useState } from 'react';
+import { router, SplashScreen, Stack } from 'expo-router';
+import { useEffect } from 'react';
 import { useColorScheme } from 'react-native';
 import { initializeKakaoSDK } from '@react-native-kakao/core';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { useAuth } from '@/hooks/useAuth';
+import { ScreenName } from '@/constants/utils';
 
 const queryClient = new QueryClient();
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
-
-  const [isAppReady, setIsAppReady] = useState(false);
+  const { autoLogin, isAutoLoginLoading, nextScreen } = useAuth();
 
   useEffect(() => {
     setTimeout(() => {
-      setIsAppReady(true);
-    }, 3000);
-  }, []);
+      autoLogin();
+    }, 1500);
+  }, [autoLogin]);
 
   useEffect(() => {
-    if (isAppReady) {
+    if (!isAutoLoginLoading && nextScreen !== null) {
       SplashScreen.hideAsync();
+
+      switch (nextScreen) {
+        case ScreenName.ONBOARDING:
+          router.push('/onboarding');
+          break;
+        case ScreenName.MAIN:
+          router.push('/main');
+          break;
+        case ScreenName.LOGIN:
+          router.push('/login');
+          break;
+      }
     }
-  }, [isAppReady]);
+  }, [isAutoLoginLoading, nextScreen]);
 
   useEffect(() => {
     initializeKakaoSDK('162f6841f726fc6ff11498b56b4030aa'); // TODO: 환경변수 설정

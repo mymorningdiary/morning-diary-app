@@ -53,4 +53,13 @@ export class SessionManager {
     const { expiredAt } = await SessionManager.getSessionInfo();
     return !expiredAt || Date.now() >= expiredAt;
   }
+
+  public static async isFirstLaunch(): Promise<boolean> {
+    const isFirstLaunch = await AsyncStorage.getItem(StorageKey.IS_FIRST_LAUNCH);
+    return isFirstLaunch === null;
+  }
+
+  public static async setIsFirstLaunch(): Promise<void> {
+    await AsyncStorage.setItem(StorageKey.IS_FIRST_LAUNCH, 'false');
+  }
 }

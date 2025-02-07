@@ -12,3 +12,12 @@ export type PostKakaoLoginResponse = BaseApiResponse & {
     isExistUser: boolean;
   };
 };
+
+export type PostAutoLoginResponse = BaseApiResponse & {
+  data: {
+    token: string;
+    goalPage: number;
+    alarmTime: string;
+    isExistUser: boolean;
+  };
+};

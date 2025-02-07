@@ -4,4 +4,11 @@ export enum StorageKey {
   ACCESS_TOKEN = 'ACCESS_TOKEN',
   REFRESH_TOKEN = 'REFRESH_TOKEN',
   EXPIRED_AT = 'EXPIRED_AT',
+  IS_FIRST_LAUNCH = 'IS_FIRST_LAUNCH',
+}
+
+export enum ScreenName {
+  ONBOARDING = 'ONBOARDING',
+  MAIN = 'MAIN',
+  LOGIN = 'LOGIN',
 }

@@ -12,33 +12,39 @@ interface RequestOptions extends RequestInit {
 export class ApiClient {
   private constructor() {} // NOTE: new SessionManager()와 같은 방식으로 클래스의 인스턴스를 생성하는 것을 막음. Static Utility Class 패턴
 
-  private static async request<T>(url: string, options: RequestOptions): Promise<T> {
-    const { requiresAuth = false, retry = { count: 0, delay: 1000 }, ...fetchOptions } = options;
-
-    console.log('[API Request]', {
-      url,
-      options,
-    });
-
+  private static async request<T>(
+    url: string,
+    options: RequestOptions,
+    requiresAuth: boolean = false,
+  ): Promise<T> {
     try {
-      const response = await this.fetchWithRetry(
-        async () => {
-          if (requiresAuth) {
-            return this.authenticatedFetch(url, fetchOptions);
-          }
-          return fetch(url, fetchOptions);
+      const { method, headers, body } = options;
+      const { accessToken } = await SessionManager.getSessionInfo();
+
+      console.log('[API Request]', {
+        url,
+        options,
+        requiresAuth,
+        accessToken,
+      });
+
+      const response = await fetch(url, {
+        headers: {
+          ...headers,
+          ...(requiresAuth && accessToken && { Authorization: `Bearer ${accessToken}` }),
         },
-        retry.count,
-        retry.delay,
-      );
+        method,
+        body,
+      });
 
       if (!response.ok) {
+        const error = await response.json();
         console.error('[API Error]', {
           url,
           status: response.status,
-          statusText: response.statusText,
+          error,
         });
-        throw new Error(`HTTP Error: ${response.status}`);
+        throw error;
       }
 
       const res = await response.json();
@@ -59,56 +65,6 @@ export class ApiClient {
     }
   }
 
-  private static async authenticatedFetch(url: string, options: RequestInit): Promise<Response> {
-    if (await SessionManager.isSessionExpired()) {
-      await ApiClient.refreshSessionToken();
-    }
-
-    const { accessToken } = await SessionManager.getSessionInfo();
-    const headers = {
-      ...options.headers,
-      Authorization: accessToken ? `${accessToken}` : '',
-      'Content-Type': 'application/json',
-    };
-
-    return fetch(url, { ...options, headers });
-  }
-
-  private static async fetchWithRetry(
-    fn: () => Promise<Response>,
-    retries: number,
-    delay: number,
-  ): Promise<Response> {
-    try {
-      const response = await fn();
-
-      if (!response.ok && retries > 0 && [500, 503].includes(response.status)) {
-        await new Promise((resolve) => setTimeout(resolve, delay));
-        return this.fetchWithRetry(fn, retries - 1, delay * 2);
-      }
-
-      return response;
-    } catch (error) {
-      if (retries <= 0) {
-        throw error;
-      }
-
-      await new Promise((resolve) => setTimeout(resolve, delay));
-
-      return this.fetchWithRetry(fn, retries - 1, delay * 2);
-    }
-  }
-
-  static async refreshSessionToken(): Promise<SessionInfo> {
-    const { refreshToken } = await SessionManager.getSessionInfo();
-    const response = await ApiClient.post<SessionInfo>('/auth/refresh', {
-      refreshToken,
-    });
-    await SessionManager.setSessionInfo({ accessToken: response.accessToken! });
-
-    return response;
-  }
-
   static async get<T>(path: string, options?: RequestOptions): Promise<T> {
     return this.request<T>(`${API_CONFIG.baseUrl}${path}`, {
       method: 'GET',
@@ -119,14 +75,17 @@ export class ApiClient {
     });
   }
 
-  static async post<T>(path: string, body: any, options?: RequestOptions): Promise<T> {
-    return this.request<T>(`${API_CONFIG.baseUrl}${path}`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
+  static async post<T>(path: string, body: any, requiresAuth?: boolean): Promise<T> {
+    return this.request<T>(
+      `${API_CONFIG.baseUrl}${path}`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(body),
       },
-      body: JSON.stringify(body),
-      ...options,
-    });
+      requiresAuth,
+    );
   }
 }

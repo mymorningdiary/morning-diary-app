@@ -33,7 +33,8 @@ export const useAuth = () => {
   const [nextScreen, setNextScreen] = useState<Nullable<ScreenName>>(null);
 
   useEffect(() => {
-    const { code, data } = loginResponse ?? {};
+    if (!loginResponse) return;
+    const { code, data } = loginResponse;
 
     if (code === 2000 && data !== undefined) {
       SessionManager.setSessionInfo({ accessToken: data.token });
@@ -53,19 +54,23 @@ export const useAuth = () => {
   };
 
   useEffect(() => {
-    if (autoLoginResponse) {
-      const { code, data } = autoLoginResponse;
+    if (!autoLoginResponse) return;
+    const { code, data } = autoLoginResponse;
 
-      console.log('autoLoginResponse', code, data);
-
-      if (code === 2000 && data !== undefined) {
-        SessionManager.setSessionInfo({ accessToken: data.token });
-        setNextScreen(ScreenName.MAIN);
-      } else {
-        setNextScreen(ScreenName.LOGIN);
-      }
+    if (code === 2000 && data !== undefined) {
+      SessionManager.setSessionInfo({ accessToken: data.token });
+      setNextScreen(ScreenName.MAIN);
+    } else {
+      setNextScreen(ScreenName.LOGIN);
     }
   }, [autoLoginResponse]);
+
+  useEffect(() => {
+    if (autoLoginError) {
+      console.error('autoLoginError', autoLoginError);
+      setNextScreen(ScreenName.LOGIN);
+    }
+  }, [autoLoginError]);
 
   return {
     loginWithKakao,

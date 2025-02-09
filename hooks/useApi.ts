@@ -1,5 +1,5 @@
 import { ApiClient, MDError } from '@/core/api';
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { MutationOptions, useMutation, useQuery } from '@tanstack/react-query';
 
 export const useApiQuery = <T>(
   info: {
@@ -22,22 +22,18 @@ export const useApiQuery = <T>(
 };
 
 export const useApiMutation = <V, T>(
-  info: {
+  resource: {
     path: string;
   },
   options?: {
     requiresAuth?: boolean;
-    mutationOptions?: any;
+    mutationOptions?: MutationOptions<T, MDError, V>;
   },
 ) => {
-  const { path } = info;
-  const { requiresAuth, mutationOptions } = options ?? {};
+  const { path } = resource;
 
   return useMutation<T, MDError, V>({
-    mutationFn: (requestBody: V) =>
-      ApiClient.post<T>(path, requestBody, {
-        requiresAuth: requiresAuth,
-      }),
-    ...mutationOptions,
+    mutationFn: (requestBody: V) => ApiClient.post<T>(path, requestBody, options?.requiresAuth),
+    ...options?.mutationOptions,
   });
 };

@@ -77,7 +77,7 @@ export const Colors = {
     },
     text: {
       normal: ColorPalette.brown[10],
-      strong: ColorPalette.brown[50],
+      brand: ColorPalette.brown[50],
       alternative: ColorPalette.brown[70],
       inversion: ColorPalette.white,
     },

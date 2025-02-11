@@ -1,11 +1,10 @@
-import { MDDarkTheme } from '@/constants/theme';
-import { MDLightTheme } from '@/constants/theme';
+import { MDDarkTheme, MDLightTheme } from '@/constants/theme';
+import { initializeKakaoSDK } from '@react-native-kakao/core';
 import { ThemeProvider } from '@react-navigation/native';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Stack } from 'expo-router';
 import { useEffect } from 'react';
 import { useColorScheme } from 'react-native';
-import { initializeKakaoSDK } from '@react-native-kakao/core';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 const queryClient = new QueryClient();
 

@@ -36,7 +36,7 @@ export default function LoginScreen() {
   return (
     <MDView style={styles.container}>
       <MDView style={styles.logoContainer}>
-        <Image source={require('@/assets/images/img-logo-login.png')} />
+        <Image source={require('@/assets/images/img-logo.png')} />
         <MDText type="labelRegular" style={styles.logoText}>
           아침에 쓰는 내 마음 속 이야기
         </MDText>

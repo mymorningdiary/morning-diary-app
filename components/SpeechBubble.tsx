@@ -1,103 +1,80 @@
-import { MDText } from '@/components';
+import { MDColors } from '@/types';
+import { MDView } from './MDView';
+import { StyleSheet } from 'react-native';
 import { useThemeColor } from '@/hooks';
-import React from 'react';
-import { StyleSheet, View } from 'react-native';
+import { MDText } from './MDText';
 
-interface SpeechBubbleProps {
+type SpeechBubbleProps = {
   text: string;
-  backgroundColor?: string;
-  borderColor?: string;
-  borderWidth?: number;
-  borderRadius?: number;
-  textColor?: string;
-}
+};
 
-export const SpeechBubble: React.FC<SpeechBubbleProps> = ({
-  text,
-  backgroundColor,
-  textColor,
-  borderColor,
-  borderWidth = 1,
-  borderRadius = 20,
-}) => {
+export const SpeechBubble = ({ text }: SpeechBubbleProps) => {
   const colors = useThemeColor();
-  const styles = speechBubbleStyles({
-    backgroundColor: backgroundColor ?? colors.fill.normal,
-    borderColor: borderColor ?? colors.line.alternative,
-    borderWidth,
-    borderRadius,
-    textColor: textColor ?? colors.text.brand,
-  });
+  const styles = speechBubbleStyles({ colors });
 
   return (
-    <View style={styles.container}>
-      <View style={styles.bubble}>
-        <MDText type="labelSemiBold" style={styles.text}>
+    <MDView style={styles.container}>
+      <MDView style={styles.textContainer}>
+        <MDText style={styles.text} type="labelSemiBold">
           {text}
         </MDText>
-      </View>
-      <View style={styles.arrowBorder} />
-      <View style={styles.arrowFill} />
-    </View>
+      </MDView>
+      <MDView style={styles.triangleContainer}>
+        <MDView style={styles.triangleBorder}></MDView>
+        <MDView style={styles.triangle}></MDView>
+      </MDView>
+    </MDView>
   );
 };
 
-const speechBubbleStyles = ({
-  backgroundColor,
-  borderColor,
-  borderWidth,
-  borderRadius,
-  textColor,
-}: {
-  backgroundColor: string;
-  borderColor: string;
-  borderWidth: number;
-  borderRadius: number;
-  textColor: string;
-}) =>
+const speechBubbleStyles = ({ colors }: { colors: MDColors }) =>
   StyleSheet.create({
     container: {
-      maxWidth: '80%',
-      backgroundColor: backgroundColor,
-      borderRadius: borderRadius,
-      borderWidth: borderWidth,
-      borderColor: borderColor,
+      alignItems: 'center',
     },
-    bubble: {
-      paddingVertical: 8,
+    textContainer: {
+      alignItems: 'center',
+      minWidth: 100,
       paddingHorizontal: 16,
+      paddingVertical: 8,
+      backgroundColor: colors.fill.normal,
+      borderRadius: 24,
+      borderWidth: 1,
+      borderColor: colors.line.alternative,
     },
     text: {
-      color: textColor,
+      color: colors.text.brand,
     },
-    arrowBorder: {
-      position: 'absolute',
-      bottom: -12,
-      alignSelf: 'center',
+    triangleContainer: {
+      alignItems: 'center',
+      position: 'relative', // 추가
+      marginTop: -1,
+    },
+    triangle: {
       width: 0,
       height: 0,
       backgroundColor: 'transparent',
       borderStyle: 'solid',
       borderLeftWidth: 7,
       borderRightWidth: 7,
-      borderTopWidth: 12,
+      borderBottomWidth: 12,
       borderLeftColor: 'transparent',
       borderRightColor: 'transparent',
-      borderTopColor: borderColor,
+      borderBottomColor: colors.fill.normal,
+      transform: [{ rotate: '180deg' }],
     },
-    arrowFill: {
+    triangleBorder: {
       position: 'absolute',
-      bottom: -(12 - borderWidth),
-      alignSelf: 'center',
       width: 0,
       height: 0,
       backgroundColor: 'transparent',
       borderStyle: 'solid',
-      borderLeftWidth: 7 - borderWidth,
-      borderRightWidth: 7 - borderWidth,
-      borderTopWidth: 12 - borderWidth,
+      borderLeftWidth: 8,
+      borderRightWidth: 8,
+      borderBottomWidth: 14,
       borderLeftColor: 'transparent',
       borderRightColor: 'transparent',
-      borderTopColor: backgroundColor,
+      borderBottomColor: colors.line.alternative,
+      transform: [{ rotate: '180deg' }],
     },
   });

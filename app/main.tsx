@@ -4,6 +4,7 @@ import { Calendar } from 'react-native-calendars';
 import { Image, StyleSheet } from 'react-native';
 import { formatCalendarDate, formatCalendarHeaderDate } from '@/utils/dates';
 import { MDColors } from '@/types';
+import { SpeechBubble } from '@/components';
 
 export default function Main() {
   const colors = useThemeColor();
@@ -72,6 +73,8 @@ export default function Main() {
           enableSwipeMonths={true}
         />
       </MDView>
+
+      <SpeechBubble text="sdfsdfsdfsdfkjklajdfksfjksdjfkls" />
     </MDView>
   );
 }

@@ -1,11 +1,47 @@
-import { Calendar } from 'react-native-calendars';
+import { Calendar, DateData, LocaleConfig } from 'react-native-calendars';
 import { MDColors } from '@/types';
 import { formatCalendarDate, formatCalendarHeaderDate } from '@/utils/dates';
 import { MDView, MDText } from '@/components';
 import { StyleSheet, TouchableOpacity } from 'react-native';
 import { useThemeColor } from '@/hooks';
+import { DayProps } from 'react-native-calendars/src/calendar/day';
 
-export const MDCalendar = () => {
+LocaleConfig.locales['kr'] = {
+  monthNames: [
+    '1월',
+    '2월',
+    '3월',
+    '4월',
+    '5월',
+    '6월',
+    '7월',
+    '8월',
+    '9월',
+    '10월',
+    '11월',
+    '12월',
+  ],
+  dayNames: ['일요일', '월요일', '화요일', '수요일', '목요일', '금요일', '토요일'],
+  dayNamesShort: ['일', '월', '화', '수', '목', '금', '토'],
+  today: '오늘',
+};
+
+LocaleConfig.defaultLocale = 'kr';
+
+export type MarkedDate = {
+  [key: string]: {
+    selected: boolean;
+    marked: boolean;
+  };
+};
+
+type MDCalendarProps = {
+  markedDates: MarkedDate;
+  onMonthChange: (month: DateData) => void;
+  onDayPress: (day?: DateData) => void;
+};
+
+export const MDCalendar = ({ markedDates, onMonthChange, onDayPress }: MDCalendarProps) => {
   const colors = useThemeColor();
   const styles = calendarStyles({ colors });
   const today = formatCalendarDate();
@@ -19,30 +55,18 @@ export const MDCalendar = () => {
       initialDate={formatCalendarDate()}
       minDate={undefined}
       maxDate={today}
-      onDayPress={(day) => {
-        console.log('selected day', day);
-      }}
+      onDayPress={onDayPress}
       monthFormat={'yyyy MM'}
-      onMonthChange={(month) => {
-        console.log('month changed', month);
-      }}
-      markedDates={{
-        ['2025-03-10']: {
-          selected: true,
-          marked: false,
-        },
-        ['2025-03-09']: {
-          selected: false,
-          marked: true,
-        },
-        ['2025-03-08']: {
-          selected: true,
-          marked: true,
-        },
-      }}
+      onMonthChange={onMonthChange}
+      markedDates={markedDates}
       renderHeader={(date: string) => <CalendarHeader date={date} />}
-      dayComponent={({ date, state, marking }: DayProps) => (
-        <Day date={date} state={state} marking={marking} />
+      dayComponent={({ date, state, marking }: DayProps & { date?: DateData }) => (
+        <CalendarDay
+          date={date}
+          state={state}
+          marking={marking}
+          onPress={(date) => onDayPress(date)}
+        />
       )}
       hideArrows={true}
       hideExtraDays={true}
@@ -103,22 +127,12 @@ const headerStyles = ({ colors }: { colors: MDColors }) =>
     container: {},
   });
 
-type DayProps = {
-  date: {
-    dateString: string;
-    day: number;
-    month: number;
-    year: number;
-    timestamp: number;
-  };
-  state?: 'today' | 'disabled';
-  marking?: {
-    selected: boolean;
-    marked: boolean;
-  };
+type CalendarDayProps = DayProps & {
+  date?: DateData;
+  onPress: (date?: DateData) => void;
 };
 
-const Day = ({ date, state, marking }: DayProps) => {
+const CalendarDay = ({ date, state, marking, onPress }: CalendarDayProps) => {
   const colors = useThemeColor();
   const styles = dayStyles({ colors });
   const isToday = state === 'today';
@@ -127,7 +141,7 @@ const Day = ({ date, state, marking }: DayProps) => {
   const isDisabled = state === 'disabled';
 
   return (
-    <TouchableOpacity onPress={() => {}}>
+    <TouchableOpacity onPress={() => onPress(date)} disabled={isDisabled}>
       <MDView
         style={[
           styles.container,
@@ -153,9 +167,9 @@ const Day = ({ date, state, marking }: DayProps) => {
               color: colors.primary.normal,
             },
           ]}>
-          {date.day}
+          {date?.day}
         </MDText>
-        {isMarked && <MDView style={styles.mark} />}
+        <MDView style={styles.markContainer}>{isMarked && <MDView style={styles.mark} />}</MDView>
       </MDView>
     </TouchableOpacity>
   );
@@ -167,12 +181,18 @@ const dayStyles = ({ colors }: { colors: MDColors }) =>
       width: 36,
       height: 36,
       alignItems: 'center',
-      justifyContent: 'center',
       borderRadius: 100,
+      paddingTop: 9,
+      paddingBottom: 11,
       gap: 2,
     },
     text: {
       color: colors.text.brand,
+    },
+    markContainer: {
+      height: 4,
+      justifyContent: 'center',
+      alignItems: 'center',
     },
     mark: {
       width: 4,

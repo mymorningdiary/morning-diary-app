@@ -10,5 +10,6 @@ export const formatCalendarHeaderDate = (date: string) => {
   const d = new Date(date);
   const year = d.getFullYear().toString().slice(2); // 년도의 마지막 2자리
   const month = d.getMonth() + 1; // 월 (0-11이므로 1을 더함)
+
   return `${year}년${month}월`;
 };

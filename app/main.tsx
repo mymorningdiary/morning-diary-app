@@ -1,43 +1,42 @@
-import { MDView, MDText, MDCalendar } from '@/components';
+import { MDCalendar, MDView, SpeechBubble } from '@/components';
 import { useThemeColor } from '@/hooks';
-import { Calendar, LocaleConfig } from 'react-native-calendars';
-import { Image, StyleSheet, TouchableOpacity } from 'react-native';
-import { formatCalendarDate, formatCalendarHeaderDate } from '@/utils/dates';
 import { MDColors } from '@/types';
-import { SpeechBubble } from '@/components';
-import { Theme } from 'react-native-calendars/src/types';
+import { getTodayDateData } from '@/utils/dates';
+import { useMemo, useState } from 'react';
+import { Image, StyleSheet } from 'react-native';
+import { DateData } from 'react-native-calendars';
 
-LocaleConfig.locales['kr'] = {
-  monthNames: [
-    '1월',
-    '2월',
-    '3월',
-    '4월',
-    '5월',
-    '6월',
-    '7월',
-    '8월',
-    '9월',
-    '10월',
-    '11월',
-    '12월',
-  ],
-  dayNames: ['일요일', '월요일', '화요일', '수요일', '목요일', '금요일', '토요일'],
-  dayNamesShort: ['일', '월', '화', '수', '목', '금', '토'],
-  today: '오늘',
-};
-
-LocaleConfig.defaultLocale = 'kr';
+const markingDays = ['2025-03-09', '2025-03-10', '2025-03-11'];
 
 export default function Main() {
   const colors = useThemeColor();
   const styles = screenStyles({ colors });
+  const [selectedDate, setSelectedDate] = useState<DateData>(getTodayDateData());
+
+  const handleDayPress = (date?: DateData) => {
+    if (date) {
+      setSelectedDate(date);
+    }
+  };
+
+  const markedDates = useMemo(() => {
+    const markings = Object.fromEntries(
+      markingDays.map((date) => [date, { selected: false, marked: true }]),
+    );
+
+    return {
+      ...markings,
+      [selectedDate.dateString]: {
+        selected: true,
+        marked: markingDays.includes(selectedDate.dateString),
+      },
+    };
+  }, [selectedDate]);
 
   return (
     <MDView style={styles.container}>
       <MainAppBar />
-      <MDCalendar />
-
+      <MDCalendar markedDates={markedDates} onMonthChange={() => {}} onDayPress={handleDayPress} />
       <SpeechBubble text="" />
       <Image source={require('@/assets/images/img-logo.png')} />
     </MDView>
@@ -48,30 +47,6 @@ const screenStyles = ({ colors }: { colors: MDColors }) =>
   StyleSheet.create({
     container: {
       flex: 1,
-    },
-    calendarContainer: {
-      backgroundColor: colors.background.normal,
-      paddingHorizontal: 12,
-    },
-    dayContainer: {
-      width: 36,
-      height: 36,
-      alignItems: 'center',
-      justifyContent: 'center',
-      borderRadius: 100,
-      gap: 2,
-    },
-    dayText: {
-      fontFamily: 'Roboto-Regular',
-      color: colors.text.brand,
-      fontSize: 13,
-      lineHeight: 18,
-    },
-    mark: {
-      width: 4,
-      height: 4,
-      borderRadius: 2,
-      backgroundColor: colors.primary.normal,
     },
   });
 

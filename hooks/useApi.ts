@@ -7,16 +7,16 @@ export const useApiQuery = <T>(
     path: string;
   },
   options?: {
-    requiresAuth?: boolean;
+    requireAuth?: boolean;
     queryOptions?: any;
   },
 ) => {
   const { key, path } = info;
-  const { requiresAuth, queryOptions } = options ?? {};
+  const { requireAuth, queryOptions } = options ?? {};
 
   return useQuery<T>({
     queryKey: key,
-    queryFn: () => ApiClient.get<T>(path, { requiresAuth: requiresAuth }),
+    queryFn: () => ApiClient.get<T>(path, { requireAuth }),
     ...queryOptions,
   });
 };
@@ -26,14 +26,15 @@ export const useApiMutation = <V, T>(
     path: string;
   },
   options?: {
-    requiresAuth?: boolean;
+    requireAuth?: boolean;
     mutationOptions?: MutationOptions<T, MDError, V>;
   },
 ) => {
   const { path } = resource;
+  const { requireAuth, mutationOptions } = options ?? {};
 
   return useMutation<T, MDError, V>({
-    mutationFn: (requestBody: V) => ApiClient.post<T>(path, requestBody, options?.requiresAuth),
-    ...options?.mutationOptions,
+    mutationFn: (requestBody: V) => ApiClient.post<T>(path, requestBody, { requireAuth }),
+    ...mutationOptions,
   });
 };

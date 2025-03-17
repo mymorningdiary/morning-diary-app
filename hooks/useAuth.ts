@@ -25,7 +25,7 @@ export const useAuth = () => {
       path: '/auth/auto-login',
     },
     {
-      requiresAuth: true,
+      requireAuth: true,
     },
   );
 

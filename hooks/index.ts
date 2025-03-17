@@ -1,4 +1,5 @@
 import { useAuth } from './useAuth';
 import { useThemeColor } from './useThemeColor';
+import { useGetDiaries } from './useGetDiaries';
 
-export { useAuth, useThemeColor };
+export { useAuth, useThemeColor, useGetDiaries };

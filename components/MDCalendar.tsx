@@ -70,7 +70,7 @@ export const MDCalendar = ({ markedDates, onMonthChange, onDayPress }: MDCalenda
       )}
       hideArrows={true}
       hideExtraDays={true}
-      firstDay={1}
+      firstDay={0}
       hideDayNames={false}
       showWeekNumbers={false}
       disableAllTouchEventsForDisabledDays={true}
@@ -141,20 +141,22 @@ const CalendarDay = ({ date, state, marking, onPress }: CalendarDayProps) => {
   const isDisabled = state === 'disabled';
 
   return (
-    <TouchableOpacity onPress={() => onPress(date)} disabled={isDisabled}>
-      <MDView
-        style={[
-          styles.container,
-          isSelected && {
-            borderRadius: 100,
-            borderWidth: 1,
-            borderColor: colors.line.normal,
-          },
-          isToday && {
-            backgroundColor: colors.primary.softer,
-            borderWidth: 0,
-          },
-        ]}>
+    <TouchableOpacity
+      style={[
+        styles.container,
+        isSelected && {
+          borderRadius: 100,
+          borderWidth: 1,
+          borderColor: colors.line.normal,
+        },
+        isToday && {
+          backgroundColor: colors.primary.softer,
+          borderWidth: 0,
+        },
+      ]}
+      onPress={() => onPress(date)}
+      disabled={isDisabled}>
+      <MDView style={{ backgroundColor: 'transparent' }}>
         <MDText
           type="numberRegular"
           style={[
@@ -181,10 +183,8 @@ const dayStyles = ({ colors }: { colors: MDColors }) =>
       width: 36,
       height: 36,
       alignItems: 'center',
+      justifyContent: 'center',
       borderRadius: 100,
-      paddingTop: 9,
-      paddingBottom: 11,
-      gap: 2,
     },
     text: {
       color: colors.text.brand,
@@ -193,11 +193,12 @@ const dayStyles = ({ colors }: { colors: MDColors }) =>
       height: 4,
       justifyContent: 'center',
       alignItems: 'center',
+      backgroundColor: 'transparent',
     },
     mark: {
       width: 4,
       height: 4,
-      borderRadius: 2,
+      borderRadius: 100,
       backgroundColor: colors.primary.normal,
     },
   });

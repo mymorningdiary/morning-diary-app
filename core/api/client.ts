@@ -1,37 +1,34 @@
-import { SessionManager, SessionInfo } from '../storage/session';
+import { SessionManager } from '../storage/session';
 import { API_CONFIG } from './config';
 
-interface RequestOptions extends RequestInit {
-  requiresAuth?: boolean;
-  retry?: {
-    count: number;
-    delay: number;
-  };
-}
+type RequestOptions = {
+  requireAuth?: boolean;
+};
 
 export class ApiClient {
   private constructor() {} // NOTE: new SessionManager()와 같은 방식으로 클래스의 인스턴스를 생성하는 것을 막음. Static Utility Class 패턴
 
   private static async request<T>(
     url: string,
-    options: RequestOptions,
-    requiresAuth: boolean = false,
+    init: RequestInit,
+    options?: RequestOptions,
   ): Promise<T> {
     try {
-      const { method, headers, body } = options;
+      const { method, headers, body } = init;
+      const { requireAuth } = options ?? { requireAuth: false };
       const { accessToken } = await SessionManager.getSessionInfo();
 
       console.log('[API Request]', {
         url,
         options,
-        requiresAuth,
+        requireAuth,
         accessToken,
       });
 
       const response = await fetch(url, {
         headers: {
           ...headers,
-          ...(requiresAuth && accessToken && { Authorization: `Bearer ${accessToken}` }),
+          ...(requireAuth && accessToken && { Authorization: `Bearer ${accessToken}` }),
         },
         method,
         body,
@@ -66,16 +63,19 @@ export class ApiClient {
   }
 
   static async get<T>(path: string, options?: RequestOptions): Promise<T> {
-    return this.request<T>(`${API_CONFIG.baseUrl}${path}`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
+    return this.request<T>(
+      `${API_CONFIG.baseUrl}${path}`,
+      {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
       },
-      ...options,
-    });
+      options,
+    );
   }
 
-  static async post<T>(path: string, body: any, requiresAuth?: boolean): Promise<T> {
+  static async post<T>(path: string, body: any, options?: RequestOptions): Promise<T> {
     return this.request<T>(
       `${API_CONFIG.baseUrl}${path}`,
       {
@@ -85,7 +85,7 @@ export class ApiClient {
         },
         body: JSON.stringify(body),
       },
-      requiresAuth,
+      options,
     );
   }
 }

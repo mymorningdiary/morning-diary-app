@@ -1,8 +1,8 @@
 import { MDCalendar, MDView, SpeechBubble } from '@/components';
-import { useThemeColor } from '@/hooks';
+import { useGetDiaries, useThemeColor } from '@/hooks';
 import { MDColors } from '@/types';
 import { getTodayDateData } from '@/utils/dates';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Image, StyleSheet } from 'react-native';
 import { DateData } from 'react-native-calendars';
 
@@ -12,6 +12,11 @@ export default function Main() {
   const colors = useThemeColor();
   const styles = screenStyles({ colors });
   const [selectedDate, setSelectedDate] = useState<DateData>(getTodayDateData());
+  const { diaries, handleMonthChange } = useGetDiaries();
+
+  useEffect(() => {
+    console.log(diaries);
+  }, [diaries]);
 
   const handleDayPress = (date?: DateData) => {
     if (date) {
@@ -36,9 +41,15 @@ export default function Main() {
   return (
     <MDView style={styles.container}>
       <MainAppBar />
-      <MDCalendar markedDates={markedDates} onMonthChange={() => {}} onDayPress={handleDayPress} />
-      <SpeechBubble text="" />
-      <Image source={require('@/assets/images/img-logo.png')} />
+      <MDCalendar
+        markedDates={markedDates}
+        onMonthChange={handleMonthChange}
+        onDayPress={handleDayPress}
+      />
+      <MDView style={styles.emptyContainer}>
+        <SpeechBubble text="아침에 흘러가는 감정들을 적어볼까요?" />
+        <Image source={require('@/assets/images/img-logo.png')} />
+      </MDView>
     </MDView>
   );
 }
@@ -47,6 +58,11 @@ const screenStyles = ({ colors }: { colors: MDColors }) =>
   StyleSheet.create({
     container: {
       flex: 1,
+    },
+    emptyContainer: {
+      marginTop: 40,
+      justifyContent: 'center',
+      alignItems: 'center',
     },
   });
 

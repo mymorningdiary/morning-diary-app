@@ -6,17 +6,15 @@ import { useEffect, useMemo, useState } from 'react';
 import { Image, StyleSheet } from 'react-native';
 import { DateData } from 'react-native-calendars';
 
-const markingDays = ['2025-03-09', '2025-03-10', '2025-03-11'];
-
 export default function Main() {
   const colors = useThemeColor();
   const styles = screenStyles({ colors });
   const [selectedDate, setSelectedDate] = useState<DateData>(getTodayDateData());
-  const { diaries, handleMonthChange } = useGetDiaries();
+  const { writtenDates, diaryInfos, handleMonthChange } = useGetDiaries();
 
   useEffect(() => {
-    console.log(diaries);
-  }, [diaries]);
+    console.log(writtenDates);
+  }, [writtenDates]);
 
   const handleDayPress = (date?: DateData) => {
     if (date) {
@@ -26,17 +24,17 @@ export default function Main() {
 
   const markedDates = useMemo(() => {
     const markings = Object.fromEntries(
-      markingDays.map((date) => [date, { selected: false, marked: true }]),
+      writtenDates.map((date) => [date, { selected: false, marked: true }]),
     );
 
     return {
       ...markings,
       [selectedDate.dateString]: {
         selected: true,
-        marked: markingDays.includes(selectedDate.dateString),
+        marked: writtenDates.includes(selectedDate.dateString),
       },
     };
-  }, [selectedDate]);
+  }, [selectedDate, writtenDates]);
 
   return (
     <MDView style={styles.container}>

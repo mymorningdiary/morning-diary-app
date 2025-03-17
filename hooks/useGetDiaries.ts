@@ -4,22 +4,19 @@ import { useState } from 'react';
 import { DateData } from 'react-native-calendars';
 
 export const useGetDiaries = () => {
-  const [currentDate, setCurrentDate] = useState(() => {
-    const now = new Date();
-    return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
-  });
+  const [currentMonth, setCurrentMonth] = useState<string>('2025-03');
 
   const { data: diaries = [], isLoading } = useApiQuery<Diary.GetDiariesResponse>(
     {
-      key: ['diaries', currentDate],
-      path: `/diaries?date=${currentDate}`,
+      key: ['diaries', currentMonth], // 쿼리 키가 변경되면 자동으로 쿼리를 다시 실행
+      path: `/diaries?date=${currentMonth}`,
     },
     { requireAuth: true },
   );
 
-  const handleMonthChange = (month: DateData) => {
-    const dateQuery = `${month.year}-${String(month.month).padStart(2, '0')}`;
-    setCurrentDate(dateQuery);
+  const handleMonthChange = (dateData: DateData) => {
+    const { year, month } = dateData;
+    setCurrentMonth(`${year}-${month}`);
   };
 
   return { diaries, isLoading, handleMonthChange };

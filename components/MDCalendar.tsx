@@ -156,23 +156,22 @@ const CalendarDay = ({ date, state, marking, onPress }: CalendarDayProps) => {
       ]}
       onPress={() => onPress(date)}
       disabled={isDisabled}>
-      <MDView style={{ backgroundColor: 'transparent' }}>
-        <MDText
-          type="numberRegular"
-          style={[
-            styles.text,
-            isDisabled && { color: colors.text.alternative },
-            isSelected && {
-              color: colors.text.brand,
-            },
-            isToday && {
-              color: colors.primary.normal,
-            },
-          ]}>
-          {date?.day}
-        </MDText>
-        <MDView style={styles.markContainer}>{isMarked && <MDView style={styles.mark} />}</MDView>
-      </MDView>
+      <MDView style={styles.placeholderMark} />
+      <MDText
+        type="numberRegular"
+        style={[
+          styles.text,
+          isDisabled && { color: colors.text.alternative },
+          isSelected && {
+            color: colors.text.brand,
+          },
+          isToday && {
+            color: colors.primary.normal,
+          },
+        ]}>
+        {date?.day}
+      </MDText>
+      {isMarked ? <MDView style={styles.mark} /> : <MDView style={styles.placeholderMark} />}
     </TouchableOpacity>
   );
 };
@@ -190,15 +189,20 @@ const dayStyles = ({ colors }: { colors: MDColors }) =>
       color: colors.text.brand,
     },
     markContainer: {
-      height: 4,
+      height: 6,
       justifyContent: 'center',
       alignItems: 'center',
-      backgroundColor: 'transparent',
+      marginTop: 1,
     },
     mark: {
       width: 4,
       height: 4,
       borderRadius: 100,
       backgroundColor: colors.primary.normal,
+    },
+    placeholderMark: {
+      width: 4,
+      height: 4,
+      opacity: 0,
     },
   });

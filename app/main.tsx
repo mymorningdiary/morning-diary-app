@@ -5,8 +5,9 @@ import { Diary } from '@/core/api';
 
 import { useGetDiaries, useThemeColor } from '@/hooks';
 import { MDColors, Nullable } from '@/types';
-import { getTodayDateData } from '@/utils/dates';
-import { useEffect, useMemo, useState } from 'react';
+import { formatMonth, getTodayDateData } from '@/utils/dates';
+import { router, useFocusEffect } from 'expo-router';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { StyleSheet } from 'react-native';
 import { DateData } from 'react-native-calendars';
 
@@ -15,31 +16,40 @@ export default function Main() {
   const styles = screenStyles({ colors });
   const [selectedDate, setSelectedDate] = useState<DateData>(getTodayDateData());
   const [selectedDiaryInfo, setSelectedDiaryInfo] = useState<Nullable<Diary.DiaryInfo>>(null);
-  const { writtenDates, diaryInfos, handleMonthChange } = useGetDiaries();
-  const isWriteButtonDisabled = useMemo(() => {
-    const today = getTodayDateData();
-    return writtenDates.includes(today.dateString);
-  }, [writtenDates]);
+  const { selectedMonth, writtenDates, diaryInfos, handleMonthChange, refetch } = useGetDiaries();
+  const [isTodayWritten, setIsTodayWritten] = useState(false);
 
+  // 다른 화면에서 돌아올 때 (화면 포커스에만 반응)
+  useFocusEffect(
+    useCallback(() => {
+      refetch();
+    }, []),
+  );
+
+  // 화면 내에서 변경될 때
   useEffect(() => {
-    console.log(writtenDates);
-    console.log(getTodayDateData().dateString);
-    console.log(`isWriteButtonDisabled: ${isWriteButtonDisabled}`);
-  }, [isWriteButtonDisabled, writtenDates]);
+    const today = getTodayDateData();
+    if (selectedMonth !== formatMonth(today)) return;
 
-  const markedDates = useMemo(() => {
-    const markings = Object.fromEntries(
+    const _isTodayWritten = writtenDates.includes(today.dateString);
+    setIsTodayWritten(_isTodayWritten);
+  }, [selectedMonth, writtenDates]);
+
+  const baseMarkings = useMemo(() => {
+    return Object.fromEntries(
       writtenDates.map((date) => [date, { selected: false, marked: true }]),
     );
+  }, [writtenDates]);
 
+  const markedDates = useMemo(() => {
     return {
-      ...markings,
+      ...baseMarkings,
       [selectedDate.dateString]: {
+        ...baseMarkings[selectedDate.dateString],
         selected: true,
-        marked: writtenDates.includes(selectedDate.dateString),
       },
     };
-  }, [selectedDate, writtenDates]);
+  }, [selectedDate, baseMarkings]);
 
   const handleDayPress = (date?: DateData) => {
     if (!date) return;
@@ -53,6 +63,7 @@ export default function Main() {
 
   const handleWriteButtonPress = () => {
     // TODO: 모닝페이지 작성 화면 이동
+    router.push('/goal-page');
   };
 
   return (
@@ -69,7 +80,7 @@ export default function Main() {
 
       <DiaryContent diaryInfo={selectedDiaryInfo} />
 
-      <WriteFloatingButton disabled={isWriteButtonDisabled} onPress={handleWriteButtonPress} />
+      <WriteFloatingButton disabled={isTodayWritten} onPress={handleWriteButtonPress} />
     </MDCol>
   );
 }

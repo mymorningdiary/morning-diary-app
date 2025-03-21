@@ -31,7 +31,7 @@ export const padToTwoDigits = (num: number) => {
   return String(num).padStart(2, '0');
 };
 
-export const formatYearMonth = (dateData: DateData) => {
+export const formatMonth = (dateData: DateData) => {
   const { year, month } = dateData;
   return `${year}-${padToTwoDigits(month)}`;
 };

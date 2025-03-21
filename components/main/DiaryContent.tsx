@@ -15,19 +15,19 @@ export default function DiaryContent({ diaryInfo }: DiaryContentProps) {
   const colors = useThemeColor();
   const styles = contentStyles({ colors });
 
-  if (diaryInfo) {
+  if (!diaryInfo) {
     return (
-      <MDView style={styles.containerDiary}>
-        <DiaryListItem diaryInfo={diaryInfo} />
-      </MDView>
+      <MDCol style={styles.containerEmpty}>
+        <SpeechBubble text="아침에 흘러가는 감정들을 적어볼까요?" />
+        <Image source={require('@/assets/images/img-sun-basic.png')} />
+      </MDCol>
     );
   }
 
   return (
-    <MDCol style={styles.containerEmpty}>
-      <SpeechBubble text="아침에 흘러가는 감정들을 적어볼까요?" />
-      <Image source={require('@/assets/images/img-sun-basic.png')} style={styles.imageEmpty} />
-    </MDCol>
+    <MDView style={styles.containerDiary}>
+      <DiaryListItem diaryInfo={diaryInfo} />
+    </MDView>
   );
 }
 
@@ -41,9 +41,5 @@ const contentStyles = ({ colors }: { colors: MDColors }) =>
       marginTop: 40,
       justifyContent: 'center',
       alignItems: 'center',
-    },
-    imageEmpty: {
-      width: 93,
-      height: 93,
     },
   });

@@ -1,4 +1,5 @@
 import { DiaryContent, MainAppBar, MDCalendar, MDCol, MDDivider } from '@/components';
+import WriteFloatingButton from '@/components/main/WriteFloatingButton';
 
 import { Diary } from '@/core/api';
 
@@ -15,20 +16,16 @@ export default function Main() {
   const [selectedDate, setSelectedDate] = useState<DateData>(getTodayDateData());
   const [selectedDiaryInfo, setSelectedDiaryInfo] = useState<Nullable<Diary.DiaryInfo>>(null);
   const { writtenDates, diaryInfos, handleMonthChange } = useGetDiaries();
+  const isWriteButtonDisabled = useMemo(() => {
+    const today = getTodayDateData();
+    return writtenDates.includes(today.dateString);
+  }, [writtenDates]);
 
   useEffect(() => {
     console.log(writtenDates);
-  }, [writtenDates]);
-
-  const handleDayPress = (date?: DateData) => {
-    if (!date) return;
-
-    const selectedDiaryInfo =
-      diaryInfos.find((diary) => diary.writtenDate === date.dateString) ?? null;
-
-    setSelectedDate(date);
-    setSelectedDiaryInfo(selectedDiaryInfo);
-  };
+    console.log(getTodayDateData().dateString);
+    console.log(`isWriteButtonDisabled: ${isWriteButtonDisabled}`);
+  }, [isWriteButtonDisabled, writtenDates]);
 
   const markedDates = useMemo(() => {
     const markings = Object.fromEntries(
@@ -44,6 +41,20 @@ export default function Main() {
     };
   }, [selectedDate, writtenDates]);
 
+  const handleDayPress = (date?: DateData) => {
+    if (!date) return;
+
+    const selectedDiaryInfo =
+      diaryInfos.find((diary) => diary.writtenDate === date.dateString) ?? null;
+
+    setSelectedDate(date);
+    setSelectedDiaryInfo(selectedDiaryInfo);
+  };
+
+  const handleWriteButtonPress = () => {
+    // TODO: 모닝페이지 작성 화면 이동
+  };
+
   return (
     <MDCol style={styles.container}>
       <MainAppBar />
@@ -53,9 +64,12 @@ export default function Main() {
         onMonthChange={handleMonthChange}
         onDayPress={handleDayPress}
       />
+
       <MDDivider marginHorizontal={16} />
 
       <DiaryContent diaryInfo={selectedDiaryInfo} />
+
+      <WriteFloatingButton disabled={isWriteButtonDisabled} onPress={handleWriteButtonPress} />
     </MDCol>
   );
 }

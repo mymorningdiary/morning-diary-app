@@ -1,7 +1,7 @@
 import { Image, StyleSheet } from 'react-native';
 import { MDButton, MDView } from '@/components';
 import PagerView from 'react-native-pager-view';
-import { SpeechBubble } from '@/components/SpeechBubble';
+import { SpeechBubble } from '@/components/MDSpeechBubble';
 import { useMemo, useRef, useState } from 'react';
 import { MDColors } from '@/types';
 import { useThemeColor } from '@/hooks';

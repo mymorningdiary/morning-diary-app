@@ -4,11 +4,11 @@ import { StyleSheet } from 'react-native';
 import { useThemeColor } from '@/hooks';
 import { MDText } from './MDText';
 
-type SpeechBubbleProps = {
+type MDSpeechBubbleProps = {
   text: string;
 };
 
-export const SpeechBubble = ({ text }: SpeechBubbleProps) => {
+export const MDSpeechBubble = ({ text }: MDSpeechBubbleProps) => {
   const colors = useThemeColor();
   const styles = speechBubbleStyles({ colors });
 

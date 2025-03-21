@@ -21,7 +21,6 @@ export default function WriteFloatingButton({ disabled, onPress }: WriteFloating
       <Image
         source={require('@/assets/images/ic-pen.png')}
         style={styles.icon}
-        contentFit="contain"
         tintColor={disabled ? colors.icon.alternative : colors.icon.inversion}
       />
     </TouchableOpacity>

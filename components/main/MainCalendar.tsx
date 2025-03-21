@@ -1,11 +1,11 @@
-import { Calendar, DateData, LocaleConfig } from 'react-native-calendars';
-import { MDColors } from '@/types';
-import { formatCalendarDate, formatCalendarHeaderDate } from '@/utils/dates';
-import { StyleSheet, TouchableOpacity } from 'react-native';
 import { useThemeColor } from '@/hooks';
+import { MDColors } from '@/types';
+import { formatCalendarDate } from '@/utils/dates';
+import { StyleSheet, TouchableOpacity } from 'react-native';
+import { Calendar, DateData, LocaleConfig } from 'react-native-calendars';
 import { DayProps } from 'react-native-calendars/src/calendar/day';
-import { MDView } from '../MDView';
 import { MDText } from '../MDText';
+import { MDView } from '../MDView';
 
 LocaleConfig.locales['kr'] = {
   monthNames: [
@@ -56,6 +56,29 @@ export default function MainCalendar({
       style={styles.container}
       theme={{
         calendarBackground: colors.background.normal,
+        'stylesheet.calendar.header': {
+          dayTextAtIndex0: {
+            color: colors.text.alternative,
+          },
+          dayTextAtIndex1: {
+            color: colors.text.alternative,
+          },
+          dayTextAtIndex2: {
+            color: colors.text.alternative,
+          },
+          dayTextAtIndex3: {
+            color: colors.text.alternative,
+          },
+          dayTextAtIndex4: {
+            color: colors.text.alternative,
+          },
+          dayTextAtIndex5: {
+            color: colors.text.alternative,
+          },
+          dayTextAtIndex6: {
+            color: colors.text.alternative,
+          },
+        },
       }}
       initialDate={formatCalendarDate()}
       minDate={undefined}
@@ -120,16 +143,32 @@ const CalendarHeader = ({ date }: CalendarHeaderProps) => {
   const colors = useThemeColor();
   const styles = headerStyles({ colors });
 
+  const formatCalendarHeaderDate = (date: string) => {
+    const d = new Date(date);
+    const year = d.getFullYear().toString().slice(2); // 년도의 마지막 2자리
+    const month = d.getMonth() + 1; // 월 (0-11이므로 1을 더함)
+
+    return `${year}년 ${month}월`;
+  };
+
   return (
     <MDView style={styles.container}>
-      <MDText>{formatCalendarHeaderDate(date)}</MDText>
+      <MDText type="heading2SemiBold" style={styles.text}>
+        {formatCalendarHeaderDate(date)}
+      </MDText>
     </MDView>
   );
 };
 
 const headerStyles = ({ colors }: { colors: MDColors }) =>
   StyleSheet.create({
-    container: {},
+    container: {
+      paddingTop: 16,
+      paddingBottom: 24,
+    },
+    text: {
+      color: colors.text.brand,
+    },
   });
 
 type CalendarDayProps = DayProps & {

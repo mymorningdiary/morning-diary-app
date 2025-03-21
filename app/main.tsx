@@ -1,5 +1,10 @@
-import { DiaryContent, MainAppBar, MDCalendar, MDCol, MDDivider } from '@/components';
-import WriteFloatingButton from '@/components/main/WriteFloatingButton';
+import { MDCol, MDDivider } from '@/components';
+import {
+  MainDiaryContent,
+  MainAppBar,
+  MainCalendar,
+  MainWriteFloatingButton,
+} from '@/components/main';
 
 import { Diary } from '@/core/api';
 
@@ -70,7 +75,7 @@ export default function Main() {
     <MDCol style={styles.container}>
       <MainAppBar />
 
-      <MDCalendar
+      <MainCalendar
         markedDates={markedDates}
         onMonthChange={handleMonthChange}
         onDayPress={handleDayPress}
@@ -78,9 +83,9 @@ export default function Main() {
 
       <MDDivider marginHorizontal={16} />
 
-      <DiaryContent diaryInfo={selectedDiaryInfo} />
+      <MainDiaryContent diaryInfo={selectedDiaryInfo} />
 
-      <WriteFloatingButton disabled={isTodayWritten} onPress={handleWriteButtonPress} />
+      <MainWriteFloatingButton disabled={isTodayWritten} onPress={handleWriteButtonPress} />
     </MDCol>
   );
 }

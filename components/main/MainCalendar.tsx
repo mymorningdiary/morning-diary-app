@@ -1,10 +1,11 @@
 import { Calendar, DateData, LocaleConfig } from 'react-native-calendars';
 import { MDColors } from '@/types';
 import { formatCalendarDate, formatCalendarHeaderDate } from '@/utils/dates';
-import { MDView, MDText } from '@/components';
 import { StyleSheet, TouchableOpacity } from 'react-native';
 import { useThemeColor } from '@/hooks';
 import { DayProps } from 'react-native-calendars/src/calendar/day';
+import { MDView } from '../MDView';
+import { MDText } from '../MDText';
 
 LocaleConfig.locales['kr'] = {
   monthNames: [
@@ -28,20 +29,24 @@ LocaleConfig.locales['kr'] = {
 
 LocaleConfig.defaultLocale = 'kr';
 
-export type MarkedDate = {
+type MarkedDate = {
   [key: string]: {
     selected: boolean;
     marked: boolean;
   };
 };
 
-type MDCalendarProps = {
+type MainCalendarProps = {
   markedDates: MarkedDate;
   onMonthChange: (month: DateData) => void;
   onDayPress: (day?: DateData) => void;
 };
 
-export const MDCalendar = ({ markedDates, onMonthChange, onDayPress }: MDCalendarProps) => {
+export default function MainCalendar({
+  markedDates,
+  onMonthChange,
+  onDayPress,
+}: MainCalendarProps) {
   const colors = useThemeColor();
   const styles = calendarStyles({ colors });
   const today = formatCalendarDate();
@@ -77,7 +82,7 @@ export const MDCalendar = ({ markedDates, onMonthChange, onDayPress }: MDCalenda
       enableSwipeMonths={true}
     />
   );
-};
+}
 
 const calendarStyles = ({ colors }: { colors: MDColors }) =>
   StyleSheet.create({

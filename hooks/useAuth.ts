@@ -5,9 +5,7 @@ import { Auth } from '@/core/api';
 import { Nullable } from '@/types';
 import { ScreenName } from '@/constants/utils';
 import { useStorageSaveItem } from './useStorage';
-
-const USER_GOAL_PAGE = 'USER_GOAL_PAGE';
-const USER_ALARM_TIME = 'USER_ALARM_TIME';
+import { USER_INFO_GOAL_PAGE, USER_INFO_ALARM_TIME } from '@/constants/storage';
 
 export const useAuth = () => {
   const {
@@ -33,8 +31,8 @@ export const useAuth = () => {
     },
   );
 
-  const { mutate: saveUserGoalPage } = useStorageSaveItem<number>(USER_GOAL_PAGE);
-  const { mutate: saveUserAlarmTime } = useStorageSaveItem<string>(USER_ALARM_TIME);
+  const { mutate: saveUserGoalPage } = useStorageSaveItem<number>(USER_INFO_GOAL_PAGE);
+  const { mutate: saveUserAlarmTime } = useStorageSaveItem<string>(USER_INFO_ALARM_TIME);
 
   const [isExistUser, setIsExistUser] = useState<Nullable<boolean>>(null);
   const [nextScreen, setNextScreen] = useState<Nullable<ScreenName>>(null);

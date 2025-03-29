@@ -1,9 +1,13 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useApiMutation } from './useApi';
 import { SessionManager } from '@/core/storage';
 import { Auth } from '@/core/api';
 import { Nullable } from '@/types';
 import { ScreenName } from '@/constants/utils';
+import { useStorageSaveItem } from './useStorage';
+
+const USER_GOAL_PAGE = 'USER_GOAL_PAGE';
+const USER_ALARM_TIME = 'USER_ALARM_TIME';
 
 export const useAuth = () => {
   const {
@@ -29,18 +33,32 @@ export const useAuth = () => {
     },
   );
 
+  const { mutate: saveUserGoalPage } = useStorageSaveItem<number>(USER_GOAL_PAGE);
+  const { mutate: saveUserAlarmTime } = useStorageSaveItem<string>(USER_ALARM_TIME);
+
   const [isExistUser, setIsExistUser] = useState<Nullable<boolean>>(null);
   const [nextScreen, setNextScreen] = useState<Nullable<ScreenName>>(null);
+
+  const saveUserInfo = useCallback(
+    (token: string, goalPage: number, alarmTime: string) => {
+      saveUserGoalPage(goalPage);
+      saveUserAlarmTime(alarmTime);
+      SessionManager.setSessionInfo({ accessToken: token });
+    },
+    [saveUserGoalPage, saveUserAlarmTime],
+  );
 
   useEffect(() => {
     if (!loginResponse) return;
     const { code, data } = loginResponse;
 
     if (code === 2000 && data !== undefined) {
-      SessionManager.setSessionInfo({ accessToken: data.token });
+      const { token, goalPage, alarmTime } = data;
+
+      saveUserInfo(token, goalPage, alarmTime);
       setIsExistUser(data.isExistUser);
     }
-  }, [loginResponse]);
+  }, [loginResponse, saveUserInfo]);
 
   const handleAutoLogin = async () => {
     const isFirstLaunch = await SessionManager.isFirstLaunch();
@@ -58,16 +76,17 @@ export const useAuth = () => {
     const { code, data } = autoLoginResponse;
 
     if (code === 2000 && data !== undefined) {
-      SessionManager.setSessionInfo({ accessToken: data.token });
+      const { token, goalPage, alarmTime } = data;
+
+      saveUserInfo(token, goalPage, alarmTime);
       setNextScreen(ScreenName.MAIN);
     } else {
       setNextScreen(ScreenName.LOGIN);
     }
-  }, [autoLoginResponse]);
+  }, [autoLoginResponse, saveUserInfo]);
 
   useEffect(() => {
     if (autoLoginError) {
-      console.error('autoLoginError', autoLoginError);
       setNextScreen(ScreenName.LOGIN);
     }
   }, [autoLoginError]);

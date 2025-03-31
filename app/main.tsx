@@ -1,15 +1,14 @@
 import { MDCol, MDDivider } from '@/components';
 import {
-  MainDiaryContent,
   MainAppBar,
   MainCalendar,
+  MainDiaryContent,
   MainWriteFloatingButton,
 } from '@/components/main';
 
 import { Diary } from '@/core/api';
 
 import { useGetDiaries, useThemeColor } from '@/hooks';
-import useUser from '@/hooks/useUser';
 import { MDColors, Nullable } from '@/types';
 import { formatMonth, getTodayDateData } from '@/utils/dates';
 import { router, useFocusEffect } from 'expo-router';
@@ -24,7 +23,6 @@ export default function Main() {
   const [selectedDiaryInfo, setSelectedDiaryInfo] = useState<Nullable<Diary.DiaryInfo>>(null);
   const { selectedMonth, writtenDates, diaryInfos, handleMonthChange, refetch } = useGetDiaries();
   const [isTodayWritten, setIsTodayWritten] = useState(false);
-  const { goalPage } = useUser();
 
   // 다른 화면에서 돌아올 때 (화면 포커스에만 반응)
   useFocusEffect(
@@ -69,11 +67,11 @@ export default function Main() {
   };
 
   const handleWriteButtonPress = () => {
-    if (goalPage === 0) {
-      router.push('/goal-page');
-    } else {
-      // TODO: 모닝페이지 작성 화면 이동
-    }
+    // if (goalPage === 0) {
+    //   router.push('/goal-page');
+    // } else {
+    //   // TODO: 모닝페이지 작성 화면 이동
+    // }
   };
 
   return (

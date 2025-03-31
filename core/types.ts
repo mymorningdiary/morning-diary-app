@@ -5,3 +5,8 @@ export type SessionInfo = {
   refreshToken?: Nullable<string>;
   expiredAt?: Nullable<number>;
 };
+
+export type User = {
+  goalPage: number;
+  alarmTime: string;
+};

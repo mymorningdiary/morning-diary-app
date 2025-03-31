@@ -1,4 +1,6 @@
 import axios from 'axios';
+import { SessionManager } from '../storage';
+import { authManager } from '../storage/auth';
 
 const BASE_URL = 'https://api.morning-diary.com'; // TODO: 실제 API URL로 변경 필요
 
@@ -12,12 +14,12 @@ export const axiosInstance = axios.create({
 
 // Request Interceptor
 axiosInstance.interceptors.request.use(
-  (config) => {
-    // TODO: 토큰이 필요한 경우 여기서 추가
-    // const token = getToken();
-    // if (token) {
-    //   config.headers.Authorization = `Bearer ${token}`;
-    // }
+  async (config) => {
+    const accessToken = await authManager.getAccessToken();
+    if (accessToken) {
+      config.headers.Authorization = `Bearer ${accessToken}`;
+    }
+
     return config;
   },
   (error) => {

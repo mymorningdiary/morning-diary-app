@@ -10,14 +10,14 @@ export type MDError = {
   message: string;
 };
 
-export interface ApiResponse<T> {
+export type ApiResponse<T> = {
   data: T;
   message: string;
   status: number;
-}
+};
 
-export interface ApiError {
+export type ApiError = {
   message: string;
   status: number;
   code: string;
-}
+};

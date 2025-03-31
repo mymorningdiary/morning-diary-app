@@ -1,9 +1,8 @@
 import { userApi } from '@/core/api/users';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { USER_QUERY_KEY } from './useGetUser';
 
-const USER_QUERY_KEY = 'USER';
-
-const useGoalPageMutation = () => {
+export const useGoalPageMutation = () => {
   const queryClient = useQueryClient();
 
   const { mutate } = useMutation({
@@ -15,5 +14,3 @@ const useGoalPageMutation = () => {
 
   return { mutate };
 };
-
-export default useGoalPageMutation;

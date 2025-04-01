@@ -1,6 +1,5 @@
 import { authManager } from '@/core/storage';
 import { createContext, useContext, useEffect, useState } from 'react';
-import { Nullable } from '@/types/types';
 
 type AuthContextType = {
   isLoggedIn: boolean;

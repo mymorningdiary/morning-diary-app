@@ -14,6 +14,12 @@ export function AppStateProvider({ children }: { children: React.ReactNode }) {
   const [isFirstLaunch, setIsFirstLaunch] = useState<Nullable<boolean>>(null);
 
   useEffect(() => {
+    if (__DEV__) {
+      console.log('[AppState] First launch status changed:', isFirstLaunch);
+    }
+  }, [isFirstLaunch]);
+
+  useEffect(() => {
     const checkIsFirstLaunch = async () => {
       try {
         const isFirstLaunch = await appStateManager.isFirstLaunch();

@@ -1,9 +1,9 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const ACCESS_TOKEN_KEY = 'ACCESS_TOKEN';
-export const REFRESH_TOKEN = 'REFRESH_TOKEN';
+export const REFRESH_TOKEN_KEY = 'REFRESH_TOKEN';
 
-const authManager = {
+export const authManager = {
   getAccessToken: async () => {
     const accessToken = await AsyncStorage.getItem(ACCESS_TOKEN_KEY);
     return accessToken;
@@ -16,16 +16,16 @@ const authManager = {
     await AsyncStorage.setItem(ACCESS_TOKEN_KEY, accessToken);
   },
   getRefreshToken: async () => {
-    const refreshToken = await AsyncStorage.getItem(REFRESH_TOKEN);
+    const refreshToken = await AsyncStorage.getItem(REFRESH_TOKEN_KEY);
     return refreshToken;
   },
   setRefreshToken: async (refreshToken: string) => {
-    await AsyncStorage.setItem(REFRESH_TOKEN, refreshToken);
+    await AsyncStorage.setItem(REFRESH_TOKEN_KEY, refreshToken);
   },
   getTokens: async () => {
     const [accessToken, refreshToken] = await Promise.all([
       AsyncStorage.getItem(ACCESS_TOKEN_KEY),
-      AsyncStorage.getItem(REFRESH_TOKEN),
+      AsyncStorage.getItem(REFRESH_TOKEN_KEY),
     ]);
     return { accessToken, refreshToken };
   },
@@ -38,15 +38,13 @@ const authManager = {
   }) => {
     await Promise.all([
       AsyncStorage.setItem(ACCESS_TOKEN_KEY, accessToken),
-      AsyncStorage.setItem(REFRESH_TOKEN, refreshToken),
+      AsyncStorage.setItem(REFRESH_TOKEN_KEY, refreshToken),
     ]);
   },
   clearTokens: async () => {
     await Promise.all([
       AsyncStorage.removeItem(ACCESS_TOKEN_KEY),
-      AsyncStorage.removeItem(REFRESH_TOKEN),
+      AsyncStorage.removeItem(REFRESH_TOKEN_KEY),
     ]);
   },
 };
-
-export default authManager;

@@ -1,6 +1,5 @@
 import axios from 'axios';
-import { SessionManager } from '../storage';
-import { authManager } from '../storage/auth';
+import authManager from '../storage/auth';
 
 const BASE_URL = 'https://api.morning-diary.com'; // TODO: 실제 API URL로 변경 필요
 

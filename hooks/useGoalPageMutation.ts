@@ -1,4 +1,4 @@
-import { userApi } from '@/core/api/users';
+import { userApi } from '@/core/api/user';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { USER_QUERY_KEY } from './useGetUser';
 

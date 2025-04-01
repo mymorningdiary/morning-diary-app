@@ -1,4 +1,4 @@
-import { userApi } from '@/core/api/users';
+import { userApi } from '@/core/api/user';
 import { useQuery } from '@tanstack/react-query';
 
 export const USER_QUERY_KEY = 'USER';

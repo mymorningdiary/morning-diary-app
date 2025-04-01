@@ -1,4 +1,3 @@
-import { authManager } from '@/core/storage/auth';
 import { User } from '@/core/types';
 import { useGetUser } from '@/hooks';
 import { Nullable } from '@/types';

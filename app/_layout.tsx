@@ -1,4 +1,5 @@
 import { MDDarkTheme, MDLightTheme } from '@/constants/theme';
+import { UserProvider } from '@/contexts/UserContext';
 import { initializeKakaoSDK } from '@react-native-kakao/core';
 import { ThemeProvider } from '@react-navigation/native';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -18,16 +19,18 @@ export default function RootLayout() {
   return (
     <ThemeProvider value={colorScheme === 'dark' ? MDDarkTheme : MDLightTheme}>
       <QueryClientProvider client={queryClient}>
-        <Stack>
-          <Stack.Screen name="index" />
-          <Stack.Screen name="login" options={{ headerShown: true }} />
-          <Stack.Screen name="main" options={{ headerShown: true }} />
-          <Stack.Screen name="onboarding" options={{ headerShown: true }} />
-          <Stack.Screen
-            name="goal-page"
-            options={{ headerShown: true, headerBackTitle: '뒤로가기' }}
-          />
-        </Stack>
+        <UserProvider>
+          <Stack>
+            <Stack.Screen name="index" />
+            <Stack.Screen name="login" options={{ headerShown: true }} />
+            <Stack.Screen name="main" options={{ headerShown: true }} />
+            <Stack.Screen name="onboarding" options={{ headerShown: true }} />
+            <Stack.Screen
+              name="goal-page"
+              options={{ headerShown: true, headerBackTitle: '뒤로가기' }}
+            />
+          </Stack>
+        </UserProvider>
       </QueryClientProvider>
     </ThemeProvider>
   );

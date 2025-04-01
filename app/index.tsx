@@ -17,13 +17,9 @@ export default function Index() {
   const { isLoggedIn } = useAuth();
 
   useEffect(() => {
-    if (isFirstLaunch !== null) {
-      SplashScreen.hideAsync();
-    }
-  }, [isFirstLaunch]);
-
-  useEffect(() => {
     if (isFirstLaunch === null) return;
+
+    SplashScreen.hideAsync();
 
     const route: Route = isFirstLaunch ? '/onboarding' : isLoggedIn ? '/main' : '/login';
     router.replace(route);

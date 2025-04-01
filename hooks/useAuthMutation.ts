@@ -1,5 +1,7 @@
 import { authApi } from '@/core/api/auth';
+import { ApiErrorResponse } from '@/core/api/types';
 import { useMutation } from '@tanstack/react-query';
+import { AxiosError } from 'axios';
 
 export const useLoginWithKakao = () => {
   const { mutate } = useMutation({
@@ -10,9 +12,15 @@ export const useLoginWithKakao = () => {
 };
 
 export const useAutoLogin = () => {
-  const { mutate } = useMutation({
+  const { mutate, isPending, data } = useMutation({
     mutationFn: authApi.autoLogin,
+    onSuccess: (data) => {
+      console.log('[Auth Mutation] Auto login success:', data);
+    },
+    onError: (error: AxiosError<ApiErrorResponse>) => {
+      console.error('[Auth Mutation] Auto login error:', error.response?.data);
+    },
   });
 
-  return { mutate };
+  return { mutate, isPending, data };
 };

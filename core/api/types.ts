@@ -16,7 +16,7 @@ export type ApiResponse<T> = {
   status: number;
 };
 
-export type ApiError = {
+export type ApiErrorResponse = {
   message: string;
   status: number;
   code: string;

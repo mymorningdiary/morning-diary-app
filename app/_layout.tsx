@@ -1,5 +1,6 @@
 import { MDDarkTheme, MDLightTheme } from '@/constants/theme';
 import { AppStateProvider } from '@/contexts/AppStateContext';
+import { AuthProvider } from '@/contexts/AuthContext';
 import { UserProvider } from '@/contexts/UserContext';
 import { initializeKakaoSDK } from '@react-native-kakao/core';
 import { ThemeProvider } from '@react-navigation/native';
@@ -21,7 +22,7 @@ export default function RootLayout() {
     <ThemeProvider value={colorScheme === 'dark' ? MDDarkTheme : MDLightTheme}>
       <QueryClientProvider client={queryClient}>
         <AppStateProvider>
-          <UserProvider>
+          <AuthProvider>
             <Stack>
               <Stack.Screen name="index" />
               <Stack.Screen name="login" options={{ headerShown: true }} />
@@ -32,7 +33,7 @@ export default function RootLayout() {
                 options={{ headerShown: true, headerBackTitle: '뒤로가기' }}
               />
             </Stack>
-          </UserProvider>
+          </AuthProvider>
         </AppStateProvider>
       </QueryClientProvider>
     </ThemeProvider>

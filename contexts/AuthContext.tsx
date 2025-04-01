@@ -1,4 +1,5 @@
 import { authManager } from '@/core/storage';
+import { useAutoLogin } from '@/hooks';
 import { createContext, useContext, useEffect, useState } from 'react';
 
 type AuthContextType = {
@@ -21,12 +22,26 @@ const AuthContext = createContext<AuthContextType>({
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const {
+    mutate: autoLogin,
+    isPending: isAutoLoginPending,
+    data: autoLoginResponse,
+  } = useAutoLogin();
+
+  useEffect(() => {
+    autoLogin();
+  }, []);
 
   useEffect(() => {
     if (__DEV__) {
       console.log('[Auth] Login status changed:', isLoggedIn);
     }
   }, [isLoggedIn]);
+
+  useEffect(() => {
+    if (autoLoginResponse) {
+    }
+  }, [autoLoginResponse]);
 
   useEffect(() => {
     const checkHasAccessToken = async () => {

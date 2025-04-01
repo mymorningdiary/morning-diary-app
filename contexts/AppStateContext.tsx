@@ -22,7 +22,7 @@ export function AppStateProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     const checkIsFirstLaunch = async () => {
       try {
-        const isFirstLaunch = await appStateManager.isFirstLaunch();
+        const isFirstLaunch = await appStateManager.checkFirstLaunch();
         setIsFirstLaunch(isFirstLaunch); // true -> 온보딩 화면, false -> 로그인 화면, null -> 대기
 
         await appStateManager.markFirstLaunch();

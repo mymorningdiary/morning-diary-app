@@ -1,5 +1,4 @@
 import { authManager } from '@/core/storage';
-import { useAutoLogin } from '@/hooks';
 import { createContext, useContext, useEffect, useState } from 'react';
 
 type AuthContextType = {

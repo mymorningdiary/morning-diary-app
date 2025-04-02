@@ -12,7 +12,7 @@ export const useLoginWithKakao = () => {
     onSuccess: async (response) => {
       switch (response.code) {
         case 2000:
-          await saveAccessToken(response.data?.token);
+          await saveAccessToken(response.data.token);
           break;
         default:
           break;

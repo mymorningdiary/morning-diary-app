@@ -9,7 +9,7 @@ const authAPi = {
     return response.data;
   },
 
-  autoLogin: async (): Promise<ApiResponse<null>> => {
+  autoLogin: async (): Promise<ApiResponse<Auth>> => {
     const response = await axiosInstance.post('/auth/auto-login');
     return response.data;
   },

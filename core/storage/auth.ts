@@ -12,15 +12,21 @@ export const authManager = {
     const accessToken = await AsyncStorage.getItem(ACCESS_TOKEN_KEY);
     return !!accessToken;
   },
-  setAccessToken: async (accessToken: string) => {
+  saveAccessToken: async (accessToken: string) => {
     await AsyncStorage.setItem(ACCESS_TOKEN_KEY, accessToken);
+  },
+  removeAccessToken: async () => {
+    await AsyncStorage.removeItem(ACCESS_TOKEN_KEY);
   },
   getRefreshToken: async () => {
     const refreshToken = await AsyncStorage.getItem(REFRESH_TOKEN_KEY);
     return refreshToken;
   },
-  setRefreshToken: async (refreshToken: string) => {
+  saveRefreshToken: async (refreshToken: string) => {
     await AsyncStorage.setItem(REFRESH_TOKEN_KEY, refreshToken);
+  },
+  removeRefreshToken: async () => {
+    await AsyncStorage.removeItem(REFRESH_TOKEN_KEY);
   },
   getTokens: async () => {
     const [accessToken, refreshToken] = await Promise.all([
@@ -29,7 +35,7 @@ export const authManager = {
     ]);
     return { accessToken, refreshToken };
   },
-  setTokens: async ({
+  saveTokens: async ({
     accessToken,
     refreshToken,
   }: {
@@ -41,7 +47,7 @@ export const authManager = {
       AsyncStorage.setItem(REFRESH_TOKEN_KEY, refreshToken),
     ]);
   },
-  clearTokens: async () => {
+  removeTokens: async () => {
     await Promise.all([
       AsyncStorage.removeItem(ACCESS_TOKEN_KEY),
       AsyncStorage.removeItem(REFRESH_TOKEN_KEY),

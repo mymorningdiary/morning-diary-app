@@ -4,44 +4,24 @@ import { createContext, useContext, useEffect, useState } from 'react';
 
 type AuthContextType = {
   isLoggedIn: boolean;
-  saveAuthTokens: ({
-    accessToken,
-    refreshToken,
-  }: {
-    accessToken: string;
-    refreshToken: string;
-  }) => Promise<boolean>;
-  removeAuthTokens: () => Promise<boolean>;
+  saveAccessToken: (accessToken: string) => Promise<boolean>;
+  removeAccessToken: () => Promise<boolean>;
 };
 
 const AuthContext = createContext<AuthContextType>({
   isLoggedIn: false,
-  saveAuthTokens: () => Promise.resolve(false),
-  removeAuthTokens: () => Promise.resolve(false),
+  saveAccessToken: () => Promise.resolve(false),
+  removeAccessToken: () => Promise.resolve(false),
 });
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const {
-    mutate: autoLogin,
-    isPending: isAutoLoginPending,
-    data: autoLoginResponse,
-  } = useAutoLogin();
-
-  useEffect(() => {
-    autoLogin();
-  }, []);
 
   useEffect(() => {
     if (__DEV__) {
       console.log('[Auth] Login status changed:', isLoggedIn);
     }
   }, [isLoggedIn]);
-
-  useEffect(() => {
-    if (autoLoginResponse) {
-    }
-  }, [autoLoginResponse]);
 
   useEffect(() => {
     const checkHasAccessToken = async () => {
@@ -52,15 +32,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     checkHasAccessToken();
   }, []);
 
-  const handleSaveAuthTokens = async ({
-    accessToken,
-    refreshToken,
-  }: {
-    accessToken: string;
-    refreshToken: string;
-  }) => {
+  const handleSaveAccessToken = async (accessToken: string) => {
     try {
-      await authManager.setTokens({ accessToken, refreshToken });
+      await authManager.saveAccessToken(accessToken);
       setIsLoggedIn(true);
 
       return true;
@@ -71,9 +45,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  const handleRemoveAuthTokens = async () => {
+  const handleRemoveAccessToken = async () => {
     try {
-      await authManager.clearTokens();
+      await authManager.removeAccessToken();
       setIsLoggedIn(false);
 
       return true;
@@ -88,8 +62,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     <AuthContext.Provider
       value={{
         isLoggedIn,
-        saveAuthTokens: handleSaveAuthTokens,
-        removeAuthTokens: handleRemoveAuthTokens,
+        saveAccessToken: handleSaveAccessToken,
+        removeAccessToken: handleRemoveAccessToken,
       }}>
       {children}
     </AuthContext.Provider>
@@ -97,6 +71,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 }
 
 export const useAuth = () => {
-  const { isLoggedIn, saveAuthTokens, removeAuthTokens } = useContext(AuthContext);
-  return { isLoggedIn, saveAuthTokens, removeAuthTokens };
+  const { isLoggedIn, saveAccessToken, removeAccessToken } = useContext(AuthContext);
+  return { isLoggedIn, saveAccessToken, removeAccessToken };
 };

@@ -24,21 +24,25 @@ export function AppStateProvider({ children }: { children: React.ReactNode }) {
       try {
         const isFirstLaunch = await appStateManager.checkFirstLaunch();
         setIsFirstLaunch(isFirstLaunch); // true -> 온보딩 화면, false -> 로그인 화면, null -> 대기
-
-        await appStateManager.markFirstLaunch();
       } catch (error) {
         console.error('Failed to check if first launch', error);
         setIsFirstLaunch(true); // -> 온보딩 화면
-
-        try {
-          await appStateManager.markFirstLaunch();
-        } catch (markError) {
-          console.error('Failed to mark first launch', markError);
-        }
       }
     };
 
     checkIsFirstLaunch();
+  }, []);
+
+  useEffect(() => {
+    const markFirstLaunch = async () => {
+      try {
+        await appStateManager.markFirstLaunch();
+      } catch (error) {
+        console.error('Failed to mark first launch', error);
+      }
+    };
+
+    markFirstLaunch();
   }, []);
 
   return <AppStateContext.Provider value={{ isFirstLaunch }}>{children}</AppStateContext.Provider>;

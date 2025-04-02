@@ -12,6 +12,7 @@ export type MDError = {
 
 export type ApiResponse<T> = {
   data: T;
+  code: number;
   message: string;
   status: number;
 };

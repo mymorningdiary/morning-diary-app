@@ -18,7 +18,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     if (__DEV__) {
-      console.log('[Auth] Login status changed:', isLoggedIn);
+      console.log('[Auth State] Login status changed:', isLoggedIn);
     }
   }, [isLoggedIn]);
 

@@ -1,4 +1,4 @@
-import { useAppState } from '@/contexts/AppStateContext';
+import { useApp } from '@/contexts/AppContext';
 import { useAuth } from '@/contexts/AuthContext';
 import { useThemeColor } from '@/hooks';
 import { Route } from '@/types/navigations';
@@ -13,7 +13,7 @@ export default function Index() {
   const styles = screenStyles();
   const colors = useThemeColor();
 
-  const { isFirstLaunch } = useAppState();
+  const { isFirstLaunch } = useApp();
   const { isLoggedIn } = useAuth();
 
   useEffect(() => {

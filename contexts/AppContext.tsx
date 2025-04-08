@@ -1,16 +1,16 @@
-import { appStateManager } from '@/core/storage';
+import { appManager } from '@/core/storage';
 import { Nullable } from '@/types';
 import { createContext, useContext, useEffect, useState } from 'react';
 
-type AppStateContextType = {
+type AppContextType = {
   isFirstLaunch: Nullable<boolean>;
 };
 
-const AppStateContext = createContext<AppStateContextType>({
+const AppContext = createContext<AppContextType>({
   isFirstLaunch: null,
 });
 
-export function AppStateProvider({ children }: { children: React.ReactNode }) {
+export function AppProvider({ children }: { children: React.ReactNode }) {
   const [isFirstLaunch, setIsFirstLaunch] = useState<Nullable<boolean>>(null);
 
   useEffect(() => {
@@ -22,7 +22,7 @@ export function AppStateProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     const checkIsFirstLaunch = async () => {
       try {
-        const isFirstLaunch = await appStateManager.checkFirstLaunch();
+        const isFirstLaunch = await appManager.checkFirstLaunch();
         setIsFirstLaunch(isFirstLaunch); // true -> 온보딩 화면, false -> 로그인 화면, null -> 대기
       } catch (error) {
         console.error('Failed to check if first launch', error);
@@ -36,7 +36,7 @@ export function AppStateProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     const markFirstLaunch = async () => {
       try {
-        await appStateManager.markFirstLaunch();
+        await appManager.markFirstLaunch();
       } catch (error) {
         console.error('Failed to mark first launch', error);
       }
@@ -45,11 +45,11 @@ export function AppStateProvider({ children }: { children: React.ReactNode }) {
     markFirstLaunch();
   }, []);
 
-  return <AppStateContext.Provider value={{ isFirstLaunch }}>{children}</AppStateContext.Provider>;
+  return <AppContext.Provider value={{ isFirstLaunch }}>{children}</AppContext.Provider>;
 }
 
-export const useAppState = () => {
-  const { isFirstLaunch } = useContext(AppStateContext);
+export const useApp = () => {
+  const { isFirstLaunch } = useContext(AppContext);
 
   return { isFirstLaunch };
 };

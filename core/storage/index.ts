@@ -1,5 +1,2 @@
-export { SessionManager } from './session';
-export { StorageClient } from './client';
-
-export { appStateManager } from './app-state';
+export { appManager } from './app';
 export { authManager } from './auth';

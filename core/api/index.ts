@@ -1,6 +1,6 @@
-import * as Auth from '@/core/api/auth/types';
-import * as Diary from '@/core/api/diary/types';
+import authAPI from './auth/apis';
+import diaryAPI from './diary/apis';
+import userAPI from './user/apis';
 
-export { ApiClient } from './client';
-export { MDError } from './types';
-export { Auth, Diary };
+export type * from './types';
+export { authAPI, diaryAPI, userAPI };

@@ -5,8 +5,8 @@ import {
   MainDiaryContent,
   MainWriteFloatingButton,
 } from '@/components/main';
-
-import { Diary } from '@/core/api';
+import { useUser } from '@/contexts/UserContext';
+import { Diary } from '@/core/types';
 
 import { useGetDiaries, useThemeColor } from '@/hooks';
 import { MDColors, Nullable } from '@/types';
@@ -19,10 +19,13 @@ import { DateData } from 'react-native-calendars';
 export default function Main() {
   const colors = useThemeColor();
   const styles = screenStyles({ colors });
+
   const [selectedDate, setSelectedDate] = useState<DateData>(getTodayDateData());
-  const [selectedDiaryInfo, setSelectedDiaryInfo] = useState<Nullable<Diary.DiaryInfo>>(null);
-  const { selectedMonth, writtenDates, diaryInfos, handleMonthChange, refetch } = useGetDiaries();
+  const [selectedDiaryInfo, setSelectedDiaryInfo] = useState<Nullable<Diary>>(null);
   const [isTodayWritten, setIsTodayWritten] = useState(false);
+
+  const { selectedMonth, writtenDates, diaryInfos, handleMonthChange, refetch } = useGetDiaries();
+  const { user } = useUser();
 
   // 다른 화면에서 돌아올 때 (화면 포커스에만 반응)
   useFocusEffect(
@@ -67,11 +70,13 @@ export default function Main() {
   };
 
   const handleWriteButtonPress = () => {
-    // if (goalPage === 0) {
-    //   router.push('/goal-page');
-    // } else {
-    //   // TODO: 모닝페이지 작성 화면 이동
-    // }
+    if (!user) return;
+
+    if (user.goalPage === 0) {
+      router.push('/goal-page');
+    } else {
+      // TODO: 모닝페이지 작성 화면 이동
+    }
   };
 
   return (

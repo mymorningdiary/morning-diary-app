@@ -1,12 +1,12 @@
-import { userApi } from '@/core/api/user';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { USER_QUERY_KEY } from './useGetUser';
+import { USER_QUERY_KEY } from './useUserQuery';
+import { userAPI } from '@/core/api';
 
 export const useGoalPageMutation = () => {
   const queryClient = useQueryClient();
 
   const { mutate } = useMutation({
-    mutationFn: userApi.updateGoalPage,
+    mutationFn: userAPI.updateGoalPage,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [USER_QUERY_KEY] });
     },

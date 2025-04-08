@@ -1,8 +1,11 @@
-import { Diary } from '@/core/api';
-import { formatMonth, getTodayDateData, padToTwoDigits } from '@/utils/dates';
+import { diaryAPI } from '@/core/api';
+import { formatMonth, padToTwoDigits } from '@/utils/dates';
+import { getTodayDateData } from '@/utils/dates';
+import { useQuery } from '@tanstack/react-query';
 import { useMemo, useState } from 'react';
 import { DateData } from 'react-native-calendars';
-import { useApiQuery } from './useApi';
+
+export const DIARY_QUERY_KEY = 'DIARY';
 
 export const useGetDiaries = () => {
   const todayDateData = getTodayDateData();
@@ -12,13 +15,10 @@ export const useGetDiaries = () => {
     data: getDiariesResponse,
     isLoading,
     refetch,
-  } = useApiQuery<Diary.GetDiariesResponse>(
-    {
-      key: ['diaries', selectedMonth], // 쿼리 키가 변경되면 자동으로 쿼리를 다시 실행
-      path: `/diaries?date=${selectedMonth}`,
-    },
-    { requireAuth: true },
-  );
+  } = useQuery({
+    queryKey: [DIARY_QUERY_KEY, selectedMonth],
+    queryFn: () => diaryAPI.getDiaries({ date: selectedMonth }),
+  });
 
   const { writtenDates, diaryInfos } = useMemo(() => {
     if (!getDiariesResponse) {

@@ -33,6 +33,10 @@ export default function RootLayout() {
                   name="goal-page"
                   options={{ headerShown: true, headerBackTitle: '뒤로가기' }}
                 />
+                <Stack.Screen
+                  name="write"
+                  options={{ headerShown: true, headerBackTitle: '뒤로가기' }}
+                />
               </Stack>
             </UserProvider>
           </AuthProvider>

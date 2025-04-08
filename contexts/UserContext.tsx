@@ -28,8 +28,6 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
     }
   }, [isLoggedIn, getUserResponse]);
 
-  useEffect(() => {}, [getUserResponse, isLoggedIn]);
-
   return <UserContext.Provider value={{ user }}>{children}</UserContext.Provider>;
 };
 

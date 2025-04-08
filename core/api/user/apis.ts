@@ -5,6 +5,7 @@ import { UpdateGoalPageRequest } from './types';
 
 const userAPI = {
   getUser: async (): Promise<ApiResponse<User>> => {
+    console.log('[User API] getUser');
     const response = await axiosInstance.get('/users/info');
     return response.data;
   },

@@ -1,17 +1,39 @@
 import { MDButton, MDCol, MDText, MDView } from '@/components';
 import { GoalPageListItem } from '@/components/goal-page';
-import { useThemeColor } from '@/hooks';
+import { useUpdateGoalPage, useThemeColor } from '@/hooks';
 import { MDColors } from '@/types';
 import { StyleSheet } from 'react-native';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { router } from 'expo-router';
+import { useUser } from '@/contexts/UserContext';
 
 const MAX_GOAL_PAGE = 3;
-const CHAR_COUNT_PER_PAGE = 527;
 
 export default function GoalPage() {
   const colors = useThemeColor();
   const styles = screenStyles({ colors });
-  const [selectedGoal, setSelectedGoal] = useState(0);
+
+  const { user } = useUser();
+  const [selectedGoal, setSelectedGoal] = useState(user?.goalPage ?? 0);
+  const isGoWriteButtonEnabled = selectedGoal !== 0;
+
+  const {
+    mutate: updateGoalPage,
+    isPending: isUpdatingGoalPage,
+    isUpdateGoalPageSuccess,
+  } = useUpdateGoalPage();
+
+  const onGoWriteButtonPress = () => {
+    if (!isGoWriteButtonEnabled || isUpdatingGoalPage) return;
+
+    updateGoalPage({ goalPage: selectedGoal });
+  };
+
+  useEffect(() => {
+    if (isUpdateGoalPageSuccess) {
+      router.replace('/write');
+    }
+  }, [isUpdateGoalPageSuccess]);
 
   return (
     <MDCol style={styles.container}>
@@ -44,12 +66,14 @@ export default function GoalPage() {
       <MDView style={styles.bottomContainer}>
         <MDButton
           style={{
-            backgroundColor: selectedGoal !== 0 ? colors.primary.normal : colors.fill.alternative,
+            backgroundColor: isGoWriteButtonEnabled
+              ? colors.primary.normal
+              : colors.fill.alternative,
           }}
-          textStyle={{ color: selectedGoal !== 0 ? colors.text.inversion : colors.text.normal }}
+          textStyle={{ color: isGoWriteButtonEnabled ? colors.text.inversion : colors.text.normal }}
           title={'일기쓰러 가기'}
-          disabled={selectedGoal === 0}
-          onPress={() => {}}
+          disabled={!isGoWriteButtonEnabled}
+          onPress={onGoWriteButtonPress}
         />
       </MDView>
     </MDCol>

@@ -17,11 +17,11 @@ export default function Index() {
   const { isLoggedIn } = useAuth();
 
   useEffect(() => {
-    console.log('[Index] Effect triggered - isLoggedIn:', isLoggedIn);
-  }, [isLoggedIn]);
+    console.log(
+      `[Index] Effect triggered - isFirstLaunch: ${isFirstLaunch}, isLoggedIn: ${isLoggedIn}  `,
+    );
 
-  useEffect(() => {
-    if (isFirstLaunch === null) return;
+    if (isFirstLaunch === null || isLoggedIn === null) return;
 
     SplashScreen.hideAsync();
 

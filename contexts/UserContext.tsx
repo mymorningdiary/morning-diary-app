@@ -13,10 +13,16 @@ const UserContext = createContext<UserContextType>({
 });
 
 export const UserProvider = ({ children }: { children: React.ReactNode }) => {
-  const { data: getUserResponse } = useGetUser();
-  const { isLoggedIn } = useAuth();
-
   const [user, setUser] = useState<Nullable<User>>(null);
+
+  const { isLoggedIn } = useAuth();
+  const { data: getUserResponse, refetch } = useGetUser();
+
+  useEffect(() => {
+    if (isLoggedIn) {
+      refetch();
+    }
+  }, [isLoggedIn, refetch]);
 
   useEffect(() => {
     console.log('[User State] Login status changed: ', isLoggedIn);

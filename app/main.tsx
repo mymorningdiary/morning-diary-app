@@ -27,12 +27,6 @@ export default function Main() {
   const { selectedMonth, writtenDates, diaryInfos, handleMonthChange, refetch } = useGetDiaries();
   const { user } = useUser();
 
-  useEffect(() => {
-    if (user === null) {
-      router.push('/login');
-    }
-  }, [user]);
-
   // 다른 화면에서 돌아올 때 (화면 포커스에만 반응)
   useFocusEffect(
     useCallback(() => {

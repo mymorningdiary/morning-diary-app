@@ -8,7 +8,7 @@ import { AxiosError } from 'axios';
 export const useLoginWithKakao = () => {
   const { saveAccessToken } = useAuth();
 
-  const { mutate } = useMutation({
+  const { mutate, isPending } = useMutation({
     mutationFn: authAPI.loginWithKakao,
     onSuccess: async (response) => {
       switch (response.code) {
@@ -24,7 +24,7 @@ export const useLoginWithKakao = () => {
     },
   });
 
-  return { mutate };
+  return { mutate, isPending };
 };
 
 export const useAutoLogin = () => {

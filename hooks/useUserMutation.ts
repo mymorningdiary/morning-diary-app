@@ -10,7 +10,6 @@ export const useUpdateGoalPage = () => {
   const { mutate, isPending } = useMutation({
     mutationFn: userAPI.updateGoalPage,
     onSuccess: () => {
-      console.log('[User Mutation] updateGoalPage success');
       queryClient.invalidateQueries({ queryKey: [USER_QUERY_KEY] });
       setIsUpdateGoalPageSuccess(true);
     },

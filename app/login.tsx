@@ -1,17 +1,23 @@
 import { MDButton, MDText, MDView } from '@/components';
+import { useAuth } from '@/contexts/AuthContext';
 import { useLoginWithKakao } from '@/hooks';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { MDColors } from '@/types/types';
 import { login } from '@react-native-kakao/user';
+import { router } from 'expo-router';
+import { useEffect } from 'react';
 import { Image, StyleSheet, TouchableOpacity } from 'react-native';
 
 export default function LoginScreen() {
   const colors = useThemeColor();
   const styles = screenStyles({ colors });
 
-  const { mutate: loginWithKakao } = useLoginWithKakao();
+  const { mutate: loginWithKakao, isPending: isLoginLoading } = useLoginWithKakao();
+  const { isLoggedIn } = useAuth();
 
   const handleLoginWithKakao = async () => {
+    if (isLoginLoading) return;
+
     try {
       const user = await login();
       loginWithKakao({ accessToken: user.accessToken });
@@ -19,6 +25,12 @@ export default function LoginScreen() {
       console.error('Error logging in:', error);
     }
   };
+
+  useEffect(() => {
+    if (isLoggedIn) {
+      router.replace('/main');
+    }
+  }, [isLoggedIn]);
 
   return (
     <MDView style={styles.container}>

@@ -1,20 +1,21 @@
 import { authManager } from '@/core/storage';
+import { Nullable } from '@/types';
 import { createContext, useContext, useEffect, useState } from 'react';
 
 type AuthContextType = {
-  isLoggedIn: boolean;
+  isLoggedIn: Nullable<boolean>;
   saveAccessToken: (accessToken: string) => Promise<boolean>;
   removeAccessToken: () => Promise<boolean>;
 };
 
 const AuthContext = createContext<AuthContextType>({
-  isLoggedIn: false,
+  isLoggedIn: null,
   saveAccessToken: () => Promise.resolve(false),
   removeAccessToken: () => Promise.resolve(false),
 });
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState<Nullable<boolean>>(null);
 
   useEffect(() => {
     if (__DEV__) {

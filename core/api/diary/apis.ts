@@ -1,4 +1,4 @@
-import { Diaries, Diary } from '@/core/types';
+import { Diaries } from '@/core/types';
 import axiosInstance from '../axios';
 import { ApiResponse } from '../types';
 import { GetDiariesRequest } from './types';

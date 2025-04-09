@@ -70,13 +70,13 @@ export default function Main() {
   };
 
   const handleWriteButtonPress = () => {
-    if (!user) return;
+    router.push('/goal-page');
 
-    if (user.goalPage === 0) {
-      router.push('/goal-page');
-    } else {
-      router.push('/write');
-    }
+    // if (user.goalPage === 0) {
+    //   router.push('/goal-page');
+    // } else {
+    //   router.push('/write');
+    // }
   };
 
   return (

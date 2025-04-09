@@ -1,3 +1,4 @@
 import WriteAppBar from './WriteAppBar';
+import WriteProgressBar from './WriteProgressBar';
 
-export { WriteAppBar };
+export { WriteAppBar, WriteProgressBar };

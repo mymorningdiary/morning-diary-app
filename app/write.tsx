@@ -1,5 +1,6 @@
-import { MDView } from '@/components';
-import { WriteAppBar } from '@/components/write';
+import { MDRow, MDText, MDView } from '@/components';
+import { WriteAppBar, WriteProgressBar } from '@/components/write';
+import { useUser } from '@/contexts/UserContext';
 import { useThemeColor } from '@/hooks';
 import { MDColors } from '@/types';
 import { router, useLocalSearchParams } from 'expo-router';
@@ -19,6 +20,8 @@ export default function Write() {
     });
   }, [year, month, day]);
 
+  const { user } = useUser();
+
   return (
     <MDView style={styles.container}>
       <WriteAppBar
@@ -27,6 +30,13 @@ export default function Write() {
         onCompleteButtonPress={() => {}}
         onBackButtonPress={() => router.back()}
       />
+
+      <MDRow style={styles.progressBarWrapper}>
+        <WriteProgressBar progress={40} />
+        <MDText
+          type="caption2Regular"
+          style={styles.textGoalPage}>{`${user?.goalPage ?? 0}P`}</MDText>
+      </MDRow>
     </MDView>
   );
 }
@@ -36,6 +46,16 @@ const screenStyles = ({ colors }: { colors: MDColors }) =>
     container: {
       flex: 1,
       backgroundColor: colors.background.normal,
+    },
+    progressBarWrapper: {
+      paddingTop: 52,
+      paddingBottom: 12,
+      paddingHorizontal: 16,
+      alignItems: 'center',
+      gap: 12,
+    },
+    textGoalPage: {
+      color: colors.text.brand,
     },
   });
 

@@ -1,20 +1,23 @@
 import { MDButton, MDText, MDView } from '@/components';
-import { useRouter } from 'expo-router';
+import { useAuth } from '@/contexts/AuthContext';
+import { useLoginWithKakao } from '@/hooks';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { MDColors } from '@/types/types';
-import { TouchableOpacity, Image, StyleSheet } from 'react-native';
 import { login } from '@react-native-kakao/user';
-import { useAuth } from '@/hooks';
+import { router } from 'expo-router';
 import { useEffect } from 'react';
+import { Image, StyleSheet, TouchableOpacity } from 'react-native';
 
 export default function LoginScreen() {
   const colors = useThemeColor();
   const styles = screenStyles({ colors });
-  const router = useRouter();
 
-  const { loginWithKakao, isExistUser } = useAuth();
+  const { mutate: loginWithKakao, isPending: isLoginLoading } = useLoginWithKakao();
+  const { isLoggedIn } = useAuth();
 
-  const handleKakaoLogin = async () => {
+  const handleLoginWithKakao = async () => {
+    if (isLoginLoading) return;
+
     try {
       const user = await login();
       loginWithKakao({ accessToken: user.accessToken });
@@ -24,14 +27,10 @@ export default function LoginScreen() {
   };
 
   useEffect(() => {
-    if (isExistUser === null) return;
-
-    if (isExistUser) {
+    if (isLoggedIn) {
       router.replace('/main');
-    } else {
-      router.replace('/onboarding');
     }
-  }, [isExistUser, router]);
+  }, [isLoggedIn]);
 
   return (
     <MDView style={styles.container}>
@@ -48,7 +47,7 @@ export default function LoginScreen() {
           textStyle={styles.kakaoLoginButtonText}
           title={'카카오 로그인'}
           icon={require('@/assets/images/ic-kakao.png')}
-          onPress={handleKakaoLogin}
+          onPress={handleLoginWithKakao}
         />
 
         <MDView style={styles.termsContainer}>

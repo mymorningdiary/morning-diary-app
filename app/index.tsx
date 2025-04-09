@@ -1,49 +1,46 @@
-import { ScreenName } from '@/constants/utils';
-import { SessionManager } from '@/core/storage';
-import { useAuth } from '@/hooks';
-import { Link, router, SplashScreen } from 'expo-router';
+import { useApp } from '@/contexts/AppContext';
+import { useAuth } from '@/contexts/AuthContext';
+import { useThemeColor } from '@/hooks';
+import { Route } from '@/types/navigations';
+
+import { router, SplashScreen } from 'expo-router';
 import { useEffect } from 'react';
-import { Text, View } from 'react-native';
+import { ActivityIndicator, StyleSheet, View } from 'react-native';
 
 SplashScreen.preventAutoHideAsync();
 
 export default function Index() {
-  const { autoLogin, isAutoLoginLoading, nextScreen } = useAuth();
+  const styles = screenStyles();
+  const colors = useThemeColor();
+
+  const { isFirstLaunch } = useApp();
+  const { isLoggedIn } = useAuth();
 
   useEffect(() => {
-    const timeoutId = setTimeout(() => {
-      autoLogin();
-    }, 1500);
+    console.log(
+      `[Index] Effect triggered - isFirstLaunch: ${isFirstLaunch}, isLoggedIn: ${isLoggedIn}  `,
+    );
 
-    return () => clearTimeout(timeoutId);
-  }, []);
+    if (isFirstLaunch === null || isLoggedIn === null) return;
 
-  useEffect(() => {
-    if (!isAutoLoginLoading && nextScreen !== null) {
-      SplashScreen.hideAsync();
-      switch (nextScreen) {
-        case ScreenName.ONBOARDING:
-          router.replace('/onboarding');
-          break;
-        case ScreenName.MAIN:
-          router.replace('/main');
-          break;
-        case ScreenName.LOGIN:
-          router.replace('/login');
-          break;
-      }
-    }
-  }, [isAutoLoginLoading, nextScreen]);
+    SplashScreen.hideAsync();
+
+    const route: Route = isFirstLaunch ? '/onboarding' : isLoggedIn ? '/main' : '/login';
+    router.replace(route);
+  }, [isFirstLaunch, isLoggedIn]);
 
   return (
-    <View
-      style={{
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-      }}>
-      <Text>Edit app/index.tsx to edit this screen.</Text>
-      <Link href="/login">Login</Link>
+    <View style={styles.container}>
+      <ActivityIndicator size="small" color={colors.primary.normal} />
     </View>
   );
 }
+
+const screenStyles = () =>
+  StyleSheet.create({
+    container: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+  });

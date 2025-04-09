@@ -1,11 +1,12 @@
-export type BaseApiResponse = {
+export type ApiResponse<T> = {
+  data: T;
+  code: number;
   message: string;
   status: number;
-  code: number;
 };
 
-export type MDError = {
-  status: number;
-  code: number;
+export type ApiErrorResponse = {
   message: string;
+  status: number;
+  code: string;
 };

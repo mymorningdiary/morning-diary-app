@@ -4,7 +4,7 @@ import { useUpdateGoalPage, useThemeColor } from '@/hooks';
 import { MDColors } from '@/types';
 import { StyleSheet } from 'react-native';
 import { useEffect, useState } from 'react';
-import { router } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import { useUser } from '@/contexts/UserContext';
 
 const MAX_GOAL_PAGE = 3;
@@ -12,6 +12,8 @@ const MAX_GOAL_PAGE = 3;
 export default function GoalPage() {
   const colors = useThemeColor();
   const styles = screenStyles({ colors });
+
+  const { year, month, day } = useLocalSearchParams();
 
   const { user } = useUser();
   const [selectedGoal, setSelectedGoal] = useState(user?.goalPage ?? 0);
@@ -31,9 +33,9 @@ export default function GoalPage() {
 
   useEffect(() => {
     if (isUpdateGoalPageSuccess) {
-      router.replace('/write');
+      router.replace(`/write?year=${year}&month=${month}&day=${day}`);
     }
-  }, [isUpdateGoalPageSuccess]);
+  }, [isUpdateGoalPageSuccess, year, month, day]);
 
   return (
     <MDCol style={styles.container}>

@@ -70,13 +70,14 @@ export default function Main() {
   };
 
   const handleWriteButtonPress = () => {
-    // router.push('/goal-page');
     if (!user) return;
 
+    const dateParam = `year=${selectedDate.year}&month=${selectedDate.month}&day=${selectedDate.day}`;
+
     if (user?.goalPage === 0) {
-      router.push('/goal-page');
+      router.push(`/goal-page?${dateParam}`);
     } else {
-      router.push('/write');
+      router.push(`/write?${dateParam}`);
     }
   };
 

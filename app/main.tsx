@@ -73,7 +73,7 @@ export default function Main() {
     if (!user) return;
 
     const dateParam = `year=${selectedDate.year}&month=${selectedDate.month}&day=${selectedDate.day}`;
-
+    // router.push(`/goal-page?${dateParam}`);
     if (user?.goalPage === 0) {
       router.push(`/goal-page?${dateParam}`);
     } else {

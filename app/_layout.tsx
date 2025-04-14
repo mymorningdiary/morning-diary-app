@@ -2,7 +2,7 @@ import { MDDarkTheme, MDLightTheme } from '@/constants/theme';
 import { AppProvider } from '@/contexts/AppContext';
 import { AuthProvider } from '@/contexts/AuthContext';
 import { UserProvider } from '@/contexts/UserContext';
-import { initializeKakaoSDK } from '@react-native-kakao/core';
+import { getKeyHashAndroid, initializeKakaoSDK } from '@react-native-kakao/core';
 import { ThemeProvider } from '@react-navigation/native';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Stack } from 'expo-router';

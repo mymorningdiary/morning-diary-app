@@ -26,7 +26,7 @@ const progressBarStyles = ({ colors }: { colors: MDColors }) =>
   StyleSheet.create({
     container: {
       flex: 1,
-      height: 17,
+      height: 16,
       backgroundColor: colors.fill.alternative,
       borderRadius: 12,
     },
@@ -57,9 +57,10 @@ const progressBarThumbStyles = ({ colors, progress }: { colors: MDColors; progre
       transform: [{ translateX: -22 }, { translateY: 8.5 }],
       alignItems: 'center',
       bottom: 0,
+      backgroundColor: 'red',
     },
     image: {
-      width: 38,
+      width: 40,
       height: 40,
     },
   });

@@ -5,7 +5,7 @@ import { useThemeColor } from '@/hooks';
 import { MDColors } from '@/types';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { StyleSheet, TextInput } from 'react-native';
+import { ScrollView, StyleSheet, TextInput, View } from 'react-native';
 
 const WORD_CNT_PER_PAGE = 50;
 
@@ -30,12 +30,21 @@ export default function Write() {
 
   const [pages, setPages] = useState<string[]>(['']);
   const [currentPageIndex, setCurrentPageIndex] = useState(0);
-
   const inputRefs = useRef<(TextInput | null)[]>([]);
-
   const totalText = useMemo(() => pages.join(''), [pages]);
 
-  const currentPageText = pages[currentPageIndex] || '';
+  const progress = useMemo(() => {
+    const currentWordCnt = totalText.length;
+    const result = Math.floor((Math.min(currentWordCnt, targetWordCnt) / targetWordCnt) * 100);
+
+    console.log(
+      `currentWordCnt: ${currentWordCnt}, targetWordCnt: ${targetWordCnt}, result: ${result}`,
+    );
+
+    return result;
+  }, [totalText, targetWordCnt]);
+
+  const scrollViewRef = useRef<ScrollView>(null);
 
   const handleTextChange = (text: string, pageIndex: number) => {
     const newPages = [...pages];
@@ -44,6 +53,10 @@ export default function Write() {
     if (text.length >= WORD_CNT_PER_PAGE && pageIndex === pages.length - 1) {
       setPages([...newPages, '']);
       setTimeout(() => {
+        scrollViewRef.current?.scrollTo({
+          y: (pageIndex + 1) * (styles.page.minHeight as number),
+          animated: true,
+        });
         setCurrentPageIndex(pageIndex + 1);
       }, 50);
     } else {
@@ -56,17 +69,6 @@ export default function Write() {
       inputRefs.current[currentPageIndex]?.focus();
     }
   }, [currentPageIndex]);
-
-  const progress = useMemo(() => {
-    const currentWordCnt = totalText.length;
-    const result = Math.floor((Math.min(currentWordCnt, targetWordCnt) / targetWordCnt) * 100);
-
-    console.log(
-      `currentWordCnt: ${currentWordCnt}, targetWordCnt: ${targetWordCnt}, result: ${result}`,
-    );
-
-    return result;
-  }, [totalText, targetWordCnt]);
 
   return (
     <MDView style={styles.container}>
@@ -86,27 +88,42 @@ export default function Write() {
           style={styles.textGoalPage}>{`${user?.goalPage ?? 0}P`}</MDText>
       </MDRow>
 
-      <MDView style={styles.textInputWrapper}>
-        {pages.map((pageText, index) => (
-          <MDCol key={`input-${index}`}>
-            <TextInput
-              ref={(ref) => {
-                inputRefs.current[index] = ref;
-              }}
-              value={pageText}
-              placeholder={
-                index === 0 ? '오늘 아침에는 어떤 생각이 떠오르시나요?' : '계속해서 적어보세요...'
-              }
-              maxLength={WORD_CNT_PER_PAGE}
-              onChangeText={(text) => handleTextChange(text, index)}
-              multiline={true}
-            />
-            <MDText style={styles.pageNumberText} type="labelRegular">
-              {`${index + 1}페이지`}
-            </MDText>
-          </MDCol>
+      <ScrollView
+        ref={scrollViewRef}
+        overScrollMode="never"
+        showsVerticalScrollIndicator={false}
+        onMomentumScrollEnd={(event) => {
+          const offsetY = event.nativeEvent.contentOffset.y;
+          const pageHeight = styles.page.minHeight as number;
+          const newPageIndex = Math.round(offsetY / pageHeight);
+
+          if (newPageIndex !== currentPageIndex) {
+            setCurrentPageIndex(newPageIndex);
+          }
+        }}>
+        {pages.map((text, index) => (
+          <MDView key={`page-${index}`}>
+            <MDCol style={styles.page}>
+              <TextInput
+                style={styles.textInput}
+                ref={(ref) => {
+                  inputRefs.current[index] = ref;
+                }}
+                value={text}
+                placeholder={index === 0 ? '오늘 아침에는 어떤 생각이 떠오르시나요?' : ''}
+                maxLength={WORD_CNT_PER_PAGE}
+                onChangeText={(value) => handleTextChange(value, index)}
+                multiline={true}
+              />
+              <MDText style={styles.pageNumber} type="labelRegular">
+                {`${index + 1}페이지`}
+              </MDText>
+            </MDCol>
+
+            {index !== pages.length - 1 && <MDView style={styles.pageDivider} />}
+          </MDView>
         ))}
-      </MDView>
+      </ScrollView>
     </MDView>
   );
 }
@@ -128,16 +145,20 @@ const screenStyles = ({ colors }: { colors: MDColors }) =>
     textGoalPage: {
       color: colors.text.brand,
     },
-    textInputWrapper: {
-      flex: 1,
-      paddingHorizontal: 24,
-      position: 'relative',
-    },
     page: {
       padding: 24,
+      minHeight: 600,
     },
-    pageNumberText: {
+    textInput: {
+      flex: 1,
+    },
+    pageNumber: {
+      alignSelf: 'flex-end',
       color: colors.text.alternative,
+    },
+    pageDivider: {
+      height: 8,
+      backgroundColor: colors.fill.alternative,
     },
   });
 

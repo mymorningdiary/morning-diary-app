@@ -67,10 +67,8 @@ const screenStyles = ({ colors }: { colors: MDColors }) =>
     progressBarWrapper: {
       paddingTop: 52,
       paddingBottom: 12,
-      paddingStart: 28,
       paddingEnd: 16,
       alignItems: 'center',
-      gap: 12,
     },
     textGoalPage: {
       color: colors.text.brand,

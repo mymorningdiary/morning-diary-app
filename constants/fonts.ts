@@ -101,4 +101,9 @@ export const FontStyles = {
     fontSize: 11,
     lineHeight: 13,
   },
+  caption2Bold: {
+    ...PretendardBold,
+    fontSize: 11,
+    lineHeight: 13,
+  },
 } as const;

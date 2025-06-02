@@ -7,129 +7,123 @@ import { router, useLocalSearchParams } from 'expo-router';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { ScrollView, StyleSheet, TextInput, View } from 'react-native';
 
-const MAX_TEXT_LENGTH_PER_PAGE = 10;
-
-const splitText = ({ text, length }: { text: string; length: number }): string[] => {
-  if (length <= 0) return text.split('');
-
-  const result = [];
-  for (let i = 0; i < text.length; i += length) {
-    result.push(text.slice(i, i + length));
-  }
-  return result;
-};
+const WORD_CNT_PER_PAGE = 50;
 
 export default function Write() {
   const colors = useThemeColor();
   const styles = screenStyles({ colors });
 
-  const { user } = useUser();
+  const { year, month, day } = useLocalSearchParams();
+  const appBarTitle = useMemo(() => {
+    return formatDateToAppBarTitle({
+      year: Number(year),
+      month: Number(month),
+      day: Number(day),
+    });
+  }, [year, month, day]);
 
-  const maxTextLength = useMemo(() => {
+  const { user } = useUser();
+  const targetWordCnt = useMemo(() => {
     const goalPage = user?.goalPage ?? 1;
-    return goalPage * MAX_TEXT_LENGTH_PER_PAGE;
+    return goalPage * WORD_CNT_PER_PAGE;
   }, [user?.goalPage]);
 
-  const [text, setText] = useState<string>('');
-  const [currentPageIndex, setCurrentPageIndex] = useState<number>(0);
-  const [pages, setPages] = useState<string[]>(['']); // pages를 state로 관리
+  const [pages, setPages] = useState<string[]>(['']);
+  const [currentPageIndex, setCurrentPageIndex] = useState(0);
+  const inputRefs = useRef<(TextInput | null)[]>([]);
+  const totalText = useMemo(() => pages.join(''), [pages]);
 
-  const inputRefs = useRef<Map<number, TextInput | null>>(new Map());
+  const progress = useMemo(() => {
+    const currentWordCnt = totalText.length;
+    const result = Math.floor((Math.min(currentWordCnt, targetWordCnt) / targetWordCnt) * 100);
 
-  const setInputRef = (index: number, ref: TextInput | null) => {
-    if (ref) {
-      inputRefs.current.set(index, ref);
+    console.log(
+      `currentWordCnt: ${currentWordCnt}, targetWordCnt: ${targetWordCnt}, result: ${result}`,
+    );
+
+    return result;
+  }, [totalText, targetWordCnt]);
+
+  const scrollViewRef = useRef<ScrollView>(null);
+
+  const handleTextChange = (text: string, pageIndex: number) => {
+    const newPages = [...pages];
+    newPages[pageIndex] = text;
+
+    if (text.length >= WORD_CNT_PER_PAGE && pageIndex === pages.length - 1) {
+      setPages([...newPages, '']);
+      setTimeout(() => {
+        scrollViewRef.current?.scrollTo({
+          y: (pageIndex + 1) * (styles.page.minHeight as number),
+          animated: true,
+        });
+        setCurrentPageIndex(pageIndex + 1);
+      }, 50);
     } else {
-      inputRefs.current.delete(index);
+      setPages(newPages);
     }
   };
 
   useEffect(() => {
-    console.log(text);
-    console.log(pages);
-  }, [text, pages]);
-
-  const handleTextChange = ({ text: newText, index }: { text: string; index: number }) => {
-    setPages((prevPages) => {
-      const newPages = [...prevPages];
-      newPages[index] = newText;
-
-      // 현재 페이지의 텍스트가 MAX_TEXT_LENGTH_PER_PAGE를 초과하면
-      // 다음 페이지로 이동하고 나머지 텍스트를 다음 페이지로 이동
-      if (newText.length > MAX_TEXT_LENGTH_PER_PAGE) {
-        const currentPageText = newText.slice(0, MAX_TEXT_LENGTH_PER_PAGE);
-        const remainingText = newText.slice(MAX_TEXT_LENGTH_PER_PAGE);
-
-        newPages[index] = currentPageText;
-
-        // 다음 페이지가 없으면 새로 생성
-        if (!newPages[index + 1]) {
-          newPages.push(remainingText);
-        } else {
-          newPages[index + 1] = remainingText + newPages[index + 1];
-        }
-
-        setCurrentPageIndex(index + 1);
-      }
-
-      return newPages;
-    });
-  };
-
-  // 페이지 삭제를 위한 별도의 핸들러
-  const handlePageDelete = (index: number) => {
-    console.log('handlePageDelete', index);
-    setPages((prevPages) => {
-      // 마지막 페이지는 삭제하지 않음
-      if (index === prevPages.length - 1) {
-        return prevPages;
-      }
-
-      const newPages = [...prevPages];
-      // 현재 페이지의 텍스트를 다음 페이지와 합침
-      if (index + 1 < newPages.length) {
-        newPages[index + 1] = newPages[index] + newPages[index + 1];
-      }
-      // 현재 페이지 삭제
-      newPages.splice(index, 1);
-
-      // 현재 페이지 인덱스 조정
-      setCurrentPageIndex(Math.max(0, index - 1));
-
-      return newPages;
-    });
-  };
-
-  // TextInput의 onKeyPress 이벤트 핸들러
-  const handleKeyPress = ({ nativeEvent, index }: { nativeEvent: any; index: number }) => {
-    // 백스페이스 키를 누르고 현재 페이지가 비어있을 때
-    if (nativeEvent.key === 'Backspace' && pages[index] === '' && index > 0) {
-      console.log('backspace');
-      handlePageDelete(index);
+    if (inputRefs.current[currentPageIndex]) {
+      inputRefs.current[currentPageIndex]?.focus();
     }
-  };
-
-  useEffect(() => {
-    // 다음 렌더링 사이클에서 포커스 실행
-    requestAnimationFrame(() => {
-      const input = inputRefs.current.get(currentPageIndex);
-      if (input) {
-        input.focus();
-      }
-    });
   }, [currentPageIndex]);
+
   return (
     <MDView style={styles.container}>
-      {pages.map((text, index) => (
-        <Page
-          key={index}
-          index={index}
-          text={text}
-          setInputRef={setInputRef}
-          onChangeText={handleTextChange}
-          onKeyPress={handleKeyPress}
-        />
-      ))}
+      <WriteAppBar
+        date={appBarTitle}
+        isCompleteButtonEnabled={progress >= 100}
+        onCompleteButtonPress={() => {
+          // 저장 로직
+        }}
+        onBackButtonPress={() => router.back()}
+      />
+
+      <MDRow style={styles.progressBarWrapper}>
+        <WriteProgressBar progress={progress} />
+        <MDText
+          type="caption2Regular"
+          style={styles.textGoalPage}>{`${user?.goalPage ?? 0}P`}</MDText>
+      </MDRow>
+
+      <ScrollView
+        ref={scrollViewRef}
+        overScrollMode="never"
+        showsVerticalScrollIndicator={false}
+        onMomentumScrollEnd={(event) => {
+          const offsetY = event.nativeEvent.contentOffset.y;
+          const pageHeight = styles.page.minHeight as number;
+          const newPageIndex = Math.round(offsetY / pageHeight);
+
+          if (newPageIndex !== currentPageIndex) {
+            setCurrentPageIndex(newPageIndex);
+          }
+        }}>
+        {pages.map((text, index) => (
+          <MDView key={`page-${index}`}>
+            <MDCol style={styles.page}>
+              <TextInput
+                style={styles.textInput}
+                ref={(ref) => {
+                  inputRefs.current[index] = ref;
+                }}
+                value={text}
+                placeholder={index === 0 ? '오늘 아침에는 어떤 생각이 떠오르시나요?' : ''}
+                maxLength={WORD_CNT_PER_PAGE}
+                onChangeText={(value) => handleTextChange(value, index)}
+                multiline={true}
+              />
+              <MDText style={styles.pageNumber} type="labelRegular">
+                {`${index + 1}페이지`}
+              </MDText>
+            </MDCol>
+
+            {index !== pages.length - 1 && <MDView style={styles.pageDivider} />}
+          </MDView>
+        ))}
+      </ScrollView>
     </MDView>
   );
 }
@@ -139,44 +133,51 @@ const screenStyles = ({ colors }: { colors: MDColors }) =>
     container: {
       flex: 1,
       backgroundColor: colors.background.normal,
-      gap: 16,
     },
-  });
-
-function Page({
-  index,
-  text,
-  setInputRef,
-  onChangeText,
-  onKeyPress,
-}: {
-  index: number;
-  text: string;
-  setInputRef: (index: number, ref: TextInput | null) => void;
-  onChangeText: ({ text, index }: { text: string; index: number }) => void;
-  onKeyPress: ({ nativeEvent, index }: { nativeEvent: any; index: number }) => void;
-}) {
-  const colors = useThemeColor();
-  const styles = pageStyles({ colors });
-
-  return (
-    <MDView style={styles.container}>
-      <TextInput
-        ref={(ref) => setInputRef(index, ref)}
-        value={text}
-        onChangeText={(value) => onChangeText({ text: value, index })}
-        onKeyPress={(e) => onKeyPress({ nativeEvent: e.nativeEvent, index })}
-      />
-      <MDText>{`${index + 1}페이지`}</MDText>
-    </MDView>
-  );
-}
-
-const pageStyles = ({ colors }: { colors: MDColors }) =>
-  StyleSheet.create({
-    container: {
+    progressBarWrapper: {
+      paddingTop: 52,
+      paddingBottom: 12,
+      paddingStart: 28,
+      paddingEnd: 16,
+      alignItems: 'center',
+      gap: 12,
+    },
+    textGoalPage: {
+      color: colors.text.brand,
+    },
+    page: {
+      padding: 24,
+      minHeight: 600,
+    },
+    textInput: {
       flex: 1,
-      backgroundColor: colors.background.normal,
-      padding: 16,
+    },
+    pageNumber: {
+      alignSelf: 'flex-end',
+      color: colors.text.alternative,
+    },
+    pageDivider: {
+      height: 8,
+      backgroundColor: colors.fill.alternative,
     },
   });
+
+const formatDateToAppBarTitle = ({
+  year,
+  month,
+  day,
+}: {
+  year: number;
+  month: number;
+  day: number;
+}): string => {
+  const date = new Date(year, month - 1, day);
+  const options: Intl.DateTimeFormatOptions = {
+    month: 'numeric',
+    day: 'numeric',
+    weekday: 'short',
+  };
+  const formattedDate = date.toLocaleDateString('ko-KR', options);
+
+  return formattedDate.replace(/\./g, '').replace(/(\d+) (\d+) \((.+)\)/, '$1월 $2일 $3');
+};

@@ -66,6 +66,7 @@ export const FontStyles = {
     fontSize: 16,
     lineHeight: 26,
   },
+
   labelRegular: {
     ...PretendardRegular,
     fontSize: 14,

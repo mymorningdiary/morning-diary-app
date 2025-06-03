@@ -4,10 +4,11 @@ import { useUser } from '@/contexts/UserContext';
 import { useThemeColor } from '@/hooks';
 import { MDColors } from '@/types';
 import { router, useLocalSearchParams } from 'expo-router';
-import { useMemo, useState } from 'react';
-import { StyleSheet } from 'react-native';
+import { useCallback, useEffect, useMemo, useState, useRef } from 'react';
+import { ScrollView, StyleSheet, TextInput } from 'react-native';
 
-const WORD_CNT_PER_PAGE = 50;
+const WORD_CNT_PER_PAGE = 450;
+const INACTIVE_WORD_CNT = 60;
 
 export default function Write() {
   const colors = useThemeColor();
@@ -23,19 +24,41 @@ export default function Write() {
   }, [year, month, day]);
 
   const { user } = useUser();
-  const targetWordCnt = useMemo(() => {
+  const targetTextCnt = useMemo(() => {
     const goalPage = user?.goalPage ?? 1;
     return goalPage * WORD_CNT_PER_PAGE;
   }, [user?.goalPage]);
 
-  const [text, setText] = useState<string>('');
+  const [currentText, setCurrentText] = useState<string>('');
+  const [inactiveText, setInactiveText] = useState<string>('');
 
   const progress = useMemo(() => {
-    const currentWordCnt = text.length;
-    const result = Math.floor((Math.min(currentWordCnt, targetWordCnt) / targetWordCnt) * 100);
+    const totalTextCnt = currentText.length + inactiveText.length;
+    const result = Math.floor((Math.min(totalTextCnt, targetTextCnt) / targetTextCnt) * 100);
 
     return result;
-  }, [text, targetWordCnt]);
+  }, [currentText, inactiveText, targetTextCnt]);
+
+  const onInactiveTextPress = useCallback(() => {
+    console.log('touch inactive text');
+  }, []);
+
+  // 텍스트 비활성화 로직
+  useEffect(() => {
+    if (currentText.length > INACTIVE_WORD_CNT) {
+      const currentInactiveText = currentText.slice(0, INACTIVE_WORD_CNT);
+      const restText = currentText.slice(INACTIVE_WORD_CNT);
+
+      setCurrentText(restText);
+      setInactiveText(inactiveText + currentInactiveText);
+    }
+  }, [currentText, inactiveText]);
+
+  const scrollViewRef = useRef<ScrollView>(null);
+
+  const handleContentSizeChange = useCallback(() => {
+    scrollViewRef.current?.scrollToEnd({ animated: true });
+  }, []);
 
   return (
     <MDView style={styles.container}>
@@ -50,10 +73,33 @@ export default function Write() {
 
       <MDRow style={styles.containerProgressBar}>
         <MDProgressBar progress={progress} />
-        <MDText
-          type="caption2Regular"
-          style={styles.textGoalPage}>{`${user?.goalPage ?? 0}P`}</MDText>
+        <MDText style={styles.textGoalPage} type="caption2Regular">
+          {`${user?.goalPage ?? 0}페이지`}
+        </MDText>
       </MDRow>
+
+      <ScrollView
+        ref={scrollViewRef}
+        contentContainerStyle={styles.containerScrollContent}
+        overScrollMode="never"
+        keyboardShouldPersistTaps="handled"
+        onContentSizeChange={handleContentSizeChange}>
+        <MDView style={styles.containerText}>
+          {inactiveText.length > 0 && (
+            <MDText style={styles.inactiveText} type="bodyRegular" onPress={onInactiveTextPress}>
+              {inactiveText}
+            </MDText>
+          )}
+          <TextInput
+            style={styles.textInput}
+            value={currentText}
+            onChangeText={setCurrentText}
+            placeholder="오늘 아침에는 어떤 생각이 떠오르나요?"
+            multiline
+            scrollEnabled={false}
+          />
+        </MDView>
+      </ScrollView>
     </MDView>
   );
 }
@@ -66,27 +112,30 @@ const screenStyles = ({ colors }: { colors: MDColors }) =>
     },
     containerProgressBar: {
       paddingTop: 38,
-      paddingBottom: 12,
-      paddingEnd: 16,
+      paddingBottom: 30,
+      paddingEnd: 24,
       alignItems: 'center',
     },
     textGoalPage: {
       color: colors.text.brand,
     },
-    page: {
-      padding: 24,
-      minHeight: 600,
+    containerScrollContent: {
+      paddingHorizontal: 24,
+      flexGrow: 1,
     },
-    textInput: {
+    containerText: {
       flex: 1,
     },
-    pageNumber: {
-      alignSelf: 'flex-end',
+    inactiveText: {
       color: colors.text.alternative,
     },
-    pageDivider: {
-      height: 8,
-      backgroundColor: colors.fill.alternative,
+    textInput: {
+      fontFamily: 'Pretendard-Regular',
+      fontWeight: '400',
+      fontSize: 16,
+      textAlignVertical: 'top',
+      minHeight: 200,
+      padding: 0,
     },
   });
 

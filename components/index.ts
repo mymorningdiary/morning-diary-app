@@ -3,8 +3,21 @@ import { MDButton } from './MDButton';
 import { MDCol } from './MDCol';
 import { MDDivider } from './MDDivider';
 import { MDRow } from './MDRow';
-import { MDSpeechBubble } from './MDSpeechBubble';
+import { MDSmallSpeechBubble } from './SpeechBubbles/MDSmallSpeechBubble';
+import { MDLargeSpeechBubble } from './SpeechBubbles/MDLargeSpeechBubble';
+import MDProgressBar from './ProgressBars/MDProgressBar';
 import { MDText } from './MDText';
 import { MDView } from './MDView';
 
-export { DiaryListItem, MDButton, MDCol, MDDivider, MDRow, MDSpeechBubble, MDText, MDView };
+export {
+  DiaryListItem,
+  MDButton,
+  MDCol,
+  MDDivider,
+  MDRow,
+  MDSmallSpeechBubble,
+  MDLargeSpeechBubble,
+  MDProgressBar,
+  MDText,
+  MDView,
+};

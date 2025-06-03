@@ -1,5 +1,5 @@
-import { MDRow, MDText, MDView } from '@/components';
-import { WriteAppBar, WriteProgressBar } from '@/components/write';
+import { MDProgressBar, MDRow, MDText, MDView } from '@/components';
+import { WriteAppBar } from '@/components/write';
 import { useUser } from '@/contexts/UserContext';
 import { useThemeColor } from '@/hooks';
 import { MDColors } from '@/types';
@@ -48,8 +48,8 @@ export default function Write() {
         onBackButtonPress={() => router.back()}
       />
 
-      <MDRow style={styles.progressBarWrapper}>
-        <WriteProgressBar progress={progress} />
+      <MDRow style={styles.containerProgressBar}>
+        <MDProgressBar progress={progress} />
         <MDText
           type="caption2Regular"
           style={styles.textGoalPage}>{`${user?.goalPage ?? 0}P`}</MDText>
@@ -64,8 +64,8 @@ const screenStyles = ({ colors }: { colors: MDColors }) =>
       flex: 1,
       backgroundColor: colors.background.normal,
     },
-    progressBarWrapper: {
-      paddingTop: 52,
+    containerProgressBar: {
+      paddingTop: 38,
       paddingBottom: 12,
       paddingEnd: 16,
       alignItems: 'center',

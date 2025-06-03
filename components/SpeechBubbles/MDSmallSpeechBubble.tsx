@@ -5,17 +5,17 @@ import { useThemeColor } from '@/hooks';
 import { MDText } from '../MDText';
 import { useMemo } from 'react';
 
-type SpeechBubbleProps = {
+type MDSmallSpeechBubbleProps = {
   text: string;
   style?: StyleProp<ViewStyle>;
 };
 
-export const SpeechBubble = ({ text, style }: SpeechBubbleProps) => {
+export const MDSmallSpeechBubble = ({ text, style }: MDSmallSpeechBubbleProps) => {
   const colors = useThemeColor();
-  const styles = useMemo(() => speechBubbleStyles({ colors }), [colors]);
+  const styles = useMemo(() => SpeechBubbleStyles({ colors }), [colors]);
 
   return (
-    <MDView style={[styles.container, style]}>
+    <MDView style={style}>
       <MDView style={styles.textContainer}>
         <MDText style={styles.text} type={'caption2Bold'}>
           {text}
@@ -29,12 +29,10 @@ export const SpeechBubble = ({ text, style }: SpeechBubbleProps) => {
   );
 };
 
-const speechBubbleStyles = ({ colors }: { colors: MDColors }) =>
+const SpeechBubbleStyles = ({ colors }: { colors: MDColors }) =>
   StyleSheet.create({
-    container: {},
     textContainer: {
       alignItems: 'center',
-      paddingHorizontal: 8,
       paddingVertical: 3.5,
       backgroundColor: colors.fill.normal,
       borderRadius: 24,

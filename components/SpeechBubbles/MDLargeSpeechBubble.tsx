@@ -1,23 +1,23 @@
 import { MDColors } from '@/types';
-import { MDView } from './MDView';
-import { StyleSheet } from 'react-native';
+import { MDView } from '../MDView';
+import { StyleProp, StyleSheet, ViewStyle } from 'react-native';
 import { useThemeColor } from '@/hooks';
-import { MDText } from './MDText';
+import { MDText } from '../MDText';
 import { useMemo } from 'react';
 
-type MDSpeechBubbleProps = {
+type MDLargeSpeechBubbleProps = {
   text: string;
-  size: 'small' | 'large';
+  style?: StyleProp<ViewStyle>;
 };
 
-export const MDSpeechBubble = ({ text, size = 'large' }: MDSpeechBubbleProps) => {
+export const MDLargeSpeechBubble = ({ text, style }: MDLargeSpeechBubbleProps) => {
   const colors = useThemeColor();
-  const styles = useMemo(() => speechBubbleStyles({ colors, size }), [colors, size]);
+  const styles = useMemo(() => SpeechBubbleStyles({ colors }), [colors]);
 
   return (
-    <MDView style={styles.container}>
+    <MDView style={style}>
       <MDView style={styles.textContainer}>
-        <MDText style={styles.text} type={size === 'small' ? 'caption1SemiBold' : 'labelSemiBold'}>
+        <MDText style={styles.text} type={'labelSemiBold'}>
           {text}
         </MDText>
       </MDView>
@@ -29,15 +29,12 @@ export const MDSpeechBubble = ({ text, size = 'large' }: MDSpeechBubbleProps) =>
   );
 };
 
-const speechBubbleStyles = ({ colors, size }: { colors: MDColors; size: 'small' | 'large' }) =>
+const SpeechBubbleStyles = ({ colors }: { colors: MDColors }) =>
   StyleSheet.create({
-    container: {
-      alignItems: 'center',
-    },
     textContainer: {
       alignItems: 'center',
-      paddingHorizontal: size === 'small' ? 12 : 16,
-      paddingVertical: size === 'small' ? 4 : 8,
+      paddingHorizontal: 16,
+      paddingVertical: 8,
       backgroundColor: colors.fill.normal,
       borderRadius: 24,
       borderWidth: 1,
@@ -56,9 +53,9 @@ const speechBubbleStyles = ({ colors, size }: { colors: MDColors; size: 'small' 
       height: 0,
       backgroundColor: 'transparent',
       borderStyle: 'solid',
-      borderLeftWidth: size === 'small' ? 4 : 7,
-      borderRightWidth: size === 'small' ? 4 : 7,
-      borderBottomWidth: size === 'small' ? 8 : 12,
+      borderLeftWidth: 7,
+      borderRightWidth: 7,
+      borderBottomWidth: 12,
       borderLeftColor: 'transparent',
       borderRightColor: 'transparent',
       borderBottomColor: colors.fill.normal,
@@ -70,9 +67,9 @@ const speechBubbleStyles = ({ colors, size }: { colors: MDColors; size: 'small' 
       height: 0,
       backgroundColor: 'transparent',
       borderStyle: 'solid',
-      borderLeftWidth: size === 'small' ? 5 : 8,
-      borderRightWidth: size === 'small' ? 5 : 8,
-      borderBottomWidth: size === 'small' ? 10 : 14,
+      borderLeftWidth: 8,
+      borderRightWidth: 8,
+      borderBottomWidth: 14,
       borderLeftColor: 'transparent',
       borderRightColor: 'transparent',
       borderBottomColor: colors.line.alternative,

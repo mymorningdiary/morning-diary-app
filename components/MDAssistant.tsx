@@ -3,25 +3,29 @@ import { MDColors } from '@/types';
 import { Image } from 'expo-image';
 import { useMemo } from 'react';
 import { StyleSheet } from 'react-native';
-import { MDText } from '../MDText';
-import { MDView } from '../MDView';
+import { MDText } from './MDText';
+import { MDView } from './MDView';
 
-export const AssistantModal = () => {
+type MDAssistantProps = {
+  imageSource: string;
+  text: string;
+};
+
+const MDAssistant = ({ imageSource, text }: MDAssistantProps) => {
   const colors = useThemeColor();
-  const styles = useMemo(() => ModalStyles({ colors }), [colors]);
+  const styles = useMemo(() => AssistantStyles({ colors }), [colors]);
 
   return (
     <MDView style={styles.container}>
       <Image style={styles.image} source={require('@/assets/images/img-sun-basic.png')} />
       <MDText style={styles.text} type="labelSemiBold" numberOfLines={2} ellipsizeMode="tail">
-        오늘의 목표를 입력해주세요. 오늘의 목표를 입력해주세요. 오늘의 목표를 입력해주세요. 오늘의
-        목표를 입력해주세요. 오늘의 목표를 입력해주세요.
+        {text}
       </MDText>
     </MDView>
   );
 };
 
-const ModalStyles = ({ colors }: { colors: MDColors }) =>
+const AssistantStyles = ({ colors }: { colors: MDColors }) =>
   StyleSheet.create({
     container: {
       flexDirection: 'row',
@@ -52,3 +56,5 @@ const ModalStyles = ({ colors }: { colors: MDColors }) =>
       color: colors.text.brand,
     },
   });
+
+export default MDAssistant;

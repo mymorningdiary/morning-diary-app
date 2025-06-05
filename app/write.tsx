@@ -1,4 +1,6 @@
 import { MDProgressBar, MDRow, MDText, MDView } from '@/components';
+import MDAssistant from '@/components/MDAssistant';
+import MDTopNotificationModal from '@/components/Modal/MDTopNotificationModal';
 import { WriteAppBar } from '@/components/write';
 import { useUser } from '@/contexts/UserContext';
 import { useThemeColor } from '@/hooks';
@@ -6,6 +8,7 @@ import { MDColors } from '@/types';
 import { router, useLocalSearchParams } from 'expo-router';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { ScrollView, StyleSheet, TextInput } from 'react-native';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 const WORD_CNT_PER_PAGE = 450;
 const INACTIVE_WORD_CNT = 60;
@@ -63,7 +66,7 @@ export default function Write() {
   const [modalVisible, setModalVisible] = useState(false);
 
   return (
-    <>
+    <GestureHandlerRootView style={{ flex: 1 }}>
       <MDView style={styles.container}>
         <WriteAppBar
           date={appBarTitle}
@@ -107,7 +110,14 @@ export default function Write() {
           </MDView>
         </ScrollView>
       </MDView>
-    </>
+
+      <MDTopNotificationModal isVisible={modalVisible} onClose={() => setModalVisible(false)}>
+        <MDAssistant
+          imageSource={require('@/assets/images/img-sun-basic.png')}
+          text="오늘의 목표를 입력해주세요."
+        />
+      </MDTopNotificationModal>
+    </GestureHandlerRootView>
   );
 }
 

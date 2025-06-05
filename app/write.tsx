@@ -4,7 +4,7 @@ import { useUser } from '@/contexts/UserContext';
 import { useThemeColor } from '@/hooks';
 import { MDColors } from '@/types';
 import { router, useLocalSearchParams } from 'expo-router';
-import { useCallback, useEffect, useMemo, useState, useRef } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { ScrollView, StyleSheet, TextInput } from 'react-native';
 
 const WORD_CNT_PER_PAGE = 450;
@@ -60,47 +60,54 @@ export default function Write() {
     scrollViewRef.current?.scrollToEnd({ animated: true });
   }, []);
 
+  const [modalVisible, setModalVisible] = useState(false);
+
   return (
-    <MDView style={styles.container}>
-      <WriteAppBar
-        date={appBarTitle}
-        isCompleteButtonEnabled={progress >= 100}
-        onCompleteButtonPress={() => {
-          // 저장 로직
-        }}
-        onBackButtonPress={() => router.back()}
-      />
+    <>
+      <MDView style={styles.container}>
+        <WriteAppBar
+          date={appBarTitle}
+          isCompleteButtonEnabled={progress >= 100}
+          onCompleteButtonPress={() => {
+            // 저장 로직
+          }}
+          onBackButtonPress={() => router.back()}
+        />
 
-      <MDRow style={styles.containerProgressBar}>
-        <MDProgressBar progress={progress} />
-        <MDText style={styles.textGoalPage} type="caption2Regular">
-          {`${user?.goalPage ?? 0}페이지`}
-        </MDText>
-      </MDRow>
+        <MDRow style={styles.containerProgressBar}>
+          <MDProgressBar progress={progress} />
+          <MDText
+            style={styles.textGoalPage}
+            type="caption2Regular"
+            onPress={() => setModalVisible(true)}>
+            {`${user?.goalPage ?? 0}페이지`}
+          </MDText>
+        </MDRow>
 
-      <ScrollView
-        ref={scrollViewRef}
-        contentContainerStyle={styles.containerScrollContent}
-        overScrollMode="never"
-        keyboardShouldPersistTaps="handled"
-        onContentSizeChange={handleContentSizeChange}>
-        <MDView style={styles.containerText}>
-          {inactiveText.length > 0 && (
-            <MDText style={styles.inactiveText} type="bodyRegular" onPress={onInactiveTextPress}>
-              {inactiveText}
-            </MDText>
-          )}
-          <TextInput
-            style={styles.textInput}
-            value={currentText}
-            onChangeText={setCurrentText}
-            placeholder="오늘 아침에는 어떤 생각이 떠오르나요?"
-            multiline
-            scrollEnabled={false}
-          />
-        </MDView>
-      </ScrollView>
-    </MDView>
+        <ScrollView
+          ref={scrollViewRef}
+          contentContainerStyle={styles.containerScrollContent}
+          overScrollMode="never"
+          keyboardShouldPersistTaps="handled"
+          onContentSizeChange={handleContentSizeChange}>
+          <MDView style={styles.containerText}>
+            {inactiveText.length > 0 && (
+              <MDText style={styles.inactiveText} type="bodyRegular" onPress={onInactiveTextPress}>
+                {inactiveText}
+              </MDText>
+            )}
+            <TextInput
+              style={styles.textInput}
+              value={currentText}
+              onChangeText={setCurrentText}
+              placeholder="오늘 아침에는 어떤 생각이 떠오르나요?"
+              multiline
+              scrollEnabled={false}
+            />
+          </MDView>
+        </ScrollView>
+      </MDView>
+    </>
   );
 }
 

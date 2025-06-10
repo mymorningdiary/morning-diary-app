@@ -36,8 +36,6 @@ export default function Write() {
 
   const [currentText, setCurrentText] = useState<string>('');
   const [inactiveText, setInactiveText] = useState<string>('');
-  const [lastInputTime, setLastInputTime] = useState<Date | null>(null);
-  const timerRef = useRef<NodeJS.Timeout | null>(null);
 
   const progress = useMemo(() => {
     const totalTextCnt = currentText.length + inactiveText.length;
@@ -52,29 +50,33 @@ export default function Write() {
   const onTextChange = useCallback(
     (text: string) => {
       setCurrentText(text);
-      setLastInputTime(new Date());
 
       if (isShowAssistant) {
         setIsShowAssistant(false);
-      }
-
-      // 이전 타이머가 있다면 취소
-      if (timerRef.current) {
-        clearTimeout(timerRef.current);
       }
     },
     [isShowAssistant],
   );
 
+  const showAssistant = useCallback(
+    (text: string) => {
+      if (isShowAssistant) return;
+
+      setIsShowAssistant(true);
+      setAssistantText(text);
+    },
+    [isShowAssistant],
+  );
+
+  const timerIdRef = useRef<NodeJS.Timeout>();
+  const lastInputTimeRef = useRef<number>(Date.now());
+
   // 어시스턴트 - 비활성화 텍스트 터치
   const onInactiveTextPress = useCallback(() => {
-    if (isShowAssistant) return;
-
-    setAssistantText(
+    showAssistant(
       '쓴 생각을 읽고 고치면 생각을 검열하게 돼요. 떠오른 생각만 쓸 수 있도록 도와줄게요 🧡',
     );
-    setIsShowAssistant(true);
-  }, [isShowAssistant]);
+  }, [showAssistant]);
 
   const handleContentSizeChange = useCallback(() => {
     scrollViewRef.current?.scrollToEnd({ animated: true });
@@ -91,43 +93,47 @@ export default function Write() {
     }
   }, [currentText, inactiveText]);
 
-  // 어시스턴트 - 5초 부동
+  // 어시스턴트 - 5초 부동 타이머
   useEffect(() => {
-    if (!lastInputTime) return;
+    const checkInactivity = () => {
+      const now = Date.now();
+      const timeSinceLastInput = now - lastInputTimeRef.current;
 
-    timerRef.current = setTimeout(() => {
-      setIsShowAssistant(true);
-      setAssistantText('생각의 꼬리를 물어서 일기를 써보면 새로운 생각을 마주할 수 있어요');
-    }, 5000);
-
-    // cleanup
-    return () => {
-      if (timerRef.current) {
-        clearTimeout(timerRef.current);
+      if (timeSinceLastInput >= 5000) {
+        showAssistant('생각의 꼬리를 물어서 일기를 써보면 새로운 생각을 마주할 수 있어요');
       }
     };
-  }, [lastInputTime, isShowAssistant]);
 
-  // 모달 show -> 5초 부동 타이머 취소
-  useEffect(() => {
-    if (isShowAssistant && timerRef.current) {
-      clearTimeout(timerRef.current);
+    // 텍스트가 변경될 때마다 마지막 입력 시간 업데이트
+    lastInputTimeRef.current = Date.now();
+
+    // 이전 타이머 클리어
+    if (timerIdRef.current) {
+      clearInterval(timerIdRef.current);
     }
-  }, [isShowAssistant]);
+
+    // 새로운 타이머 설정
+    timerIdRef.current = setInterval(checkInactivity, 1000);
+
+    return () => {
+      if (timerIdRef.current) {
+        clearInterval(timerIdRef.current);
+      }
+    };
+  }, [currentText, showAssistant]);
 
   // 어시스턴트 - 목표율 달성
   useEffect(() => {
     if (progress === 10 || progress === 50 || progress === 90) {
-      setIsShowAssistant(true);
-      if (progress === 10) {
-        setAssistantText('잠든 생각들을 깨워봐요');
-      } else if (progress === 50) {
-        setAssistantText('요즘 계속 생각나는 고민이나 생각들이 있나요?');
-      } else if (progress === 90) {
-        setAssistantText('고지가 코앞이에요');
-      }
+      showAssistant(
+        progress === 10
+          ? '잠든 생각들을 깨워봐요'
+          : progress === 50
+            ? '요즘 계속 생각나는 고민이나 생각들이 있나요?'
+            : '고지가 코앞이에요',
+      );
     }
-  }, [progress]);
+  }, [progress, showAssistant]);
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>

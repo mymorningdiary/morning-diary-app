@@ -42,6 +42,10 @@ export default function Write() {
     return result;
   }, [currentText, inactiveText, targetTextCnt]);
 
+  const [isShowAssistant, setIsShowAssistant] = useState(false);
+  const [assistantText, setAssistantText] = useState<string>('');
+
+  // 어시스턴트 - 비활성화 텍스트 터치
   const onInactiveTextPress = useCallback(() => {
     setAssistantText(
       '쓴 생각을 읽고 고치면 생각을 검열하게 돼요. 떠오른 생각만 쓸 수 있도록 도와줄게요 🧡',
@@ -49,7 +53,7 @@ export default function Write() {
     setIsShowAssistant(true);
   }, []);
 
-  // 텍스트 비활성화 로직
+  // 텍스트 비활성화
   useEffect(() => {
     if (currentText.length > INACTIVE_WORD_CNT) {
       const currentInactiveText = currentText.slice(0, INACTIVE_WORD_CNT);
@@ -65,9 +69,6 @@ export default function Write() {
   const handleContentSizeChange = useCallback(() => {
     scrollViewRef.current?.scrollToEnd({ animated: true });
   }, []);
-
-  const [isShowAssistant, setIsShowAssistant] = useState(false);
-  const [assistantText, setAssistantText] = useState<string>('');
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>

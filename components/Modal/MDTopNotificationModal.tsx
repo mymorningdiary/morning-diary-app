@@ -87,7 +87,6 @@ const ModalStyles = ({ colors }: { colors: MDColors }) =>
       flex: 1,
       paddingTop: 48,
       paddingHorizontal: 16,
-      backgroundColor: 'red',
     },
   });
 

@@ -10,8 +10,8 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { ScrollView, StyleSheet, TextInput } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
-const WORD_CNT_PER_PAGE = 450;
-const INACTIVE_WORD_CNT = 60;
+const WORD_CNT_PER_PAGE = 100;
+const INACTIVE_WORD_CNT = 10;
 
 export default function Write() {
   const colors = useThemeColor();
@@ -49,15 +49,22 @@ export default function Write() {
   const [isShowAssistant, setIsShowAssistant] = useState(false);
   const [assistantText, setAssistantText] = useState<string>('');
 
-  const onTextChange = useCallback((text: string) => {
-    setCurrentText(text);
-    setLastInputTime(new Date());
+  const onTextChange = useCallback(
+    (text: string) => {
+      setCurrentText(text);
+      setLastInputTime(new Date());
 
-    // 이전 타이머가 있다면 취소
-    if (timerRef.current) {
-      clearTimeout(timerRef.current);
-    }
-  }, []);
+      if (isShowAssistant) {
+        setIsShowAssistant(false);
+      }
+
+      // 이전 타이머가 있다면 취소
+      if (timerRef.current) {
+        clearTimeout(timerRef.current);
+      }
+    },
+    [isShowAssistant],
+  );
 
   // 어시스턴트 - 비활성화 텍스트 터치
   const onInactiveTextPress = useCallback(() => {
@@ -107,6 +114,20 @@ export default function Write() {
       clearTimeout(timerRef.current);
     }
   }, [isShowAssistant]);
+
+  // 어시스턴트 - 목표율 달성
+  useEffect(() => {
+    if (progress === 10 || progress === 50 || progress === 90) {
+      setIsShowAssistant(true);
+      if (progress === 10) {
+        setAssistantText('잠든 생각들을 깨워봐요');
+      } else if (progress === 50) {
+        setAssistantText('요즘 계속 생각나는 고민이나 생각들이 있나요?');
+      } else if (progress === 90) {
+        setAssistantText('고지가 코앞이에요');
+      }
+    }
+  }, [progress]);
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>

@@ -50,11 +50,11 @@ const MDTopNotificationModal = ({ isVisible, onClose, children }: MDTopNotificat
       translateY.value = withSpring(0, { damping: 50 });
     } else {
       translateY.value = withTiming(-SCREEN_HEIGHT, {
-        duration: 2500,
+        duration: 1500,
         easing: Easing.bezier(0.25, 0.1, 0.25, 1),
       });
     }
-  }, [isVisible]);
+  }, [isVisible, translateY]);
 
   const rStyle = useAnimatedStyle(() => {
     return {
@@ -65,7 +65,9 @@ const MDTopNotificationModal = ({ isVisible, onClose, children }: MDTopNotificat
   return (
     <GestureDetector gesture={gesture}>
       <Animated.View style={[styles.container, rStyle]}>
-        <Pressable onPress={onClose}>{children}</Pressable>
+        <Pressable style={styles.containerContent} onPress={onClose}>
+          {children}
+        </Pressable>
       </Animated.View>
     </GestureDetector>
   );
@@ -80,8 +82,12 @@ const ModalStyles = ({ colors }: { colors: MDColors }) =>
       right: 0,
       width: '100%',
       minHeight: SCREEN_HEIGHT,
+    },
+    containerContent: {
+      flex: 1,
       paddingTop: 48,
       paddingHorizontal: 16,
+      backgroundColor: 'red',
     },
   });
 

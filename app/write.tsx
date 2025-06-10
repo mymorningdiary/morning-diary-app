@@ -43,7 +43,10 @@ export default function Write() {
   }, [currentText, inactiveText, targetTextCnt]);
 
   const onInactiveTextPress = useCallback(() => {
-    console.log('touch inactive text');
+    setAssistantText(
+      '쓴 생각을 읽고 고치면 생각을 검열하게 돼요. 떠오른 생각만 쓸 수 있도록 도와줄게요 🧡',
+    );
+    setIsShowAssistant(true);
   }, []);
 
   // 텍스트 비활성화 로직
@@ -63,7 +66,8 @@ export default function Write() {
     scrollViewRef.current?.scrollToEnd({ animated: true });
   }, []);
 
-  const [modalVisible, setModalVisible] = useState(false);
+  const [isShowAssistant, setIsShowAssistant] = useState(false);
+  const [assistantText, setAssistantText] = useState<string>('');
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
@@ -82,7 +86,7 @@ export default function Write() {
           <MDText
             style={styles.textGoalPage}
             type="caption2Regular"
-            onPress={() => setModalVisible(true)}>
+            onPress={() => setIsShowAssistant(true)}>
             {`${user?.goalPage ?? 0}페이지`}
           </MDText>
         </MDRow>
@@ -111,10 +115,10 @@ export default function Write() {
         </ScrollView>
       </MDView>
 
-      <MDTopNotificationModal isVisible={modalVisible} onClose={() => setModalVisible(false)}>
+      <MDTopNotificationModal isVisible={isShowAssistant} onClose={() => setIsShowAssistant(false)}>
         <MDAssistant
           imageSource={require('@/assets/images/img-sun-basic.png')}
-          text="오늘의 목표를 입력해주세요."
+          text={assistantText}
         />
       </MDTopNotificationModal>
     </GestureHandlerRootView>

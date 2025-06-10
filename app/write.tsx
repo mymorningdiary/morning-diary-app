@@ -17,6 +17,8 @@ export default function Write() {
   const colors = useThemeColor();
   const styles = screenStyles({ colors });
 
+  const scrollViewRef = useRef<ScrollView>(null);
+
   const { year, month, day } = useLocalSearchParams();
   const appBarTitle = useMemo(() => {
     return formatDateToAppBarTitle({
@@ -34,6 +36,8 @@ export default function Write() {
 
   const [currentText, setCurrentText] = useState<string>('');
   const [inactiveText, setInactiveText] = useState<string>('');
+  const [lastInputTime, setLastInputTime] = useState<Date | null>(null);
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
 
   const progress = useMemo(() => {
     const totalTextCnt = currentText.length + inactiveText.length;
@@ -45,12 +49,28 @@ export default function Write() {
   const [isShowAssistant, setIsShowAssistant] = useState(false);
   const [assistantText, setAssistantText] = useState<string>('');
 
+  const onTextChange = useCallback((text: string) => {
+    setCurrentText(text);
+    setLastInputTime(new Date());
+
+    // 이전 타이머가 있다면 취소
+    if (timerRef.current) {
+      clearTimeout(timerRef.current);
+    }
+  }, []);
+
   // 어시스턴트 - 비활성화 텍스트 터치
   const onInactiveTextPress = useCallback(() => {
+    if (isShowAssistant) return;
+
     setAssistantText(
       '쓴 생각을 읽고 고치면 생각을 검열하게 돼요. 떠오른 생각만 쓸 수 있도록 도와줄게요 🧡',
     );
     setIsShowAssistant(true);
+  }, [isShowAssistant]);
+
+  const handleContentSizeChange = useCallback(() => {
+    scrollViewRef.current?.scrollToEnd({ animated: true });
   }, []);
 
   // 텍스트 비활성화
@@ -64,11 +84,29 @@ export default function Write() {
     }
   }, [currentText, inactiveText]);
 
-  const scrollViewRef = useRef<ScrollView>(null);
+  // 어시스턴트 - 5초 부동
+  useEffect(() => {
+    if (!lastInputTime) return;
 
-  const handleContentSizeChange = useCallback(() => {
-    scrollViewRef.current?.scrollToEnd({ animated: true });
-  }, []);
+    timerRef.current = setTimeout(() => {
+      setIsShowAssistant(true);
+      setAssistantText('생각의 꼬리를 물어서 일기를 써보면 새로운 생각을 마주할 수 있어요');
+    }, 5000);
+
+    // cleanup
+    return () => {
+      if (timerRef.current) {
+        clearTimeout(timerRef.current);
+      }
+    };
+  }, [lastInputTime, isShowAssistant]);
+
+  // 모달 show -> 5초 부동 타이머 취소
+  useEffect(() => {
+    if (isShowAssistant && timerRef.current) {
+      clearTimeout(timerRef.current);
+    }
+  }, [isShowAssistant]);
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
@@ -107,7 +145,7 @@ export default function Write() {
             <TextInput
               style={styles.textInput}
               value={currentText}
-              onChangeText={setCurrentText}
+              onChangeText={onTextChange}
               placeholder="오늘 아침에는 어떤 생각이 떠오르나요?"
               multiline
               scrollEnabled={false}

@@ -13,6 +13,13 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 const WORD_CNT_PER_PAGE = 100;
 const INACTIVE_WORD_CNT = 10;
 
+const PROGRESS_MESSAGES = {
+  10: '잠든 생각들을 깨워봐요',
+  50: '요즘 계속 생각나는 고민이나 생각들이 있나요?',
+  90: '고지가 코앞이에요',
+} as const;
+type ProgressKey = keyof typeof PROGRESS_MESSAGES;
+
 export default function Write() {
   const colors = useThemeColor();
   const styles = screenStyles({ colors });
@@ -38,7 +45,6 @@ export default function Write() {
 
   const [currentText, setCurrentText] = useState<string>('');
   const [inactiveText, setInactiveText] = useState<string>('');
-
   const progress = useMemo(() => {
     const totalTextCnt = currentText.length + inactiveText.length;
     const result = Math.floor((Math.min(totalTextCnt, targetTextCnt) / targetTextCnt) * 100);
@@ -48,25 +54,26 @@ export default function Write() {
 
   const [isShowAssistant, setIsShowAssistant] = useState(false);
   const [assistantText, setAssistantText] = useState<string>('');
+  const [alreadyShowProgressAssistant, setAlreadyShowProgressAssistant] = useState<
+    Record<ProgressKey, boolean>
+  >(
+    Object.keys(PROGRESS_MESSAGES).reduce(
+      (acc, key) => ({ ...acc, [key]: false }),
+      {} as Record<ProgressKey, boolean>,
+    ),
+  );
 
   const onTextChange = useCallback((text: string) => {
     setCurrentText(text);
   }, []);
 
+  const handleContentSizeChange = useCallback(() => {
+    scrollViewRef.current?.scrollToEnd({ animated: true });
+  }, []);
+
   const showAssistant = useCallback((text: string) => {
     setAssistantText(text);
     setIsShowAssistant(true);
-  }, []);
-
-  // 어시스턴트 - 비활성화 텍스트 터치
-  const onInactiveTextPress = useCallback(() => {
-    showAssistant(
-      '쓴 생각을 읽고 고치면 생각을 검열하게 돼요. 떠오른 생각만 쓸 수 있도록 도와줄게요 🧡',
-    );
-  }, [showAssistant]);
-
-  const handleContentSizeChange = useCallback(() => {
-    scrollViewRef.current?.scrollToEnd({ animated: true });
   }, []);
 
   // 텍스트 비활성화
@@ -80,10 +87,17 @@ export default function Write() {
     }
   }, [currentText, inactiveText]);
 
+  // 어시스턴트 - 비활성화 텍스트 터치
+  const onInactiveTextPress = useCallback(() => {
+    showAssistant(
+      '쓴 생각을 읽고 고치면 생각을 검열하게 돼요. 떠오른 생각만 쓸 수 있도록 도와줄게요 🧡',
+    );
+  }, [showAssistant]);
+
   // 어시스턴트 - 5초 부동 타이머
   useEffect(() => {
     const checkInactivity = () => {
-      if (currentText.length === 0) return;
+      if (currentText.length === 0 || progress === 100) return;
       const now = Date.now();
       const timeSinceLastInput = now - lastInputTimeRef.current;
 
@@ -111,20 +125,16 @@ export default function Write() {
         clearInterval(timerIdRef.current);
       }
     };
-  }, [currentText, showAssistant]);
+  }, [currentText, progress, showAssistant]);
 
   // 어시스턴트 - 목표율 달성
   useEffect(() => {
-    if (progress === 10 || progress === 50 || progress === 90) {
-      showAssistant(
-        progress === 10
-          ? '잠든 생각들을 깨워봐요'
-          : progress === 50
-            ? '요즘 계속 생각나는 고민이나 생각들이 있나요?'
-            : '고지가 코앞이에요',
-      );
+    const message = PROGRESS_MESSAGES[progress as keyof typeof PROGRESS_MESSAGES];
+    if (message && !alreadyShowProgressAssistant[progress as ProgressKey]) {
+      showAssistant(message);
+      setAlreadyShowProgressAssistant((prev) => ({ ...prev, [progress as ProgressKey]: true }));
     }
-  }, [progress, showAssistant]);
+  }, [progress, showAssistant, alreadyShowProgressAssistant]);
 
   useEffect(() => {
     if (!isShowAssistant) return;

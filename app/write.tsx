@@ -18,6 +18,8 @@ export default function Write() {
   const styles = screenStyles({ colors });
 
   const scrollViewRef = useRef<ScrollView>(null);
+  const timerIdRef = useRef<NodeJS.Timeout>();
+  const lastInputTimeRef = useRef<number>(Date.now());
 
   const { year, month, day } = useLocalSearchParams();
   const appBarTitle = useMemo(() => {
@@ -47,29 +49,14 @@ export default function Write() {
   const [isShowAssistant, setIsShowAssistant] = useState(false);
   const [assistantText, setAssistantText] = useState<string>('');
 
-  const onTextChange = useCallback(
-    (text: string) => {
-      setCurrentText(text);
+  const onTextChange = useCallback((text: string) => {
+    setCurrentText(text);
+  }, []);
 
-      if (isShowAssistant) {
-        setIsShowAssistant(false);
-      }
-    },
-    [isShowAssistant],
-  );
-
-  const showAssistant = useCallback(
-    (text: string) => {
-      if (isShowAssistant) return;
-
-      setIsShowAssistant(true);
-      setAssistantText(text);
-    },
-    [isShowAssistant],
-  );
-
-  const timerIdRef = useRef<NodeJS.Timeout>();
-  const lastInputTimeRef = useRef<number>(Date.now());
+  const showAssistant = useCallback((text: string) => {
+    setAssistantText(text);
+    setIsShowAssistant(true);
+  }, []);
 
   // 어시스턴트 - 비활성화 텍스트 터치
   const onInactiveTextPress = useCallback(() => {
@@ -100,8 +87,6 @@ export default function Write() {
       const now = Date.now();
       const timeSinceLastInput = now - lastInputTimeRef.current;
 
-      console.log(`${now} - ${lastInputTimeRef.current} = ${timeSinceLastInput}`);
-
       if (timeSinceLastInput >= 5000) {
         showAssistant('생각의 꼬리를 물어서 일기를 써보면 새로운 생각을 마주할 수 있어요');
         if (timerIdRef.current) {
@@ -126,7 +111,7 @@ export default function Write() {
         clearInterval(timerIdRef.current);
       }
     };
-  }, [currentText]);
+  }, [currentText, showAssistant]);
 
   // 어시스턴트 - 목표율 달성
   useEffect(() => {
@@ -140,6 +125,16 @@ export default function Write() {
       );
     }
   }, [progress, showAssistant]);
+
+  useEffect(() => {
+    if (!isShowAssistant) return;
+
+    const timer = setTimeout(() => {
+      setIsShowAssistant(false);
+    }, 3000);
+
+    return () => clearTimeout(timer);
+  }, [isShowAssistant]);
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>

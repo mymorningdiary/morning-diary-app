@@ -96,11 +96,17 @@ export default function Write() {
   // 어시스턴트 - 5초 부동 타이머
   useEffect(() => {
     const checkInactivity = () => {
+      if (currentText.length === 0) return;
       const now = Date.now();
       const timeSinceLastInput = now - lastInputTimeRef.current;
 
+      console.log(`${now} - ${lastInputTimeRef.current} = ${timeSinceLastInput}`);
+
       if (timeSinceLastInput >= 5000) {
         showAssistant('생각의 꼬리를 물어서 일기를 써보면 새로운 생각을 마주할 수 있어요');
+        if (timerIdRef.current) {
+          clearInterval(timerIdRef.current);
+        }
       }
     };
 
@@ -120,7 +126,7 @@ export default function Write() {
         clearInterval(timerIdRef.current);
       }
     };
-  }, [currentText, showAssistant]);
+  }, [currentText]);
 
   // 어시스턴트 - 목표율 달성
   useEffect(() => {

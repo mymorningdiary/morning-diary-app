@@ -1,4 +1,4 @@
-import { MDProgressBar, MDRow, MDText, MDView } from '@/components';
+import { MDCol, MDProgressBar, MDRow, MDText, MDView } from '@/components';
 import MDAssistant from '@/components/MDAssistant';
 import MDTopNotificationModal from '@/components/Modal/MDTopNotificationModal';
 import { WriteAppBar } from '@/components/write';
@@ -158,15 +158,12 @@ export default function Write() {
           onBackButtonPress={() => router.back()}
         />
 
-        <MDRow style={styles.containerProgressBar}>
-          <MDProgressBar progress={progress} />
-          <MDText
-            style={styles.textGoalPage}
-            type="caption2Regular"
-            onPress={() => setIsShowAssistant(true)}>
-            {`${user?.goalPage ?? 0}페이지`}
+        <MDCol style={styles.containerProgressBar}>
+          <MDText type="caption2Regular" style={styles.textGoal}>
+            아침일기 목표
           </MDText>
-        </MDRow>
+          <MDProgressBar progress={progress} />
+        </MDCol>
 
         <ScrollView
           ref={scrollViewRef}
@@ -209,13 +206,18 @@ const screenStyles = ({ colors }: { colors: MDColors }) =>
       backgroundColor: colors.background.normal,
     },
     containerProgressBar: {
-      paddingTop: 38,
-      paddingBottom: 30,
-      paddingEnd: 24,
-      alignItems: 'center',
+      paddingBottom: 24,
+      gap: 16,
+      // backgroundColor: 'red',
     },
-    textGoalPage: {
-      color: colors.text.brand,
+    textGoal: {
+      height: 20,
+      alignSelf: 'center',
+      backgroundColor: colors.primary.faint,
+      color: colors.primary.normal,
+      paddingVertical: 3.5,
+      paddingHorizontal: 8,
+      borderRadius: 16,
     },
     containerScrollContent: {
       paddingHorizontal: 24,

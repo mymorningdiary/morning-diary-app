@@ -12,7 +12,7 @@ type MDProgressBarProps = {
 
 export default function MDProgressBar({ progress }: MDProgressBarProps) {
   const colors = useThemeColor();
-  const styles = useMemo(() => ProgressBarStyles({ colors, progress }), [colors, progress]);
+  const styles = useMemo(() => ProgressBarStyles({ colors }), [colors]);
 
   return (
     <MDView style={styles.wrapper}>
@@ -24,20 +24,20 @@ export default function MDProgressBar({ progress }: MDProgressBarProps) {
   );
 }
 
-const ProgressBarStyles = ({ colors, progress }: { colors: MDColors; progress: number }) =>
+const ProgressBarStyles = ({ colors }: { colors: MDColors }) =>
   StyleSheet.create({
     wrapper: {
-      flex: 1,
       paddingHorizontal: 24,
     },
     container: {
-      height: 16,
+      height: 12,
       borderRadius: 12,
       backgroundColor: colors.fill.alternative,
     },
     fill: {
       height: '100%',
       backgroundColor: colors.primary.light,
-      borderRadius: 12,
+      borderTopStartRadius: 12,
+      borderBottomStartRadius: 12,
     },
   });

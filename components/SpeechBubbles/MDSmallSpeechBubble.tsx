@@ -16,12 +16,12 @@ export const MDSmallSpeechBubble = ({ text, style }: MDSmallSpeechBubbleProps) =
 
   return (
     <MDView style={style}>
-      <MDView style={styles.textContainer}>
+      <MDView style={styles.containerText}>
         <MDText style={styles.text} type={'caption2Bold'}>
           {text}
         </MDText>
       </MDView>
-      <MDView style={styles.triangleContainer}>
+      <MDView style={styles.containerTriangle}>
         <MDView style={styles.triangleBorder}></MDView>
         <MDView style={styles.triangle}></MDView>
       </MDView>
@@ -31,9 +31,10 @@ export const MDSmallSpeechBubble = ({ text, style }: MDSmallSpeechBubbleProps) =
 
 const SpeechBubbleStyles = ({ colors }: { colors: MDColors }) =>
   StyleSheet.create({
-    textContainer: {
+    containerText: {
+      height: 20,
       alignItems: 'center',
-      paddingVertical: 3.5,
+      justifyContent: 'center',
       backgroundColor: colors.fill.normal,
       borderRadius: 24,
       borderWidth: 1,
@@ -42,7 +43,7 @@ const SpeechBubbleStyles = ({ colors }: { colors: MDColors }) =>
     text: {
       color: colors.text.brand,
     },
-    triangleContainer: {
+    containerTriangle: {
       alignItems: 'center',
       position: 'relative',
       marginTop: -1,
@@ -52,9 +53,9 @@ const SpeechBubbleStyles = ({ colors }: { colors: MDColors }) =>
       height: 0,
       backgroundColor: 'transparent',
       borderStyle: 'solid',
-      borderLeftWidth: 4,
-      borderRightWidth: 4,
-      borderBottomWidth: 8,
+      borderLeftWidth: 4.5,
+      borderRightWidth: 4.5,
+      borderBottomWidth: 7,
       borderLeftColor: 'transparent',
       borderRightColor: 'transparent',
       borderBottomColor: colors.fill.normal,
@@ -66,9 +67,9 @@ const SpeechBubbleStyles = ({ colors }: { colors: MDColors }) =>
       height: 0,
       backgroundColor: 'transparent',
       borderStyle: 'solid',
-      borderLeftWidth: 5,
-      borderRightWidth: 5,
-      borderBottomWidth: 10,
+      borderLeftWidth: 5.5,
+      borderRightWidth: 5.5,
+      borderBottomWidth: 9,
       borderLeftColor: 'transparent',
       borderRightColor: 'transparent',
       borderBottomColor: colors.line.alternative,

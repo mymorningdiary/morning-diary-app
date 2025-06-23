@@ -1,4 +1,4 @@
-import { MDCol, MDProgressBar, MDRow, MDText, MDView } from '@/components';
+import { MDCol, MDProgressBar, MDText, MDView } from '@/components';
 import MDAssistant from '@/components/MDAssistant';
 import MDTopNotificationModal from '@/components/Modal/MDTopNotificationModal';
 import { WriteAppBar } from '@/components/write';
@@ -10,8 +10,11 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { ScrollView, StyleSheet, TextInput } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
-const WORD_CNT_PER_PAGE = 100;
-const INACTIVE_WORD_CNT = 10;
+const WORD_CNT_PER_PAGE = 300;
+const INACTIVE_TEXT_LEN = 50;
+const INACTIVATE_TEXT_TIME = 1500;
+const INACTIVE_INPUT_TIME = 5000;
+const ASSISTANT_SHOW_TIME = 3000;
 
 const PROGRESS_MESSAGES = {
   10: '잠든 생각들을 깨워봐요',
@@ -25,8 +28,9 @@ export default function Write() {
   const styles = screenStyles({ colors });
 
   const scrollViewRef = useRef<ScrollView>(null);
-  const timerIdRef = useRef<NodeJS.Timeout>();
+  const timerRef = useRef<NodeJS.Timeout>();
   const lastInputTimeRef = useRef<number>(Date.now());
+  const debounceTimerRef = useRef<NodeJS.Timeout>();
 
   const { year, month, day } = useLocalSearchParams();
   const appBarTitle = useMemo(() => {
@@ -43,18 +47,22 @@ export default function Write() {
     return goalPage * WORD_CNT_PER_PAGE;
   }, [user?.goalPage]);
 
-  const [currentText, setCurrentText] = useState<string>('');
-  const [inactiveText, setInactiveText] = useState<string>('');
+  const textInputRef = useRef<TextInput>(null);
+  const [textState, setTextState] = useState({
+    active: '',
+    inactive: '',
+  });
+
   const progress = useMemo(() => {
-    const totalTextCnt = currentText.length + inactiveText.length;
+    const totalTextCnt = textState.active.length + textState.inactive.length;
     const result = Math.floor((Math.min(totalTextCnt, targetTextCnt) / targetTextCnt) * 100);
 
     return result;
-  }, [currentText, inactiveText, targetTextCnt]);
+  }, [textState, targetTextCnt]);
 
   const [isShowAssistant, setIsShowAssistant] = useState(false);
   const [assistantText, setAssistantText] = useState<string>('');
-  const [alreadyShowProgressAssistant, setAlreadyShowProgressAssistant] = useState<
+  const [isShowProgressAssistant, setIsShowProgressAssistant] = useState<
     Record<ProgressKey, boolean>
   >(
     Object.keys(PROGRESS_MESSAGES).reduce(
@@ -64,7 +72,11 @@ export default function Write() {
   );
 
   const onTextChange = useCallback((text: string) => {
-    setCurrentText(text);
+    // 즉시 active 텍스트 업데이트
+    setTextState((prev) => ({
+      ...prev,
+      active: text,
+    }));
   }, []);
 
   const handleContentSizeChange = useCallback(() => {
@@ -76,16 +88,19 @@ export default function Write() {
     setIsShowAssistant(true);
   }, []);
 
-  // 텍스트 비활성화
-  useEffect(() => {
-    if (currentText.length > INACTIVE_WORD_CNT) {
-      const currentInactiveText = currentText.slice(0, INACTIVE_WORD_CNT);
-      const restText = currentText.slice(INACTIVE_WORD_CNT);
+  // 텍스트 비활성화 함수
+  const inactivateText = useCallback(() => {
+    if (textState.active.length > INACTIVE_TEXT_LEN) {
+      const inactiveChunkCount = Math.floor(textState.active.length / INACTIVE_TEXT_LEN);
+      const newInactiveText = textState.active.slice(0, INACTIVE_TEXT_LEN * inactiveChunkCount);
+      const newActiveText = textState.active.slice(INACTIVE_TEXT_LEN * inactiveChunkCount);
 
-      setCurrentText(restText);
-      setInactiveText(inactiveText + currentInactiveText);
+      setTextState((prev) => ({
+        active: newActiveText,
+        inactive: prev.inactive + newInactiveText,
+      }));
     }
-  }, [currentText, inactiveText]);
+  }, [textState.active]);
 
   // 어시스턴트 - 비활성화 텍스트 터치
   const onInactiveTextPress = useCallback(() => {
@@ -94,17 +109,28 @@ export default function Write() {
     );
   }, [showAssistant]);
 
-  // 어시스턴트 - 5초 부동 타이머
+  // 어시스턴트 - 5초 부동 타이머 + 텍스트 비활성화 (부동 1.5초 후)
   useEffect(() => {
     const checkInactivity = () => {
-      if (currentText.length === 0 || progress === 100) return;
+      if (textState.active.length === 0) return;
       const now = Date.now();
       const timeSinceLastInput = now - lastInputTimeRef.current;
 
-      if (timeSinceLastInput >= 5000) {
+      if (timeSinceLastInput >= INACTIVATE_TEXT_TIME) {
+        if (debounceTimerRef.current) {
+          clearTimeout(debounceTimerRef.current);
+        }
+
+        debounceTimerRef.current = setTimeout(() => {
+          inactivateText();
+        }, 300);
+      }
+
+      if (timeSinceLastInput >= INACTIVE_INPUT_TIME) {
+        if (progress === 100) return;
         showAssistant('생각의 꼬리를 물어서 일기를 써보면 새로운 생각을 마주할 수 있어요');
-        if (timerIdRef.current) {
-          clearInterval(timerIdRef.current);
+        if (timerRef.current) {
+          clearInterval(timerRef.current);
         }
       }
     };
@@ -113,35 +139,35 @@ export default function Write() {
     lastInputTimeRef.current = Date.now();
 
     // 이전 타이머 클리어
-    if (timerIdRef.current) {
-      clearInterval(timerIdRef.current);
+    if (timerRef.current !== null) {
+      clearInterval(timerRef.current);
     }
 
     // 새로운 타이머 설정
-    timerIdRef.current = setInterval(checkInactivity, 1000);
+    timerRef.current = setInterval(checkInactivity, 1000);
 
     return () => {
-      if (timerIdRef.current) {
-        clearInterval(timerIdRef.current);
+      if (timerRef.current) {
+        clearInterval(timerRef.current);
       }
     };
-  }, [currentText, progress, showAssistant]);
+  }, [textState.active, progress, showAssistant, inactivateText]);
 
   // 어시스턴트 - 목표율 달성
   useEffect(() => {
     const message = PROGRESS_MESSAGES[progress as keyof typeof PROGRESS_MESSAGES];
-    if (message && !alreadyShowProgressAssistant[progress as ProgressKey]) {
+    if (message && !isShowProgressAssistant[progress as ProgressKey]) {
       showAssistant(message);
-      setAlreadyShowProgressAssistant((prev) => ({ ...prev, [progress as ProgressKey]: true }));
+      setIsShowProgressAssistant((prev) => ({ ...prev, [progress as ProgressKey]: true }));
     }
-  }, [progress, showAssistant, alreadyShowProgressAssistant]);
+  }, [progress, showAssistant, isShowProgressAssistant]);
 
   useEffect(() => {
     if (!isShowAssistant) return;
 
     const timer = setTimeout(() => {
       setIsShowAssistant(false);
-    }, 3000);
+    }, ASSISTANT_SHOW_TIME);
 
     return () => clearTimeout(timer);
   }, [isShowAssistant]);
@@ -172,14 +198,15 @@ export default function Write() {
           keyboardShouldPersistTaps="handled"
           onContentSizeChange={handleContentSizeChange}>
           <MDView style={styles.containerText}>
-            {inactiveText.length > 0 && (
+            {textState.inactive.length > 0 && (
               <MDText style={styles.inactiveText} type="bodyRegular" onPress={onInactiveTextPress}>
-                {inactiveText}
+                {textState.inactive}
               </MDText>
             )}
             <TextInput
+              ref={textInputRef}
               style={styles.textInput}
-              value={currentText}
+              value={textState.active}
               onChangeText={onTextChange}
               placeholder="오늘 아침에는 어떤 생각이 떠오르나요?"
               multiline
@@ -204,6 +231,7 @@ const screenStyles = ({ colors }: { colors: MDColors }) =>
     container: {
       flex: 1,
       backgroundColor: colors.background.normal,
+      paddingBottom: 40,
     },
     containerProgressBar: {
       paddingBottom: 24,
@@ -232,10 +260,8 @@ const screenStyles = ({ colors }: { colors: MDColors }) =>
     textInput: {
       fontFamily: 'Pretendard-Regular',
       fontWeight: '400',
+      lineHeight: 26,
       fontSize: 16,
-      textAlignVertical: 'top',
-      minHeight: 200,
-      padding: 0,
     },
   });
 

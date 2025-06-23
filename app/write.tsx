@@ -28,7 +28,7 @@ export default function Write() {
   const colors = useThemeColor();
   const styles = screenStyles({ colors });
 
-  const { mutate: writeDiary, isPending: isWritingLoading } = useWriteDiary();
+  const { mutate: writeDiary, isPending: isWritingLoading, writeDiaryResponse } = useWriteDiary();
 
   const scrollViewRef = useRef<ScrollView>(null);
   const timerRef = useRef<NodeJS.Timeout>();
@@ -106,6 +106,8 @@ export default function Write() {
   }, [textState.active]);
 
   const onCompleteButtonPress = useCallback(() => {
+    if (isWritingLoading) return;
+
     const formattedMonth = month.toString().padStart(2, '0');
     const formattedDay = day.toString().padStart(2, '0');
     const formattedDate = `${year}-${formattedMonth}-${formattedDay}`;
@@ -114,7 +116,7 @@ export default function Write() {
       writtenDate: formattedDate,
       content: textState.inactive + textState.active,
     });
-  }, [year, month, day, textState, writeDiary]);
+  }, [year, month, day, textState, isWritingLoading, writeDiary]);
 
   // 어시스턴트 - 비활성화 텍스트 터치
   const onInactiveTextPress = useCallback(() => {
@@ -185,6 +187,12 @@ export default function Write() {
 
     return () => clearTimeout(timer);
   }, [isShowAssistant]);
+
+  useEffect(() => {
+    if (writeDiaryResponse === null) return;
+
+    router.back();
+  }, [writeDiaryResponse]);
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>

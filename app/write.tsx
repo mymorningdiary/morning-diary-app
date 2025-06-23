@@ -4,6 +4,7 @@ import MDTopNotificationModal from '@/components/Modal/MDTopNotificationModal';
 import { WriteAppBar } from '@/components/write';
 import { useUser } from '@/contexts/UserContext';
 import { useThemeColor } from '@/hooks';
+import { useWriteDiary } from '@/hooks/useDiaryMutation';
 import { MDColors } from '@/types';
 import { router, useLocalSearchParams } from 'expo-router';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
@@ -26,6 +27,8 @@ type ProgressKey = keyof typeof PROGRESS_MESSAGES;
 export default function Write() {
   const colors = useThemeColor();
   const styles = screenStyles({ colors });
+
+  const { mutate: writeDiary, isPending: isWritingLoading } = useWriteDiary();
 
   const scrollViewRef = useRef<ScrollView>(null);
   const timerRef = useRef<NodeJS.Timeout>();
@@ -101,6 +104,17 @@ export default function Write() {
       }));
     }
   }, [textState.active]);
+
+  const onCompleteButtonPress = useCallback(() => {
+    const formattedMonth = month.toString().padStart(2, '0');
+    const formattedDay = day.toString().padStart(2, '0');
+    const formattedDate = `${year}-${formattedMonth}-${formattedDay}`;
+
+    writeDiary({
+      writtenDate: formattedDate,
+      content: textState.inactive + textState.active,
+    });
+  }, [year, month, day, textState, writeDiary]);
 
   // 어시스턴트 - 비활성화 텍스트 터치
   const onInactiveTextPress = useCallback(() => {
@@ -178,9 +192,7 @@ export default function Write() {
         <WriteAppBar
           date={appBarTitle}
           isCompleteButtonEnabled={progress >= 100}
-          onCompleteButtonPress={() => {
-            // 저장 로직
-          }}
+          onCompleteButtonPress={onCompleteButtonPress}
           onBackButtonPress={() => router.back()}
         />
 

@@ -8,7 +8,6 @@ const userAPI = {
     const response = await axiosInstance.get('/users/info');
     return response.data;
   },
-
   updateGoalPage: async (body: UpdateGoalPageRequest): Promise<ApiResponse<null>> => {
     const response = await axiosInstance.put('/users/goal-page', body);
     return response.data;

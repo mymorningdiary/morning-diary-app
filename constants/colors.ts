@@ -1,6 +1,7 @@
 const ColorPalette = {
   black: '#000000',
   white: '#FFFFFF',
+  kakao: '#FEE500',
   orange: {
     10: '#6B2C00',
     20: '#8C3A00',
@@ -44,7 +45,7 @@ export const Colors = {
     },
     text: {
       normal: ColorPalette.brown[10],
-      strong: ColorPalette.brown[50],
+      brand: ColorPalette.brown[50],
       alternative: ColorPalette.brown[70],
       inversion: ColorPalette.white,
     },
@@ -62,6 +63,7 @@ export const Colors = {
       alternative: ColorPalette.brown[95],
       inversion: ColorPalette.white,
     },
+    kakao: ColorPalette.kakao,
   },
   dark: {
     primary: {
@@ -75,7 +77,7 @@ export const Colors = {
     },
     text: {
       normal: ColorPalette.brown[10],
-      strong: ColorPalette.brown[50],
+      brand: ColorPalette.brown[50],
       alternative: ColorPalette.brown[70],
       inversion: ColorPalette.white,
     },
@@ -93,5 +95,6 @@ export const Colors = {
       alternative: ColorPalette.brown[95],
       inversion: ColorPalette.white,
     },
+    kakao: ColorPalette.kakao,
   },
 };

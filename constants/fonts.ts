@@ -66,6 +66,7 @@ export const FontStyles = {
     fontSize: 16,
     lineHeight: 26,
   },
+
   labelRegular: {
     ...PretendardRegular,
     fontSize: 14,
@@ -98,6 +99,11 @@ export const FontStyles = {
   },
   caption2Regular: {
     ...InterRegular,
+    fontSize: 11,
+    lineHeight: 13,
+  },
+  caption2Bold: {
+    ...PretendardBold,
     fontSize: 11,
     lineHeight: 13,
   },

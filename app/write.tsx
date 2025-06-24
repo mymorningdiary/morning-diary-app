@@ -4,6 +4,7 @@ import MDTopNotificationModal from '@/components/Modal/MDTopNotificationModal';
 import { WriteAppBar } from '@/components/write';
 import { useUser } from '@/contexts/UserContext';
 import { useThemeColor } from '@/hooks';
+import { useWriteDiary } from '@/hooks/useDiaryMutation';
 import { MDColors } from '@/types';
 import { router, useLocalSearchParams } from 'expo-router';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
@@ -26,6 +27,8 @@ type ProgressKey = keyof typeof PROGRESS_MESSAGES;
 export default function Write() {
   const colors = useThemeColor();
   const styles = screenStyles({ colors });
+
+  const { mutate: writeDiary, isPending: isWritingLoading, writeDiaryResponse } = useWriteDiary();
 
   const scrollViewRef = useRef<ScrollView>(null);
   const timerRef = useRef<NodeJS.Timeout>();
@@ -102,6 +105,19 @@ export default function Write() {
     }
   }, [textState.active]);
 
+  const onCompleteButtonPress = useCallback(() => {
+    if (isWritingLoading) return;
+
+    const formattedMonth = month.toString().padStart(2, '0');
+    const formattedDay = day.toString().padStart(2, '0');
+    const formattedDate = `${year}-${formattedMonth}-${formattedDay}`;
+
+    writeDiary({
+      writtenDate: formattedDate,
+      content: textState.inactive + textState.active,
+    });
+  }, [year, month, day, textState, isWritingLoading, writeDiary]);
+
   // 어시스턴트 - 비활성화 텍스트 터치
   const onInactiveTextPress = useCallback(() => {
     showAssistant(
@@ -172,15 +188,24 @@ export default function Write() {
     return () => clearTimeout(timer);
   }, [isShowAssistant]);
 
+  useEffect(() => {
+    if (writeDiaryResponse === null) return;
+
+    if (writeDiaryResponse.isFirstWrittenDiary) {
+      // TODO 첫 일기 작성 + 목표 설정 화면 이동
+      router.back();
+    } else {
+      router.back();
+    }
+  }, [writeDiaryResponse]);
+
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <MDView style={styles.container}>
         <WriteAppBar
           date={appBarTitle}
           isCompleteButtonEnabled={progress >= 100}
-          onCompleteButtonPress={() => {
-            // 저장 로직
-          }}
+          onCompleteButtonPress={onCompleteButtonPress}
           onBackButtonPress={() => router.back()}
         />
 

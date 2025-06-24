@@ -191,7 +191,12 @@ export default function Write() {
   useEffect(() => {
     if (writeDiaryResponse === null) return;
 
-    router.back();
+    if (writeDiaryResponse.isFirstWrittenDiary) {
+      // TODO 첫 일기 작성 + 목표 설정 화면 이동
+      router.back();
+    } else {
+      router.back();
+    }
   }, [writeDiaryResponse]);
 
   return (

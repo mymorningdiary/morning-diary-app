@@ -8,6 +8,8 @@ import { MDLargeSpeechBubble } from './SpeechBubbles/MDLargeSpeechBubble';
 import MDProgressBar from './ProgressBars/MDProgressBar';
 import { MDText } from './MDText';
 import { MDView } from './MDView';
+import MDPressable from './MDPressable';
+import MDDotIndicator from './MDDotIndicator';
 
 export {
   DiaryListItem,
@@ -20,4 +22,6 @@ export {
   MDProgressBar,
   MDText,
   MDView,
+  MDDotIndicator,
+  MDPressable,
 };

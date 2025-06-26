@@ -77,7 +77,8 @@ export default function Main() {
     if (user?.goalPage === 0) {
       router.push(`/goal-page?${dateParam}`);
     } else {
-      router.push(`/write?${dateParam}`);
+      // router.push(`/write?${dateParam}`);
+      router.push(`/first-write`);
     }
   };
 

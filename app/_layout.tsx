@@ -2,7 +2,7 @@ import { MDDarkTheme, MDLightTheme } from '@/constants/theme';
 import { AppProvider } from '@/contexts/AppContext';
 import { AuthProvider } from '@/contexts/AuthContext';
 import { UserProvider } from '@/contexts/UserContext';
-import { getKeyHashAndroid, initializeKakaoSDK } from '@react-native-kakao/core';
+import { initializeKakaoSDK } from '@react-native-kakao/core';
 import { ThemeProvider } from '@react-navigation/native';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Stack } from 'expo-router';
@@ -34,6 +34,7 @@ export default function RootLayout() {
                   options={{ headerShown: true, headerBackTitle: '뒤로가기' }}
                 />
                 <Stack.Screen name="write" options={{ headerShown: true }} />
+                <Stack.Screen name="first-write" options={{ headerShown: true }} />
               </Stack>
             </UserProvider>
           </AuthProvider>

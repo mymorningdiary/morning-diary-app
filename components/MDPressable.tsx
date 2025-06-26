@@ -12,7 +12,9 @@ export default function MDPressable({
   ...props
 }: MDPressableProps) {
   return (
-    <Pressable {...props} style={({ pressed }) => [style, { opacity: pressed ? 0.2 : 1 }]}>
+    <Pressable
+      {...props}
+      style={({ pressed }) => [style, { opacity: pressed ? pressedOpacity : 1 }]}>
       {children}
     </Pressable>
   );

@@ -4,21 +4,22 @@ import {
   Image,
   ImageSourcePropType,
   ImageStyle,
+  PressableProps,
   StyleSheet,
   TextStyle,
-  TouchableOpacity,
-  TouchableOpacityProps,
   ViewStyle,
 } from 'react-native';
+import MDPressable from './MDPressable';
 import { MDText } from './MDText';
 
-type MDButtonProps = TouchableOpacityProps & {
+type MDButtonProps = PressableProps & {
   title: string;
   textType?: Typography;
   style?: ViewStyle;
   textStyle?: TextStyle;
   icon?: ImageSourcePropType;
   iconStyle?: ImageStyle;
+  pressedOpacity?: number;
 };
 
 export function MDButton({
@@ -28,26 +29,28 @@ export function MDButton({
   textType = 'bodyRegular',
   icon,
   iconStyle,
-  activeOpacity = 0.8,
+  pressedOpacity = 0.8,
+  disabled,
   ...rest
 }: MDButtonProps) {
   const colors = useThemeColor();
-  const defaultStyles = buttonStyles(colors);
+  const defaultStyles = buttonStyles({ colors, disabled: disabled ?? false });
 
   return (
-    <TouchableOpacity
+    <MDPressable
       style={[defaultStyles.container, style]}
-      activeOpacity={activeOpacity}
+      pressedOpacity={pressedOpacity}
+      disabled={disabled}
       {...rest}>
       {icon && <Image source={icon} style={[defaultStyles.icon, iconStyle]} />}
       <MDText type={textType} style={[defaultStyles.text, textStyle]}>
         {title}
       </MDText>
-    </TouchableOpacity>
+    </MDPressable>
   );
 }
 
-const buttonStyles = (colors: MDColors) =>
+const buttonStyles = ({ colors, disabled }: { colors: MDColors; disabled: boolean }) =>
   StyleSheet.create({
     container: {
       flexDirection: 'row',
@@ -56,11 +59,11 @@ const buttonStyles = (colors: MDColors) =>
       paddingHorizontal: 24,
       alignItems: 'center',
       justifyContent: 'center',
-      backgroundColor: colors.primary.normal,
+      backgroundColor: disabled ? colors.fill.alternative : colors.primary.normal,
       gap: 8,
     },
     text: {
-      color: colors.text.inversion,
+      color: disabled ? colors.text.normal : colors.text.inversion,
     },
     icon: {
       width: 24,

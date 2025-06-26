@@ -1,6 +1,9 @@
 import { MDButton, MDText } from '@/components';
 import MDDotIndicator from '@/components/MDDotIndicator';
 import AppBar from '@/domain/first-write/AppBar';
+import Page1 from '@/domain/first-write/Page1';
+import { useThemeColor } from '@/hooks';
+import { MDColors } from '@/types';
 import { router } from 'expo-router';
 import { useMemo, useRef, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
@@ -10,7 +13,8 @@ const PAGE_COUNT = 3;
 const BUTTON_TEXTS = ['나만의 일기 스타일 고르기', '다음', '완료'];
 
 export default function FirstWrite() {
-  const styles = ScreenStyles;
+  const colors = useThemeColor();
+  const styles = useMemo(() => ScreenStyles({ colors }), [colors]);
 
   const pagerRef = useRef<PagerView>(null);
 
@@ -46,9 +50,7 @@ export default function FirstWrite() {
         ref={pagerRef}
         initialPage={0}
         onPageSelected={({ nativeEvent }) => onPageSelected(nativeEvent.position)}>
-        <View key="1">
-          <MDText>1</MDText>
-        </View>
+        <Page1 key="1" />
         <View key="2">
           <MDText>2</MDText>
         </View>
@@ -68,20 +70,21 @@ export default function FirstWrite() {
   );
 }
 
-const ScreenStyles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: 'red',
-  },
-  containerDotIndicator: {
-    alignItems: 'center',
-    paddingTop: 40,
-  },
-  containerNextButton: {
-    paddingHorizontal: 16,
-    paddingBottom: 60,
-  },
-  containerPager: {
-    flex: 1,
-  },
-});
+const ScreenStyles = ({ colors }: { colors: MDColors }) =>
+  StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: colors.background.normal,
+    },
+    containerDotIndicator: {
+      alignItems: 'center',
+      paddingTop: 40,
+    },
+    containerNextButton: {
+      paddingHorizontal: 16,
+      paddingBottom: 60,
+    },
+    containerPager: {
+      flex: 1,
+    },
+  });

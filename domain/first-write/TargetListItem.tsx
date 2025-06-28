@@ -1,0 +1,44 @@
+import { useThemeColor } from '@/hooks';
+import { MDColors } from '@/types';
+import { StyleSheet } from 'react-native';
+
+import { MDPressable, MDText } from '@/components';
+
+type TargetListItemProps = {
+  textLeft: string;
+  textRight: string;
+  isSelected: boolean;
+  onPress: () => void;
+};
+
+const TargetListItem = ({ textLeft, textRight, isSelected, onPress }: TargetListItemProps) => {
+  const colors = useThemeColor();
+  const styles = ItemStyles({ colors, isSelected });
+
+  return (
+    <MDPressable style={styles.container} pressedOpacity={0.6} onPress={onPress}>
+      <MDText type="labelRegular" color={colors.text.normal}>
+        {textLeft}
+      </MDText>
+
+      <MDText type="labelRegular" color={colors.text.alternative}>
+        {textRight}
+      </MDText>
+    </MDPressable>
+  );
+};
+
+const ItemStyles = ({ colors, isSelected }: { colors: MDColors; isSelected: boolean }) =>
+  StyleSheet.create({
+    container: {
+      flexDirection: 'row',
+      borderRadius: 16,
+      borderWidth: 1,
+      borderColor: isSelected ? colors.primary.normal : colors.line.alternative,
+      padding: 16,
+      alignItems: 'center',
+      justifyContent: 'space-between',
+    },
+  });
+
+export default TargetListItem;

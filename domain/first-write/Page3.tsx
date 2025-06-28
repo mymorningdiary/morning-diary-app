@@ -48,6 +48,7 @@ const PageStyles = ({ colors }: { colors: MDColors }) =>
       justifyContent: 'center',
       alignItems: 'center',
       gap: 40,
+      paddingVertical: 40,
     },
     image: {
       width: 120,

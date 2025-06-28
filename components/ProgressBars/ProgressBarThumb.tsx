@@ -5,12 +5,17 @@ import { StyleSheet } from 'react-native';
 import { MDView } from '../MDView';
 import { MDSmallSpeechBubble } from '../SpeechBubbles/MDSmallSpeechBubble';
 
-export default function ProgressBarThumb({ progress }: { progress: number }) {
+type ProgressBarThumbProps = {
+  progress: number;
+  text?: string;
+};
+
+export default function ProgressBarThumb({ progress, text }: ProgressBarThumbProps) {
   const styles = useMemo(() => ThumbStyles({ progress }), [progress]);
 
   return (
     <MDView style={styles.container}>
-      <MDSmallSpeechBubble text={`${progress}%`} style={styles.speechBubble} />
+      <MDSmallSpeechBubble text={text ?? `${progress}%`} style={styles.speechBubble} />
       <Image style={styles.image} source={require('@/assets/images/img-sun-small.png')} />
     </MDView>
   );

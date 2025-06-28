@@ -2,6 +2,7 @@ import { MDButton, MDText } from '@/components';
 import MDDotIndicator from '@/components/MDDotIndicator';
 import AppBar from '@/domain/first-write/AppBar';
 import Page1 from '@/domain/first-write/Page1';
+import Page3 from '@/domain/first-write/Page3';
 import { useThemeColor } from '@/hooks';
 import { MDColors } from '@/types';
 import { router } from 'expo-router';
@@ -54,9 +55,7 @@ export default function FirstWrite() {
         <View key="2">
           <MDText>2</MDText>
         </View>
-        <View key="3">
-          <MDText>3</MDText>
-        </View>
+        <Page3 key="3" />
       </PagerView>
 
       <View style={styles.containerNextButton}>

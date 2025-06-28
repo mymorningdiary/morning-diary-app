@@ -8,9 +8,10 @@ import ProgressBarThumb from './ProgressBarThumb';
 
 type MDProgressBarProps = {
   progress: number;
+  text?: string;
 };
 
-export default function MDProgressBar({ progress }: MDProgressBarProps) {
+export default function MDProgressBar({ progress, text }: MDProgressBarProps) {
   const colors = useThemeColor();
   const styles = useMemo(() => ProgressBarStyles({ colors }), [colors]);
 
@@ -18,7 +19,7 @@ export default function MDProgressBar({ progress }: MDProgressBarProps) {
     <MDView style={styles.wrapper}>
       <MDView style={styles.container}>
         <MDView style={[styles.fill, { width: `${progress}%` }]} />
-        <ProgressBarThumb progress={progress} />
+        <ProgressBarThumb progress={progress} text={text} />
       </MDView>
     </MDView>
   );

@@ -17,7 +17,7 @@ export const MDSmallSpeechBubble = ({ text, style }: MDSmallSpeechBubbleProps) =
   return (
     <MDView style={style}>
       <MDView style={styles.containerText}>
-        <MDText style={styles.text} type={'caption2Bold'}>
+        <MDText style={styles.text} type={'caption2Bold'} numberOfLines={1}>
           {text}
         </MDText>
       </MDView>

@@ -2,6 +2,7 @@ import { MDButton, MDText } from '@/components';
 import MDDotIndicator from '@/components/MDDotIndicator';
 import AppBar from '@/domain/first-write/AppBar';
 import Page1 from '@/domain/first-write/Page1';
+import Page2 from '@/domain/first-write/Page2';
 import Page3 from '@/domain/first-write/Page3';
 import { useThemeColor } from '@/hooks';
 import { MDColors } from '@/types';
@@ -52,9 +53,7 @@ export default function FirstWrite() {
         initialPage={0}
         onPageSelected={({ nativeEvent }) => onPageSelected(nativeEvent.position)}>
         <Page1 key="1" />
-        <View key="2">
-          <MDText>2</MDText>
-        </View>
+        <Page2 key="2" writtenTextLength={210022200} targetTextLength={500} />
         <Page3 key="3" />
       </PagerView>
 

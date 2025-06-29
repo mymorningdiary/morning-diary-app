@@ -2,7 +2,6 @@ import { MDCol, MDProgressBar, MDText, MDView } from '@/components';
 import MDAssistant from '@/components/MDAssistant';
 import MDTopNotificationModal from '@/components/Modal/MDTopNotificationModal';
 import { WriteAppBar } from '@/components/write';
-import { useUser } from '@/contexts/UserContext';
 import { useThemeColor } from '@/hooks';
 import { useWriteDiary } from '@/hooks/useDiaryMutation';
 import { MDColors } from '@/types';
@@ -11,7 +10,6 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { ScrollView, StyleSheet, TextInput } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
-const WORD_CNT_PER_PAGE = 300;
 const INACTIVE_TEXT_LEN = 50;
 const INACTIVATE_TEXT_TIME = 1500;
 const INACTIVE_INPUT_TIME = 5000;
@@ -35,7 +33,7 @@ export default function Write() {
   const lastInputTimeRef = useRef<number>(Date.now());
   const debounceTimerRef = useRef<NodeJS.Timeout>();
 
-  const { year, month, day } = useLocalSearchParams();
+  const { year, month, day, textGoalLength } = useLocalSearchParams();
   const appBarTitle = useMemo(() => {
     return formatDateToAppBarTitle({
       year: Number(year),
@@ -44,11 +42,9 @@ export default function Write() {
     });
   }, [year, month, day]);
 
-  const { user } = useUser();
   const targetTextCnt = useMemo(() => {
-    const goalPage = user?.goalPage ?? 1;
-    return goalPage * WORD_CNT_PER_PAGE;
-  }, [user?.goalPage]);
+    return Number(textGoalLength);
+  }, [textGoalLength]);
 
   const textInputRef = useRef<TextInput>(null);
   const [textState, setTextState] = useState({

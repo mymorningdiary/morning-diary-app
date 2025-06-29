@@ -8,7 +8,8 @@ import { useThemeColor } from '@/hooks';
 import useGetTextGoals from '@/hooks/useTextGoalQuery';
 import { MDColors } from '@/types';
 import { router } from 'expo-router';
-import { useMemo, useRef, useState } from 'react';
+import { useLocalSearchParams } from 'expo-router/build/hooks';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import PagerView from 'react-native-pager-view';
 
@@ -19,12 +20,16 @@ export default function FirstWrite() {
   const colors = useThemeColor();
   const styles = useMemo(() => ScreenStyles({ colors }), [colors]);
 
+  const { textLength } = useLocalSearchParams();
+
   const pagerRef = useRef<PagerView>(null);
 
   const { textGoals } = useGetTextGoals();
 
   const [currentPage, setCurrentPage] = useState(0);
   const [currentTextGoalId, setCurrentTextGoalId] = useState<number | null>(null);
+  const [writtenTextLength, setWrittenTextLength] = useState<number | null>(null);
+  const [targetTextLength, setTargetTextLength] = useState<number | null>(null);
 
   const isDisabledNextButton = useMemo(() => {
     if (currentPage === 1 && currentTextGoalId === null) return true;
@@ -52,6 +57,31 @@ export default function FirstWrite() {
     }
   };
 
+  useEffect(() => {
+    if (textLength === undefined || textLength === null) {
+      router.replace('/main');
+      return;
+    }
+
+    const parsedLength = Number(textLength);
+    if (isNaN(parsedLength) || parsedLength < 0) {
+      router.replace('/main');
+      return;
+    }
+
+    setWrittenTextLength(parsedLength);
+  }, [textLength]);
+
+  useEffect(() => {
+    if (textGoals === null) return;
+
+    setTargetTextLength(textGoals[1].textLength);
+  }, [textGoals]);
+
+  if (writtenTextLength === null || targetTextLength === null) {
+    return null;
+  }
+
   return (
     <View style={styles.container}>
       <AppBar onCloseButtonPress={onCloseButtonPress} />
@@ -72,8 +102,8 @@ export default function FirstWrite() {
           textGoals={textGoals}
           currentTextGoalId={currentTextGoalId}
           onSelectTextGoalItem={setCurrentTextGoalId}
-          writtenTextLength={210022200}
-          targetTextLength={500}
+          writtenTextLength={writtenTextLength}
+          targetTextLength={targetTextLength}
         />
         <Page3 key="3" />
       </PagerView>

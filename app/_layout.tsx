@@ -29,10 +29,6 @@ export default function RootLayout() {
                 <Stack.Screen name="login" options={{ headerShown: true }} />
                 <Stack.Screen name="main" options={{ headerShown: true }} />
                 <Stack.Screen name="onboarding" options={{ headerShown: true }} />
-                <Stack.Screen
-                  name="goal-page"
-                  options={{ headerShown: true, headerBackTitle: '뒤로가기' }}
-                />
                 <Stack.Screen name="write" options={{ headerShown: true }} />
                 <Stack.Screen name="first-write" options={{ headerShown: true }} />
               </Stack>

@@ -1,7 +1,7 @@
 import { User } from '@/core/types';
 import axiosInstance from '../axios';
 import { ApiResponse } from '../types';
-import { UpdateGoalPageRequest } from './types';
+import { UpdateGoalPageRequest, UpdateTextGoalRequest } from './types';
 
 const userAPI = {
   getUser: async (): Promise<ApiResponse<User>> => {
@@ -12,7 +12,7 @@ const userAPI = {
     const response = await axiosInstance.put('/users/goal-page', body);
     return response.data;
   },
-  updateTextGoal: async (body: UpdateGoalPageRequest): Promise<ApiResponse<null>> => {
+  updateTextGoal: async (body: UpdateTextGoalRequest): Promise<ApiResponse<null>> => {
     const response = await axiosInstance.put('/users/text-goal', body);
     return response.data;
   },

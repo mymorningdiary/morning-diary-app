@@ -25,11 +25,11 @@ export default function FirstWrite() {
 
   const [currentPage, setCurrentPage] = useState(0);
   const [currentTextGoalId, setCurrentTextGoalId] = useState<number | null>(null);
-  const [isDisabledNextButton, setIsDisabledNextButton] = useState(false);
 
-  useEffect(() => {
-    console.log(textGoals);
-  }, [textGoals]);
+  const isDisabledNextButton = useMemo(() => {
+    if (currentPage === 1 && currentTextGoalId === null) return true;
+    return false;
+  }, [currentPage, currentTextGoalId]);
 
   const onCloseButtonPress = () => {
     router.replace('/main');

@@ -27,3 +27,10 @@ export type Diaries = {
   days: number[];
   diaryInfos: Diary[];
 };
+
+export type TextGoal = {
+  textGoalId: number;
+  title: string;
+  textLength: number;
+  option: 'lte' | 'about' | 'gte';
+};

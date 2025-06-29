@@ -5,18 +5,23 @@ import { StyleSheet } from 'react-native';
 import { MDPressable, MDText } from '@/components';
 
 type TargetListItemProps = {
+  id: number;
   textLeft: string;
   textRight: string;
   isSelected: boolean;
-  onPress: () => void;
+  onPress: (id: number) => void;
 };
 
-const TargetListItem = ({ textLeft, textRight, isSelected, onPress }: TargetListItemProps) => {
+const TargetListItem = ({ id, textLeft, textRight, isSelected, onPress }: TargetListItemProps) => {
   const colors = useThemeColor();
   const styles = ItemStyles({ colors, isSelected });
 
+  const handlePress = () => {
+    onPress(id);
+  };
+
   return (
-    <MDPressable style={styles.container} pressedOpacity={0.6} onPress={onPress}>
+    <MDPressable style={styles.container} pressedOpacity={0.6} onPress={handlePress}>
       <MDText type="labelRegular" color={colors.text.normal}>
         {textLeft}
       </MDText>

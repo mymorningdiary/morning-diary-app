@@ -17,3 +17,11 @@ export const useUpdateGoalPage = () => {
 
   return { mutate, isPending, isUpdateGoalPageSuccess };
 };
+
+export const useUpdateTextGoal = () => {
+  const { mutate, isPending } = useMutation({
+    mutationFn: userAPI.updateGoalPage,
+  });
+
+  return { mutate, isPending };
+};

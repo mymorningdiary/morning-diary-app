@@ -12,6 +12,10 @@ const userAPI = {
     const response = await axiosInstance.put('/users/goal-page', body);
     return response.data;
   },
+  updateTextGoal: async (body: UpdateGoalPageRequest): Promise<ApiResponse<null>> => {
+    const response = await axiosInstance.put('/users/text-goal', body);
+    return response.data;
+  },
 };
 
 export default userAPI;

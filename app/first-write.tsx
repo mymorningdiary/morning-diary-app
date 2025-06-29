@@ -4,7 +4,7 @@ import AppBar from '@/domain/first-write/AppBar';
 import Page1 from '@/domain/first-write/Page1';
 import Page2 from '@/domain/first-write/Page2';
 import Page3 from '@/domain/first-write/Page3';
-import { useThemeColor } from '@/hooks';
+import { useThemeColor, useUpdateTextGoal } from '@/hooks';
 import useGetTextGoals from '@/hooks/useTextGoalQuery';
 import { MDColors } from '@/types';
 import { router } from 'expo-router';
@@ -25,6 +25,7 @@ export default function FirstWrite() {
   const pagerRef = useRef<PagerView>(null);
 
   const { textGoals } = useGetTextGoals();
+  const { mutate: updateTextGoal } = useUpdateTextGoal();
 
   const [currentPage, setCurrentPage] = useState(0);
   const [currentTextGoalId, setCurrentTextGoalId] = useState<number | null>(null);
@@ -51,6 +52,10 @@ export default function FirstWrite() {
 
   const onNextButtonPress = () => {
     if (currentPage === PAGE_COUNT - 1) {
+      if (currentTextGoalId !== null) {
+        updateTextGoal({ textGoalId: currentTextGoalId });
+      }
+
       router.replace('/main');
     } else {
       pagerRef.current?.setPage(currentPage + 1);
@@ -78,7 +83,7 @@ export default function FirstWrite() {
     setTargetTextLength(textGoals[1].textLength);
   }, [textGoals]);
 
-  if (writtenTextLength === null || targetTextLength === null) {
+  if (writtenTextLength === null || targetTextLength === 0) {
     return null;
   }
 
@@ -102,8 +107,8 @@ export default function FirstWrite() {
           textGoals={textGoals}
           currentTextGoalId={currentTextGoalId}
           onSelectTextGoalItem={setCurrentTextGoalId}
-          writtenTextLength={writtenTextLength}
-          targetTextLength={targetTextLength}
+          writtenTextLength={writtenTextLength ?? 0}
+          targetTextLength={targetTextLength ?? 0}
         />
         <Page3 key="3" />
       </PagerView>

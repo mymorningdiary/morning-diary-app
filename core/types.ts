@@ -9,6 +9,7 @@ export type SessionInfo = {
 export type User = {
   goalPage: number;
   alarmTime: string;
+  textGoalId: number;
 };
 
 export type Auth = {

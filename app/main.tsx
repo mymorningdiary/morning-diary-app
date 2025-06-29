@@ -9,6 +9,7 @@ import { useUser } from '@/contexts/UserContext';
 import { Diary } from '@/core/types';
 
 import { useGetDiaries, useThemeColor } from '@/hooks';
+import useGetTextGoals from '@/hooks/useTextGoalQuery';
 import { MDColors, Nullable } from '@/types';
 import { formatMonth, getTodayDateData } from '@/utils/dates';
 import { router, useFocusEffect } from 'expo-router';
@@ -26,6 +27,7 @@ export default function Main() {
 
   const { selectedMonth, writtenDates, diaryInfos, handleMonthChange, refetch } = useGetDiaries();
   const { user } = useUser();
+  const { textGoals } = useGetTextGoals();
 
   // 다른 화면에서 돌아올 때 (화면 포커스에만 반응)
   useFocusEffect(
@@ -70,10 +72,13 @@ export default function Main() {
   };
 
   const handleWriteButtonPress = () => {
-    if (!user) return;
+    if (!user || !textGoals) return;
+
+    const textGoal = textGoals.find((item) => item.textGoalId === user.textGoalId);
+    if (textGoal === undefined) return;
 
     const dateParam = `year=${selectedDate.year}&month=${selectedDate.month}&day=${selectedDate.day}`;
-    router.push(`/write?${dateParam}`);
+    router.push(`/write?${dateParam}&textGoalLength=${textGoal.textLength}`);
   };
 
   return (

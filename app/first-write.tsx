@@ -1,4 +1,4 @@
-import { MDButton, MDText } from '@/components';
+import { MDButton } from '@/components';
 import MDDotIndicator from '@/components/MDDotIndicator';
 import AppBar from '@/domain/first-write/AppBar';
 import Page1 from '@/domain/first-write/Page1';
@@ -8,7 +8,7 @@ import { useThemeColor } from '@/hooks';
 import useGetTextGoals from '@/hooks/useTextGoalQuery';
 import { MDColors } from '@/types';
 import { router } from 'expo-router';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import PagerView from 'react-native-pager-view';
 
@@ -29,6 +29,11 @@ export default function FirstWrite() {
   const isDisabledNextButton = useMemo(() => {
     if (currentPage === 1 && currentTextGoalId === null) return true;
     return false;
+  }, [currentPage, currentTextGoalId]);
+
+  const isScrollEnabled = useMemo(() => {
+    if (currentPage === 1 && currentTextGoalId === null) return false;
+    return true;
   }, [currentPage, currentTextGoalId]);
 
   const onCloseButtonPress = () => {
@@ -59,6 +64,7 @@ export default function FirstWrite() {
         style={styles.containerPager}
         ref={pagerRef}
         initialPage={0}
+        scrollEnabled={isScrollEnabled}
         onPageSelected={({ nativeEvent }) => onPageSelected(nativeEvent.position)}>
         <Page1 key="1" />
         <Page2

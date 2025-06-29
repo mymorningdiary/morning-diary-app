@@ -1,11 +1,15 @@
-import { TextGoal } from '@/core/types';
+import { Diaries } from '@/core/types';
 import axiosInstance from '../axios';
 import { ApiResponse } from '../types';
 import { GetDiariesRequest, PostDiariesRequest, PostDiariesResponse } from './types';
 
 const diaryAPI = {
-  getTextGoals: async (params: GetDiariesRequest): Promise<ApiResponse<TextGoal>> => {
+  getDiaries: async (params: GetDiariesRequest): Promise<ApiResponse<Diaries>> => {
     const response = await axiosInstance.get('/diaries', { params });
+    return response.data;
+  },
+  postDiaries: async (body: PostDiariesRequest): Promise<ApiResponse<PostDiariesResponse>> => {
+    const response = await axiosInstance.post('/diaries', body);
     return response.data;
   },
 };

@@ -19,8 +19,13 @@ export const useUpdateGoalPage = () => {
 };
 
 export const useUpdateTextGoal = () => {
+  const queryClient = useQueryClient();
+
   const { mutate, isPending } = useMutation({
-    mutationFn: userAPI.updateGoalPage,
+    mutationFn: userAPI.updateTextGoal,
+    onSuccess: async () => {
+      queryClient.invalidateQueries({ queryKey: [USER_QUERY_KEY] });
+    },
   });
 
   return { mutate, isPending };

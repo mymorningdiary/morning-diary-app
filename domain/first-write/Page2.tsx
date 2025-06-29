@@ -5,13 +5,23 @@ import { MDColors } from '@/types';
 import { useMemo } from 'react';
 import { StyleSheet, View } from 'react-native';
 import TargetListItem from './TargetListItem';
+import { TextGoal } from '@/core/types';
 
 type Page2Props = {
+  textGoals: TextGoal[] | null;
+  currentTextGoalId: number | null;
+  onSelectTextGoalItem: (id: number) => void;
   writtenTextLength: number;
   targetTextLength: number;
 };
 
-export default function Page2({ writtenTextLength, targetTextLength }: Page2Props) {
+export default function Page2({
+  textGoals,
+  currentTextGoalId,
+  onSelectTextGoalItem,
+  writtenTextLength,
+  targetTextLength,
+}: Page2Props) {
   const colors = useThemeColor();
   const styles = useMemo(() => PageStyles({ colors }), [colors]);
 
@@ -42,24 +52,16 @@ export default function Page2({ writtenTextLength, targetTextLength }: Page2Prop
       </MDText>
 
       <View style={styles.containerGoal}>
-        <TargetListItem
-          textLeft={'⛅ 적게 쓸래요'}
-          textRight="250자 이하"
-          isSelected={false}
-          onPress={() => {}}
-        />
-        <TargetListItem
-          textLeft={'🌤 보통만큼 쓸래요'}
-          textRight="약 300자"
-          isSelected={false}
-          onPress={() => {}}
-        />
-        <TargetListItem
-          textLeft={'🌞 길게 써볼래요'}
-          textRight="350자 이상"
-          isSelected={false}
-          onPress={() => {}}
-        />
+        {textGoals?.map((textGoal) => (
+          <TargetListItem
+            key={textGoal.textGoalId}
+            id={textGoal.textGoalId}
+            textLeft={textGoal.title}
+            textRight={`${textGoal.option === 'about' ? '약 ' : ''}${textGoal.textLength}자 ${textGoal.option === 'lte' ? '이하' : textGoal.option === 'gte' ? '이상' : ''}`}
+            isSelected={textGoal.textGoalId === currentTextGoalId}
+            onPress={onSelectTextGoalItem}
+          />
+        ))}
       </View>
     </View>
   );

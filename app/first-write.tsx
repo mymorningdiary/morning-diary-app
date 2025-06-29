@@ -5,9 +5,10 @@ import Page1 from '@/domain/first-write/Page1';
 import Page2 from '@/domain/first-write/Page2';
 import Page3 from '@/domain/first-write/Page3';
 import { useThemeColor } from '@/hooks';
+import useGetTextGoals from '@/hooks/useTextGoalQuery';
 import { MDColors } from '@/types';
 import { router } from 'expo-router';
-import { useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import PagerView from 'react-native-pager-view';
 
@@ -20,8 +21,15 @@ export default function FirstWrite() {
 
   const pagerRef = useRef<PagerView>(null);
 
+  const { textGoals } = useGetTextGoals();
+
   const [currentPage, setCurrentPage] = useState(0);
+  const [currentTextGoalId, setCurrentTextGoalId] = useState<number | null>(null);
   const [isDisabledNextButton, setIsDisabledNextButton] = useState(false);
+
+  useEffect(() => {
+    console.log(textGoals);
+  }, [textGoals]);
 
   const onCloseButtonPress = () => {
     router.replace('/main');
@@ -53,7 +61,14 @@ export default function FirstWrite() {
         initialPage={0}
         onPageSelected={({ nativeEvent }) => onPageSelected(nativeEvent.position)}>
         <Page1 key="1" />
-        <Page2 key="2" writtenTextLength={210022200} targetTextLength={500} />
+        <Page2
+          key="2"
+          textGoals={textGoals}
+          currentTextGoalId={currentTextGoalId}
+          onSelectTextGoalItem={setCurrentTextGoalId}
+          writtenTextLength={210022200}
+          targetTextLength={500}
+        />
         <Page3 key="3" />
       </PagerView>
 

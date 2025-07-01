@@ -81,9 +81,13 @@ export default function Main() {
     router.push(`/write?${dateParam}&textGoalLength=${textGoal.textLength}`);
   };
 
+  const navigateToSetting = useCallback(() => {
+    router.push('/setting');
+  }, []);
+
   return (
     <MDCol style={styles.container}>
-      <MainAppBar />
+      <MainAppBar navigateToSetting={navigateToSetting} />
 
       <MainCalendar
         markedDates={markedDates}

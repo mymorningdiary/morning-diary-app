@@ -2,15 +2,25 @@ import { useThemeColor } from '@/hooks';
 import { MDColors } from '@/types';
 import { Image, StyleSheet } from 'react-native';
 import { MDRow } from '../MDRow';
+import MDPressable from '../MDPressable';
 
-export default function MainAppBar() {
+interface MainAppBarProps {
+  navigateToSetting?: () => void;
+}
+
+export default function MainAppBar({ navigateToSetting }: MainAppBarProps) {
   const colors = useThemeColor();
   const styles = appBarStyles({ colors });
 
   return (
     <MDRow style={styles.container}>
-      <Image source={require('@/assets/images/ic-list.png')} style={styles.icon} />
-      <Image source={require('@/assets/images/ic-setting.png')} style={styles.icon} />
+      <MDPressable style={styles.containerButton} onPress={() => {}}>
+        <Image source={require('@/assets/images/ic-list.png')} style={styles.icon} />
+      </MDPressable>
+
+      <MDPressable style={styles.containerButton} onPress={navigateToSetting}>
+        <Image source={require('@/assets/images/ic-setting.png')} style={styles.icon} />
+      </MDPressable>
     </MDRow>
   );
 }
@@ -21,9 +31,14 @@ const appBarStyles = ({ colors }: { colors: MDColors }) =>
       height: 48,
       justifyContent: 'space-between',
       alignItems: 'center',
-      paddingHorizontal: 16,
-      paddingVertical: 12,
+
       backgroundColor: colors.background.normal,
+    },
+    containerButton: {
+      height: '100%',
+      paddingHorizontal: 16,
+      alignItems: 'center',
+      justifyContent: 'center',
     },
     icon: {
       width: 24,

@@ -1,4 +1,4 @@
-import { MDText, MDSwitch } from '@/components';
+import { MDSwitch, MDText } from '@/components';
 import SettingAppBar from '@/domain/setting/SettingAppBar';
 import SettingSection from '@/domain/setting/SettingSection';
 import SettingSectionListItem from '@/domain/setting/SettingSectionListItem';
@@ -19,6 +19,18 @@ export default function Setting() {
     router.back();
   }, []);
 
+  const navigateToAccount = useCallback(() => {
+    // TODO router.push('/account');
+  }, []);
+
+  const navigateToTextGoal = useCallback(() => {
+    // TODO router.push('/text-goal')
+  }, []);
+
+  const navigateToAlarm = useCallback(() => {
+    // TODO router.push('/alarm')
+  }, []);
+
   return (
     <View style={styles.container}>
       <SettingAppBar navigateBack={navigateBack} />
@@ -34,6 +46,7 @@ export default function Setting() {
                   source={require('@/assets/images/ic-chevron_right.png')}
                 />
               }
+              onPress={navigateToAccount}
             />
           </SettingSection>
 
@@ -54,6 +67,7 @@ export default function Setting() {
                   tintColor={isAlarmOn ? colors.icon.normal : colors.icon.alternative}
                 />
               }
+              onPress={navigateToAlarm}
             />
             <SettingSectionListItem
               label="아침일기 목표"
@@ -63,6 +77,7 @@ export default function Setting() {
                   source={require('@/assets/images/ic-chevron_right.png')}
                 />
               }
+              onPress={navigateToTextGoal}
             />
           </SettingSection>
 

@@ -10,6 +10,7 @@ import { MDText } from './MDText';
 import { MDView } from './MDView';
 import MDPressable from './MDPressable';
 import MDDotIndicator from './MDDotIndicator';
+import MDSwitch from './MDSwitch';
 
 export {
   DiaryListItem,
@@ -24,4 +25,5 @@ export {
   MDView,
   MDDotIndicator,
   MDPressable,
+  MDSwitch,
 };

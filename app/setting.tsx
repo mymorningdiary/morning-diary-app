@@ -1,5 +1,6 @@
 import { MDCol, MDPressable, MDRow, MDText } from '@/components';
 import SettingAppBar from '@/domain/setting/SettingAppBar';
+import SettingSection from '@/domain/setting/SettingSection';
 import { useThemeColor } from '@/hooks';
 import { MDColors } from '@/types';
 import { Image } from 'expo-image';
@@ -21,11 +22,7 @@ export default function Setting() {
 
       <ScrollView contentContainerStyle={styles.containerContent} overScrollMode="never">
         <View>
-          <MDCol style={styles.containerSection}>
-            <MDRow style={styles.containerSectionHeader}>
-              <MDText type="labelSemiBold">계정</MDText>
-            </MDRow>
-
+          <SettingSection title="계정">
             <MDPressable style={styles.containerSectionItem}>
               <MDText type="bodyRegular">계정 관리</MDText>
               <MDPressable style={styles.buttonIconRight}>
@@ -35,15 +32,11 @@ export default function Setting() {
                 />
               </MDPressable>
             </MDPressable>
-          </MDCol>
+          </SettingSection>
 
           <View style={styles.divider} />
 
-          <MDCol style={styles.containerSection}>
-            <MDRow style={styles.containerSectionHeader}>
-              <MDText type="labelSemiBold">시스템 설정</MDText>
-            </MDRow>
-
+          <SettingSection title="시스템 설정">
             <MDRow style={styles.containerSectionItem}>
               <MDText type="bodyRegular">알림</MDText>
               <MDPressable style={styles.buttonIconRight}>
@@ -76,15 +69,11 @@ export default function Setting() {
                 />
               </MDPressable>
             </MDPressable>
-          </MDCol>
+          </SettingSection>
 
           <View style={styles.divider} />
 
-          <MDCol style={styles.containerSection}>
-            <MDRow style={styles.containerSectionHeader}>
-              <MDText type="labelSemiBold">소통</MDText>
-            </MDRow>
-
+          <SettingSection title="소통">
             <MDPressable style={styles.containerSectionItem}>
               <MDText type="bodyRegular">의견 보내기</MDText>
             </MDPressable>
@@ -92,15 +81,11 @@ export default function Setting() {
             <MDPressable style={styles.containerSectionItem}>
               <MDText type="bodyRegular">리뷰 남기기</MDText>
             </MDPressable>
-          </MDCol>
+          </SettingSection>
 
           <View style={styles.divider} />
 
-          <MDCol style={styles.containerSection}>
-            <MDRow style={styles.containerSectionHeader}>
-              <MDText type="labelSemiBold">정보</MDText>
-            </MDRow>
-
+          <SettingSection title="정보">
             <MDPressable style={styles.containerSectionItem}>
               <MDText type="bodyRegular">이용 약관</MDText>
             </MDPressable>
@@ -112,7 +97,7 @@ export default function Setting() {
             <MDRow style={styles.containerSectionItem}>
               <MDText type="bodyRegular">버전 정보 1.0.0</MDText>
             </MDRow>
-          </MDCol>
+          </SettingSection>
         </View>
       </ScrollView>
     </View>
@@ -128,14 +113,7 @@ const screenStyles = ({ colors }: { colors: MDColors }) =>
     containerContent: {
       paddingBottom: 40,
     },
-    containerSection: {
-      paddingVertical: 12,
-    },
-    containerSectionHeader: {
-      height: 44,
-      alignItems: 'center',
-      paddingHorizontal: 16,
-    },
+
     containerSectionItem: {
       height: 48,
       flexDirection: 'row',

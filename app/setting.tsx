@@ -1,4 +1,4 @@
-import { MDText } from '@/components';
+import { MDText, MDSwitch } from '@/components';
 import SettingAppBar from '@/domain/setting/SettingAppBar';
 import SettingSection from '@/domain/setting/SettingSection';
 import SettingSectionListItem from '@/domain/setting/SettingSectionListItem';
@@ -40,7 +40,10 @@ export default function Setting() {
           <View style={styles.divider} />
 
           <SettingSection title="시스템 설정">
-            <SettingSectionListItem label="알림" />
+            <SettingSectionListItem
+              label="알림"
+              tailComponent={<MDSwitch checked={isAlarmOn} onChange={setIsAlarmOn} />}
+            />
             <SettingSectionListItem
               label="알림 시간"
               disabled={!isAlarmOn}

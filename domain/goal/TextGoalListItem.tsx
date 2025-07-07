@@ -4,15 +4,15 @@ import { StyleSheet } from 'react-native';
 
 import { MDPressable, MDText } from '@/components';
 
-type TargetListItemProps = {
+interface Props {
   id: number;
   textLeft: string;
   textRight: string;
   isSelected: boolean;
   onPress: (id: number) => void;
-};
+}
 
-const TargetListItem = ({ id, textLeft, textRight, isSelected, onPress }: TargetListItemProps) => {
+const TextGoalListItem = ({ id, textLeft, textRight, isSelected, onPress }: Props) => {
   const colors = useThemeColor();
   const styles = ItemStyles({ colors, isSelected });
 
@@ -46,4 +46,4 @@ const ItemStyles = ({ colors, isSelected }: { colors: MDColors; isSelected: bool
     },
   });
 
-export default TargetListItem;
+export default TextGoalListItem;

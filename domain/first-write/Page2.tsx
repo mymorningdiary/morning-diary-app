@@ -4,7 +4,7 @@ import { useThemeColor } from '@/hooks';
 import { MDColors } from '@/types';
 import { useMemo } from 'react';
 import { StyleSheet, View } from 'react-native';
-import TargetListItem from './TargetListItem';
+import TextGoalListItem from '../goal/TextGoalListItem';
 import { TextGoal } from '@/core/types';
 
 type Page2Props = {
@@ -53,7 +53,7 @@ export default function Page2({
 
       <View style={styles.containerGoal}>
         {textGoals?.map((textGoal) => (
-          <TargetListItem
+          <TextGoalListItem
             key={textGoal.textGoalId}
             id={textGoal.textGoalId}
             textLeft={textGoal.title}

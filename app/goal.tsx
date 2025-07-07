@@ -1,7 +1,7 @@
 import { MDButton, MDText } from '@/components';
 import TextGoalListItem from '@/domain/goal/TextGoalListItem';
 import GoalAppBar from '@/domain/goal/GoalAppBar';
-import { useThemeColor } from '@/hooks';
+import { useThemeColor, useUpdateTextGoal } from '@/hooks';
 import useGetTextGoals from '@/hooks/useTextGoalQuery';
 import { MDColors } from '@/types';
 import { router } from 'expo-router';
@@ -14,7 +14,10 @@ export default function Goal() {
   const styles = useMemo(() => ScreenStyles({ colors }), [colors]);
 
   const { user } = useUser();
+
   const { textGoals } = useGetTextGoals();
+  const { mutate: updateTextGoal } = useUpdateTextGoal();
+
   const [currentTextGoalId, setCurrentTextGoalId] = useState<number | null>(null);
 
   const navigateBack = useCallback(() => {
@@ -22,8 +25,11 @@ export default function Goal() {
   }, []);
 
   const onNextButtonPress = useCallback(() => {
-    // TODO
-  }, []);
+    if (currentTextGoalId === null) return;
+
+    updateTextGoal({ textGoalId: currentTextGoalId });
+    router.back();
+  }, [currentTextGoalId, updateTextGoal]);
 
   useEffect(() => {
     if (user === null) return;

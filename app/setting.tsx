@@ -23,8 +23,8 @@ export default function Setting() {
     // TODO router.push('/account');
   }, []);
 
-  const navigateToTextGoal = useCallback(() => {
-    // TODO router.push('/text-goal')
+  const navigateToGoal = useCallback(() => {
+    router.push('/goal');
   }, []);
 
   const navigateToAlarm = useCallback(() => {
@@ -77,7 +77,7 @@ export default function Setting() {
                   source={require('@/assets/images/ic-chevron_right.png')}
                 />
               }
-              onPress={navigateToTextGoal}
+              onPress={navigateToGoal}
             />
           </SettingSection>
 

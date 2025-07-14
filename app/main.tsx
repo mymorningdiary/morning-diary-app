@@ -85,6 +85,10 @@ export default function Main() {
     router.push('/setting');
   }, []);
 
+  const navigateToReadDiary = useCallback((diary: Diary) => {
+    router.push('/read-diary');
+  }, []);
+
   return (
     <MDCol style={styles.container}>
       <MainAppBar navigateToSetting={navigateToSetting} />
@@ -97,7 +101,7 @@ export default function Main() {
 
       <MDDivider marginHorizontal={16} />
 
-      <MainDiaryContent diaryInfo={selectedDiaryInfo} />
+      <MainDiaryContent diaryInfo={selectedDiaryInfo} onDiaryItemPress={navigateToReadDiary} />
 
       <MainWriteFloatingButton disabled={isTodayWritten} onPress={handleWriteButtonPress} />
     </MDCol>

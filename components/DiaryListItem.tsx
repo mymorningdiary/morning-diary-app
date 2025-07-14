@@ -1,22 +1,27 @@
+import { Diary } from '@/core/types';
 import { useThemeColor } from '@/hooks';
 import { MDColors } from '@/types';
 import { Image, StyleSheet } from 'react-native';
-import { MDRow } from './MDRow';
 import { MDCol } from './MDCol';
+import MDPressable from './MDPressable';
 import { MDText } from './MDText';
-import { Diary } from '@/core/api';
 
 type DiaryListItemProps = {
-  diaryInfo: Diary.DiaryInfo;
+  diaryInfo: Diary;
+  onPress?: (diary: Diary) => void;
 };
 
-export default function DiaryListItem({ diaryInfo }: DiaryListItemProps) {
+export default function DiaryListItem({ diaryInfo, onPress }: DiaryListItemProps) {
   const colors = useThemeColor();
   const styles = diaryListItemStyles({ colors });
   const { dayOfWeek, previewContent, writtenDate } = diaryInfo;
 
+  const handlePress = () => {
+    onPress?.(diaryInfo);
+  };
+
   return (
-    <MDRow style={styles.container}>
+    <MDPressable style={styles.container} onPress={handlePress}>
       <MDCol style={styles.containerLeft}>
         <Image source={require('@/assets/images/img-sun-mini.png')} style={styles.iconLeft} />
         <MDText type="labelSemiBold" style={styles.textLeft}>
@@ -26,7 +31,7 @@ export default function DiaryListItem({ diaryInfo }: DiaryListItemProps) {
       <MDText type="labelRegular" style={styles.text} numberOfLines={2} ellipsizeMode="tail">
         {previewContent}
       </MDText>
-    </MDRow>
+    </MDPressable>
   );
 }
 
@@ -34,6 +39,7 @@ const diaryListItemStyles = ({ colors }: { colors: MDColors }) =>
   StyleSheet.create({
     container: {
       height: 76,
+      flexDirection: 'row',
       alignItems: 'center',
       backgroundColor: colors.primary.faint,
       borderRadius: 16,

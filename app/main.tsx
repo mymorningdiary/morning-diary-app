@@ -85,9 +85,13 @@ export default function Main() {
     router.push('/setting');
   }, []);
 
-  const navigateToReadDiary = useCallback((diary: Diary) => {
-    router.push('/read-diary');
-  }, []);
+  const navigateToReadDiary = useCallback(
+    (diary: Diary) => {
+      const dateParam = `year=${selectedDate.year}&month=${selectedDate.month}&day=${selectedDate.day}`;
+      router.push(`/read-diary?${dateParam}&diaryId=${diary.diaryId}`);
+    },
+    [selectedDate],
+  );
 
   return (
     <MDCol style={styles.container}>

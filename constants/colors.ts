@@ -30,6 +30,10 @@ const ColorPalette = {
     98: '#EBE6E4',
     99: '#F1EEEC',
   },
+  opacity: {
+    black: '#000000CC',
+    white: '#FFFFFFCC',
+  },
 } as const;
 
 export const Colors = {
@@ -57,6 +61,7 @@ export const Colors = {
       normal: ColorPalette.white,
       brand: ColorPalette.brown[50],
       alternative: ColorPalette.brown[98],
+      dim: ColorPalette.opacity.black,
     },
     icon: {
       normal: ColorPalette.brown[50],
@@ -89,6 +94,7 @@ export const Colors = {
       normal: ColorPalette.white,
       brand: ColorPalette.brown[50],
       alternative: ColorPalette.brown[98],
+      dim: ColorPalette.opacity.black,
     },
     icon: {
       normal: ColorPalette.brown[50],

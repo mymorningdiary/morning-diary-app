@@ -3,16 +3,18 @@ import { MDColors, Nullable } from '@/types';
 import { StyleSheet } from 'react-native';
 import { MDView } from '../MDView';
 import { MDCol } from '../MDCol';
-import { Diary } from '@/core/api';
+
 import DiaryListItem from '../DiaryListItem';
 import { Image } from 'expo-image';
 import { MDLargeSpeechBubble } from '../SpeechBubbles/MDLargeSpeechBubble';
+import { Diary } from '@/core/types';
 
 type MainDiaryContentProps = {
-  diaryInfo: Nullable<Diary.DiaryInfo>;
+  diaryInfo: Nullable<Diary>;
+  onDiaryItemPress?: (diary: Diary) => void;
 };
 
-export default function MainDiaryContent({ diaryInfo }: MainDiaryContentProps) {
+export default function MainDiaryContent({ diaryInfo, onDiaryItemPress }: MainDiaryContentProps) {
   const colors = useThemeColor();
   const styles = contentStyles({ colors });
 
@@ -27,7 +29,7 @@ export default function MainDiaryContent({ diaryInfo }: MainDiaryContentProps) {
 
   return (
     <MDView style={styles.containerDiary}>
-      <DiaryListItem diaryInfo={diaryInfo} />
+      <DiaryListItem diaryInfo={diaryInfo} onPress={onDiaryItemPress} />
     </MDView>
   );
 }

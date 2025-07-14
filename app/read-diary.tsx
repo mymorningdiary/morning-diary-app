@@ -1,25 +1,58 @@
 import AppBar from '@/domain/read-diary/AppBar';
+import RemoveDiaryModal from '@/domain/read-diary/RemoveDiaryModal';
 import { useThemeColor } from '@/hooks';
 import { MDColors } from '@/types';
-import { router } from 'expo-router';
-import { useMemo } from 'react';
+import { router, useLocalSearchParams } from 'expo-router';
+import { useMemo, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 
 export default function ReadDiaryScreen() {
   const colors = useThemeColor();
   const styles = useMemo(() => ScreenStyles({ colors }), [colors]);
 
+  const { year, month, day, diaryId } = useLocalSearchParams();
+
+  const appBarTitle = useMemo(() => {
+    return formatDateToAppBarTitle({
+      year: Number(year),
+      month: Number(month),
+      day: Number(day),
+    });
+  }, [year, month, day]);
+
+  const [isOpenRemoveModal, setIsOpenRemoveModal] = useState(false);
+
   const navigateBack = () => {
     router.back();
+  };
+
+  const openRemoveModal = () => {
+    setIsOpenRemoveModal(true);
+  };
+
+  const closeRemoveModal = () => {
+    setIsOpenRemoveModal(false);
+  };
+
+  const removeDiary = () => {
+    closeRemoveModal();
+    // TODO ...
   };
 
   return (
     <View style={styles.container}>
       <AppBar
-        title="12월 24일 일"
+        title={appBarTitle}
         onBackButtonPress={navigateBack}
         onUpdateButtonPress={() => {}}
-        onRemoveButtonPress={() => {}}
+        onRemoveButtonPress={openRemoveModal}
+      />
+
+      <RemoveDiaryModal
+        title="일기를 삭제할까요?"
+        opened={isOpenRemoveModal}
+        closeModal={closeRemoveModal}
+        removeDiary={removeDiary}
       />
     </View>
   );
@@ -32,3 +65,23 @@ const ScreenStyles = ({ colors }: { colors: MDColors }) =>
       backgroundColor: colors.background.normal,
     },
   });
+
+const formatDateToAppBarTitle = ({
+  year,
+  month,
+  day,
+}: {
+  year: number;
+  month: number;
+  day: number;
+}): string => {
+  const date = new Date(year, month - 1, day);
+  const options: Intl.DateTimeFormatOptions = {
+    month: 'numeric',
+    day: 'numeric',
+    weekday: 'short',
+  };
+  const formattedDate = date.toLocaleDateString('ko-KR', options);
+
+  return formattedDate.replace(/\./g, '').replace(/(\d+) (\d+) \((.+)\)/, '$1월 $2일 $3');
+};

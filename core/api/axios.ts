@@ -22,6 +22,10 @@ axiosInstance.interceptors.request.use(async (config) => {
       config.headers.Authorization = `Bearer ${accessToken}`;
     }
 
+    // 요청 URL 로깅
+    console.log('Request URL:', `${config.baseURL}${config.url}`);
+    console.log('Request params:', config.params);
+
     return config;
   } catch (error) {
     console.error('Request interceptor error:', error);

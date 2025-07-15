@@ -1,12 +1,7 @@
 import { Diaries, Diary } from '@/core/types';
 import axiosInstance from '../axios';
 import { ApiResponse } from '../types';
-import {
-  GetDiariesRequest,
-  PostDiariesRequest,
-  PostDiariesResponse,
-  GetDiaryRequest,
-} from './types';
+import { GetDiariesRequest, PostDiariesRequest, PostDiariesResponse } from './types';
 
 const diaryAPI = {
   getDiaries: async (params: GetDiariesRequest): Promise<ApiResponse<Diaries>> => {
@@ -17,8 +12,8 @@ const diaryAPI = {
     const response = await axiosInstance.post('/diaries', body);
     return response.data;
   },
-  getDiary: async (params: GetDiaryRequest): Promise<ApiResponse<Diary>> => {
-    const response = await axiosInstance.get('/diaries', { params });
+  getDiary: async ({ diaryId }: { diaryId: number }): Promise<ApiResponse<Diary>> => {
+    const response = await axiosInstance.get(`/diaries/${diaryId}`);
     return response.data;
   },
 };

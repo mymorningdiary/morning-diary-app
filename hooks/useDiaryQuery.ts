@@ -48,7 +48,7 @@ export const useGetDiary = ({ diaryId }: { diaryId: number }) => {
     isLoading,
     refetch,
   } = useQuery({
-    queryKey: [DIARY_QUERY_KEY, `${diaryId}`],
+    queryKey: [DIARY_QUERY_KEY, diaryId],
     queryFn: () => diaryAPI.getDiary({ diaryId }),
   });
 

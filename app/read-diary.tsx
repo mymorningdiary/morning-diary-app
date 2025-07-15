@@ -1,10 +1,11 @@
+import { MDText } from '@/components';
 import AppBar from '@/domain/read-diary/AppBar';
 import RemoveDiaryModal from '@/domain/read-diary/RemoveDiaryModal';
-import { useThemeColor } from '@/hooks';
+import { useGetDiary, useThemeColor } from '@/hooks';
 import { MDColors } from '@/types';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useMemo, useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { ScrollView, StyleSheet, View } from 'react-native';
 
 export default function ReadDiaryScreen() {
   const colors = useThemeColor();
@@ -19,6 +20,8 @@ export default function ReadDiaryScreen() {
       day: Number(day),
     });
   }, [year, month, day]);
+
+  const { diary } = useGetDiary({ diaryId: Number(diaryId) });
 
   const [isOpenRemoveModal, setIsOpenRemoveModal] = useState(false);
 
@@ -48,6 +51,17 @@ export default function ReadDiaryScreen() {
         onRemoveButtonPress={openRemoveModal}
       />
 
+      {diary && (
+        <ScrollView
+          contentContainerStyle={styles.containerContent}
+          overScrollMode="never"
+          showsVerticalScrollIndicator={false}>
+          <View>
+            <MDText type="bodyRegular">{diary.content}</MDText>
+          </View>
+        </ScrollView>
+      )}
+
       <RemoveDiaryModal
         title="일기를 삭제할까요?"
         opened={isOpenRemoveModal}
@@ -63,6 +77,11 @@ const ScreenStyles = ({ colors }: { colors: MDColors }) =>
     container: {
       flex: 1,
       backgroundColor: colors.background.normal,
+    },
+    containerContent: {
+      paddingTop: 24,
+      paddingHorizontal: 24,
+      paddingBottom: 40,
     },
   });
 

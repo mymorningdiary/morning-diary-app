@@ -21,6 +21,7 @@ export type Diary = {
   writtenDate: string;
   dayOfWeek: string;
   previewContent: string;
+  content: string;
 };
 
 export type Diaries = {

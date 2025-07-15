@@ -12,3 +12,7 @@ export interface PostDiariesResponse {
   isFirstWrittenDiary: boolean;
   textLength: number;
 }
+
+export interface GetDiaryRequest {
+  diaryId: number;
+}

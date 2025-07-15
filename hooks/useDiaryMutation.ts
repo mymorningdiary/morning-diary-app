@@ -26,3 +26,26 @@ export const useWriteDiary = () => {
 
   return { mutate, isPending, writeDiaryResponse };
 };
+
+export const useRemoveDiary = ({ diaryId }: { diaryId: number }) => {
+  const [isRemoved, setIsRemoved] = useState(false);
+
+  const { mutate, isPending } = useMutation({
+    mutationFn: () => diaryAPI.deleteDiary({ diaryId }),
+    onSuccess: async (response) => {
+      switch (response.code) {
+        case 2000:
+          console.log(response.data);
+          setIsRemoved(true);
+          break;
+        default:
+          break;
+      }
+    },
+    onError: (error: AxiosError<ApiErrorResponse>) => {
+      console.error('[Diary Mutation] Failed to delete diary:', error.response?.data);
+    },
+  });
+
+  return { mutate, isPending, isRemoved };
+};

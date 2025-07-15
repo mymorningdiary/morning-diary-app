@@ -1,10 +1,10 @@
 import { MDText } from '@/components';
 import AppBar from '@/domain/read-diary/AppBar';
 import RemoveDiaryModal from '@/domain/read-diary/RemoveDiaryModal';
-import { useGetDiary, useThemeColor } from '@/hooks';
+import { useGetDiary, useRemoveDiary, useThemeColor } from '@/hooks';
 import { MDColors } from '@/types';
 import { router, useLocalSearchParams } from 'expo-router';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 
 export default function ReadDiaryScreen() {
@@ -22,6 +22,7 @@ export default function ReadDiaryScreen() {
   }, [year, month, day]);
 
   const { diary } = useGetDiary({ diaryId: Number(diaryId) });
+  const { mutate: removeDiary, isRemoved } = useRemoveDiary({ diaryId: Number(diaryId) });
 
   const [isOpenRemoveModal, setIsOpenRemoveModal] = useState(false);
 
@@ -37,10 +38,16 @@ export default function ReadDiaryScreen() {
     setIsOpenRemoveModal(false);
   };
 
-  const removeDiary = () => {
+  const handleRemoveDiary = () => {
     closeRemoveModal();
-    // TODO ...
+    removeDiary();
   };
+
+  useEffect(() => {
+    if (isRemoved) {
+      router.back();
+    }
+  }, [isRemoved]);
 
   return (
     <View style={styles.container}>
@@ -66,7 +73,7 @@ export default function ReadDiaryScreen() {
         title="일기를 삭제할까요?"
         opened={isOpenRemoveModal}
         closeModal={closeRemoveModal}
-        removeDiary={removeDiary}
+        removeDiary={handleRemoveDiary}
       />
     </View>
   );

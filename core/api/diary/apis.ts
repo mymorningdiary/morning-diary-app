@@ -16,6 +16,10 @@ const diaryAPI = {
     const response = await axiosInstance.get(`/diaries/${diaryId}`);
     return response.data;
   },
+  deleteDiary: async ({ diaryId }: { diaryId: number }): Promise<ApiResponse<null>> => {
+    const response = await axiosInstance.delete(`/diaries/${diaryId}`);
+    return response.data;
+  },
 };
 
 export default diaryAPI;

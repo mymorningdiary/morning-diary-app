@@ -201,7 +201,7 @@ export default function Write() {
       <MDView style={styles.container}>
         <WriteAppBar
           date={appBarTitle}
-          isCompleteButtonEnabled={progress >= 100}
+          isCompleteButtonEnabled={progress >= 10}
           onCompleteButtonPress={onCompleteButtonPress}
           onBackButtonPress={() => router.back()}
         />

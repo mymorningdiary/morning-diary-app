@@ -63,12 +63,7 @@ export default function Main() {
 
   const handleDayPress = (date?: DateData) => {
     if (!date) return;
-
-    const selectedDiaryInfo =
-      diaryInfos.find((diary) => diary.writtenDate === date.dateString) ?? null;
-
     setSelectedDate(date);
-    setSelectedDiaryInfo(selectedDiaryInfo);
   };
 
   const handleWriteButtonPress = () => {
@@ -76,8 +71,9 @@ export default function Main() {
 
     const textGoal = textGoals.find((item) => item.textGoalId === user.textGoalId);
     if (textGoal === undefined) return;
+    const todayDate = getTodayDateData();
 
-    const dateParam = `year=${selectedDate.year}&month=${selectedDate.month}&day=${selectedDate.day}`;
+    const dateParam = `year=${todayDate.year}&month=${todayDate.month}&day=${todayDate.day}`;
     router.push(`/write?${dateParam}&textGoalLength=${textGoal.textLength}`);
   };
 
@@ -92,6 +88,15 @@ export default function Main() {
     },
     [selectedDate],
   );
+
+  useEffect(() => {
+    if (!selectedDate || diaryInfos.length === 0) return;
+
+    const selectedDiaryInfo =
+      diaryInfos.find((diary) => diary.writtenDate === selectedDate.dateString) ?? null;
+
+    setSelectedDiaryInfo(selectedDiaryInfo);
+  }, [selectedDate, diaryInfos]);
 
   return (
     <MDCol style={styles.container}>

@@ -4,15 +4,15 @@ import { useThemeColor } from '@/hooks';
 import { MDColors } from '@/types';
 import { useMemo } from 'react';
 import { StyleSheet, View } from 'react-native';
-import TextGoalListItem from '../goal/TextGoalListItem';
+import TextGoalListItem from '../text-goal/TextGoalListItem';
 import { TextGoal } from '@/core/types';
 
 type Page2Props = {
   textGoals: TextGoal[] | null;
   currentTextGoalId: number | null;
   onSelectTextGoalItem: (id: number) => void;
-  writtenTextLength: number;
-  targetTextLength: number;
+  writtenTextLength: number | null;
+  defaultTextGoalLength: number | null;
 };
 
 export default function Page2({
@@ -20,14 +20,24 @@ export default function Page2({
   currentTextGoalId,
   onSelectTextGoalItem,
   writtenTextLength,
-  targetTextLength,
+  defaultTextGoalLength,
 }: Page2Props) {
   const colors = useThemeColor();
   const styles = useMemo(() => PageStyles({ colors }), [colors]);
 
   const progress = useMemo(() => {
-    return Math.floor((Math.min(writtenTextLength, targetTextLength) / targetTextLength) * 100);
-  }, [writtenTextLength, targetTextLength]);
+    if (writtenTextLength === null || defaultTextGoalLength === null) {
+      return null;
+    }
+
+    return Math.floor(
+      (Math.min(writtenTextLength, defaultTextGoalLength) / defaultTextGoalLength) * 100,
+    );
+  }, [writtenTextLength, defaultTextGoalLength]);
+
+  if (writtenTextLength === null || defaultTextGoalLength === null) {
+    return null;
+  }
 
   return (
     <View style={styles.container}>
@@ -35,9 +45,11 @@ export default function Page2({
         {`마음 속 깊은 생각을 꺼내기 위해\n아침일기 목표를 정해볼까요?`}
       </MDText>
 
-      <View style={styles.containerProgressBar}>
-        <MDProgressBar progress={progress} text={`${writtenTextLength.toLocaleString()}자`} />
-      </View>
+      {progress && (
+        <View style={styles.containerProgressBar}>
+          <MDProgressBar progress={progress} text={`${writtenTextLength.toLocaleString()}자`} />
+        </View>
+      )}
 
       <MDText
         style={styles.textCenter}
@@ -48,7 +60,7 @@ export default function Page2({
         <MDText type="labelSemiBold" color={colors.text.alternative} align="center">
           {`${writtenTextLength.toLocaleString()}`}
         </MDText>
-        {`자를 썼어요.\n1페이지 기준은 ${targetTextLength}자에요.`}
+        {`자를 썼어요.\n1페이지 기준은 ${defaultTextGoalLength}자에요.`}
       </MDText>
 
       <View style={styles.containerGoal}>
@@ -57,7 +69,7 @@ export default function Page2({
             key={textGoal.textGoalId}
             id={textGoal.textGoalId}
             textLeft={textGoal.title}
-            textRight={`${textGoal.option === 'about' ? '약 ' : ''}${textGoal.textLength}자 ${textGoal.option === 'lte' ? '이하' : textGoal.option === 'gte' ? '이상' : ''}`}
+            textRight={textGoal.option}
             isSelected={textGoal.textGoalId === currentTextGoalId}
             onPress={onSelectTextGoalItem}
           />

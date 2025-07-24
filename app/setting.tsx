@@ -24,7 +24,7 @@ export default function Setting() {
   }, []);
 
   const navigateToGoal = useCallback(() => {
-    router.push('/goal');
+    router.push('/text-goal');
   }, []);
 
   const navigateToAlarm = useCallback(() => {

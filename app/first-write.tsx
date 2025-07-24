@@ -30,7 +30,7 @@ export default function FirstWrite() {
   const [currentPage, setCurrentPage] = useState(0);
   const [currentTextGoalId, setCurrentTextGoalId] = useState<number | null>(null);
   const [writtenTextLength, setWrittenTextLength] = useState<number | null>(null);
-  const [targetTextLength, setTargetTextLength] = useState<number | null>(null);
+  const [defaultTextGoalLength, setDefaultTextGoalLength] = useState<number | null>(null);
 
   const isDisabledNextButton = useMemo(() => {
     if (currentPage === 1 && currentTextGoalId === null) return true;
@@ -78,14 +78,9 @@ export default function FirstWrite() {
   }, [textLength]);
 
   useEffect(() => {
-    if (textGoals === null) return;
-
-    setTargetTextLength(textGoals[1].textLength);
+    const defaultTextGoal = textGoals?.find((textGoal) => textGoal.isDefault);
+    setDefaultTextGoalLength(defaultTextGoal?.textLength ?? null);
   }, [textGoals]);
-
-  if (writtenTextLength === null || targetTextLength === 0) {
-    return null;
-  }
 
   return (
     <View style={styles.container}>
@@ -107,8 +102,8 @@ export default function FirstWrite() {
           textGoals={textGoals}
           currentTextGoalId={currentTextGoalId}
           onSelectTextGoalItem={setCurrentTextGoalId}
-          writtenTextLength={writtenTextLength ?? 0}
-          targetTextLength={targetTextLength ?? 0}
+          writtenTextLength={writtenTextLength}
+          defaultTextGoalLength={defaultTextGoalLength}
         />
         <Page3 key="3" />
       </PagerView>

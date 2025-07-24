@@ -10,9 +10,9 @@ interface Props {
   navigateBack?: () => void;
 }
 
-export default function GoalAppBar({ navigateBack }: Props) {
+export default function TextGoalAppBar({ navigateBack }: Props) {
   const colors = useThemeColor();
-  const styles = useMemo(() => appBarStyles({ colors }), [colors]);
+  const styles = useMemo(() => AppBarStyles({ colors }), [colors]);
 
   return (
     <MDRow style={styles.container}>
@@ -26,7 +26,7 @@ export default function GoalAppBar({ navigateBack }: Props) {
   );
 }
 
-const appBarStyles = ({ colors }: { colors: MDColors }) =>
+const AppBarStyles = ({ colors }: { colors: MDColors }) =>
   StyleSheet.create({
     container: {
       height: 48,

@@ -33,5 +33,7 @@ export type TextGoal = {
   textGoalId: number;
   title: string;
   textLength: number;
-  option: 'lte' | 'about' | 'gte';
+  option: string;
+  isDefault: boolean;
+  isUserTextGoal: boolean;
 };

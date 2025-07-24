@@ -1,24 +1,22 @@
 import { MDButton, MDText } from '@/components';
-import TextGoalListItem from '@/domain/goal/TextGoalListItem';
-import GoalAppBar from '@/domain/goal/GoalAppBar';
+import TextGoalAppBar from '@/domain/text-goal/TextGoalAppBar';
+import TextGoalListItem from '@/domain/text-goal/TextGoalListItem';
 import { useThemeColor, useUpdateTextGoal } from '@/hooks';
 import useGetTextGoals from '@/hooks/useTextGoalQuery';
 import { MDColors } from '@/types';
 import { router } from 'expo-router';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { useUser } from '@/contexts/UserContext';
 
-export default function Goal() {
+export default function TextGoalScreen() {
   const colors = useThemeColor();
   const styles = useMemo(() => ScreenStyles({ colors }), [colors]);
-
-  const { user } = useUser();
 
   const { textGoals } = useGetTextGoals();
   const { mutate: updateTextGoal } = useUpdateTextGoal();
 
   const [currentTextGoalId, setCurrentTextGoalId] = useState<number | null>(null);
+  const [defaultTextGoalLength, setDefaultTextGoalLength] = useState<number | null>(null);
 
   const navigateBack = useCallback(() => {
     router.back();
@@ -32,14 +30,17 @@ export default function Goal() {
   }, [currentTextGoalId, updateTextGoal]);
 
   useEffect(() => {
-    if (user === null) return;
+    const userTextGoalId =
+      textGoals?.find((textGoal) => textGoal.isUserTextGoal)?.textGoalId ?? null;
+    setCurrentTextGoalId(userTextGoalId);
 
-    setCurrentTextGoalId(user.textGoalId);
-  }, [user]);
+    const defaultTextGoal = textGoals?.find((textGoal) => textGoal.isDefault);
+    setDefaultTextGoalLength(defaultTextGoal?.textLength ?? null);
+  }, [textGoals]);
 
   return (
     <View style={styles.container}>
-      <GoalAppBar navigateBack={navigateBack} />
+      <TextGoalAppBar navigateBack={navigateBack} />
 
       <View style={styles.containerText}>
         <MDText type="titleSemiBold" color={colors.text.brand} align="center">
@@ -50,9 +51,11 @@ export default function Goal() {
           {`를 정해볼까요?`}
         </MDText>
 
-        <MDText type="labelRegular" color={colors.text.alternative} align="center">
-          {`1페이지 기준은 300자에요.`}
-        </MDText>
+        {defaultTextGoalLength && (
+          <MDText type="labelRegular" color={colors.text.alternative} align="center">
+            {`1페이지 기준은 ${defaultTextGoalLength}자에요.`}
+          </MDText>
+        )}
       </View>
 
       <View style={styles.containerBottom}>

@@ -5,7 +5,6 @@ import {
   MainDiaryContent,
   MainWriteFloatingButton,
 } from '@/components/main';
-import { useUser } from '@/contexts/UserContext';
 import { Diary } from '@/core/types';
 
 import { useGetDiaries, useThemeColor } from '@/hooks';
@@ -26,7 +25,6 @@ export default function Main() {
   const [isTodayWritten, setIsTodayWritten] = useState(false);
 
   const { selectedMonth, writtenDates, diaryInfos, handleMonthChange, refetch } = useGetDiaries();
-  const { user } = useUser();
   const { textGoals } = useGetTextGoals();
 
   // 다른 화면에서 돌아올 때 (화면 포커스에만 반응)
@@ -67,14 +65,12 @@ export default function Main() {
   };
 
   const handleWriteButtonPress = () => {
-    if (!user || !textGoals) return;
+    const userTextGoalLength = textGoals?.find((item) => item.isUserTextGoal)?.textLength;
+    if (userTextGoalLength === undefined) return;
 
-    const textGoal = textGoals.find((item) => item.textGoalId === user.textGoalId);
-    if (textGoal === undefined) return;
     const todayDate = getTodayDateData();
-
     const dateParam = `year=${todayDate.year}&month=${todayDate.month}&day=${todayDate.day}`;
-    router.push(`/write?${dateParam}&textGoalLength=${textGoal.textLength}`);
+    router.push(`/write?${dateParam}&textGoalLength=${userTextGoalLength}`);
   };
 
   const navigateToSetting = useCallback(() => {

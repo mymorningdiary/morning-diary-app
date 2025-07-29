@@ -20,7 +20,7 @@ export default function Setting() {
   }, []);
 
   const navigateToAccount = useCallback(() => {
-    // TODO router.push('/account');
+    router.push('/account');
   }, []);
 
   const navigateToGoal = useCallback(() => {
@@ -33,7 +33,7 @@ export default function Setting() {
 
   return (
     <View style={styles.container}>
-      <SettingAppBar navigateBack={navigateBack} />
+      <SettingAppBar title="설정" navigateBack={navigateBack} />
 
       <ScrollView contentContainerStyle={styles.containerContent} overScrollMode="never">
         <View>

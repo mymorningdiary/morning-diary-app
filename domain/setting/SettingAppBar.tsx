@@ -7,17 +7,18 @@ import { MDPressable, MDRow, MDText } from '@/components';
 import { useMemo } from 'react';
 
 interface AppBarProps {
+  title: string;
   navigateBack?: () => void;
 }
 
-export default function SettingAppBar({ navigateBack }: AppBarProps) {
+export default function SettingAppBar({ title, navigateBack }: AppBarProps) {
   const colors = useThemeColor();
   const styles = useMemo(() => appBarStyles({ colors }), [colors]);
 
   return (
     <MDRow style={styles.container}>
       <MDText type="titleSemiBold" style={styles.title}>
-        설정
+        {title}
       </MDText>
       <MDPressable style={styles.buttonBack} onPress={navigateBack}>
         <Image source={require('@/assets/images/ic-chevron_left.png')} style={styles.icon} />

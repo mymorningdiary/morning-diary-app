@@ -16,3 +16,12 @@ export interface PostDiariesResponse {
 export interface GetDiaryRequest {
   diaryId: number;
 }
+
+export interface UpdateDiaryRequest {
+  writtenDate: string;
+  content: string;
+}
+
+export interface UpdateDiaryResponse {
+  diaryId: number;
+}

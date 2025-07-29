@@ -51,7 +51,7 @@ export default function ReadDiaryScreen() {
 
   const navigateToUpdateDiary = () => {
     if (isToday === false) return;
-    router.push(`/update-diary?year=${year}&month=${month}&day=${day}&diaryId=${diaryId}`);
+    router.replace(`/update-diary?year=${year}&month=${month}&day=${day}&diaryId=${diaryId}`);
   };
 
   useEffect(() => {

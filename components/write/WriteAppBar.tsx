@@ -69,3 +69,23 @@ const appBarStyles = ({
       color: isCompleteButtonEnabled ? colors.text.brand : colors.text.alternative,
     },
   });
+
+export const formatDateToAppBarTitle = ({
+  year,
+  month,
+  day,
+}: {
+  year: number;
+  month: number;
+  day: number;
+}): string => {
+  const date = new Date(year, month - 1, day);
+  const options: Intl.DateTimeFormatOptions = {
+    month: 'numeric',
+    day: 'numeric',
+    weekday: 'short',
+  };
+  const formattedDate = date.toLocaleDateString('ko-KR', options);
+
+  return formattedDate.replace(/\./g, '').replace(/(\d+) (\d+) \((.+)\)/, '$1월 $2일 $3');
+};

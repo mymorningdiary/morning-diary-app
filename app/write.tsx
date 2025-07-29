@@ -2,6 +2,7 @@ import { MDCol, MDProgressBar, MDText, MDView } from '@/components';
 import MDAssistant from '@/components/MDAssistant';
 import MDTopNotificationModal from '@/components/Modal/MDTopNotificationModal';
 import { WriteAppBar } from '@/components/write';
+import { formatDateToAppBarTitle } from '@/components/write/WriteAppBar';
 import { useThemeColor } from '@/hooks';
 import { useWriteDiary } from '@/hooks/useDiaryMutation';
 import { MDColors } from '@/types';
@@ -286,23 +287,3 @@ const screenStyles = ({ colors }: { colors: MDColors }) =>
       fontSize: 16,
     },
   });
-
-const formatDateToAppBarTitle = ({
-  year,
-  month,
-  day,
-}: {
-  year: number;
-  month: number;
-  day: number;
-}): string => {
-  const date = new Date(year, month - 1, day);
-  const options: Intl.DateTimeFormatOptions = {
-    month: 'numeric',
-    day: 'numeric',
-    weekday: 'short',
-  };
-  const formattedDate = date.toLocaleDateString('ko-KR', options);
-
-  return formattedDate.replace(/\./g, '').replace(/(\d+) (\d+) \((.+)\)/, '$1월 $2일 $3');
-};

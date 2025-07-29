@@ -3,6 +3,7 @@ import AppBar from '@/domain/read-diary/AppBar';
 import RemoveDiaryModal from '@/domain/read-diary/RemoveDiaryModal';
 import { useGetDiary, useRemoveDiary, useThemeColor } from '@/hooks';
 import { MDColors } from '@/types';
+import { checkToday } from '@/utils/dates';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useEffect, useMemo, useState } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
@@ -12,6 +13,11 @@ export default function ReadDiaryScreen() {
   const styles = useMemo(() => ScreenStyles({ colors }), [colors]);
 
   const { year, month, day, diaryId } = useLocalSearchParams();
+
+  const isToday = useMemo(
+    () => checkToday({ year: Number(year), month: Number(month), day: Number(day) }),
+    [year, month, day],
+  );
 
   const appBarTitle = useMemo(() => {
     return formatDateToAppBarTitle({
@@ -43,6 +49,11 @@ export default function ReadDiaryScreen() {
     removeDiary();
   };
 
+  const navigateToUpdateDiary = () => {
+    if (isToday === false) return;
+    router.push(`/update-diary?year=${year}&month=${month}&day=${day}&diaryId=${diaryId}`);
+  };
+
   useEffect(() => {
     if (isRemoved) {
       router.back();
@@ -54,7 +65,7 @@ export default function ReadDiaryScreen() {
       <AppBar
         title={appBarTitle}
         onBackButtonPress={navigateBack}
-        onUpdateButtonPress={() => {}}
+        onUpdateButtonPress={isToday ? navigateToUpdateDiary : undefined}
         onRemoveButtonPress={openRemoveModal}
       />
 

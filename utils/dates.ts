@@ -27,3 +27,8 @@ export const formatMonth = (dateData: DateData) => {
   const { year, month } = dateData;
   return `${year}-${padToTwoDigits(month)}`;
 };
+
+export const checkToday = ({ year, month, day }: { year: number; month: number; day: number }) => {
+  const today = getTodayDateData();
+  return year === today.year && month === today.month && day === today.day;
+};

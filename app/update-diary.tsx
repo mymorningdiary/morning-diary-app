@@ -1,6 +1,6 @@
 import { MDCol, MDProgressBar, MDText } from '@/components';
 import WriteAppBar, { formatDateToAppBarTitle } from '@/components/write/WriteAppBar';
-import { useThemeColor } from '@/hooks';
+import { useGetDiary, useThemeColor } from '@/hooks';
 import useGetTextGoals from '@/hooks/useTextGoalQuery';
 import { MDColors } from '@/types';
 import { router, useLocalSearchParams } from 'expo-router';
@@ -24,6 +24,7 @@ export default function UpdateDiaryScreen() {
   );
 
   const { textGoals } = useGetTextGoals();
+  const { diary } = useGetDiary({ diaryId: Number(diaryId) });
 
   const textGoalLen = useMemo(() => {
     const textGoal = textGoals?.find((textGoal) => textGoal.isUserTextGoal);
@@ -47,6 +48,14 @@ export default function UpdateDiaryScreen() {
   useEffect(() => {
     console.log(textGoalLen);
   }, [textGoalLen]);
+
+  useEffect(() => {
+    if (!diary) return;
+    setTextState({
+      active: '',
+      inactive: diary.content,
+    });
+  }, [diary]);
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>

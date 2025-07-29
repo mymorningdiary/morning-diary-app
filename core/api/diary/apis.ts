@@ -1,7 +1,13 @@
 import { Diaries, Diary } from '@/core/types';
 import axiosInstance from '../axios';
 import { ApiResponse } from '../types';
-import { GetDiariesRequest, PostDiariesRequest, PostDiariesResponse } from './types';
+import {
+  GetDiariesRequest,
+  PostDiariesRequest,
+  PostDiariesResponse,
+  UpdateDiaryRequest,
+  UpdateDiaryResponse,
+} from './types';
 
 const diaryAPI = {
   getDiaries: async (params: GetDiariesRequest): Promise<ApiResponse<Diaries>> => {
@@ -18,6 +24,16 @@ const diaryAPI = {
   },
   deleteDiary: async ({ diaryId }: { diaryId: number }): Promise<ApiResponse<null>> => {
     const response = await axiosInstance.delete(`/diaries/${diaryId}`);
+    return response.data;
+  },
+  updateDiary: async ({
+    diaryId,
+    body,
+  }: {
+    diaryId: number;
+    body: UpdateDiaryRequest;
+  }): Promise<ApiResponse<UpdateDiaryResponse>> => {
+    const response = await axiosInstance.put(`/diaries/${diaryId}`, body);
     return response.data;
   },
 };

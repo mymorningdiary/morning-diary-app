@@ -3,6 +3,14 @@ import MDAssistant from '@/components/MDAssistant';
 import MDTopNotificationModal from '@/components/Modal/MDTopNotificationModal';
 import { WriteAppBar } from '@/components/write';
 import { formatDateToAppBarTitle } from '@/components/write/WriteAppBar';
+import {
+  ASSISTANT_SHOW_TIME,
+  INACTIVE_INPUT_TIME,
+  INACTIVE_TEXT_LEN,
+  INACTIVATE_TEXT_TIME,
+  PROGRESS_MESSAGES,
+  ProgressKey,
+} from '@/domain/write-diary/constants';
 import { useThemeColor } from '@/hooks';
 import { useWriteDiary } from '@/hooks/useDiaryMutation';
 import { MDColors } from '@/types';
@@ -10,18 +18,6 @@ import { router, useLocalSearchParams } from 'expo-router';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { ScrollView, StyleSheet, TextInput } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-
-const INACTIVE_TEXT_LEN = 50;
-const INACTIVATE_TEXT_TIME = 1500;
-const INACTIVE_INPUT_TIME = 5000;
-const ASSISTANT_SHOW_TIME = 3000;
-
-const PROGRESS_MESSAGES = {
-  10: '잠든 생각들을 깨워봐요',
-  50: '요즘 계속 생각나는 고민이나 생각들이 있나요?',
-  90: '고지가 코앞이에요',
-} as const;
-type ProgressKey = keyof typeof PROGRESS_MESSAGES;
 
 export default function Write() {
   const colors = useThemeColor();

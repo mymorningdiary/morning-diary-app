@@ -1,4 +1,7 @@
 import { MDText } from '@/components';
+import { useAuth } from '@/contexts/AuthContext';
+import { useUser } from '@/contexts/UserContext';
+import LogoutModal from '@/domain/setting/LogoutModal';
 import SettingAppBar from '@/domain/setting/SettingAppBar';
 import SettingSection from '@/domain/setting/SettingSection';
 import SettingSectionListItem from '@/domain/setting/SettingSectionListItem';
@@ -6,12 +9,17 @@ import { useThemeColor } from '@/hooks';
 import { MDColors } from '@/types';
 import { Image } from 'expo-image';
 import { router } from 'expo-router';
-import { useCallback } from 'react';
+import { useCallback, useState } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 
 export default function AccountScreen() {
   const colors = useThemeColor();
   const styles = screenStyles({ colors });
+
+  const [isOpenLogoutModal, setIsOpenLogoutModal] = useState(false);
+
+  const { logout } = useAuth();
+  const { user } = useUser();
 
   const navigateBack = useCallback(() => {
     router.back();
@@ -21,6 +29,19 @@ export default function AccountScreen() {
     // TODO router.push('/withdraw');
   }, []);
 
+  const openLogoutModal = useCallback(() => {
+    setIsOpenLogoutModal(true);
+  }, []);
+
+  const closeLogoutModal = useCallback(() => {
+    setIsOpenLogoutModal(false);
+  }, []);
+
+  const handleLogout = useCallback(async () => {
+    closeLogoutModal();
+    await logout();
+  }, [closeLogoutModal, logout]);
+
   return (
     <View style={styles.container}>
       <SettingAppBar title="계정관리" navigateBack={navigateBack} />
@@ -29,7 +50,7 @@ export default function AccountScreen() {
         <View>
           <SettingSection title="계정">
             <SettingSectionListItem
-              label=""
+              label={user?.email ?? ''}
               tailComponent={
                 <MDText type="bodyRegular" color={colors.text.alternative}>
                   카카오 연동
@@ -41,7 +62,7 @@ export default function AccountScreen() {
           <View style={styles.divider} />
 
           <SettingSection title="관리">
-            <SettingSectionListItem label="로그아웃" onPress={() => {}} />
+            <SettingSectionListItem label="로그아웃" onPress={openLogoutModal} />
             <SettingSectionListItem
               label="회원 탈퇴"
               tailComponent={
@@ -56,6 +77,13 @@ export default function AccountScreen() {
           </SettingSection>
         </View>
       </ScrollView>
+
+      <LogoutModal
+        title="일기를 삭제할까요?"
+        opened={isOpenLogoutModal}
+        closeModal={closeLogoutModal}
+        logout={handleLogout}
+      />
     </View>
   );
 }

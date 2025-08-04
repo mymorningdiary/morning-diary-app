@@ -7,8 +7,9 @@ export type SessionInfo = {
 };
 
 export type User = {
-  alarmTime: string;
+  alarmTime: string | null;
   textGoalId: number;
+  email: string | null;
 };
 
 export type Auth = {

@@ -8,19 +8,12 @@ import { useMemo } from 'react';
 
 interface AppBarProps {
   title?: string;
-  option?: string;
   navigateBack?: () => void;
-  onOptionButtonPress?: () => void;
 }
 
-export default function NotificationAppBar({
-  title,
-  option,
-  navigateBack,
-  onOptionButtonPress,
-}: AppBarProps) {
+export default function NotificationAppBar({ title, navigateBack }: AppBarProps) {
   const colors = useThemeColor();
-  const styles = useMemo(() => appBarStyles({ colors }), [colors]);
+  const styles = useMemo(() => AppBarStyles({ colors }), [colors]);
 
   return (
     <MDRow style={styles.container}>
@@ -29,25 +22,14 @@ export default function NotificationAppBar({
           {title}
         </MDText>
       )}
-      {navigateBack && (
-        <MDPressable style={styles.buttonBack} onPress={navigateBack}>
-          <Image source={require('@/assets/images/ic-chevron_left.png')} style={styles.icon} />
-        </MDPressable>
-      )}
-      <MDRow style={styles.containerRight}>
-        {option && (
-          <MDPressable style={styles.buttonOption} onPress={onOptionButtonPress}>
-            <MDText type="labelRegular" color={colors.text.alternative}>
-              {option}
-            </MDText>
-          </MDPressable>
-        )}
-      </MDRow>
+      <MDPressable style={styles.buttonBack} onPress={navigateBack}>
+        <Image source={require('@/assets/images/ic-chevron_left.png')} style={styles.iconBack} />
+      </MDPressable>
     </MDRow>
   );
 }
 
-const appBarStyles = ({ colors }: { colors: MDColors }) =>
+const AppBarStyles = ({ colors }: { colors: MDColors }) =>
   StyleSheet.create({
     container: {
       height: 48,
@@ -60,7 +42,7 @@ const appBarStyles = ({ colors }: { colors: MDColors }) =>
       paddingHorizontal: 16,
       justifyContent: 'center',
     },
-    icon: {
+    iconBack: {
       width: 24,
       height: 24,
     },
@@ -70,16 +52,5 @@ const appBarStyles = ({ colors }: { colors: MDColors }) =>
       right: 0,
       textAlign: 'center',
       color: colors.text.brand,
-    },
-    containerRight: {
-      flex: 1,
-      height: '100%',
-      alignItems: 'center',
-      justifyContent: 'flex-end',
-    },
-    buttonOption: {
-      alignItems: 'center',
-      justifyContent: 'center',
-      paddingEnd: 16,
     },
   });

@@ -52,16 +52,29 @@
         {
           "nativeAppKey": "a243e903ae144e0e7d383fc00ef39d21",
           "android": {
-           "authCodeHandlerActivity": true
+            "authCodeHandlerActivity": true
           },
           "ios": {
-           "handleKakaoOpenUrl": true
+            "handleKakaoOpenUrl": true
           }
         }
       ]
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "295098dc-51af-4553-b9ca-a7bbf5514d8c"
+      }
+    },
+    "owner": "morning-diary",
+    "runtimeVersion": "1.0.0",
+    "updates": {
+      "url": "https://u.expo.dev/295098dc-51af-4553-b9ca-a7bbf5514d8c"
     }
   }
 }

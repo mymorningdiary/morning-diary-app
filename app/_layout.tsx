@@ -18,6 +18,7 @@ export default function RootLayout() {
     initializeKakaoSDK('a243e903ae144e0e7d383fc00ef39d21'); // TODO: 환경변수 설정
   }, []);
 
+  // 수정 테스트
   return (
     <ThemeProvider value={colorScheme === 'dark' ? MDDarkTheme : MDLightTheme}>
       <QueryClientProvider client={queryClient}>

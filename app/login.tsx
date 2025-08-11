@@ -40,6 +40,7 @@ export default function LoginScreen() {
   //     const hash = await getKeyHashAndroid();
   //     setKeyHash(hash || '키 해시를 가져올 수 없습니다.');
   //   })();
+
   // }, []);
 
   return (

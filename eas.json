@@ -19,7 +19,6 @@
     },
     "preview": {
       "distribution": "internal",
-      "developmentClient": false,
       "channel": "preview"
     },
     "production": {

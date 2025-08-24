@@ -19,7 +19,8 @@
         "foregroundImage": "./assets/images/ic-adaptive-app.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.mymorningdiary.morningdiary"
+      "package": "com.mymorningdiary.morningdiary",
+      "googleServicesFile": "./google-services.json"
     },
     "web": {
       "bundler": "metro",

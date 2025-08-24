@@ -78,7 +78,7 @@ const ScreenStyles = ({ colors }: { colors: MDColors }) =>
     containerContent: {
       flex: 1,
       paddingHorizontal: 16,
-      paddingTop: 120,
+      justifyContent: 'center',
       gap: 24,
     },
     containerSun: {

@@ -28,7 +28,10 @@ export default function Setting() {
   }, []);
 
   const navigateToAlarm = useCallback(() => {
-    router.push('/(notification)');
+    router.push({
+      pathname: '/(notification)',
+      params: { prevRoute: 'onboarding' },
+    });
   }, []);
 
   return (

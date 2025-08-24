@@ -28,7 +28,7 @@ export default function Setting() {
   }, []);
 
   const navigateToAlarm = useCallback(() => {
-    // TODO router.push('/alarm')
+    router.push('/(notification)');
   }, []);
 
   return (

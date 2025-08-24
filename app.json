@@ -11,7 +11,10 @@
     "ios": {
       "displayName": "아침일기",
       "supportsTablet": true,
-      "bundleIdentifier": "com.mymorningdiary.morningdiary"
+      "bundleIdentifier": "com.mymorningdiary.morningdiary",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
     },
     "android": {
       "displayName": "아침일기",

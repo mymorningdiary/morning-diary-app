@@ -246,7 +246,7 @@ PODS:
     - ExpoModulesCore
   - ExpoLinking (7.0.4):
     - ExpoModulesCore
-  - ExpoModulesCore (2.1.4):
+  - ExpoModulesCore (2.5.0):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -261,7 +261,6 @@ PODS:
     - React-ImageManager
     - React-jsinspector
     - React-NativeModulesApple
-    - React-RCTAppDelegate
     - React-RCTFabric
     - React-rendererdebug
     - React-utils
@@ -2519,7 +2518,7 @@ SPEC CHECKSUMS:
   ExpoImage: c6d1f54445f38766650052aedf5396a74bb96fff
   ExpoKeepAwake: 62ff49bbc3bff90d8ee28329190f9ba371bf88e7
   ExpoLinking: 4a09f2f0dc1132607c20f5628ba30d94795ea73d
-  ExpoModulesCore: 646f706f6e756128c79d4c10972cade56d9efef0
+  ExpoModulesCore: 07dca9f55337896f22e3c3186b2e227c94e8f7ea
   ExpoSplashScreen: c64f3b577e1cb0b6a2f47d01c528ad7d80d9ae6a
   ExpoSymbols: a2543b833cfa11d9477247d5c7b5230e03e98031
   ExpoSystemUI: 36f50ee42da3e814bffd01ee38edcf3c7cc0015d

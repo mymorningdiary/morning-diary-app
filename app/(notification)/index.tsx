@@ -1,17 +1,44 @@
 import { MDButton, MDLargeSpeechBubble, MDPressable, MDRow, MDText } from '@/components';
+import { useUser } from '@/contexts/UserContext';
 import NotificationAppBar from '@/domain/notification/NotificationAppBar';
 import { useThemeColor } from '@/hooks';
 import { MDColors } from '@/types';
 import { Image } from 'expo-image';
 import { router, useLocalSearchParams } from 'expo-router';
-import { useMemo } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { useEffect, useMemo, useState } from 'react';
+import { Dimensions, StyleSheet, View } from 'react-native';
+import { TimerPickerModal } from 'react-native-timer-picker';
+
+const padZero = (value: number) => value.toString().padStart(2, '0');
+
+const formatAlarmTime = (alarmTime: AlarmTime): string => {
+  const { hours, minutes } = alarmTime;
+
+  if (hours < 12) {
+    return `${padZero(hours)}:${padZero(minutes)} AM`;
+  } else if (hours === 12) {
+    return `${padZero(hours)}:${padZero(minutes)} PM`;
+  } else {
+    return `${padZero(hours - 12)}:${padZero(minutes)} PM`;
+  }
+};
+
+interface AlarmTime {
+  days: number;
+  hours: number;
+  minutes: number;
+  seconds: number;
+}
 
 export default function NotificationScreen() {
   const colors = useThemeColor();
   const styles = useMemo(() => ScreenStyles({ colors }), [colors]);
 
   const { prevRoute } = useLocalSearchParams<{ prevRoute: string }>();
+
+  const [showPicker, setShowPicker] = useState(false);
+  const [alarmTime, setAlarmTime] = useState<AlarmTime | null>(null);
+  const { user } = useUser();
 
   const navigateBack = () => {
     router.back();
@@ -20,6 +47,37 @@ export default function NotificationScreen() {
   const onSkipButtonPress = () => {
     router.back();
   };
+
+  const openPicker = () => {
+    setShowPicker(true);
+  };
+
+  const closePicker = () => {
+    setShowPicker(false);
+  };
+
+  const onConfirmButtonPress = ({ hours, minutes }: AlarmTime) => {
+    setAlarmTime({
+      days: 0,
+      hours,
+      minutes,
+      seconds: 0,
+    });
+    setShowPicker(false);
+  };
+
+  useEffect(() => {
+    if (user?.alarmTime === null) {
+      setAlarmTime({
+        days: 0,
+        hours: 7,
+        minutes: 0,
+        seconds: 0,
+      });
+    } else {
+      // TODO: format time -> AlarmTime
+    }
+  }, [user]);
 
   return (
     <View style={styles.container}>
@@ -47,14 +105,40 @@ export default function NotificationScreen() {
             나와의 약속을 만들어봐요
           </MDText>
         </View>
-        <MDPressable style={styles.buttonTimePicker}>
+        <MDPressable style={styles.buttonTimePicker} onPress={openPicker}>
           <MDText type="bodyRegular">알림 시간</MDText>
-          <MDText type="bodyRegular">7:00 AM</MDText>
+          {alarmTime && <MDText type="bodyRegular">{formatAlarmTime(alarmTime)}</MDText>}
         </MDPressable>
       </View>
       <View style={styles.containerFooter}>
         <MDButton title="완료" onPress={() => {}} />
       </View>
+
+      <TimerPickerModal
+        styles={{
+          container: {
+            width: Dimensions.get('window').width * 0.8,
+          },
+          confirmButton: {
+            borderColor: colors.primary.normal,
+            color: colors.primary.normal,
+          },
+        }}
+        modalProps={{
+          overlayOpacity: 0.2,
+        }}
+        visible={showPicker}
+        hideSeconds
+        confirmButtonText="완료"
+        cancelButtonText="취소"
+        padHoursWithZero
+        hourLabel="시"
+        minuteLabel="분"
+        closeOnOverlayPress
+        setIsVisible={setShowPicker}
+        onConfirm={onConfirmButtonPress}
+        onCancel={closePicker}
+      />
     </View>
   );
 }

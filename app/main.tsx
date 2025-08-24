@@ -5,6 +5,7 @@ import {
   MainDiaryContent,
   MainWriteFloatingButton,
 } from '@/components/main';
+import { useNotification } from '@/contexts/NotificationContext';
 import { Diary } from '@/core/types';
 
 import { useGetDiaries, useThemeColor } from '@/hooks';
@@ -26,6 +27,18 @@ export default function Main() {
 
   const { selectedMonth, writtenDates, diaryInfos, handleMonthChange, refetch } = useGetDiaries();
   const { textGoals } = useGetTextGoals();
+
+  const { notification, expoPushToken, error } = useNotification();
+
+  useEffect(() => {
+    if (!error) return;
+    console.error('Notification Context - Error:', error);
+  }, [error]);
+
+  useEffect(() => {
+    if (!expoPushToken) return;
+    console.log('Notification Context - Expo Push Token:', expoPushToken);
+  }, [expoPushToken]);
 
   // 다른 화면에서 돌아올 때 (화면 포커스에만 반응)
   useFocusEffect(

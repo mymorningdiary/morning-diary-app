@@ -1,7 +1,8 @@
-import { MDPressable, MDRow, MDText } from '@/components';
+import { MDButton, MDLargeSpeechBubble, MDPressable, MDRow, MDText } from '@/components';
 import NotificationAppBar from '@/domain/notification/NotificationAppBar';
 import { useThemeColor } from '@/hooks';
 import { MDColors } from '@/types';
+import { Image } from 'expo-image';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useMemo } from 'react';
 import { StyleSheet, View } from 'react-native';
@@ -34,6 +35,26 @@ export default function NotificationScreen() {
       {prevRoute === 'setting' && (
         <NotificationAppBar title="알림 시간" navigateBack={navigateBack} />
       )}
+
+      <View style={styles.containerContent}>
+        <View style={styles.containerSun}>
+          <MDLargeSpeechBubble text="일어나서 바로 써볼까요?" />
+          <Image source={require('@/assets/images/img-sun-basic.png')} style={styles.imageSun} />
+        </View>
+        <View style={styles.containerTitle}>
+          <MDText type="titleSemiBold">알림을 받을 시간을 정해주세요</MDText>
+          <MDText type="labelRegular" color={colors.text.alternative}>
+            나와의 약속을 만들어봐요
+          </MDText>
+        </View>
+        <MDPressable style={styles.buttonTimePicker}>
+          <MDText type="bodyRegular">알림 시간</MDText>
+          <MDText type="bodyRegular">7:00 AM</MDText>
+        </MDPressable>
+      </View>
+      <View style={styles.containerFooter}>
+        <MDButton title="완료" onPress={() => {}} />
+      </View>
     </View>
   );
 }
@@ -53,5 +74,38 @@ const ScreenStyles = ({ colors }: { colors: MDColors }) =>
       paddingHorizontal: 16,
       alignItems: 'center',
       justifyContent: 'center',
+    },
+    containerContent: {
+      flex: 1,
+      paddingHorizontal: 16,
+      paddingTop: 120,
+      gap: 24,
+    },
+    containerSun: {
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    imageSun: {
+      width: 93,
+      height: 93,
+    },
+    containerTitle: {
+      justifyContent: 'center',
+      alignItems: 'center',
+      gap: 4,
+    },
+    buttonTimePicker: {
+      height: 56,
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      backgroundColor: colors.primary.softer,
+      borderRadius: 16,
+      paddingHorizontal: 16,
+      paddingVertical: 12,
+    },
+    containerFooter: {
+      paddingHorizontal: 16,
+      paddingBottom: 60,
     },
   });

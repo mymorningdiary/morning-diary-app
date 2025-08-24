@@ -58,7 +58,8 @@
             "handleKakaoOpenUrl": true
           }
         }
-      ]
+      ],
+      "expo-notifications"
     ],
     "experiments": {
       "typedRoutes": true

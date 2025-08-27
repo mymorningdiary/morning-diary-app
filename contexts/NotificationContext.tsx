@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, useRef, ReactNode } from 'react';
 import * as Notifications from 'expo-notifications';
+import * as Device from 'expo-device';
 
 import { registerForPushNotificationsAsync } from '@/utils/registerForPushNotificationsAsync';
 
@@ -29,9 +30,9 @@ export const NotificationProvider: React.FC<NotificationProviderProps> = ({ chil
   const [error, setError] = useState<Error | null>(null);
 
   useEffect(() => {
-    registerForPushNotificationsAsync()
-      .then((token) => setExpoPushToken(token ?? ''))
-      .catch((error: any) => setError(error));
+    // registerForPushNotificationsAsync()
+    //   .then((token) => setExpoPushToken(token ?? ''))
+    //   .catch((error: any) => setError(error));
 
     const notificationListener = Notifications.addNotificationReceivedListener((notification) => {
       console.log('🔔 Notification Received: ', notification);

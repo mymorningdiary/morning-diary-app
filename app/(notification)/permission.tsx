@@ -2,6 +2,7 @@ import { MDButton, MDLargeSpeechBubble, MDPressable, MDRow, MDText } from '@/com
 import { useThemeColor } from '@/hooks';
 import { MDColors } from '@/types';
 import { Image } from 'expo-image';
+import * as Notifications from 'expo-notifications';
 import { router } from 'expo-router';
 import { useMemo } from 'react';
 import { StyleSheet, View } from 'react-native';
@@ -11,14 +12,18 @@ export default function NotificationPermissionScreen() {
   const styles = useMemo(() => ScreenStyles({ colors }), [colors]);
 
   const onSkipButtonPress = () => {
-    router.back();
+    router.replace('/main');
   };
 
-  const onNextButtonPress = () => {
-    router.push({
-      pathname: '/(notification)',
-      params: { prevRoute: 'onboarding' },
-    });
+  const onNextButtonPress = async () => {
+    const { granted } = await Notifications.requestPermissionsAsync();
+
+    if (granted) {
+      // TODO: Push Token 등록 API
+      router.replace('/(notification)');
+    } else {
+      router.replace('/main');
+    }
   };
 
   return (

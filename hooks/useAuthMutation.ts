@@ -2,18 +2,20 @@ import { useAuth } from '@/contexts/AuthContext';
 import { authAPI } from '@/core/api';
 
 import { ApiErrorResponse } from '@/core/api/types';
+import { Auth } from '@/core/types';
 import { useMutation } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
+import { useState } from 'react';
 
 export const useLoginWithKakao = () => {
-  const { saveAccessToken } = useAuth();
+  const [auth, setAuth] = useState<Auth | null>(null);
 
   const { mutate, isPending } = useMutation({
     mutationFn: authAPI.loginWithKakao,
     onSuccess: async (response) => {
       switch (response.code) {
         case 2000:
-          await saveAccessToken(response.data.token);
+          setAuth(response.data);
           break;
         default:
           break;
@@ -24,7 +26,7 @@ export const useLoginWithKakao = () => {
     },
   });
 
-  return { mutate, isPending };
+  return { mutate, auth, isPending };
 };
 
 export const useAutoLogin = () => {

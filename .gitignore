@@ -38,3 +38,5 @@ yarn-error.*
 app-example
 
 CLAUDE.md
+
+google-services.json

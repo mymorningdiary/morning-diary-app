@@ -33,7 +33,7 @@ export default function LoginScreen() {
     saveAccessToken(token);
 
     if (isExistUser) {
-      router.replace('/(notification)/permission');
+      router.replace('/main');
     } else {
       router.replace('/(notification)/permission');
     }

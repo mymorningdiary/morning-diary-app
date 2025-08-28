@@ -5,6 +5,7 @@ import SettingSectionListItem from '@/domain/setting/SettingSectionListItem';
 import { useThemeColor } from '@/hooks';
 import { MDColors } from '@/types';
 import { Image } from 'expo-image';
+import * as Notifications from 'expo-notifications';
 import { router } from 'expo-router';
 import { useCallback, useState } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
@@ -27,11 +28,28 @@ export default function Setting() {
     router.push('/text-goal');
   }, []);
 
-  const navigateToAlarm = useCallback(() => {
+  const navigateToAlarm = async () => {
     router.push({
-      pathname: '/(notification)/permission',
+      pathname: '/(notification)',
     });
-  }, []);
+  };
+
+  const onAlarmToggle = async () => {
+    if (isAlarmOn) {
+      // TODO: Push Token 삭제 API
+      setIsAlarmOn(false);
+    } else {
+      const { granted, canAskAgain } = await Notifications.requestPermissionsAsync();
+
+      if (granted) {
+        // TODO: Push Token 등록 API
+        setIsAlarmOn(true);
+      }
+      if (canAskAgain === false) {
+        alert('알림 권한이 거부되었습니다. 설정에서 변경해주세요.');
+      }
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -57,7 +75,7 @@ export default function Setting() {
           <SettingSection title="시스템 설정">
             <SettingSectionListItem
               label="알림"
-              tailComponent={<MDSwitch checked={isAlarmOn} onChange={setIsAlarmOn} />}
+              tailComponent={<MDSwitch checked={isAlarmOn} onChange={onAlarmToggle} />}
             />
             <SettingSectionListItem
               label="알림 시간"

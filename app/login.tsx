@@ -3,20 +3,17 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useLoginWithKakao } from '@/hooks';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { MDColors } from '@/types/types';
-import { getKeyHashAndroid } from '@react-native-kakao/core';
 import { login } from '@react-native-kakao/user';
 import { router } from 'expo-router';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { Image, StyleSheet, TouchableOpacity } from 'react-native';
 
 export default function LoginScreen() {
   const colors = useThemeColor();
   const styles = screenStyles({ colors });
 
-  const [keyHash, setKeyHash] = useState<string | null>(null);
-
-  const { mutate: loginWithKakao, isPending: isLoginLoading } = useLoginWithKakao();
-  const { isLoggedIn } = useAuth();
+  const { mutate: loginWithKakao, isPending: isLoginLoading, auth } = useLoginWithKakao();
+  const { saveAccessToken } = useAuth();
 
   const handleLoginWithKakao = async () => {
     if (isLoginLoading) return;
@@ -30,18 +27,17 @@ export default function LoginScreen() {
   };
 
   useEffect(() => {
-    if (isLoggedIn) {
+    if (auth === null) return;
+
+    const { token, isExistUser } = auth;
+    saveAccessToken(token);
+
+    if (isExistUser) {
       router.replace('/main');
+    } else {
+      router.replace('/(notification)/permission');
     }
-  }, [isLoggedIn]);
-
-  // useEffect(() => {
-  //   (async () => {
-  //     const hash = await getKeyHashAndroid();
-  //     setKeyHash(hash || '키 해시를 가져올 수 없습니다.');
-  //   })();
-
-  // }, []);
+  }, [auth]);
 
   return (
     <MDView style={styles.container}>

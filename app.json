@@ -9,17 +9,19 @@
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
-      "displayName": "아침일기",
       "supportsTablet": true,
-      "bundleIdentifier": "com.mymorningdiary.morningdiary"
+      "bundleIdentifier": "com.mymorningdiary.morningdiary",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
     },
     "android": {
-      "displayName": "아침일기",
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/ic-adaptive-app.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.mymorningdiary.morningdiary"
+      "package": "com.mymorningdiary.morningdiary",
+      "googleServicesFile": "./google-services.json"
     },
     "web": {
       "bundler": "metro",
@@ -58,7 +60,8 @@
             "handleKakaoOpenUrl": true
           }
         }
-      ]
+      ],
+      "expo-notifications"
     ],
     "experiments": {
       "typedRoutes": true

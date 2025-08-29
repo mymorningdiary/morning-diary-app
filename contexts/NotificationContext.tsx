@@ -42,7 +42,6 @@ export const NotificationProvider: React.FC<NotificationProviderProps> = ({ chil
       ).data;
 
       setPushToken(pushTokenString);
-      console.log('🔑 Push Token:', pushTokenString);
     } catch (e) {
       console.error('Failed to fetch expo pushToken:', e);
     }
@@ -50,7 +49,7 @@ export const NotificationProvider: React.FC<NotificationProviderProps> = ({ chil
 
   useEffect(() => {
     const initializeNotifications = async () => {
-      // Android 알림 채널 설정
+      // ANDROID 알림 채널 설정
       if (Device.osName === 'Android') {
         await Notifications.setNotificationChannelAsync('default', {
           name: 'default',
@@ -67,16 +66,12 @@ export const NotificationProvider: React.FC<NotificationProviderProps> = ({ chil
     initializeNotifications();
 
     const notificationListener = Notifications.addNotificationReceivedListener((notification) => {
-      console.log('🔔 Notification Received: ', notification);
+      // console.log('🔔 Notification Received: ', notification);
       setNotification(notification);
     });
 
     const responseListener = Notifications.addNotificationResponseReceivedListener((response) => {
-      console.log(
-        '🔔 Notification Response: ',
-        JSON.stringify(response, null, 2),
-        JSON.stringify(response.notification.request.content.data, null, 2),
-      );
+      // console.log('🔔 Notification Response: ', JSON.stringify(response, null, 2), JSON.stringify(response.notification.request.content.data, null, 2));
     });
 
     return () => {

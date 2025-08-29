@@ -1,7 +1,7 @@
 import { User } from '@/core/types';
 import axiosInstance from '../axios';
 import { ApiResponse } from '../types';
-import { UpdateTextGoalRequest } from './types';
+import { UpdatePushTokenRequest, UpdateTextGoalRequest } from './types';
 
 const userAPI = {
   getUser: async (): Promise<ApiResponse<User>> => {
@@ -10,6 +10,10 @@ const userAPI = {
   },
   updateTextGoal: async (body: UpdateTextGoalRequest): Promise<ApiResponse<null>> => {
     const response = await axiosInstance.put('/users/text-goal', body);
+    return response.data;
+  },
+  updatePushToken: async (body: UpdatePushTokenRequest): Promise<ApiResponse<null>> => {
+    const response = await axiosInstance.put('/users/push-token', body);
     return response.data;
   },
 };

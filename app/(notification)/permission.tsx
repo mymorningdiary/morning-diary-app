@@ -1,5 +1,6 @@
 import { MDButton, MDLargeSpeechBubble, MDPressable, MDRow, MDText } from '@/components';
-import { useThemeColor } from '@/hooks';
+import { useNotification } from '@/contexts/NotificationContext';
+import { useThemeColor, useUpdatePushToken } from '@/hooks';
 import { MDColors } from '@/types';
 import { Image } from 'expo-image';
 import * as Notifications from 'expo-notifications';
@@ -11,18 +12,25 @@ export default function NotificationPermissionScreen() {
   const colors = useThemeColor();
   const styles = useMemo(() => ScreenStyles({ colors }), [colors]);
 
+  const { pushToken } = useNotification();
+  const { mutate: updatePushToken } = useUpdatePushToken();
+
   const onSkipButtonPress = () => {
     router.replace('/main');
   };
 
   const onNextButtonPress = async () => {
-    const { granted } = await Notifications.requestPermissionsAsync();
+    try {
+      const { granted } = await Notifications.requestPermissionsAsync();
 
-    if (granted) {
-      // TODO: Push Token 등록 API
-      router.replace('/(notification)');
-    } else {
-      router.replace('/main');
+      if (granted === true && pushToken !== null) {
+        updatePushToken({ pushToken });
+        router.replace('/(notification)');
+      } else {
+        router.replace('/main');
+      }
+    } catch (error) {
+      console.error(error);
     }
   };
 

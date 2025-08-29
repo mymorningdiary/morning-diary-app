@@ -1,4 +1,5 @@
 import { MDSwitch, MDText } from '@/components';
+import MDDefaultModal from '@/components/Modal/MDDefaultModal';
 import { useNotification } from '@/contexts/NotificationContext';
 import SettingAppBar from '@/domain/setting/SettingAppBar';
 import SettingSection from '@/domain/setting/SettingSection';
@@ -8,33 +9,30 @@ import { MDColors } from '@/types';
 import { Image } from 'expo-image';
 import * as Notifications from 'expo-notifications';
 import { router } from 'expo-router';
-import { useCallback, useEffect, useState } from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { useState } from 'react';
+import { Linking, ScrollView, StyleSheet, View } from 'react-native';
 
-export default function Setting() {
+export default function SettingsScreen() {
   const colors = useThemeColor();
   const styles = screenStyles({ colors });
 
+  const [showPermissionModal, setShowPermissionModal] = useState(false);
   const [isAlarmOn, setIsAlarmOn] = useState(false);
 
   const { pushToken } = useNotification();
   const { mutate: updatePushToken } = useUpdatePushToken();
 
-  useEffect(() => {
-    console.log('push token', `${pushToken}`);
-  }, [pushToken]);
-
-  const navigateBack = useCallback(() => {
+  const navigateBack = () => {
     router.back();
-  }, []);
+  };
 
-  const navigateToAccount = useCallback(() => {
+  const navigateToAccount = () => {
     router.push('/account');
-  }, []);
+  };
 
-  const navigateToGoal = useCallback(() => {
+  const navigateToGoal = () => {
     router.push('/text-goal');
-  }, []);
+  };
 
   const navigateToAlarm = async () => {
     router.push({
@@ -57,9 +55,18 @@ export default function Setting() {
       }
 
       if (canAskAgain === false) {
-        alert('알림 권한이 거부되었습니다. 설정에서 변경해주세요.');
+        setShowPermissionModal(true);
       }
     }
+  };
+
+  const onClosePermissionModal = () => {
+    setShowPermissionModal(false);
+  };
+
+  const onOpenDeviceSettings = () => {
+    Linking.openSettings();
+    setShowPermissionModal(false);
   };
 
   return (
@@ -135,6 +142,19 @@ export default function Setting() {
           </SettingSection>
         </View>
       </ScrollView>
+
+      <MDDefaultModal
+        visible={showPermissionModal}
+        title={'알림을 받으려면, 기기 설정에서 알림을 허용해주세요'}
+        negativeButton={{
+          text: '취소',
+          onPress: onClosePermissionModal,
+        }}
+        positiveButton={{
+          text: '알림 허용',
+          onPress: onOpenDeviceSettings,
+        }}
+      />
     </View>
   );
 }

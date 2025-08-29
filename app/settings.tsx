@@ -1,6 +1,7 @@
 import { MDSwitch, MDText } from '@/components';
 import MDDefaultModal from '@/components/Modal/MDDefaultModal';
 import { useNotification } from '@/contexts/NotificationContext';
+import { appManager } from '@/core/storage';
 import SettingAppBar from '@/domain/setting/SettingAppBar';
 import SettingSection from '@/domain/setting/SettingSection';
 import SettingSectionListItem from '@/domain/setting/SettingSectionListItem';
@@ -9,7 +10,7 @@ import { MDColors } from '@/types';
 import { Image } from 'expo-image';
 import * as Notifications from 'expo-notifications';
 import { router } from 'expo-router';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Linking, ScrollView, StyleSheet, View } from 'react-native';
 
 export default function SettingsScreen() {
@@ -17,7 +18,7 @@ export default function SettingsScreen() {
   const styles = screenStyles({ colors });
 
   const [showPermissionModal, setShowPermissionModal] = useState(false);
-  const [isAlarmOn, setIsAlarmOn] = useState(false);
+  const [isAlarmOn, setIsAlarmOn] = useState<boolean | null>(null);
 
   const { pushToken } = useNotification();
   const { mutate: updatePushToken } = useUpdatePushToken();
@@ -40,26 +41,6 @@ export default function SettingsScreen() {
     });
   };
 
-  const onAlarmToggle = async () => {
-    if (isAlarmOn) {
-      updatePushToken({ pushToken: null }); // pushToken == null -> 알림 해제
-      setIsAlarmOn(false);
-    } else {
-      const { granted, canAskAgain } = await Notifications.requestPermissionsAsync();
-
-      if (granted) {
-        if (pushToken !== null) {
-          updatePushToken({ pushToken });
-        }
-        setIsAlarmOn(true);
-      }
-
-      if (canAskAgain === false) {
-        setShowPermissionModal(true);
-      }
-    }
-  };
-
   const onClosePermissionModal = () => {
     setShowPermissionModal(false);
   };
@@ -68,6 +49,59 @@ export default function SettingsScreen() {
     Linking.openSettings();
     setShowPermissionModal(false);
   };
+
+  const onAlarmToggle = async () => {
+    try {
+      if (isAlarmOn === true) {
+        setIsAlarmOn(false);
+      } else {
+        const { granted, canAskAgain } = await Notifications.requestPermissionsAsync();
+
+        if (granted === true) {
+          setIsAlarmOn(true);
+        }
+
+        if (canAskAgain === false) {
+          setShowPermissionModal(true);
+        }
+      }
+    } catch (error) {
+      console.error('알림 설정 중 오류:', error);
+    }
+  };
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const { granted } = await Notifications.getPermissionsAsync();
+        const alarmOn = await appManager.checkAlarmOn();
+
+        if (granted === true && alarmOn === true) {
+          setIsAlarmOn(true);
+        } else {
+          setIsAlarmOn(false);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    })();
+  }, []);
+
+  useEffect(() => {
+    if (isAlarmOn === null) return;
+
+    try {
+      if (isAlarmOn === true && pushToken !== null) {
+        updatePushToken({ pushToken });
+        appManager.markAlarmOn();
+      } else {
+        updatePushToken({ pushToken: null });
+        appManager.clearAlarmOn();
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }, [isAlarmOn, pushToken]);
 
   return (
     <View style={styles.container}>
@@ -93,7 +127,7 @@ export default function SettingsScreen() {
           <SettingSection title="시스템 설정">
             <SettingSectionListItem
               label="알림"
-              tailComponent={<MDSwitch checked={isAlarmOn} onChange={onAlarmToggle} />}
+              tailComponent={<MDSwitch checked={isAlarmOn ?? false} onChange={onAlarmToggle} />}
             />
             <SettingSectionListItem
               label="알림 시간"

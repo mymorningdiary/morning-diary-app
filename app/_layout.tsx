@@ -46,7 +46,7 @@ export default function RootLayout() {
                   <Stack.Screen name="read-diary" options={{ headerShown: true }} />
                   <Stack.Screen name="update-diary" options={{ headerShown: true }} />
                   <Stack.Screen name="text-goal" options={{ headerShown: true }} />
-                  <Stack.Screen name="setting" options={{ headerShown: true }} />
+                  <Stack.Screen name="settings" options={{ headerShown: true }} />
                   <Stack.Screen name="account" options={{ headerShown: true }} />
                   <Stack.Screen name="(notification)" options={{ headerShown: true }} />
                 </Stack>

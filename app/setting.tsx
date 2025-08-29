@@ -1,13 +1,14 @@
 import { MDSwitch, MDText } from '@/components';
+import { useNotification } from '@/contexts/NotificationContext';
 import SettingAppBar from '@/domain/setting/SettingAppBar';
 import SettingSection from '@/domain/setting/SettingSection';
 import SettingSectionListItem from '@/domain/setting/SettingSectionListItem';
-import { useThemeColor } from '@/hooks';
+import { useThemeColor, useUpdatePushToken } from '@/hooks';
 import { MDColors } from '@/types';
 import { Image } from 'expo-image';
 import * as Notifications from 'expo-notifications';
 import { router } from 'expo-router';
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 
 export default function Setting() {
@@ -15,6 +16,13 @@ export default function Setting() {
   const styles = screenStyles({ colors });
 
   const [isAlarmOn, setIsAlarmOn] = useState(false);
+
+  const { pushToken } = useNotification();
+  const { mutate: updatePushToken } = useUpdatePushToken();
+
+  useEffect(() => {
+    console.log('push token', `${pushToken}`);
+  }, [pushToken]);
 
   const navigateBack = useCallback(() => {
     router.back();
@@ -36,15 +44,18 @@ export default function Setting() {
 
   const onAlarmToggle = async () => {
     if (isAlarmOn) {
-      // TODO: Push Token 삭제 API
+      updatePushToken({ pushToken: null }); // pushToken == null -> 알림 해제
       setIsAlarmOn(false);
     } else {
       const { granted, canAskAgain } = await Notifications.requestPermissionsAsync();
 
       if (granted) {
-        // TODO: Push Token 등록 API
+        if (pushToken !== null) {
+          updatePushToken({ pushToken });
+        }
         setIsAlarmOn(true);
       }
+
       if (canAskAgain === false) {
         alert('알림 권한이 거부되었습니다. 설정에서 변경해주세요.');
       }

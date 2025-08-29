@@ -1,6 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const FIRST_LAUNCH_KEY = 'FIRST_LAUNCH';
+const ALARM_ON_KEY = 'ALARM_ON';
 
 export const appManager = {
   checkFirstLaunch: async () => {
@@ -12,5 +13,15 @@ export const appManager = {
   },
   clearFirstLaunch: async () => {
     await AsyncStorage.removeItem(FIRST_LAUNCH_KEY);
+  },
+  checkAlarmOn: async () => {
+    const alarmOn = await AsyncStorage.getItem(ALARM_ON_KEY);
+    return alarmOn === 'true';
+  },
+  markAlarmOn: async () => {
+    await AsyncStorage.setItem(ALARM_ON_KEY, 'true');
+  },
+  clearAlarmOn: async () => {
+    await AsyncStorage.removeItem(ALARM_ON_KEY);
   },
 };

@@ -18,6 +18,12 @@ export const useUpdateTextGoal = () => {
 export const useUpdatePushToken = () => {
   const { mutate, isPending } = useMutation({
     mutationFn: userAPI.updatePushToken,
+    onSuccess: (res) => {
+      // console.log(res);
+    },
+    onError: (res) => {
+      // console.log(res);
+    },
   });
 
   return { mutate, isPending };

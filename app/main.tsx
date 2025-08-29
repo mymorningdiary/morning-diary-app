@@ -87,7 +87,7 @@ export default function Main() {
   };
 
   const navigateToSetting = useCallback(() => {
-    router.push('/setting');
+    router.push('/settings');
   }, []);
 
   const navigateToReadDiary = useCallback(

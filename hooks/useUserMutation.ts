@@ -30,9 +30,13 @@ export const useUpdatePushToken = () => {
 };
 
 export const useUpdateAlarmTime = () => {
+  const queryClient = useQueryClient();
+
   const { mutate, isPending } = useMutation({
     mutationFn: userAPI.updateAlarmTime,
-    onSuccess: (res) => {},
+    onSuccess: async () => {
+      queryClient.invalidateQueries({ queryKey: [USER_QUERY_KEY] });
+    },
     onError: (res) => {},
   });
 

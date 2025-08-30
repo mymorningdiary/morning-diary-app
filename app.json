@@ -13,7 +13,8 @@
       "bundleIdentifier": "com.mymorningdiary.morningdiary",
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false
-      }
+      },
+      "appleTeamId": "53RC4S4AT2"
     },
     "android": {
       "adaptiveIcon": {

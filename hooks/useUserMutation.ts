@@ -35,4 +35,6 @@ export const useUpdateAlarmTime = () => {
     onSuccess: (res) => {},
     onError: (res) => {},
   });
+
+  return { mutate, isPending };
 };

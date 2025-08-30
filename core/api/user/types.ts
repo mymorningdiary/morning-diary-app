@@ -5,3 +5,7 @@ export type UpdateTextGoalRequest = {
 export interface UpdatePushTokenRequest {
   pushToken: string | null;
 }
+
+export interface UpdateAlarmTimeRequest {
+  alarmTime: string;
+}

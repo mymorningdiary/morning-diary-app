@@ -28,3 +28,11 @@ export const useUpdatePushToken = () => {
 
   return { mutate, isPending };
 };
+
+export const useUpdateAlarmTime = () => {
+  const { mutate, isPending } = useMutation({
+    mutationFn: userAPI.updateAlarmTime,
+    onSuccess: (res) => {},
+    onError: (res) => {},
+  });
+};

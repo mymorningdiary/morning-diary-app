@@ -28,48 +28,53 @@ export default function NotificationScreen() {
   const colors = useThemeColor();
   const styles = useMemo(() => ScreenStyles({ colors }), [colors]);
 
-  const { prevRoute } = useLocalSearchParams<{ prevRoute: string }>();
+  const { fromScreen } = useLocalSearchParams<{ fromScreen: string }>();
 
-  const [showPicker, setShowPicker] = useState(false);
-  const [alarmTime, setAlarmTime] = useState<AlarmTime | null>(null);
+  const [showTimePicker, setShowTimePicker] = useState(false);
+  const [selectedAlarmTime, setSelectedAlarmTime] = useState<AlarmTime | null>({
+    days: 0,
+    hours: 7,
+    minutes: 0,
+    seconds: 0,
+  });
   const { user } = useUser();
 
   const { mutate: updateAlarmTime } = useUpdateAlarmTime();
 
-  const navigateBack = () => {
+  const onNavigateBack = () => {
     router.back();
   };
 
-  const onSkipButtonPress = () => {
-    router.back();
+  const onNavigateToMain = () => {
+    router.replace('/main');
   };
 
-  const openPicker = () => {
-    setShowPicker(true);
+  const onOpenTimePicker = () => {
+    setShowTimePicker(true);
   };
 
-  const closePicker = () => {
-    setShowPicker(false);
+  const onCloseTimePicker = () => {
+    setShowTimePicker(false);
   };
 
-  const onConfirmButtonPress = ({ hours, minutes }: AlarmTime) => {
-    setAlarmTime({
+  const onSetAlarmTime = ({ hours, minutes }: AlarmTime) => {
+    setSelectedAlarmTime({
       days: 0,
       hours,
       minutes,
       seconds: 0,
     });
-    setShowPicker(false);
+    setShowTimePicker(false);
   };
 
   const onCompleteButtonPress = () => {
-    if (alarmTime === null) return;
+    if (selectedAlarmTime === null) return;
 
-    const { hours, minutes } = alarmTime;
-    const formattedAlarmTime = dayjs().hour(hours).minute(minutes).format('HH:mm:ss');
+    const { hours, minutes } = selectedAlarmTime;
+    const newAlarmTime = dayjs().hour(hours).minute(minutes).second(0).format('HH:mm:ss');
 
-    updateAlarmTime({ alarmTime: formattedAlarmTime });
-    if (prevRoute === '/onboarding') {
+    updateAlarmTime({ alarmTime: newAlarmTime });
+    if (fromScreen === '/onboarding') {
       router.replace('/main');
     } else {
       router.back();
@@ -77,37 +82,29 @@ export default function NotificationScreen() {
   };
 
   useEffect(() => {
-    if (user === null || user.alarmTime === null) {
-      setAlarmTime({
-        days: 0,
-        hours: 7,
-        minutes: 0,
-        seconds: 0,
-      });
-    } else {
-      const parsed = dayjs(user.alarmTime, 'HH:mm:ss');
+    if (user === null || user.alarmTime === null) return;
 
-      setAlarmTime({
-        days: 0,
-        hours: parsed.hour(),
-        minutes: parsed.minute(),
-        seconds: parsed.second(),
-      });
-    }
+    const [hours, minutes] = user.alarmTime.split(':').map(Number);
+    setSelectedAlarmTime({
+      days: 0,
+      hours,
+      minutes,
+      seconds: 0,
+    });
   }, [user]);
 
   return (
     <View style={styles.container}>
-      {prevRoute === 'onboarding' ? (
+      {fromScreen === 'onboarding' ? (
         <MDRow style={styles.containerSkipAppBar}>
-          <MDPressable style={styles.buttonSkip} onPress={onSkipButtonPress}>
+          <MDPressable style={styles.buttonSkip} onPress={onNavigateToMain}>
             <MDText type="labelRegular" color={colors.text.alternative}>
               건너띄기
             </MDText>
           </MDPressable>
         </MDRow>
       ) : (
-        <NotificationAppBar title="알림 시간" navigateBack={navigateBack} />
+        <NotificationAppBar title="알림 시간" navigateBack={onNavigateBack} />
       )}
 
       <View style={styles.containerContent}>
@@ -121,9 +118,11 @@ export default function NotificationScreen() {
             나와의 약속을 만들어봐요
           </MDText>
         </View>
-        <MDPressable style={styles.buttonTimePicker} onPress={openPicker}>
+        <MDPressable style={styles.buttonTimePicker} onPress={onOpenTimePicker}>
           <MDText type="bodyRegular">알림 시간</MDText>
-          {alarmTime && <MDText type="bodyRegular">{formatAlarmTime(alarmTime)}</MDText>}
+          {selectedAlarmTime && (
+            <MDText type="bodyRegular">{formatAlarmTime(selectedAlarmTime)}</MDText>
+          )}
         </MDPressable>
       </View>
       <View style={styles.containerFooter}>
@@ -143,7 +142,8 @@ export default function NotificationScreen() {
         modalProps={{
           overlayOpacity: 0.2,
         }}
-        visible={showPicker}
+        initialValue={selectedAlarmTime ?? { hours: 7, minutes: 0 }}
+        visible={showTimePicker}
         hideSeconds
         confirmButtonText="완료"
         cancelButtonText="취소"
@@ -151,9 +151,9 @@ export default function NotificationScreen() {
         hourLabel="시"
         minuteLabel="분"
         closeOnOverlayPress
-        setIsVisible={setShowPicker}
-        onConfirm={onConfirmButtonPress}
-        onCancel={closePicker}
+        setIsVisible={setShowTimePicker}
+        onConfirm={onSetAlarmTime}
+        onCancel={onCloseTimePicker}
       />
     </View>
   );

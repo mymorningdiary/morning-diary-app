@@ -41,11 +41,11 @@ export default function NotificationScreen() {
 
   const { mutate: updateAlarmTime } = useUpdateAlarmTime();
 
-  const onNavigateBack = () => {
+  const onBackButtonPress = () => {
     router.back();
   };
 
-  const onNavigateToMain = () => {
+  const onSkipButtonPress = () => {
     router.replace('/main');
   };
 
@@ -53,11 +53,11 @@ export default function NotificationScreen() {
     setShowTimePicker(true);
   };
 
-  const onCloseTimePicker = () => {
+  const onTimePickerCancel = () => {
     setShowTimePicker(false);
   };
 
-  const onSetAlarmTime = ({ hours, minutes }: AlarmTime) => {
+  const onTimePickerConfirm = ({ hours, minutes }: AlarmTime) => {
     setSelectedAlarmTime({
       days: 0,
       hours,
@@ -74,7 +74,7 @@ export default function NotificationScreen() {
     const newAlarmTime = dayjs().hour(hours).minute(minutes).second(0).format('HH:mm:ss');
 
     updateAlarmTime({ alarmTime: newAlarmTime });
-    if (fromScreen === '/onboarding') {
+    if (fromScreen === 'login') {
       router.replace('/main');
     } else {
       router.back();
@@ -95,16 +95,16 @@ export default function NotificationScreen() {
 
   return (
     <View style={styles.container}>
-      {fromScreen === 'onboarding' ? (
+      {fromScreen === 'login' ? (
         <MDRow style={styles.containerSkipAppBar}>
-          <MDPressable style={styles.buttonSkip} onPress={onNavigateToMain}>
+          <MDPressable style={styles.buttonSkip} onPress={onSkipButtonPress}>
             <MDText type="labelRegular" color={colors.text.alternative}>
               건너띄기
             </MDText>
           </MDPressable>
         </MDRow>
       ) : (
-        <NotificationAppBar title="알림 시간" navigateBack={onNavigateBack} />
+        <NotificationAppBar title="알림 시간" onBackButtonPress={onBackButtonPress} />
       )}
 
       <View style={styles.containerContent}>
@@ -152,8 +152,8 @@ export default function NotificationScreen() {
         minuteLabel="분"
         closeOnOverlayPress
         setIsVisible={setShowTimePicker}
-        onConfirm={onSetAlarmTime}
-        onCancel={onCloseTimePicker}
+        onConfirm={onTimePickerConfirm}
+        onCancel={onTimePickerCancel}
       />
     </View>
   );

@@ -25,7 +25,7 @@ export default function NotificationPermissionScreen() {
 
       if (granted === true && pushToken !== null) {
         updatePushToken({ pushToken });
-        router.replace({ pathname: '/(notification)', params: { fromScreen: 'onboarding' } });
+        router.replace({ pathname: '/(notification)', params: { fromScreen: 'login' } });
       } else {
         router.replace('/main');
       }

@@ -8,10 +8,10 @@ import { useMemo } from 'react';
 
 interface AppBarProps {
   title?: string;
-  navigateBack?: () => void;
+  onBackButtonPress?: () => void;
 }
 
-export default function NotificationAppBar({ title, navigateBack }: AppBarProps) {
+export default function NotificationAppBar({ title, onBackButtonPress }: AppBarProps) {
   const colors = useThemeColor();
   const styles = useMemo(() => AppBarStyles({ colors }), [colors]);
 
@@ -22,7 +22,7 @@ export default function NotificationAppBar({ title, navigateBack }: AppBarProps)
           {title}
         </MDText>
       )}
-      <MDPressable style={styles.buttonBack} onPress={navigateBack}>
+      <MDPressable style={styles.buttonBack} onPress={onBackButtonPress}>
         <Image source={require('@/assets/images/ic-chevron_left.png')} style={styles.iconBack} />
       </MDPressable>
     </MDRow>

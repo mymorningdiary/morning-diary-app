@@ -1,26 +1,20 @@
 import { MDButton, MDLargeSpeechBubble, MDPressable, MDRow, MDText } from '@/components';
 import { useUser } from '@/contexts/UserContext';
 import NotificationAppBar from '@/domain/notification/NotificationAppBar';
-import { useThemeColor } from '@/hooks';
+import { useThemeColor, useUpdateAlarmTime } from '@/hooks';
 import { MDColors } from '@/types';
 import { Image } from 'expo-image';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useEffect, useMemo, useState } from 'react';
 import { Dimensions, StyleSheet, View } from 'react-native';
 import { TimerPickerModal } from 'react-native-timer-picker';
-
-const padZero = (value: number) => value.toString().padStart(2, '0');
+import dayjs from 'dayjs';
 
 const formatAlarmTime = (alarmTime: AlarmTime): string => {
   const { hours, minutes } = alarmTime;
+  const date = dayjs().hour(hours).minute(minutes);
 
-  if (hours < 12) {
-    return `${padZero(hours)}:${padZero(minutes)} AM`;
-  } else if (hours === 12) {
-    return `${padZero(hours)}:${padZero(minutes)} PM`;
-  } else {
-    return `${padZero(hours - 12)}:${padZero(minutes)} PM`;
-  }
+  return date.format('hh:mm A');
 };
 
 interface AlarmTime {
@@ -39,6 +33,8 @@ export default function NotificationScreen() {
   const [showPicker, setShowPicker] = useState(false);
   const [alarmTime, setAlarmTime] = useState<AlarmTime | null>(null);
   const { user } = useUser();
+
+  const { mutate: updateAlarmTime } = useUpdateAlarmTime();
 
   const navigateBack = () => {
     router.back();
@@ -66,8 +62,22 @@ export default function NotificationScreen() {
     setShowPicker(false);
   };
 
+  const onCompleteButtonPress = () => {
+    if (alarmTime === null) return;
+
+    const { hours, minutes } = alarmTime;
+    const formattedAlarmTime = dayjs().hour(hours).minute(minutes).format('HH:mm:ss');
+
+    updateAlarmTime({ alarmTime: formattedAlarmTime });
+    if (prevRoute === '/onboarding') {
+      router.replace('/main');
+    } else {
+      router.back();
+    }
+  };
+
   useEffect(() => {
-    if (user?.alarmTime === null) {
+    if (user === null || user.alarmTime === null) {
       setAlarmTime({
         days: 0,
         hours: 7,
@@ -75,13 +85,20 @@ export default function NotificationScreen() {
         seconds: 0,
       });
     } else {
-      // TODO: format time -> AlarmTime
+      const parsed = dayjs(user.alarmTime, 'HH:mm:ss');
+
+      setAlarmTime({
+        days: 0,
+        hours: parsed.hour(),
+        minutes: parsed.minute(),
+        seconds: parsed.second(),
+      });
     }
   }, [user]);
 
   return (
     <View style={styles.container}>
-      {prevRoute === 'onboarding' && (
+      {prevRoute === 'onboarding' ? (
         <MDRow style={styles.containerSkipAppBar}>
           <MDPressable style={styles.buttonSkip} onPress={onSkipButtonPress}>
             <MDText type="labelRegular" color={colors.text.alternative}>
@@ -89,8 +106,7 @@ export default function NotificationScreen() {
             </MDText>
           </MDPressable>
         </MDRow>
-      )}
-      {prevRoute === 'setting' && (
+      ) : (
         <NotificationAppBar title="알림 시간" navigateBack={navigateBack} />
       )}
 
@@ -111,7 +127,7 @@ export default function NotificationScreen() {
         </MDPressable>
       </View>
       <View style={styles.containerFooter}>
-        <MDButton title="완료" onPress={() => {}} />
+        <MDButton title="완료" onPress={onCompleteButtonPress} />
       </View>
 
       <TimerPickerModal

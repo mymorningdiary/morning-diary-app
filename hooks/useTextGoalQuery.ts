@@ -1,3 +1,4 @@
+import { useAuth } from '@/contexts/AuthContext';
 import textGoalAPI from '@/core/api/text-goal/apis';
 import { TextGoal } from '@/core/types';
 import { useQuery } from '@tanstack/react-query';
@@ -6,6 +7,7 @@ import { useEffect, useState } from 'react';
 const TEXT_GOALS_QUERY_KEY = 'TEXT_GOALS';
 
 const useGetTextGoals = () => {
+  const { logout } = useAuth();
   const [textGoals, setTextGoals] = useState<TextGoal[] | null>(null);
 
   const {
@@ -19,8 +21,18 @@ const useGetTextGoals = () => {
 
   useEffect(() => {
     if (getTextGoalsResponse === undefined) return;
-    if (getTextGoalsResponse.code === 2000) {
-      setTextGoals(getTextGoalsResponse.data.textGoals);
+
+    switch (getTextGoalsResponse.code) {
+      case 2000: {
+        setTextGoals(getTextGoalsResponse.data.textGoals);
+        break;
+      }
+      case 4001:
+      case 4002:
+      case 4003: {
+        logout();
+        break;
+      }
     }
   }, [getTextGoalsResponse]);
 

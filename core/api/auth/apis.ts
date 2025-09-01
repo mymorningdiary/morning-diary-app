@@ -1,16 +1,16 @@
 import { Auth } from '@/core/types';
-import axiosInstance from '../axios';
+import apiClient from '../axios';
 import { ApiResponse } from '../types';
 import { PostAuthKakaoLoginRequest } from './types';
 
 const authAPI = {
   loginWithKakao: async (body: PostAuthKakaoLoginRequest): Promise<ApiResponse<Auth>> => {
-    const response = await axiosInstance.post('/auth/kakao/login', body);
+    const response = await apiClient.post('/auth/kakao/login', body);
     return response.data;
   },
 
   autoLogin: async (): Promise<ApiResponse<Auth>> => {
-    const response = await axiosInstance.post('/auth/auto-login');
+    const response = await apiClient.post('/auth/auto-login');
     return response.data;
   },
 };

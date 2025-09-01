@@ -17,8 +17,8 @@ const UserContext = createContext<UserContextType>({
 export const UserProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<Nullable<User>>(null);
 
-  const { isLoggedIn } = useAuth();
-  const { data: getUserResponse, refetch } = useGetUser();
+  const { isLoggedIn, logout } = useAuth();
+  const { data: getUserResponse, error, refetch } = useGetUser();
 
   const getUser = useCallback(async () => {
     if (!isLoggedIn) return;
@@ -39,11 +39,28 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
     console.log('[User State] getUserResponse: ', getUserResponse);
 
     if (isLoggedIn && getUserResponse) {
-      setUser(getUserResponse.data);
+      switch (getUserResponse.code) {
+        case 2000: {
+          setUser(getUserResponse.data);
+          break;
+        }
+      }
     } else {
       setUser(null);
     }
   }, [isLoggedIn, getUserResponse]);
+
+  useEffect(() => {
+    console.log('[User State] error: ', error);
+    switch (error?.code) {
+      case 4001:
+      case 4002:
+      case 4003: {
+        logout();
+        break;
+      }
+    }
+  }, [error]);
 
   return <UserContext.Provider value={{ user, getUser }}>{children}</UserContext.Provider>;
 };

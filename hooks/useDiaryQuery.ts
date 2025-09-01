@@ -1,16 +1,20 @@
+import { useAuth } from '@/contexts/AuthContext';
 import { diaryAPI } from '@/core/api';
 import { Diary } from '@/core/types';
-import { formatMonth, padToTwoDigits } from '@/utils/dates';
-import { getTodayDateData } from '@/utils/dates';
+import { formatMonth, getTodayDateData, padToTwoDigits } from '@/utils/dates';
 import { useQuery } from '@tanstack/react-query';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { DateData } from 'react-native-calendars';
 
 export const DIARY_QUERY_KEY = 'DIARY';
 
 export const useGetDiaries = () => {
+  const { logout } = useAuth();
+
   const todayDateData = getTodayDateData();
   const [selectedMonth, setSelectedMonth] = useState<string>(formatMonth(todayDateData));
+  const [writtenDates, setWrittenDiaries] = useState<string[]>([]);
+  const [diaryInfos, setDiaryInfos] = useState<Diary[]>([]);
 
   const {
     data: getDiariesResponse,
@@ -21,16 +25,27 @@ export const useGetDiaries = () => {
     queryFn: () => diaryAPI.getDiaries({ date: selectedMonth }),
   });
 
-  const { writtenDates, diaryInfos } = useMemo(() => {
-    if (!getDiariesResponse) {
-      return { writtenDates: [], diaryInfos: [] };
+  useEffect(() => {
+    if (getDiariesResponse === undefined) return;
+
+    switch (getDiariesResponse.code) {
+      case 2000: {
+        const dates = getDiariesResponse.data.days.map(
+          (day) => `${selectedMonth}-${padToTwoDigits(day)}`,
+        );
+
+        setWrittenDiaries(dates);
+        setDiaryInfos(getDiariesResponse.data.diaryInfos);
+        break;
+      }
+      case 4001:
+      case 4002:
+      case 4003: {
+        logout();
+        break;
+      }
     }
-
-    const { days, diaryInfos } = getDiariesResponse.data;
-    const writtenDates = days.map((day) => `${selectedMonth}-${padToTwoDigits(day)}`);
-
-    return { writtenDates, diaryInfos };
-  }, [getDiariesResponse, selectedMonth]);
+  }, [getDiariesResponse]);
 
   const handleMonthChange = (dateData: DateData) => {
     const month = formatMonth(dateData);
@@ -41,6 +56,8 @@ export const useGetDiaries = () => {
 };
 
 export const useGetDiary = ({ diaryId }: { diaryId: number }) => {
+  const { logout } = useAuth();
+
   const [diary, setDiary] = useState<Diary | null>(null);
 
   const {
@@ -56,9 +73,16 @@ export const useGetDiary = ({ diaryId }: { diaryId: number }) => {
     if (!getDiaryResponse) return;
 
     switch (getDiaryResponse.code) {
-      case 2000:
+      case 2000: {
         setDiary(getDiaryResponse.data);
         break;
+      }
+      case 4001:
+      case 4002:
+      case 4003: {
+        logout();
+        break;
+      }
     }
   }, [getDiaryResponse]);
 

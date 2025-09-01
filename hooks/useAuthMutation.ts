@@ -1,7 +1,7 @@
 import { useAuth } from '@/contexts/AuthContext';
 import { authAPI } from '@/core/api';
 
-import { ApiErrorResponse } from '@/core/api/types';
+import { ApiError } from '@/core/api/types';
 import { Auth } from '@/core/types';
 import { useMutation } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
@@ -21,7 +21,7 @@ export const useLoginWithKakao = () => {
           break;
       }
     },
-    onError: (error: AxiosError<ApiErrorResponse>) => {
+    onError: (error: AxiosError<ApiError>) => {
       console.error('[Auth Mutation] Login with Kakao error:', error.response?.data);
     },
   });
@@ -43,7 +43,7 @@ export const useAutoLogin = () => {
           break;
       }
     },
-    onError: (error: AxiosError<ApiErrorResponse>) => {
+    onError: (error: AxiosError<ApiError>) => {
       console.error('[Auth Mutation] Auto login error:', error.response?.data);
     },
   });

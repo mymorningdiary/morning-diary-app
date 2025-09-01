@@ -2,6 +2,12 @@ import axios, { AxiosError } from 'axios';
 import { authManager } from '../storage';
 import { ApiError } from './types';
 
+let logoutCallback: (() => void) | null = null;
+
+export const setLogoutCallback = (callback: () => void) => {
+  logoutCallback = callback;
+};
+
 const BASE_URL = 'https://api-dev.mymorningdiary.com'; // TODO: 실제 API URL로 변경 필요
 
 export const apiClient = axios.create({
@@ -35,6 +41,13 @@ apiClient.interceptors.response.use(
         code: 0,
       };
       return Promise.reject(networkError);
+    }
+
+    const { status, data } = error.response;
+    const authErrorCode = [4001, 4002, 4003];
+
+    if (status === 401 || authErrorCode.includes(data?.code)) {
+      logoutCallback?.();
     }
 
     return Promise.reject(error.response.data);

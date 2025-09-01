@@ -1,7 +1,8 @@
+import { setLogoutCallback } from '@/core/api/axios';
 import { authManager } from '@/core/storage';
 import { Nullable } from '@/types';
-import { createContext, useContext, useEffect, useState } from 'react';
 import { router } from 'expo-router';
+import { createContext, useContext, useEffect, useState } from 'react';
 
 type AuthContextType = {
   isLoggedIn: Nullable<boolean>;
@@ -27,15 +28,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, [isLoggedIn]);
 
   useEffect(() => {
-    const checkHasAccessToken = async () => {
+    const checkAccessToken = async () => {
       const hasAccessToken = await authManager.hasAccessToken();
       setIsLoggedIn(hasAccessToken);
     };
 
-    checkHasAccessToken();
+    checkAccessToken();
   }, []);
 
-  const handleSaveAccessToken = async (accessToken: string) => {
+  const saveAccessToken = async (accessToken: string) => {
     try {
       await authManager.saveAccessToken(accessToken);
       setIsLoggedIn(true);
@@ -48,7 +49,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  const handleRemoveAccessToken = async () => {
+  const removeAccessToken = async () => {
     try {
       await authManager.removeAccessToken();
       setIsLoggedIn(false);
@@ -61,7 +62,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  const handleLogout = async () => {
+  const logout = async () => {
     try {
       await authManager.removeAccessToken();
       setIsLoggedIn(false);
@@ -74,13 +75,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
+  useEffect(() => {
+    setLogoutCallback(async () => {
+      await logout();
+    });
+  });
+
   return (
     <AuthContext.Provider
       value={{
         isLoggedIn,
-        saveAccessToken: handleSaveAccessToken,
-        removeAccessToken: handleRemoveAccessToken,
-        logout: handleLogout,
+        saveAccessToken,
+        removeAccessToken,
+        logout,
       }}>
       {children}
     </AuthContext.Provider>

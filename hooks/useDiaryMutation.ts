@@ -6,8 +6,6 @@ import { AxiosError } from 'axios';
 import { useState } from 'react';
 
 export const useWriteDiary = () => {
-  const { logout } = useAuth();
-
   const [writeDiaryResponse, setWriteDiaryResponse] = useState<PostDiariesResponse | null>(null);
 
   const { mutate, isPending } = useMutation({
@@ -16,12 +14,6 @@ export const useWriteDiary = () => {
       switch (response.code) {
         case 2000: {
           setWriteDiaryResponse(response.data);
-          break;
-        }
-        case 4001:
-        case 4002:
-        case 4003: {
-          logout();
           break;
         }
       }
@@ -35,8 +27,6 @@ export const useWriteDiary = () => {
 };
 
 export const useRemoveDiary = ({ diaryId }: { diaryId: number }) => {
-  const { logout } = useAuth();
-
   const [isRemoved, setIsRemoved] = useState(false);
 
   const { mutate, isPending } = useMutation({
@@ -53,10 +43,6 @@ export const useRemoveDiary = ({ diaryId }: { diaryId: number }) => {
       switch (error.response?.data.code) {
         case 4001:
         case 4002:
-        case 4003: {
-          logout();
-          break;
-        }
       }
     },
   });
@@ -65,8 +51,6 @@ export const useRemoveDiary = ({ diaryId }: { diaryId: number }) => {
 };
 
 export const useUpdateDiary = () => {
-  const { logout } = useAuth();
-
   const [updateDiaryResponse, setUpdateDiaryResponse] = useState<UpdateDiaryResponse | null>(null);
 
   const { mutate, isPending } = useMutation({
@@ -75,16 +59,6 @@ export const useUpdateDiary = () => {
       switch (response.code) {
         case 2000: {
           setUpdateDiaryResponse(response.data);
-          break;
-        }
-      }
-    },
-    onError: (error: AxiosError<ApiError>) => {
-      switch (error.response?.data.code) {
-        case 4001:
-        case 4002:
-        case 4003: {
-          logout();
           break;
         }
       }

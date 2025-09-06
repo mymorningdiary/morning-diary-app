@@ -1,5 +1,5 @@
 import { MDButton, MDText, MDView } from '@/components';
-import { useAuth } from '@/contexts/AuthContext';
+import { useAuth } from '@/contexts/AuthContext3';
 import { useLoginWithKakao } from '@/hooks';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { MDColors } from '@/types/types';

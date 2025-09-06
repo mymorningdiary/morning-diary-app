@@ -1,5 +1,5 @@
 import { useApp } from '@/contexts/AppContext';
-import { useAuth } from '@/contexts/AuthContext';
+import { useAuth } from '@/contexts/AuthContext3';
 import { useThemeColor } from '@/hooks';
 import { Route } from '@/types/navigations';
 

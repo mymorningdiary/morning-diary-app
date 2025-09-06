@@ -2,7 +2,7 @@ import { User } from '@/core/types';
 import { useGetUser } from '@/hooks';
 import { Nullable } from '@/types';
 import { createContext, useContext, useEffect, useState } from 'react';
-import { useAuth } from './AuthContext';
+import { useAuth } from './AuthContext3';
 
 type UserContextType = {
   user: Nullable<User>;

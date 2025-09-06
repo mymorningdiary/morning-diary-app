@@ -1,5 +1,5 @@
 import { SplashScreen } from 'expo-router';
-import { useSession } from './contexts/AuthContext';
+import { useSession } from '../contexts/AuthContext';
 import { useEffect } from 'react';
 
 

@@ -2,11 +2,20 @@ import { useStorageState } from '@/hooks/useStorageState';
 import { createContext, type PropsWithChildren, use, useEffect } from 'react';
 
 const AuthContext = createContext<{
+  session?: string | null;
+  hasVisited?: string | null;
+  isLoading: boolean;
   signIn: (token: string) => void;
   signOut: () => void;
-  session?: string | null;
-  isLoading: boolean;
-}>({ signIn: () => null, signOut: () => null, session: null, isLoading: false });
+  setHasVisited: (value: string | null) => void;
+}>({
+  session: null,
+  hasVisited: null,
+  isLoading: false,
+  signIn: () => null,
+  signOut: () => null,
+  setHasVisited: () => null,
+});
 
 export function useSession() {
   const value = use(AuthContext);
@@ -25,7 +34,9 @@ export function getAuthHelpers() {
 }
 
 export function SessionProvider({ children }: PropsWithChildren) {
-  const [[isLoading, session], setSession] = useStorageState('session');
+  const [[isSessionLoading, session], setSession] = useStorageState('session');
+  const [[isVisitedLoading, hasVisited], setHasVisited] = useStorageState('hasVisited');
+  const isLoading = isSessionLoading || isVisitedLoading;
 
   const signIn = (token: string) => {
     setSession(token);
@@ -38,16 +49,18 @@ export function SessionProvider({ children }: PropsWithChildren) {
   globalSignOut = signOut;
 
   useEffect(() => {
-    console.log('[SessionProvider] session:', session);
-  }, [session]);
+    console.log('[SessionProvider] session:', session, 'hasVisited:', hasVisited);
+  }, [session, hasVisited]);
 
   return (
     <AuthContext
       value={{
+        session,
+        hasVisited,
+        isLoading,
         signIn,
         signOut,
-        session,
-        isLoading,
+        setHasVisited,
       }}>
       {children}
     </AuthContext>

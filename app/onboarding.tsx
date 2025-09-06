@@ -1,4 +1,5 @@
 import { MDButton, MDView } from '@/components';
+import { useSession } from '@/contexts/AuthContext';
 import { useThemeColor } from '@/hooks';
 import { MDColors } from '@/types';
 import { useRouter } from 'expo-router';
@@ -11,12 +12,15 @@ export default function Onboarding() {
   const colors = useThemeColor();
   const styles = screenStyles({ colors });
   const router = useRouter();
+  const { setHasVisited } = useSession();
 
   const [currentPage, setCurrentPage] = useState(0);
   const bottomButtonTexts = useMemo(() => ['다음', '시작하기'], []);
 
   const handleBottomButtonPress = () => {
     if (currentPage === 1) {
+      // 온보딩 완료 시 방문 여부 저장 후 로그인 화면으로
+      setHasVisited('true');
       router.replace('/sign-in');
     } else {
       pageRef.current?.setPage(currentPage + 1);

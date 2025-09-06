@@ -25,7 +25,7 @@ export default function Index() {
 
     SplashScreen.hideAsync();
 
-    const route: Route = isFirstLaunch ? '/onboarding' : isLoggedIn ? '/main' : '/login';
+    const route: Route = isFirstLaunch ? '/onboarding' : isLoggedIn ? '/main' : '/sign-in';
     router.replace(route);
   }, [isFirstLaunch, isLoggedIn]);
 

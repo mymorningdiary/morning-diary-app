@@ -1,5 +1,4 @@
 import { MDCol, MDProgressBar, MDText, MDView } from '@/components';
-import { withAuthGuard } from '@/components/AuthGuard';
 import MDAssistant from '@/components/MDAssistant';
 import MDTopNotificationModal from '@/components/Modal/MDTopNotificationModal';
 import WriteAppBar, { formatDateToAppBarTitle } from '@/components/write/WriteAppBar';
@@ -19,16 +18,16 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { ScrollView, StyleSheet, TextInput } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
-function UpdateDiaryScreen() {
+export default function UpdateDiaryScreen() {
   const colors = useThemeColor();
   const styles = useMemo(() => ScreenStyles({ colors }), [colors]);
 
   const scrollViewRef = useRef<ScrollView>(null);
   const textInputRef = useRef<TextInput>(null);
 
-  const timerRef = useRef<NodeJS.Timeout>();
+  const timerRef = useRef<number | null>(null);
   const lastInputTimeRef = useRef<number>(Date.now());
-  const debounceTimerRef = useRef<NodeJS.Timeout>();
+  const debounceTimerRef = useRef<number | null>(null);
 
   const { year, month, day, diaryId } = useLocalSearchParams();
   const appBarTitle = useMemo(
@@ -139,7 +138,7 @@ function UpdateDiaryScreen() {
       const timeSinceLastInput = now - lastInputTimeRef.current;
 
       if (timeSinceLastInput >= INACTIVATE_TEXT_TIME) {
-        if (debounceTimerRef.current) {
+        if (debounceTimerRef?.current) {
           clearTimeout(debounceTimerRef.current);
         }
 
@@ -151,7 +150,7 @@ function UpdateDiaryScreen() {
       if (timeSinceLastInput >= INACTIVE_INPUT_TIME) {
         if (progress === 100) return;
         showAssistant('생각의 꼬리를 물어서 일기를 써보면 새로운 생각을 마주할 수 있어요');
-        if (timerRef.current) {
+        if (timerRef?.current) {
           clearInterval(timerRef.current);
         }
       }
@@ -161,7 +160,7 @@ function UpdateDiaryScreen() {
     lastInputTimeRef.current = Date.now();
 
     // 이전 타이머 클리어
-    if (timerRef.current !== null) {
+    if (timerRef?.current !== null) {
       clearInterval(timerRef.current);
     }
 
@@ -169,7 +168,7 @@ function UpdateDiaryScreen() {
     timerRef.current = setInterval(checkInactivity, 1000);
 
     return () => {
-      if (timerRef.current) {
+      if (timerRef?.current) {
         clearInterval(timerRef.current);
       }
     };
@@ -214,7 +213,7 @@ function UpdateDiaryScreen() {
       if (timeSinceLastInput >= INACTIVE_INPUT_TIME) {
         if (progress === 100) return;
         showAssistant('생각의 꼬리를 물어서 일기를 써보면 새로운 생각을 마주할 수 있어요');
-        if (timerRef.current) {
+        if (timerRef?.current) {
           clearInterval(timerRef.current);
         }
       }
@@ -224,7 +223,7 @@ function UpdateDiaryScreen() {
     lastInputTimeRef.current = Date.now();
 
     // 이전 타이머 클리어
-    if (timerRef.current !== null) {
+    if (timerRef?.current !== null) {
       clearInterval(timerRef.current);
     }
 
@@ -232,7 +231,7 @@ function UpdateDiaryScreen() {
     timerRef.current = setInterval(checkInactivity, 1000);
 
     return () => {
-      if (timerRef.current) {
+      if (timerRef?.current) {
         clearInterval(timerRef.current);
       }
     };
@@ -364,5 +363,3 @@ const ScreenStyles = ({ colors }: { colors: MDColors }) =>
       fontSize: 16,
     },
   });
-
-export default withAuthGuard(UpdateDiaryScreen);

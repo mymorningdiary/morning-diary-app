@@ -8,7 +8,7 @@ import { useMutation } from '@tanstack/react-query';
 import { router } from 'expo-router';
 import { Image, StyleSheet, TouchableOpacity } from 'react-native';
 
-export default function SignIn() {
+export default function SignInScreen() {
   const colors = useThemeColor();
   const styles = screenStyles({ colors });
 

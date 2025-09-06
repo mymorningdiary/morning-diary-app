@@ -17,7 +17,7 @@ export default function Onboarding() {
 
   const handleBottomButtonPress = () => {
     if (currentPage === 1) {
-      router.replace('/login');
+      router.replace('/sign-in');
     } else {
       pageRef.current?.setPage(currentPage + 1);
       setCurrentPage(currentPage + 1);

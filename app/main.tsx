@@ -1,5 +1,4 @@
 import { MDCol, MDDivider } from '@/components';
-import { withAuthGuard } from '@/components/AuthGuard';
 import {
   MainAppBar,
   MainCalendar,
@@ -17,7 +16,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { StyleSheet } from 'react-native';
 import { DateData } from 'react-native-calendars';
 
-function MainScreen() {
+export default function MainScreen() {
   const colors = useThemeColor();
   const styles = screenStyles({ colors });
 
@@ -121,5 +120,3 @@ const screenStyles = ({ colors }: { colors: MDColors }) =>
       backgroundColor: colors.background.normal,
     },
   });
-
-export default withAuthGuard(MainScreen);

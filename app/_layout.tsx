@@ -1,6 +1,6 @@
 import { MDDarkTheme, MDLightTheme } from '@/constants/theme';
 import { AppProvider } from '@/contexts/AppContext';
-import { AuthProvider } from '@/contexts/AuthContext3';
+import { SessionProvider } from '@/contexts/AuthContext';
 import { NotificationProvider } from '@/contexts/NotificationContext';
 import { UserProvider } from '@/contexts/UserContext';
 import { SplashScreenController } from '@/splash';
@@ -34,12 +34,12 @@ export default function RootLayout() {
       <QueryClientProvider client={queryClient}>
         <AppProvider>
           <NotificationProvider>
-            <AuthProvider>
+            <SessionProvider>
               <UserProvider>
                 <SplashScreenController />
                 <RootNavigator />
               </UserProvider>
-            </AuthProvider>
+            </SessionProvider>
           </NotificationProvider>
         </AppProvider>
       </QueryClientProvider>

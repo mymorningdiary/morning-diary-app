@@ -3,6 +3,7 @@ import { AppProvider } from '@/contexts/AppContext';
 import { AuthProvider } from '@/contexts/AuthContext3';
 import { NotificationProvider } from '@/contexts/NotificationContext';
 import { UserProvider } from '@/contexts/UserContext';
+import { SplashScreenController } from '@/splash';
 import { initializeKakaoSDK } from '@react-native-kakao/core';
 import { ThemeProvider } from '@react-navigation/native';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -35,24 +36,31 @@ export default function RootLayout() {
           <NotificationProvider>
             <AuthProvider>
               <UserProvider>
-                <Stack>
-                  <Stack.Screen name="main" options={{ headerShown: true }} />
-                  <Stack.Screen name="write-diary" options={{ headerShown: true }} />
-                  <Stack.Screen name="first-write" options={{ headerShown: true }} />
-                  <Stack.Screen name="read-diary" options={{ headerShown: true }} />
-                  <Stack.Screen name="update-diary" options={{ headerShown: true }} />
-                  <Stack.Screen name="text-goal" options={{ headerShown: true }} />
-                  <Stack.Screen name="settings" options={{ headerShown: true }} />
-                  <Stack.Screen name="account" options={{ headerShown: true }} />
-                  <Stack.Screen name="(notification)" options={{ headerShown: true }} />
-                  <Stack.Screen name="login" options={{ headerShown: true }} />
-                  <Stack.Screen name="onboarding" options={{ headerShown: true }} />
-                </Stack>
+                <SplashScreenController />
+                <RootNavigator />
               </UserProvider>
             </AuthProvider>
           </NotificationProvider>
         </AppProvider>
       </QueryClientProvider>
     </ThemeProvider>
+  );
+}
+
+function RootNavigator() {
+  return (
+    <Stack>
+      <Stack.Screen name="main" options={{ headerShown: true }} />
+      <Stack.Screen name="write-diary" options={{ headerShown: true }} />
+      <Stack.Screen name="first-write" options={{ headerShown: true }} />
+      <Stack.Screen name="read-diary" options={{ headerShown: true }} />
+      <Stack.Screen name="update-diary" options={{ headerShown: true }} />
+      <Stack.Screen name="text-goal" options={{ headerShown: true }} />
+      <Stack.Screen name="settings" options={{ headerShown: true }} />
+      <Stack.Screen name="account" options={{ headerShown: true }} />
+      <Stack.Screen name="(notification)" options={{ headerShown: true }} />
+      <Stack.Screen name="sign-in" options={{ headerShown: true }} />
+      <Stack.Screen name="onboarding" options={{ headerShown: true }} />
+    </Stack>
   );
 }

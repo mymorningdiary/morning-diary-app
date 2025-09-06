@@ -1,10 +1,10 @@
 import { Auth } from '@/core/types';
 import apiClient from '../axios';
 import { ApiResponse } from '../types';
-import { PostAuthKakaoLoginRequest } from './types';
+import { PostAuthKakaoSignInRequest } from './types';
 
 const authAPI = {
-  loginWithKakao: async (body: PostAuthKakaoLoginRequest): Promise<ApiResponse<Auth>> => {
+  kakaoSignIn: async (body: PostAuthKakaoSignInRequest): Promise<ApiResponse<Auth>> => {
     const response = await apiClient.post('/auth/kakao/login', body);
     return response.data;
   },

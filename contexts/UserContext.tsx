@@ -1,62 +1,37 @@
+import { userAPI } from '@/core/api';
 import { User } from '@/core/types';
-import { useGetUser } from '@/hooks';
 import { Nullable } from '@/types';
-import { createContext, useContext, useEffect, useState } from 'react';
-import { useAuth } from './AuthContext3';
+import { useQuery } from '@tanstack/react-query';
+import { createContext, use, useEffect, useState } from 'react';
 
-type UserContextType = {
-  user: Nullable<User>;
-  getUser: () => Promise<void>;
-};
+const UserContext = createContext<{ user: User | null }>({ user: null });
 
-const UserContext = createContext<UserContextType>({
-  user: null,
-  getUser: () => Promise.resolve(),
-});
+export function useUser() {
+  const value = use(UserContext);
+  if (!value) {
+    throw new Error('useUser must be wrapped in a <UserProvider />');
+  }
 
-export const UserProvider = ({ children }: { children: React.ReactNode }) => {
+  return value;
+}
+
+export const USER_QUERY_KEY = 'USER';
+
+export function UserProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<Nullable<User>>(null);
 
-  const { isLoggedIn } = useAuth();
-  const { data: getUserResponse, refetch } = useGetUser();
-
-  const getUser = async () => {
-    try {
-      await refetch();
-    } catch (error) {
-      console.error('[User Context] getUser error: ', error);
-    }
-  };
+  const { data } = useQuery({
+    queryKey: [USER_QUERY_KEY],
+    queryFn: () => userAPI.getUser(),
+  });
 
   useEffect(() => {
-    console.log('[User State] Login status changed: ', isLoggedIn);
-
-    if (isLoggedIn === true) {
-      refetch();
-    } else {
-      setUser(null);
+    console.log('[User State] getUserResponse: ', data);
+    
+    if (data?.code === 2000) {
+      setUser(data.data);
     }
-  }, [isLoggedIn]);
+  }, [data]);
 
-  useEffect(() => {
-    console.log('[User State] getUserResponse: ', getUserResponse);
-    if (getUserResponse === undefined) return;
-
-    switch (getUserResponse.code) {
-      case 2000: {
-        setUser(getUserResponse.data);
-        break;
-      }
-    }
-  }, [getUserResponse]);
-
-  return <UserContext.Provider value={{ user, getUser }}>{children}</UserContext.Provider>;
-};
-
-export default UserContext;
-
-export const useUser = () => {
-  const { user, getUser } = useContext(UserContext);
-
-  return { user, getUser };
+  return <UserContext.Provider value={{ user }}>{children}</UserContext.Provider>;
 };

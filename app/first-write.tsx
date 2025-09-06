@@ -1,5 +1,4 @@
 import { MDButton } from '@/components';
-import { withAuthGuard } from '@/components/AuthGuard';
 import MDDotIndicator from '@/components/MDDotIndicator';
 import AppBar from '@/domain/first-write/AppBar';
 import Page1 from '@/domain/first-write/Page1';
@@ -17,7 +16,7 @@ import PagerView from 'react-native-pager-view';
 const PAGE_COUNT = 3;
 const BUTTON_TEXTS = ['나만의 일기 스타일 고르기', '다음', '완료'];
 
-function FirstWriteScreen() {
+export default function FirstWriteScreen() {
   const colors = useThemeColor();
   const styles = useMemo(() => ScreenStyles({ colors }), [colors]);
 
@@ -138,5 +137,3 @@ const ScreenStyles = ({ colors }: { colors: MDColors }) =>
       flex: 1,
     },
   });
-
-export default withAuthGuard(FirstWriteScreen);

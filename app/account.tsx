@@ -1,5 +1,4 @@
 import { MDText } from '@/components';
-import { withAuthGuard } from '@/components/AuthGuard';
 import { useAuth } from '@/contexts/AuthContext3';
 import { useUser } from '@/contexts/UserContext';
 import LogoutModal from '@/domain/setting/LogoutModal';
@@ -13,7 +12,7 @@ import { router } from 'expo-router';
 import { useCallback, useState } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 
-function AccountScreen() {
+export default function AccountScreen() {
   const colors = useThemeColor();
   const styles = screenStyles({ colors });
 
@@ -109,4 +108,3 @@ const screenStyles = ({ colors }: { colors: MDColors }) =>
     },
   });
 
-export default withAuthGuard(AccountScreen);

@@ -1,5 +1,4 @@
 import { MDSwitch, MDText } from '@/components';
-import { withAuthGuard } from '@/components/AuthGuard';
 import MDDefaultModal from '@/components/Modal/MDDefaultModal';
 import { useNotification } from '@/contexts/NotificationContext';
 import { appManager } from '@/core/storage';
@@ -14,7 +13,7 @@ import { router } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { Linking, ScrollView, StyleSheet, View } from 'react-native';
 
-function SettingsScreen() {
+export default function SettingsScreen() {
   const colors = useThemeColor();
   const styles = screenStyles({ colors });
 
@@ -213,5 +212,3 @@ const screenStyles = ({ colors }: { colors: MDColors }) =>
       height: 24,
     },
   });
-
-export default withAuthGuard(SettingsScreen);

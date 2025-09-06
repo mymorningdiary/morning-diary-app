@@ -95,7 +95,7 @@ export default function NotificationScreen() {
 
   return (
     <View style={styles.container}>
-      {fromScreen === 'login' ? (
+      {fromScreen === 'permission' ? (
         <MDRow style={styles.containerSkipAppBar}>
           <MDPressable style={styles.buttonSkip} onPress={onSkipButtonPress}>
             <MDText type="labelRegular" color={colors.text.alternative}>
@@ -131,17 +131,10 @@ export default function NotificationScreen() {
 
       <TimerPickerModal
         styles={{
-          container: {
-            width: Dimensions.get('window').width * 0.8,
-          },
-          confirmButton: {
-            borderColor: colors.primary.normal,
-            color: colors.primary.normal,
-          },
+          container: { width: Dimensions.get('window').width * 0.8 },
+          confirmButton: { borderColor: colors.primary.normal, color: colors.primary.normal },
         }}
-        modalProps={{
-          overlayOpacity: 0.2,
-        }}
+        modalProps={{ overlayOpacity: 0.2 }}
         initialValue={selectedAlarmTime ?? { hours: 7, minutes: 0 }}
         visible={showTimePicker}
         hideSeconds

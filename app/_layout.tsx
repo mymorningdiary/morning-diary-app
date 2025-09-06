@@ -1,8 +1,7 @@
 import { MDDarkTheme, MDLightTheme } from '@/constants/theme';
-import { AppProvider } from '@/contexts/AppContext';
 import { SessionProvider, useSession } from '@/contexts/AuthContext';
 import { NotificationProvider } from '@/contexts/NotificationContext';
-import { SplashScreenController } from '@/splash';
+import { SplashScreenController } from '@/core/splash';
 import { initializeKakaoSDK } from '@react-native-kakao/core';
 import { ThemeProvider } from '@react-navigation/native';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -45,11 +44,11 @@ export default function RootLayout() {
 }
 
 function RootNavigator() {
-  const { session, isLoading } = useSession();
+  const { session, hasVisited, isLoading } = useSession();
 
   useEffect(() => {
-    console.log('[RootNavigator] session:', session);
-  }, [session]);
+    console.log('[RootNavigator] session:', session, 'hasVisited:', hasVisited);
+  }, [session, hasVisited]);
 
   if (isLoading) {
     return null;
@@ -61,9 +60,12 @@ function RootNavigator() {
         <Stack.Screen name="(app)" options={{ headerShown: false }} />
       </Stack.Protected>
 
-      <Stack.Protected guard={!session}>
-        <Stack.Screen name="sign-in" options={{ headerShown: false }} />
+      <Stack.Protected guard={!session && hasVisited === null}>
         <Stack.Screen name="onboarding" options={{ headerShown: false }} />
+      </Stack.Protected>
+
+      <Stack.Protected guard={!session && hasVisited === 'true'}>
+        <Stack.Screen name="sign-in" options={{ headerShown: false }} />
       </Stack.Protected>
     </Stack>
   );

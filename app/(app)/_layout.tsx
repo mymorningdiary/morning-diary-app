@@ -7,15 +7,15 @@ export default function AppLayout() {
   return (
     <UserProvider>
       <Stack>
-        <Stack.Screen name="main" options={{ headerShown: true }} />
-        <Stack.Screen name="write-diary" options={{ headerShown: true }} />
-        <Stack.Screen name="update-diary" options={{ headerShown: true }} />
-        <Stack.Screen name="read-diary" options={{ headerShown: true }} />
-        <Stack.Screen name="first-write" options={{ headerShown: true }} />
-        <Stack.Screen name="settings" options={{ headerShown: true }} />
-        <Stack.Screen name="account" options={{ headerShown: true }} />
-        <Stack.Screen name="text-goal" options={{ headerShown: true }} />
-        <Stack.Screen name="(notification)" options={{ headerShown: true }} />
+        <Stack.Screen name="index" options={{ headerShown: false }} />
+        <Stack.Screen name="write-diary" options={{ headerShown: false }} />
+        <Stack.Screen name="update-diary" options={{ headerShown: false }} />
+        <Stack.Screen name="read-diary" options={{ headerShown: false }} />
+        <Stack.Screen name="first-write" options={{ headerShown: false }} />
+        <Stack.Screen name="settings" options={{ headerShown: false }} />
+        <Stack.Screen name="account" options={{ headerShown: false }} />
+        <Stack.Screen name="text-goal" options={{ headerShown: false }} />
+        <Stack.Screen name="(notification)" options={{ headerShown: false }} />
       </Stack>
     </UserProvider>
   );

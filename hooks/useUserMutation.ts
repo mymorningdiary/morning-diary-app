@@ -1,6 +1,6 @@
+import { USER_QUERY_KEY } from '@/contexts/UserContext';
 import { userAPI } from '@/core/api';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { USER_QUERY_KEY } from './useUserQuery';
 
 export const useUpdateTextGoal = () => {
   const queryClient = useQueryClient();

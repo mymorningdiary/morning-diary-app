@@ -1,6 +1,8 @@
 import axios, { AxiosError } from 'axios';
-import { authManager } from '../storage';
+import * as SecureStore from 'expo-secure-store';
 import { ApiError } from './types';
+import { getAuthHelpers } from '@/contexts/AuthContext';
+
 
 const BASE_URL = 'https://api-dev.mymorningdiary.com'; // TODO: 실제 API URL로 변경 필요
 
@@ -14,10 +16,10 @@ export const apiClient = axios.create({
 
 apiClient.interceptors.request.use(
   async (config) => {
-    const accessToken = await authManager.getAccessToken();
-    if (accessToken) {
-      console.log('accessToken: ', accessToken);
-      config.headers.Authorization = `Bearer ${accessToken}`;
+    const token = await SecureStore.getItemAsync('session');
+    if (token) {
+      console.log('accessToken: ', token);
+      config.headers.Authorization = `Bearer ${token}`;
     }
     return config;
   },
@@ -35,13 +37,13 @@ apiClient.interceptors.response.use(
         code: 0,
       };
       return Promise.reject(networkError);
-    }
+    } 
 
     const { status, data } = error.response;
     const authErrorCode = [4001, 4002, 4003];
 
     if (status === 401 || authErrorCode.includes(data?.code)) {
-      authManager.removeAccessToken();
+      getAuthHelpers().signOut();
     }
 
     return Promise.reject(error.response.data);

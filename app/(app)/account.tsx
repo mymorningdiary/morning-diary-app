@@ -1,5 +1,5 @@
 import { MDText } from '@/components';
-import { useAuth } from '@/contexts/AuthContext3';
+import { useSession } from '@/contexts/AuthContext';
 import { useUser } from '@/contexts/UserContext';
 import LogoutModal from '@/domain/setting/LogoutModal';
 import SettingAppBar from '@/domain/setting/SettingAppBar';
@@ -18,7 +18,7 @@ export default function AccountScreen() {
 
   const [isOpenLogoutModal, setIsOpenLogoutModal] = useState(false);
 
-  const { logout } = useAuth();
+  const { signOut } = useSession();
   const { user } = useUser();
 
   const navigateBack = useCallback(() => {
@@ -39,7 +39,7 @@ export default function AccountScreen() {
 
   const handleLogout = () => {
     closeLogoutModal();
-    logout();
+    signOut();
   };
 
   return (

@@ -1,4 +1,5 @@
 import { MDText } from '@/components';
+import { withAuthGuard } from '@/components/AuthGuard';
 import { useAuth } from '@/contexts/AuthContext';
 import { useUser } from '@/contexts/UserContext';
 import LogoutModal from '@/domain/setting/LogoutModal';
@@ -12,7 +13,7 @@ import { router } from 'expo-router';
 import { useCallback, useState } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 
-export default function AccountScreen() {
+function AccountScreen() {
   const colors = useThemeColor();
   const styles = screenStyles({ colors });
 
@@ -37,10 +38,10 @@ export default function AccountScreen() {
     setIsOpenLogoutModal(false);
   }, []);
 
-  const handleLogout = useCallback(async () => {
+  const handleLogout = () => {
     closeLogoutModal();
-    await logout();
-  }, [closeLogoutModal, logout]);
+    logout();
+  };
 
   return (
     <View style={styles.container}>
@@ -107,3 +108,5 @@ const screenStyles = ({ colors }: { colors: MDColors }) =>
       height: 24,
     },
   });
+
+export default withAuthGuard(AccountScreen);

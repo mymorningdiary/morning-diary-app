@@ -1,4 +1,5 @@
 import { MDButton, MDLargeSpeechBubble, MDPressable, MDRow, MDText } from '@/components';
+import { withAuthGuard } from '@/components/AuthGuard';
 import { useNotification } from '@/contexts/NotificationContext';
 import { useThemeColor, useUpdatePushToken } from '@/hooks';
 import { MDColors } from '@/types';
@@ -8,7 +9,7 @@ import { router } from 'expo-router';
 import { useMemo } from 'react';
 import { StyleSheet, View } from 'react-native';
 
-export default function NotificationPermissionScreen() {
+function NotificationPermissionScreen() {
   const colors = useThemeColor();
   const styles = useMemo(() => ScreenStyles({ colors }), [colors]);
 
@@ -104,3 +105,5 @@ const ScreenStyles = ({ colors }: { colors: MDColors }) =>
       paddingBottom: 60,
     },
   });
+
+export default withAuthGuard(NotificationPermissionScreen);

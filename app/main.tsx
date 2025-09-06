@@ -1,4 +1,5 @@
 import { MDCol, MDDivider } from '@/components';
+import { withAuthGuard } from '@/components/AuthGuard';
 import {
   MainAppBar,
   MainCalendar,
@@ -16,7 +17,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { StyleSheet } from 'react-native';
 import { DateData } from 'react-native-calendars';
 
-export default function Main() {
+function MainScreen() {
   const colors = useThemeColor();
   const styles = screenStyles({ colors });
 
@@ -70,7 +71,7 @@ export default function Main() {
 
     const todayDate = getTodayDateData();
     const dateParam = `year=${todayDate.year}&month=${todayDate.month}&day=${todayDate.day}`;
-    router.push(`/write?${dateParam}&textGoalLength=${userTextGoalLength}`);
+    router.push(`/write-diary?${dateParam}&textGoalLength=${userTextGoalLength}`);
   };
 
   const navigateToSetting = useCallback(() => {
@@ -120,3 +121,5 @@ const screenStyles = ({ colors }: { colors: MDColors }) =>
       backgroundColor: colors.background.normal,
     },
   });
+
+export default withAuthGuard(MainScreen);

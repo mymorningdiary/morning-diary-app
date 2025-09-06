@@ -30,14 +30,14 @@ export const useLoginWithKakao = () => {
 };
 
 export const useAutoLogin = () => {
-  const { saveAccessToken } = useAuth();
+  const { login } = useAuth();
 
   const { mutate, isPending, data } = useMutation({
     mutationFn: authAPI.autoLogin,
-    onSuccess: async (response) => {
+    onSuccess: (response) => {
       switch (response.code) {
         case 2000:
-          await saveAccessToken(response.data.token);
+          login(response.data.token);
           break;
         default:
           break;

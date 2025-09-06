@@ -3,7 +3,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useLoginWithKakao } from '@/hooks';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { MDColors } from '@/types/types';
-import { login } from '@react-native-kakao/user';
+import { login as loginKakao } from '@react-native-kakao/user';
 import { router } from 'expo-router';
 import { useEffect } from 'react';
 import { Image, StyleSheet, TouchableOpacity } from 'react-native';
@@ -12,15 +12,15 @@ export default function LoginScreen() {
   const colors = useThemeColor();
   const styles = screenStyles({ colors });
 
-  const { mutate: loginWithKakao, isPending: isLoginLoading, auth } = useLoginWithKakao();
-  const { saveAccessToken } = useAuth();
+  const { mutate: mutateLoginKakao, isPending: isLoginLoading, auth } = useLoginWithKakao();
+  const { login } = useAuth();
 
   const handleLoginWithKakao = async () => {
     if (isLoginLoading) return;
 
     try {
-      const user = await login();
-      loginWithKakao({ accessToken: user.accessToken });
+      const user = await loginKakao();
+      mutateLoginKakao({ accessToken: user.accessToken });
     } catch (error) {
       console.error('Error logging in:', error);
     }
@@ -30,7 +30,7 @@ export default function LoginScreen() {
     if (auth === null) return;
 
     const { token, isExistUser } = auth;
-    saveAccessToken(token);
+    login(token);
 
     if (isExistUser) {
       router.replace('/main');

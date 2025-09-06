@@ -1,6 +1,6 @@
 import { MDDarkTheme, MDLightTheme } from '@/constants/theme';
 import { AppProvider } from '@/contexts/AppContext';
-import { SessionProvider } from '@/contexts/AuthContext';
+import { SessionProvider, useSession } from '@/contexts/AuthContext';
 import { NotificationProvider } from '@/contexts/NotificationContext';
 import { UserProvider } from '@/contexts/UserContext';
 import { SplashScreenController } from '@/splash';
@@ -35,10 +35,8 @@ export default function RootLayout() {
         <AppProvider>
           <NotificationProvider>
             <SessionProvider>
-              <UserProvider>
                 <SplashScreenController />
                 <RootNavigator />
-              </UserProvider>
             </SessionProvider>
           </NotificationProvider>
         </AppProvider>
@@ -48,19 +46,18 @@ export default function RootLayout() {
 }
 
 function RootNavigator() {
+  const { session } = useSession();
+
   return (
     <Stack>
-      <Stack.Screen name="main" options={{ headerShown: true }} />
-      <Stack.Screen name="write-diary" options={{ headerShown: true }} />
-      <Stack.Screen name="first-write" options={{ headerShown: true }} />
-      <Stack.Screen name="read-diary" options={{ headerShown: true }} />
-      <Stack.Screen name="update-diary" options={{ headerShown: true }} />
-      <Stack.Screen name="text-goal" options={{ headerShown: true }} />
-      <Stack.Screen name="settings" options={{ headerShown: true }} />
-      <Stack.Screen name="account" options={{ headerShown: true }} />
-      <Stack.Screen name="(notification)" options={{ headerShown: true }} />
-      <Stack.Screen name="sign-in" options={{ headerShown: true }} />
-      <Stack.Screen name="onboarding" options={{ headerShown: true }} />
+      <Stack.Protected guard={!!session}>
+        <Stack.Screen name="(app)" />
+      </Stack.Protected>
+
+      <Stack.Protected guard={!session}>
+        <Stack.Screen name="sign-in" />
+        <Stack.Screen name='onboarding' />
+      </Stack.Protected>
     </Stack>
   );
 }

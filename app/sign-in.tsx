@@ -32,7 +32,7 @@ export default function SignInScreen() {
         if (isExistUser) {
           router.replace('/main');
         } else {
-          router.replace('/(notification)/permission');
+          router.replace('/(app)/(notification)/permission');
         }
       }
     } catch (e) {

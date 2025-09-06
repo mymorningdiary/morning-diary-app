@@ -2,7 +2,6 @@ import { MDDarkTheme, MDLightTheme } from '@/constants/theme';
 import { AppProvider } from '@/contexts/AppContext';
 import { SessionProvider, useSession } from '@/contexts/AuthContext';
 import { NotificationProvider } from '@/contexts/NotificationContext';
-import { UserProvider } from '@/contexts/UserContext';
 import { SplashScreenController } from '@/splash';
 import { initializeKakaoSDK } from '@react-native-kakao/core';
 import { ThemeProvider } from '@react-navigation/native';
@@ -17,6 +16,8 @@ Notifications.setNotificationHandler({
     shouldPlaySound: true,
     shouldSetBadge: true,
     shouldShowAlert: true,
+    shouldShowBanner: true,
+    shouldShowList: true,
   }),
 });
 
@@ -32,31 +33,37 @@ export default function RootLayout() {
   return (
     <ThemeProvider value={colorScheme === 'dark' ? MDDarkTheme : MDLightTheme}>
       <QueryClientProvider client={queryClient}>
-        <AppProvider>
-          <NotificationProvider>
-            <SessionProvider>
-                <SplashScreenController />
-                <RootNavigator />
-            </SessionProvider>
-          </NotificationProvider>
-        </AppProvider>
+        <NotificationProvider>
+          <SessionProvider>
+            <SplashScreenController />
+            <RootNavigator />
+          </SessionProvider>
+        </NotificationProvider>
       </QueryClientProvider>
     </ThemeProvider>
   );
 }
 
 function RootNavigator() {
-  const { session } = useSession();
+  const { session, isLoading } = useSession();
+
+  useEffect(() => {
+    console.log('[RootNavigator] session:', session);
+  }, [session]);
+
+  if (isLoading) {
+    return null;
+  }
 
   return (
     <Stack>
       <Stack.Protected guard={!!session}>
-        <Stack.Screen name="(app)" />
+        <Stack.Screen name="(app)" options={{ headerShown: false }} />
       </Stack.Protected>
 
       <Stack.Protected guard={!session}>
-        <Stack.Screen name="sign-in" />
-        <Stack.Screen name='onboarding' />
+        <Stack.Screen name="sign-in" options={{ headerShown: false }} />
+        <Stack.Screen name="onboarding" options={{ headerShown: false }} />
       </Stack.Protected>
     </Stack>
   );

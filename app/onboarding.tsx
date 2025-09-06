@@ -61,6 +61,7 @@ const screenStyles = ({ colors }: { colors: MDColors }) =>
   StyleSheet.create({
     container: {
       flex: 1,
+      backgroundColor: colors.background.normal
     },
     page: {
       flex: 1,

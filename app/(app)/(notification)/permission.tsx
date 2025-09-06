@@ -16,7 +16,7 @@ export default function NotificationPermissionScreen() {
   const { mutate: updatePushToken } = useUpdatePushToken();
 
   const onSkipButtonPress = () => {
-    router.replace('/main');
+     router.replace('/(app)');
   };
 
   const onNextButtonPress = async () => {
@@ -27,7 +27,7 @@ export default function NotificationPermissionScreen() {
         updatePushToken({ pushToken });
         router.replace({ pathname: '/(app)/(notification)', params: { fromScreen: 'login' } });
       } else {
-        router.replace('/main');
+        router.replace('/(app)');
       }
     } catch (error) {
       console.error(error);

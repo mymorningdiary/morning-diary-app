@@ -16,7 +16,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { StyleSheet } from 'react-native';
 import { DateData } from 'react-native-calendars';
 
-export default function MainScreen() {
+export default function IndexScreen() {
   const colors = useThemeColor();
   const styles = screenStyles({ colors });
 

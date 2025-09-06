@@ -27,10 +27,11 @@ export default function SignInScreen() {
 
       if (response.code === 2000) {
         const { token, isExistUser } = response.data;
+        console.log('[SignInScreen] data:', response.data);
 
         signIn(token);
         if (isExistUser) {
-          router.replace('/main');
+          router.replace('/(app)');
         } else {
           router.replace('/(app)/(notification)/permission');
         }
@@ -113,6 +114,7 @@ const screenStyles = ({ colors }: { colors: MDColors }) =>
       flex: 1,
       alignItems: 'center',
       padding: 20,
+       backgroundColor: colors.background.normal
     },
     logoContainer: {
       width: '100%',

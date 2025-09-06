@@ -46,7 +46,7 @@ export default function NotificationScreen() {
   };
 
   const onSkipButtonPress = () => {
-    router.replace('/main');
+    router.replace('/(app)');
   };
 
   const onOpenTimePicker = () => {
@@ -75,7 +75,7 @@ export default function NotificationScreen() {
 
     updateAlarmTime({ alarmTime: newAlarmTime });
     if (fromScreen === 'login') {
-      router.replace('/main');
+       router.replace('/(app)');
     } else {
       router.back();
     }

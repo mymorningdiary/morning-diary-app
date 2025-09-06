@@ -1,4 +1,4 @@
-import { useAuth } from '@/contexts/AuthContext';
+import { useAuth } from '@/contexts/AuthContext3';
 import { authAPI } from '@/core/api';
 
 import { ApiError } from '@/core/api/types';

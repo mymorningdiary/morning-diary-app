@@ -1,6 +1,6 @@
 import { MDText } from '@/components';
 import { withAuthGuard } from '@/components/AuthGuard';
-import { useAuth } from '@/contexts/AuthContext';
+import { useAuth } from '@/contexts/AuthContext3';
 import { useUser } from '@/contexts/UserContext';
 import LogoutModal from '@/domain/setting/LogoutModal';
 import SettingAppBar from '@/domain/setting/SettingAppBar';

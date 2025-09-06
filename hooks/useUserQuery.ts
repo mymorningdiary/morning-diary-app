@@ -1,4 +1,4 @@
-import { useAuth } from '@/contexts/AuthContext';
+import { useAuth } from '@/contexts/AuthContext3';
 import { userAPI } from '@/core/api';
 import { useQuery } from '@tanstack/react-query';
 

@@ -1,4 +1,3 @@
-export * from './useAuthMutation';
 export * from './useDiaryQuery';
 export * from './useDiaryMutation';
 export * from './useUserQuery';

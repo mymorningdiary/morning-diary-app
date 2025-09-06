@@ -1,3 +1,3 @@
-export type PostAuthKakaoLoginRequest = {
+export type PostAuthKakaoSignInRequest = {
   accessToken: string;
 };

@@ -1,43 +1,44 @@
 import { MDButton, MDText, MDView } from '@/components';
-import { useAuth } from '@/contexts/AuthContext3';
-import { useLoginWithKakao } from '@/hooks';
+import { useSession } from '@/contexts/AuthContext';
+import { authAPI } from '@/core/api';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { MDColors } from '@/types/types';
-import { login as loginKakao } from '@react-native-kakao/user';
+import { login } from '@react-native-kakao/user';
+import { useMutation } from '@tanstack/react-query';
 import { router } from 'expo-router';
-import { useEffect } from 'react';
 import { Image, StyleSheet, TouchableOpacity } from 'react-native';
 
-export default function LoginScreen() {
+export default function SignIn() {
   const colors = useThemeColor();
   const styles = screenStyles({ colors });
 
-  const { mutate: mutateLoginKakao, isPending: isLoginLoading, auth } = useLoginWithKakao();
-  const { login } = useAuth();
+  const { signIn } = useSession();
 
-  const handleLoginWithKakao = async () => {
-    if (isLoginLoading) return;
+  const { mutateAsync, isPending } = useMutation({
+    mutationFn: authAPI.kakaoSignIn,
+  });
+
+  const kakaoSignIn = async () => {
+    if (isPending) return;
 
     try {
-      const user = await loginKakao();
-      mutateLoginKakao({ accessToken: user.accessToken });
-    } catch (error) {
-      console.error('Error logging in:', error);
+      const user = await login();
+      const response = await mutateAsync({ accessToken: user.accessToken });
+
+      if (response.code === 2000) {
+        const { token, isExistUser } = response.data;
+
+        signIn(token);
+        if (isExistUser) {
+          router.replace('/main');
+        } else {
+          router.replace('/(notification)/permission');
+        }
+      }
+    } catch (e) {
+      console.error('Failed to sign in', e);
     }
   };
-
-  useEffect(() => {
-    if (auth === null) return;
-
-    const { token, isExistUser } = auth;
-    login(token);
-
-    if (isExistUser) {
-      router.replace('/main');
-    } else {
-      router.replace('/(notification)/permission');
-    }
-  }, [auth]);
 
   return (
     <MDView style={styles.container}>
@@ -52,11 +53,11 @@ export default function LoginScreen() {
 
       <MDView style={styles.bottomContainer}>
         <MDButton
-          style={styles.kakaoLoginButton}
-          textStyle={styles.kakaoLoginButtonText}
+          style={styles.kakaoSignInButton}
+          textStyle={styles.kakaoSignInButtonText}
           title={'카카오 로그인'}
           icon={require('@/assets/images/ic-kakao.png')}
-          onPress={handleLoginWithKakao}
+          onPress={kakaoSignIn}
         />
 
         <MDView style={styles.termsContainer}>
@@ -123,10 +124,10 @@ const screenStyles = ({ colors }: { colors: MDColors }) =>
     logoText: {
       color: colors.text.alternative,
     },
-    kakaoLoginButton: {
+    kakaoSignInButton: {
       backgroundColor: colors.kakao,
     },
-    kakaoLoginButtonText: {
+    kakaoSignInButtonText: {
       color: colors.text.normal,
     },
     bottomContainer: {

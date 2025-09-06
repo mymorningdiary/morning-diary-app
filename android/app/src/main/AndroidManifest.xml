@@ -27,7 +27,6 @@
         <category android:name="android.intent.category.DEFAULT"/>
         <category android:name="android.intent.category.BROWSABLE"/>
         <data android:scheme="morningdiary"/>
-        <data android:scheme="com.mymorningdiary.morningdiary"/>
         <data android:scheme="exp+morning-diary"/>
       </intent-filter>
     </activity>

@@ -1,20 +1,16 @@
-import { setLogoutCallback } from '@/core/api/axios';
 import { authManager } from '@/core/storage';
 import { Nullable } from '@/types';
-import { router } from 'expo-router';
 import { createContext, useContext, useEffect, useState } from 'react';
 
 type AuthContextType = {
   isLoggedIn: Nullable<boolean>;
-  saveAccessToken: (accessToken: string) => Promise<boolean>;
-  removeAccessToken: () => Promise<boolean>;
+  login: (accessToken: string) => Promise<void>;
   logout: () => Promise<void>;
 };
 
 const AuthContext = createContext<AuthContextType>({
   isLoggedIn: null,
-  saveAccessToken: () => Promise.resolve(false),
-  removeAccessToken: () => Promise.resolve(false),
+  login: () => Promise.resolve(),
   logout: () => Promise.resolve(),
 });
 
@@ -36,29 +32,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     checkAccessToken();
   }, []);
 
-  const saveAccessToken = async (accessToken: string) => {
+  const login = async (accessToken: string) => {
     try {
       await authManager.saveAccessToken(accessToken);
       setIsLoggedIn(true);
-
-      return true;
     } catch (error) {
       console.error('Failed to update token', error);
-
-      return false;
-    }
-  };
-
-  const removeAccessToken = async () => {
-    try {
-      await authManager.removeAccessToken();
-      setIsLoggedIn(false);
-
-      return true;
-    } catch (error) {
-      console.error('Failed to remove token', error);
-
-      return false;
     }
   };
 
@@ -66,27 +45,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try {
       await authManager.removeAccessToken();
       setIsLoggedIn(false);
-
-      // 로그아웃 시 네비게이션 처리
-      router.dismissAll();
-      router.replace('/login');
     } catch (error) {
       console.error('Failed to logout', error);
     }
   };
 
-  useEffect(() => {
-    setLogoutCallback(async () => {
-      await logout();
-    });
-  });
-
   return (
     <AuthContext.Provider
       value={{
         isLoggedIn,
-        saveAccessToken,
-        removeAccessToken,
+        login,
         logout,
       }}>
       {children}
@@ -95,6 +63,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 }
 
 export const useAuth = () => {
-  const { isLoggedIn, saveAccessToken, removeAccessToken, logout } = useContext(AuthContext);
-  return { isLoggedIn, saveAccessToken, removeAccessToken, logout };
+  const { isLoggedIn, login, logout } = useContext(AuthContext);
+  return { isLoggedIn, login, logout };
 };

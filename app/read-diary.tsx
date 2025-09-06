@@ -1,4 +1,5 @@
 import { MDText } from '@/components';
+import { withAuthGuard } from '@/components/AuthGuard';
 import AppBar from '@/domain/read-diary/AppBar';
 import RemoveDiaryModal from '@/domain/read-diary/RemoveDiaryModal';
 import { useGetDiary, useRemoveDiary, useThemeColor } from '@/hooks';
@@ -8,7 +9,7 @@ import { router, useLocalSearchParams } from 'expo-router';
 import { useEffect, useMemo, useState } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 
-export default function ReadDiaryScreen() {
+function ReadDiaryScreen() {
   const colors = useThemeColor();
   const styles = useMemo(() => ScreenStyles({ colors }), [colors]);
 
@@ -122,3 +123,5 @@ const formatDateToAppBarTitle = ({
 
   return formattedDate.replace(/\./g, '').replace(/(\d+) (\d+) \((.+)\)/, '$1월 $2일 $3');
 };
+
+export default withAuthGuard(ReadDiaryScreen);

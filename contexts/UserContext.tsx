@@ -1,7 +1,7 @@
 import { User } from '@/core/types';
 import { useGetUser } from '@/hooks';
 import { Nullable } from '@/types';
-import { createContext, useCallback, useContext, useEffect, useState } from 'react';
+import { createContext, useContext, useEffect, useState } from 'react';
 import { useAuth } from './AuthContext';
 
 type UserContextType = {
@@ -20,35 +20,35 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
   const { isLoggedIn } = useAuth();
   const { data: getUserResponse, refetch } = useGetUser();
 
-  const getUser = useCallback(async () => {
-    if (!isLoggedIn) return;
-
+  const getUser = async () => {
     try {
       await refetch();
     } catch (error) {
       console.error('[User Context] getUser error: ', error);
     }
-  }, [isLoggedIn, refetch]);
-
-  useEffect(() => {
-    getUser();
-  }, [isLoggedIn, getUser]);
+  };
 
   useEffect(() => {
     console.log('[User State] Login status changed: ', isLoggedIn);
-    console.log('[User State] getUserResponse: ', getUserResponse);
 
-    if (isLoggedIn && getUserResponse) {
-      switch (getUserResponse.code) {
-        case 2000: {
-          setUser(getUserResponse.data);
-          break;
-        }
-      }
+    if (isLoggedIn === true) {
+      refetch();
     } else {
       setUser(null);
     }
-  }, [isLoggedIn, getUserResponse]);
+  }, [isLoggedIn]);
+
+  useEffect(() => {
+    console.log('[User State] getUserResponse: ', getUserResponse);
+    if (getUserResponse === undefined) return;
+
+    switch (getUserResponse.code) {
+      case 2000: {
+        setUser(getUserResponse.data);
+        break;
+      }
+    }
+  }, [getUserResponse]);
 
   return <UserContext.Provider value={{ user, getUser }}>{children}</UserContext.Provider>;
 };

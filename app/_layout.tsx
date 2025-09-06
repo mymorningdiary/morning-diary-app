@@ -28,20 +28,16 @@ export default function RootLayout() {
     initializeKakaoSDK('a243e903ae144e0e7d383fc00ef39d21'); // TODO: 환경변수 설정
   }, []);
 
-  // 수정 테스트
   return (
-    <NotificationProvider>
-      <ThemeProvider value={colorScheme === 'dark' ? MDDarkTheme : MDLightTheme}>
-        <QueryClientProvider client={queryClient}>
-          <AppProvider>
+    <ThemeProvider value={colorScheme === 'dark' ? MDDarkTheme : MDLightTheme}>
+      <QueryClientProvider client={queryClient}>
+        <AppProvider>
+          <NotificationProvider>
             <AuthProvider>
               <UserProvider>
                 <Stack>
-                  <Stack.Screen name="index" />
-                  <Stack.Screen name="login" options={{ headerShown: true }} />
                   <Stack.Screen name="main" options={{ headerShown: true }} />
-                  <Stack.Screen name="onboarding" options={{ headerShown: true }} />
-                  <Stack.Screen name="write" options={{ headerShown: true }} />
+                  <Stack.Screen name="write-diary" options={{ headerShown: true }} />
                   <Stack.Screen name="first-write" options={{ headerShown: true }} />
                   <Stack.Screen name="read-diary" options={{ headerShown: true }} />
                   <Stack.Screen name="update-diary" options={{ headerShown: true }} />
@@ -49,12 +45,14 @@ export default function RootLayout() {
                   <Stack.Screen name="settings" options={{ headerShown: true }} />
                   <Stack.Screen name="account" options={{ headerShown: true }} />
                   <Stack.Screen name="(notification)" options={{ headerShown: true }} />
+                  <Stack.Screen name="login" options={{ headerShown: true }} />
+                  <Stack.Screen name="onboarding" options={{ headerShown: true }} />
                 </Stack>
               </UserProvider>
             </AuthProvider>
-          </AppProvider>
-        </QueryClientProvider>
-      </ThemeProvider>
-    </NotificationProvider>
+          </NotificationProvider>
+        </AppProvider>
+      </QueryClientProvider>
+    </ThemeProvider>
   );
 }

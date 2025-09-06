@@ -1,4 +1,5 @@
 import { MDCol, MDProgressBar, MDText, MDView } from '@/components';
+import { withAuthGuard } from '@/components/AuthGuard';
 import MDAssistant from '@/components/MDAssistant';
 import MDTopNotificationModal from '@/components/Modal/MDTopNotificationModal';
 import WriteAppBar, { formatDateToAppBarTitle } from '@/components/write/WriteAppBar';
@@ -18,7 +19,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { ScrollView, StyleSheet, TextInput } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
-export default function UpdateDiaryScreen() {
+function UpdateDiaryScreen() {
   const colors = useThemeColor();
   const styles = useMemo(() => ScreenStyles({ colors }), [colors]);
 
@@ -363,3 +364,5 @@ const ScreenStyles = ({ colors }: { colors: MDColors }) =>
       fontSize: 16,
     },
   });
+
+export default withAuthGuard(UpdateDiaryScreen);

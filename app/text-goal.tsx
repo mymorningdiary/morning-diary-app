@@ -1,4 +1,5 @@
 import { MDButton, MDText } from '@/components';
+import { withAuthGuard } from '@/components/AuthGuard';
 import TextGoalAppBar from '@/domain/text-goal/TextGoalAppBar';
 import TextGoalListItem from '@/domain/text-goal/TextGoalListItem';
 import { useThemeColor, useUpdateTextGoal } from '@/hooks';
@@ -8,7 +9,7 @@ import { router } from 'expo-router';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 
-export default function TextGoalScreen() {
+function TextGoalScreen() {
   const colors = useThemeColor();
   const styles = useMemo(() => ScreenStyles({ colors }), [colors]);
 
@@ -104,3 +105,5 @@ const ScreenStyles = ({ colors }: { colors: MDColors }) =>
       paddingBottom: 60,
     },
   });
+
+export default withAuthGuard(TextGoalScreen);

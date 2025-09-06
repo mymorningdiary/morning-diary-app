@@ -9,6 +9,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { Dimensions, StyleSheet, View } from 'react-native';
 import { TimerPickerModal } from 'react-native-timer-picker';
 import dayjs from 'dayjs';
+import { withAuthGuard } from '@/components/AuthGuard';
 
 const formatAlarmTime = (alarmTime: AlarmTime): string => {
   const { hours, minutes } = alarmTime;
@@ -24,7 +25,7 @@ interface AlarmTime {
   seconds: number;
 }
 
-export default function NotificationScreen() {
+function NotificationScreen() {
   const colors = useThemeColor();
   const styles = useMemo(() => ScreenStyles({ colors }), [colors]);
 
@@ -209,3 +210,5 @@ const ScreenStyles = ({ colors }: { colors: MDColors }) =>
       paddingBottom: 60,
     },
   });
+
+export default withAuthGuard(NotificationScreen);

@@ -1,4 +1,5 @@
 import { MDCol, MDProgressBar, MDText, MDView } from '@/components';
+import { withAuthGuard } from '@/components/AuthGuard';
 import MDAssistant from '@/components/MDAssistant';
 import MDTopNotificationModal from '@/components/Modal/MDTopNotificationModal';
 import { WriteAppBar } from '@/components/write';
@@ -19,7 +20,7 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { ScrollView, StyleSheet, TextInput } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
-export default function Write() {
+function WriteDiaryScreen() {
   const colors = useThemeColor();
   const styles = screenStyles({ colors });
 
@@ -283,3 +284,5 @@ const screenStyles = ({ colors }: { colors: MDColors }) =>
       fontSize: 16,
     },
   });
+
+export default withAuthGuard(WriteDiaryScreen);

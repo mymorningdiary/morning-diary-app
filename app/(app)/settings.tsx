@@ -1,5 +1,6 @@
-import { MDSwitch, MDText } from '@/components';
+import { MDPressable, MDSwitch, MDText } from '@/components';
 import MDDefaultModal from '@/components/Modal/MDDefaultModal';
+import { useAppState } from '@/contexts/AppStateContext';
 import { useNotification } from '@/contexts/NotificationContext';
 import { appManager } from '@/core/storage';
 import SettingAppBar from '@/domain/setting/SettingAppBar';
@@ -7,12 +8,14 @@ import SettingSection from '@/domain/setting/SettingSection';
 import SettingSectionListItem from '@/domain/setting/SettingSectionListItem';
 import { useThemeColor, useUpdatePushToken } from '@/hooks';
 import { MDColors } from '@/types';
+import * as Application from 'expo-application';
 import { Image } from 'expo-image';
 import * as Notifications from 'expo-notifications';
 import { router } from 'expo-router';
-import { useEffect, useState } from 'react';
-import { Linking, ScrollView, StyleSheet, View } from 'react-native';
+import { useEffect, useMemo, useState } from 'react';
+import { Linking, Platform, ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import semver from 'semver';
 
 export default function SettingsScreen() {
   const colors = useThemeColor();
@@ -23,6 +26,38 @@ export default function SettingsScreen() {
 
   const { pushToken } = useNotification();
   const { mutate: updatePushToken } = useUpdatePushToken();
+
+  const { appVersion } = useAppState();
+
+  const updateAppComponent = useMemo(() => {
+    if (!appVersion) return null;
+
+    const { android, ios } = appVersion;
+    const latestVersion = Platform.select({
+      android: android.version,
+      ios: ios.version,
+      default: null,
+    });
+    const currentVersion = Application.nativeApplicationVersion;
+
+    if (!currentVersion || !latestVersion) return null;
+    const isUpdateNeeded = semver.lt(currentVersion, latestVersion);
+
+    return (
+      <MDPressable
+        style={styles.buttonUpdateApp}
+        disabled={!isUpdateNeeded}
+        onPress={() => {
+          // TODO: 스토어 앱 오픈
+        }}>
+        <MDText
+          type="bodyRegular"
+          color={isUpdateNeeded ? colors.primary.normal : colors.text.alternative}>
+          {isUpdateNeeded ? '업데이트 하기' : '최신 버전'}
+        </MDText>
+      </MDPressable>
+    );
+  }, [appVersion, colors, styles]);
 
   const navigateBack = () => {
     router.back();
@@ -184,12 +219,9 @@ export default function SettingsScreen() {
               <SettingSectionListItem label="이용약관" />
               <SettingSectionListItem label="개인정보처리방침" />
               <SettingSectionListItem
-                label="버전 정보 1.0.0"
-                tailComponent={
-                  <MDText type="bodyRegular" color={colors.text.alternative}>
-                    최신 버전
-                  </MDText>
-                }
+                label={`버전 정보 ${Application.nativeApplicationVersion}`}
+                disabled
+                tailComponent={updateAppComponent}
               />
             </SettingSection>
           </View>
@@ -227,5 +259,9 @@ const screenStyles = ({ colors }: { colors: MDColors }) =>
     icon: {
       width: 24,
       height: 24,
+    },
+    buttonUpdateApp: {
+      height: '100%',
+      justifyContent: 'center',
     },
   });

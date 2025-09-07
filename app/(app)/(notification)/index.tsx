@@ -3,13 +3,13 @@ import { useUser } from '@/contexts/UserContext';
 import NotificationAppBar from '@/domain/notification/NotificationAppBar';
 import { useThemeColor, useUpdateAlarmTime } from '@/hooks';
 import { MDColors } from '@/types';
+import dayjs from 'dayjs';
 import { Image } from 'expo-image';
 import { router, useLocalSearchParams } from 'expo-router';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Dimensions, StyleSheet, View } from 'react-native';
-import { TimerPickerModal } from 'react-native-timer-picker';
-import dayjs from 'dayjs';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
+import { TimerPickerModal } from 'react-native-timer-picker';
 
 const formatAlarmTime = (alarmTime: AlarmTime): string => {
   const { hours, minutes } = alarmTime;
@@ -29,7 +29,7 @@ export default function NotificationScreen() {
   const colors = useThemeColor();
   const insets = useSafeAreaInsets();
   const styles = ScreenStyles({ colors, bottomInset: insets.bottom });
-  
+
   const { fromScreen } = useLocalSearchParams<{ fromScreen: string }>();
 
   const [showTimePicker, setShowTimePicker] = useState(false);
@@ -77,7 +77,7 @@ export default function NotificationScreen() {
 
     updateAlarmTime({ alarmTime: newAlarmTime });
     if (fromScreen === 'login') {
-       router.replace('/(app)');
+      router.replace('/(app)');
     } else {
       router.back();
     }
@@ -156,7 +156,7 @@ export default function NotificationScreen() {
   );
 }
 
-const ScreenStyles = ({ colors, bottomInset }: { colors: MDColors, bottomInset: number }) =>
+const ScreenStyles = ({ colors, bottomInset }: { colors: MDColors; bottomInset: number }) =>
   StyleSheet.create({
     containerSafeArea: {
       flex: 1,

@@ -1,7 +1,7 @@
 import axios, { AxiosError } from 'axios';
 import * as SecureStore from 'expo-secure-store';
 import { ApiError } from './types';
-import { getAuthHelpers } from '@/contexts/AuthContext';
+import { getAuthHelpers } from '@/contexts/AppContext';
 
 
 const BASE_URL = 'https://api-dev.mymorningdiary.com'; // TODO: 실제 API URL로 변경 필요

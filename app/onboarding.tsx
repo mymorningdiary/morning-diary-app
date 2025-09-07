@@ -1,5 +1,5 @@
 import { MDButton, MDView } from '@/components';
-import { useSession } from '@/contexts/AuthContext';
+import { useAppState } from '@/contexts/AppContext';
 import { useThemeColor } from '@/hooks';
 import { MDColors } from '@/types';
 import { useRouter } from 'expo-router';
@@ -12,7 +12,7 @@ export default function Onboarding() {
   const colors = useThemeColor();
   const styles = screenStyles({ colors });
   const router = useRouter();
-  const { setHasVisited } = useSession();
+  const { setHasVisited } = useAppState();
 
   const [currentPage, setCurrentPage] = useState(0);
   const bottomButtonTexts = useMemo(() => ['다음', '시작하기'], []);

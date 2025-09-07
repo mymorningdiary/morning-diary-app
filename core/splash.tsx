@@ -1,10 +1,10 @@
 import { SplashScreen } from 'expo-router';
-import { useSession } from '../contexts/AuthContext';
 import { useEffect } from 'react';
+import { useAppState } from '../contexts/AppContext';
 
 
 export function SplashScreenController() {
-  const { isLoading, session } = useSession();
+  const { isLoading, session } = useAppState();
 
   useEffect(() => {
     console.log('[SplashScreenController] isLoading', isLoading, 'session', session);

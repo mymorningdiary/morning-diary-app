@@ -9,14 +9,14 @@ export default function MDPressable({
   children,
   style,
   pressedOpacity = 0.2,
-  disabled,
+  onPress,
   ...props
 }: MDPressableProps) {
   return (
     <Pressable
-      {...props}
-      disabled={disabled}
-      style={({ pressed }) => [style, { opacity: pressed && !disabled ? pressedOpacity : 1 }]}>
+      style={({ pressed }) => [style, { opacity: pressed && onPress ? pressedOpacity : 1 }]}
+      onPress={onPress}
+      {...props}>
       {children}
     </Pressable>
   );

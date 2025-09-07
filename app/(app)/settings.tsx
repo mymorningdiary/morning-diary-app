@@ -219,7 +219,6 @@ export default function SettingsScreen() {
               <SettingSectionListItem label="개인정보처리방침" />
               <SettingSectionListItem
                 label={`버전 정보 ${Application.nativeApplicationVersion}`}
-                disabled
                 tailComponent={updateAppComponent}
               />
             </SettingSection>

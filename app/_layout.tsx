@@ -2,6 +2,7 @@ import { MDDarkTheme, MDLightTheme } from '@/constants/theme';
 import { AppStateProvider, useAppState } from '@/contexts/AppStateContext';
 import { NotificationProvider } from '@/contexts/NotificationContext';
 import { SplashScreenController } from '@/core/splash';
+import { openStoreLink } from '@/utils/links';
 import { initializeKakaoSDK } from '@react-native-kakao/core';
 import { ThemeProvider } from '@react-navigation/native';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -44,13 +45,19 @@ export default function RootLayout() {
 }
 
 function RootNavigator() {
-  const { session, hasVisited, isLoading } = useAppState();
+  const { session, hasVisited, isLoading, isForceUpdateNeeded } = useAppState();
 
   useEffect(() => {
     console.log('[RootNavigator] session:', session, 'hasVisited:', hasVisited);
   }, [session, hasVisited]);
 
-  if (isLoading) {
+  useEffect(() => {
+    if (isForceUpdateNeeded) {
+      openStoreLink();
+    }
+  }, [isForceUpdateNeeded]);
+
+  if (isLoading || isForceUpdateNeeded) {
     return null;
   }
 

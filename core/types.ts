@@ -38,3 +38,14 @@ export type TextGoal = {
   isDefault: boolean;
   isUserTextGoal: boolean;
 };
+
+export interface AppVersion {
+  android: {
+    version: string;
+    minVersion: string;
+  };
+  ios: {
+    version: string;
+    minVersion: string;
+  };
+}

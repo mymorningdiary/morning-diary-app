@@ -1,7 +1,7 @@
 import { useStorageState } from '@/hooks/useStorageState';
 import { createContext, type PropsWithChildren, use, useEffect } from 'react';
 
-const AuthContext = createContext<{
+const AppStateContext = createContext<{
   session?: string | null;
   hasVisited?: string | null;
   isLoading: boolean;
@@ -17,10 +17,10 @@ const AuthContext = createContext<{
   setHasVisited: () => null,
 });
 
-export function useSession() {
-  const value = use(AuthContext);
+export function useAppState() {
+  const value = use(AppStateContext);
   if (!value) {
-    throw new Error('useSession must be wrapped in a <SessionProvider />');
+    throw new Error('useAppState must be wrapped in a <SessionProvider />');
   }
 
   return value;
@@ -28,12 +28,12 @@ export function useSession() {
 
 let globalSignOut: (() => void) | null = null;
 
-export function getAuthHelpers() {
+export function getAppStateHelpers() {
   if (!globalSignOut) throw new Error('Auth not initialized');
   return { signOut: globalSignOut };
 }
 
-export function SessionProvider({ children }: PropsWithChildren) {
+export function AppStateProvider({ children }: PropsWithChildren) {
   const [[isSessionLoading, session], setSession] = useStorageState('session');
   const [[isVisitedLoading, hasVisited], setHasVisited] = useStorageState('hasVisited');
   const isLoading = isSessionLoading || isVisitedLoading;
@@ -49,11 +49,11 @@ export function SessionProvider({ children }: PropsWithChildren) {
   globalSignOut = signOut;
 
   useEffect(() => {
-    console.log('[SessionProvider] session:', session, 'hasVisited:', hasVisited);
+    console.log('[AppStateProvider] session:', session, 'hasVisited:', hasVisited);
   }, [session, hasVisited]);
 
   return (
-    <AuthContext
+    <AppStateContext
       value={{
         session,
         hasVisited,
@@ -63,6 +63,6 @@ export function SessionProvider({ children }: PropsWithChildren) {
         setHasVisited,
       }}>
       {children}
-    </AuthContext>
+    </AppStateContext>
   );
 }

@@ -1,5 +1,5 @@
 import { MDDarkTheme, MDLightTheme } from '@/constants/theme';
-import { SessionProvider, useSession } from '@/contexts/AuthContext';
+import { AppStateProvider, useAppState } from '@/contexts/AppContext';
 import { NotificationProvider } from '@/contexts/NotificationContext';
 import { SplashScreenController } from '@/core/splash';
 import { initializeKakaoSDK } from '@react-native-kakao/core';
@@ -32,19 +32,19 @@ export default function RootLayout() {
   return (
     <ThemeProvider value={colorScheme === 'dark' ? MDDarkTheme : MDLightTheme}>
       <QueryClientProvider client={queryClient}>
-        <NotificationProvider>
-          <SessionProvider>
+        <AppStateProvider>
+          <NotificationProvider>
             <SplashScreenController />
             <RootNavigator />
-          </SessionProvider>
-        </NotificationProvider>
+          </NotificationProvider>
+        </AppStateProvider>
       </QueryClientProvider>
     </ThemeProvider>
   );
 }
 
 function RootNavigator() {
-  const { session, hasVisited, isLoading } = useSession();
+  const { session, hasVisited, isLoading } = useAppState();
 
   useEffect(() => {
     console.log('[RootNavigator] session:', session, 'hasVisited:', hasVisited);

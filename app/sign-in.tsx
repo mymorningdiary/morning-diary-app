@@ -1,5 +1,5 @@
 import { MDButton, MDText, MDView } from '@/components';
-import { useSession } from '@/contexts/AuthContext';
+import { useAppState } from '@/contexts/AppContext';
 import { authAPI } from '@/core/api';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { MDColors } from '@/types/types';
@@ -12,7 +12,7 @@ export default function SignInScreen() {
   const colors = useThemeColor();
   const styles = screenStyles({ colors });
 
-  const { signIn } = useSession();
+  const { signIn } = useAppState();
 
   const { mutateAsync, isPending } = useMutation({
     mutationFn: authAPI.kakaoSignIn,

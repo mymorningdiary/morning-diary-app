@@ -1,9 +1,10 @@
-import { MDPressable, MDRow } from '@/components';
+import { MDText } from '@/components';
+import AppBar from '@/domain/web-view/AppBar';
 import { useThemeColor } from '@/hooks';
 import { MDColors } from '@/types';
-import { Image } from 'expo-image';
-import { router } from 'expo-router';
-import { StyleSheet } from 'react-native';
+import { useLocalSearchParams } from 'expo-router';
+import { useState } from 'react';
+import { ActivityIndicator, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { WebView } from 'react-native-webview';
 
@@ -11,19 +12,44 @@ export default function WebViewScreen() {
   const colors = useThemeColor();
   const styles = ScreenStyles({ colors });
 
-  const onNavigateToBack = () => {
-    router.back();
+  const { webviewURL } = useLocalSearchParams<{ webviewURL: string }>();
+  const [isLoading, setLoading] = useState(true);
+
+  const onLoadEnd = () => {
+    setLoading(false);
   };
+
+  if (!webviewURL) {
+    return (
+      <SafeAreaView style={styles.containerSafeArea}>
+        <View style={styles.container}>
+          <AppBar />
+
+          <View style={styles.containerError}>
+            <MDText align="center">페이지를 불러올 수 없습니다.</MDText>
+          </View>
+        </View>
+      </SafeAreaView>
+    );
+  }
 
   return (
     <SafeAreaView style={styles.containerSafeArea}>
-      <MDRow style={styles.containerAppBar}>
-        <MDPressable style={styles.buttonClose} onPress={onNavigateToBack}>
-          <Image source={require('@/assets/images/ic-close.png')} />
-        </MDPressable>
-      </MDRow>
+      <View style={styles.container}>
+        <AppBar />
 
-      <WebView style={styles.containerWebView} source={{ uri: 'https://expo.dev' }} />
+        <WebView
+          style={styles.containerWebView}
+          source={{ uri: webviewURL }}
+          onLoadEnd={onLoadEnd}
+        />
+
+        {isLoading && (
+          <View style={styles.containerLoading}>
+            <ActivityIndicator color={colors.primary.normal} />
+          </View>
+        )}
+      </View>
     </SafeAreaView>
   );
 }
@@ -34,16 +60,25 @@ const ScreenStyles = ({ colors }: { colors: MDColors }) =>
       flex: 1,
       backgroundColor: colors.background.normal,
     },
+    container: {
+      flex: 1,
+    },
+    containerLoading: {
+      flex: 1,
+      position: 'absolute',
+      top: 48,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      justifyContent: 'center',
+      alignContent: 'center',
+    },
     containerWebView: {
       flex: 1,
     },
-    containerAppBar: {
-      height: 48,
-    },
-    buttonClose: {
-      height: '100%',
-      paddingHorizontal: 16,
-      alignItems: 'center',
+    containerError: {
+      flex: 1,
       justifyContent: 'center',
+      alignContent: 'center',
     },
   });

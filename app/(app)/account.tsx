@@ -26,9 +26,9 @@ export default function AccountScreen() {
     router.back();
   }, []);
 
-  const navigateToWithdraw = useCallback(() => {
-    // TODO router.push('/withdraw');
-  }, []);
+  const onNavigateToWithdraw = () => {
+    router.push('/(app)/withdraw');
+  };
 
   const openLogoutModal = useCallback(() => {
     setIsOpenLogoutModal(true);
@@ -74,7 +74,7 @@ export default function AccountScreen() {
                     tintColor={colors.icon.normal}
                   />
                 }
-                onPress={navigateToWithdraw}
+                onPress={onNavigateToWithdraw}
               />
             </SettingSection>
           </View>
@@ -114,4 +114,3 @@ const ScreenStyles = ({ colors }: { colors: MDColors }) =>
       height: 24,
     },
   });
-

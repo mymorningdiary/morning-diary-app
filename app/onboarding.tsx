@@ -6,14 +6,17 @@ import { useRouter } from 'expo-router';
 import { useMemo, useRef, useState } from 'react';
 import { Image, StyleSheet } from 'react-native';
 import PagerView from 'react-native-pager-view';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default function Onboarding() {
-  const pageRef = useRef<PagerView>(null);
   const colors = useThemeColor();
-  const styles = screenStyles({ colors });
+  const insets = useSafeAreaInsets();
+  const styles = screenStyles({ colors, bottomInset: insets.bottom });
+
   const router = useRouter();
   const { setHasVisited } = useAppState();
 
+  const pageRef = useRef<PagerView>(null);
   const [currentPage, setCurrentPage] = useState(0);
   const bottomButtonTexts = useMemo(() => ['다음', '시작하기'], []);
 
@@ -61,11 +64,11 @@ export default function Onboarding() {
   );
 }
 
-const screenStyles = ({ colors }: { colors: MDColors }) =>
+const screenStyles = ({ colors, bottomInset }: { colors: MDColors; bottomInset: number }) =>
   StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: colors.background.normal
+      backgroundColor: colors.background.normal,
     },
     page: {
       flex: 1,
@@ -74,7 +77,7 @@ const screenStyles = ({ colors }: { colors: MDColors }) =>
     },
     bottomContainer: {
       paddingHorizontal: 16,
-      paddingBottom: 60,
+      paddingBottom: 60 - bottomInset,
     },
     indicatorContainer: {
       flexDirection: 'row',

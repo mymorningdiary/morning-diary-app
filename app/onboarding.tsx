@@ -1,5 +1,5 @@
 import { MDButton, MDView } from '@/components';
-import { useAppState } from '@/contexts/AppContext';
+import { useAppState } from '@/contexts/AppStateContext';
 import { useThemeColor } from '@/hooks';
 import { MDColors } from '@/types';
 import { useRouter } from 'expo-router';

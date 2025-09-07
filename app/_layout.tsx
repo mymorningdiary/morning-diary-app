@@ -1,5 +1,5 @@
 import { MDDarkTheme, MDLightTheme } from '@/constants/theme';
-import { AppStateProvider, useAppState } from '@/contexts/AppContext';
+import { AppStateProvider, useAppState } from '@/contexts/AppStateContext';
 import { NotificationProvider } from '@/contexts/NotificationContext';
 import { SplashScreenController } from '@/core/splash';
 import { initializeKakaoSDK } from '@react-native-kakao/core';

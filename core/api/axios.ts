@@ -1,8 +1,7 @@
 import axios, { AxiosError } from 'axios';
 import * as SecureStore from 'expo-secure-store';
 import { ApiError } from './types';
-import { getAuthHelpers } from '@/contexts/AppContext';
-
+import { getAppStateHelpers } from '@/contexts/AppStateContext';
 
 const BASE_URL = 'https://api-dev.mymorningdiary.com'; // TODO: 실제 API URL로 변경 필요
 
@@ -43,7 +42,7 @@ apiClient.interceptors.response.use(
     const authErrorCode = [4001, 4002, 4003];
 
     if (status === 401 || authErrorCode.includes(data?.code)) {
-      getAuthHelpers().signOut();
+      getAppStateHelpers().signOut();
     }
 
     return Promise.reject(error.response.data);

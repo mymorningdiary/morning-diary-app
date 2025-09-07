@@ -15,10 +15,11 @@ import { router, useFocusEffect } from 'expo-router';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { StyleSheet } from 'react-native';
 import { DateData } from 'react-native-calendars';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function IndexScreen() {
   const colors = useThemeColor();
-  const styles = screenStyles({ colors });
+  const styles = ScreenStyles({ colors });
 
   const [selectedDate, setSelectedDate] = useState<DateData>(getTodayDateData());
   const [selectedDiaryInfo, setSelectedDiaryInfo] = useState<Nullable<Diary>>(null);
@@ -95,26 +96,32 @@ export default function IndexScreen() {
   }, [selectedDate, diaryInfos]);
 
   return (
-    <MDCol style={styles.container}>
-      <MainAppBar navigateToSetting={navigateToSetting} />
+    <SafeAreaView style={styles.containerSafeArea}>
+      <MDCol style={styles.container}>
+        <MainAppBar navigateToSetting={navigateToSetting} />
 
-      <MainCalendar
-        markedDates={markedDates}
-        onMonthChange={handleMonthChange}
-        onDayPress={handleDayPress}
-      />
+        <MainCalendar
+          markedDates={markedDates}
+          onMonthChange={handleMonthChange}
+          onDayPress={handleDayPress}
+        />
 
-      <MDDivider marginHorizontal={16} />
+        <MDDivider marginHorizontal={16} />
 
-      <MainDiaryContent diaryInfo={selectedDiaryInfo} onDiaryItemPress={navigateToReadDiary} />
+        <MainDiaryContent diaryInfo={selectedDiaryInfo} onDiaryItemPress={navigateToReadDiary} />
 
-      <MainWriteFloatingButton disabled={isTodayWritten} onPress={handleWriteButtonPress} />
-    </MDCol>
+        <MainWriteFloatingButton disabled={isTodayWritten} onPress={handleWriteButtonPress} />
+      </MDCol>
+    </SafeAreaView>
   );
 }
 
-const screenStyles = ({ colors }: { colors: MDColors }) =>
+const ScreenStyles = ({ colors }: { colors: MDColors }) =>
   StyleSheet.create({
+    containerSafeArea: {
+      flex: 1,
+      backgroundColor: colors.background.normal,
+    },
     container: {
       flex: 1,
       backgroundColor: colors.background.normal,

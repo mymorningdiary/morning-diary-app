@@ -2,6 +2,7 @@ import { useThemeColor } from '@/hooks';
 import { MDColors } from '@/types';
 import { Image } from 'expo-image';
 import { StyleSheet, TouchableOpacity } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 type WriteFloatingButtonProps = {
   disabled?: boolean;
@@ -10,7 +11,8 @@ type WriteFloatingButtonProps = {
 
 export default function WriteFloatingButton({ disabled, onPress }: WriteFloatingButtonProps) {
   const colors = useThemeColor();
-  const styles = buttonStyles({ colors, disabled });
+  const insets = useSafeAreaInsets();
+  const styles = ButtonStyles({ colors, disabled, bottomInset: insets.bottom });
 
   const handlePress = () => {
     onPress();
@@ -27,11 +29,11 @@ export default function WriteFloatingButton({ disabled, onPress }: WriteFloating
   );
 }
 
-const buttonStyles = ({ colors, disabled }: { colors: MDColors; disabled?: boolean }) =>
+const ButtonStyles = ({ colors, disabled, bottomInset }: { colors: MDColors; disabled?: boolean, bottomInset: number }) =>
   StyleSheet.create({
     container: {
       position: 'absolute',
-      bottom: 80,
+      bottom: 80 - bottomInset,
       right: 24,
       width: 56,
       height: 56,
@@ -40,8 +42,5 @@ const buttonStyles = ({ colors, disabled }: { colors: MDColors; disabled?: boole
       alignItems: 'center',
       justifyContent: 'center',
     },
-    icon: {
-      width: 24,
-      height: 24,
-    },
+    icon: { width: 24, height: 24 },
   });

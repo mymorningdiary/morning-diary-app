@@ -17,10 +17,12 @@ import { router, useLocalSearchParams } from 'expo-router';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { ScrollView, StyleSheet, TextInput } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default function UpdateDiaryScreen() {
   const colors = useThemeColor();
-  const styles = useMemo(() => ScreenStyles({ colors }), [colors]);
+  const insets = useSafeAreaInsets();
+  const styles = ScreenStyles({ colors, bottomInset: insets.bottom });
 
   const scrollViewRef = useRef<ScrollView>(null);
   const textInputRef = useRef<TextInput>(null);
@@ -276,62 +278,73 @@ export default function UpdateDiaryScreen() {
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <MDView style={styles.container}>
-        <WriteAppBar
-          date={appBarTitle}
-          isCompleteButtonEnabled={progress >= 10}
-          onCompleteButtonPress={onCompleteButtonPress}
-          onBackButtonPress={() => router.back()}
-        />
+      <SafeAreaView style={styles.containerSafeArea}>
+        <MDView style={styles.container}>
+          <WriteAppBar
+            date={appBarTitle}
+            isCompleteButtonEnabled={progress >= 10}
+            onCompleteButtonPress={onCompleteButtonPress}
+            onBackButtonPress={() => router.back()}
+          />
 
-        <MDCol style={styles.containerProgressBar}>
-          <MDText type="caption2Regular" style={styles.textGoal}>
-            아침일기 목표
-          </MDText>
-          <MDProgressBar progress={progress} />
-        </MDCol>
+          <MDCol style={styles.containerProgressBar}>
+            <MDText type="caption2Regular" style={styles.textGoal}>
+              아침일기 목표
+            </MDText>
+            <MDProgressBar progress={progress} />
+          </MDCol>
 
-        <ScrollView
-          ref={scrollViewRef}
-          contentContainerStyle={styles.containerScrollContent}
-          overScrollMode="never"
-          keyboardShouldPersistTaps="handled"
-          onContentSizeChange={handleContentSizeChange}>
-          <MDView style={styles.containerText}>
-            {textState.inactive.length > 0 && (
-              <MDText style={styles.inactiveText} type="bodyRegular" onPress={onInactiveTextPress}>
-                {textState.inactive}
-              </MDText>
-            )}
-            <TextInput
-              ref={textInputRef}
-              style={styles.textInput}
-              value={textState.active}
-              onChangeText={onTextChange}
-              placeholder="오늘 아침에는 어떤 생각이 떠오르나요?"
-              multiline
-              scrollEnabled={false}
-            />
-          </MDView>
-        </ScrollView>
-      </MDView>
+          <ScrollView
+            ref={scrollViewRef}
+            contentContainerStyle={styles.containerScrollContent}
+            overScrollMode="never"
+            keyboardShouldPersistTaps="handled"
+            onContentSizeChange={handleContentSizeChange}>
+            <MDView style={styles.containerText}>
+              {textState.inactive.length > 0 && (
+                <MDText
+                  style={styles.inactiveText}
+                  type="bodyRegular"
+                  onPress={onInactiveTextPress}>
+                  {textState.inactive}
+                </MDText>
+              )}
+              <TextInput
+                ref={textInputRef}
+                style={styles.textInput}
+                value={textState.active}
+                onChangeText={onTextChange}
+                placeholder="오늘 아침에는 어떤 생각이 떠오르나요?"
+                multiline
+                scrollEnabled={false}
+              />
+            </MDView>
+          </ScrollView>
+        </MDView>
 
-      <MDTopNotificationModal isVisible={isShowAssistant} onClose={() => setIsShowAssistant(false)}>
-        <MDAssistant
-          imageSource={require('@/assets/images/img-sun-basic.png')}
-          text={assistantText}
-        />
-      </MDTopNotificationModal>
+        <MDTopNotificationModal
+          isVisible={isShowAssistant}
+          onClose={() => setIsShowAssistant(false)}>
+          <MDAssistant
+            imageSource={require('@/assets/images/img-sun-basic.png')}
+            text={assistantText}
+          />
+        </MDTopNotificationModal>
+      </SafeAreaView>
     </GestureHandlerRootView>
   );
 }
 
-const ScreenStyles = ({ colors }: { colors: MDColors }) =>
+const ScreenStyles = ({ colors, bottomInset }: { colors: MDColors, bottomInset: number }) =>
   StyleSheet.create({
+    containerSafeArea: {
+      flex: 1,
+      backgroundColor: colors.background.normal,
+    },
     container: {
       flex: 1,
       backgroundColor: colors.background.normal,
-      paddingBottom: 40,
+      paddingBottom: 40 - bottomInset,
     },
     containerProgressBar: {
       paddingBottom: 24,

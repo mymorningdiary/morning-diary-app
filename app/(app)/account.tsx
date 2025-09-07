@@ -11,10 +11,11 @@ import { Image } from 'expo-image';
 import { router } from 'expo-router';
 import { useCallback, useState } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function AccountScreen() {
   const colors = useThemeColor();
-  const styles = screenStyles({ colors });
+  const styles = ScreenStyles({ colors });
 
   const [isOpenLogoutModal, setIsOpenLogoutModal] = useState(false);
 
@@ -43,53 +44,59 @@ export default function AccountScreen() {
   };
 
   return (
-    <View style={styles.container}>
-      <SettingAppBar title="계정관리" navigateBack={navigateBack} />
+    <SafeAreaView style={styles.containerSafeArea}>
+      <View style={styles.container}>
+        <SettingAppBar title="계정관리" navigateBack={navigateBack} />
 
-      <ScrollView contentContainerStyle={styles.containerContent} overScrollMode="never">
-        <View>
-          <SettingSection title="계정">
-            <SettingSectionListItem
-              label={user?.email ?? ''}
-              tailComponent={
-                <MDText type="bodyRegular" color={colors.text.alternative}>
-                  카카오 연동
-                </MDText>
-              }
-            />
-          </SettingSection>
+        <ScrollView contentContainerStyle={styles.containerContent} overScrollMode="never">
+          <View>
+            <SettingSection title="계정">
+              <SettingSectionListItem
+                label={user?.email ?? ''}
+                tailComponent={
+                  <MDText type="bodyRegular" color={colors.text.alternative}>
+                    카카오 연동
+                  </MDText>
+                }
+              />
+            </SettingSection>
 
-          <View style={styles.divider} />
+            <View style={styles.divider} />
 
-          <SettingSection title="관리">
-            <SettingSectionListItem label="로그아웃" onPress={openLogoutModal} />
-            <SettingSectionListItem
-              label="회원 탈퇴"
-              tailComponent={
-                <Image
-                  style={styles.icon}
-                  source={require('@/assets/images/ic-chevron_right.png')}
-                  tintColor={colors.icon.normal}
-                />
-              }
-              onPress={navigateToWithdraw}
-            />
-          </SettingSection>
-        </View>
-      </ScrollView>
+            <SettingSection title="관리">
+              <SettingSectionListItem label="로그아웃" onPress={openLogoutModal} />
+              <SettingSectionListItem
+                label="회원 탈퇴"
+                tailComponent={
+                  <Image
+                    style={styles.icon}
+                    source={require('@/assets/images/ic-chevron_right.png')}
+                    tintColor={colors.icon.normal}
+                  />
+                }
+                onPress={navigateToWithdraw}
+              />
+            </SettingSection>
+          </View>
+        </ScrollView>
 
-      <LogoutModal
-        title="일기를 삭제할까요?"
-        opened={isOpenLogoutModal}
-        closeModal={closeLogoutModal}
-        logout={handleLogout}
-      />
-    </View>
+        <LogoutModal
+          title="일기를 삭제할까요?"
+          opened={isOpenLogoutModal}
+          closeModal={closeLogoutModal}
+          logout={handleLogout}
+        />
+      </View>
+    </SafeAreaView>
   );
 }
 
-const screenStyles = ({ colors }: { colors: MDColors }) =>
+const ScreenStyles = ({ colors }: { colors: MDColors }) =>
   StyleSheet.create({
+    containerSafeArea: {
+      flex: 1,
+      backgroundColor: colors.background.normal,
+    },
     container: {
       flex: 1,
       backgroundColor: colors.background.normal,

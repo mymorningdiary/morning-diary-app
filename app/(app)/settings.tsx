@@ -42,6 +42,13 @@ export default function SettingsScreen() {
     });
   };
 
+  const onNavigateToWebView = () => {
+    router.push({
+      pathname: '/web-view',
+      params: { webviewURL: 'https://slashpage.com/morningdiary' },
+    });
+  };
+
   const onClosePermissionModal = () => {
     setShowPermissionModal(false);
   };
@@ -158,7 +165,16 @@ export default function SettingsScreen() {
             <View style={styles.divider} />
 
             <SettingSection title="소통">
-              <SettingSectionListItem label="의견 보내기" />
+              <SettingSectionListItem
+                label="개발자에게 의견 보내기"
+                tailComponent={
+                  <Image
+                    style={styles.icon}
+                    source={require('@/assets/images/ic-chevron_right.png')}
+                  />
+                }
+                onPress={onNavigateToWebView}
+              />
               <SettingSectionListItem label="리뷰 남기기" />
             </SettingSection>
 

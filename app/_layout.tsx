@@ -66,6 +66,7 @@ function RootNavigator() {
 
       <Stack.Protected guard={!session && hasVisited === 'true'}>
         <Stack.Screen name="sign-in" options={{ headerShown: false }} />
+        <Stack.Screen name="web-view" options={{ headerShown: false }} />
       </Stack.Protected>
     </Stack>
   );

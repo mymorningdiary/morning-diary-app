@@ -1,9 +1,7 @@
-
 import { UserProvider } from '@/contexts/UserContext';
 import { Stack } from 'expo-router';
 
 export default function AppLayout() {
-
   return (
     <UserProvider>
       <Stack>
@@ -16,6 +14,7 @@ export default function AppLayout() {
         <Stack.Screen name="account" options={{ headerShown: false }} />
         <Stack.Screen name="text-goal" options={{ headerShown: false }} />
         <Stack.Screen name="(notification)" options={{ headerShown: false }} />
+        <Stack.Screen name="withdraw" options={{ headerShown: false }} />
       </Stack>
     </UserProvider>
   );

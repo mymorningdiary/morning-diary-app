@@ -1,5 +1,5 @@
 import { MDButton, MDText, MDView } from '@/components';
-import { useAppState } from '@/contexts/AppContext';
+import { useAppState } from '@/contexts/AppStateContext';
 import { authAPI } from '@/core/api';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { MDColors } from '@/types/types';

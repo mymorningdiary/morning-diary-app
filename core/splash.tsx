@@ -1,6 +1,6 @@
 import { SplashScreen } from 'expo-router';
 import { useEffect } from 'react';
-import { useAppState } from '../contexts/AppContext';
+import { useAppState } from '../contexts/AppStateContext';
 
 
 export function SplashScreenController() {

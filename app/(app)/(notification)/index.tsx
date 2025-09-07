@@ -9,6 +9,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { Dimensions, StyleSheet, View } from 'react-native';
 import { TimerPickerModal } from 'react-native-timer-picker';
 import dayjs from 'dayjs';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const formatAlarmTime = (alarmTime: AlarmTime): string => {
   const { hours, minutes } = alarmTime;
@@ -26,8 +27,9 @@ interface AlarmTime {
 
 export default function NotificationScreen() {
   const colors = useThemeColor();
-  const styles = useMemo(() => ScreenStyles({ colors }), [colors]);
-
+  const insets = useSafeAreaInsets();
+  const styles = ScreenStyles({ colors, bottomInset: insets.bottom });
+  
   const { fromScreen } = useLocalSearchParams<{ fromScreen: string }>();
 
   const [showTimePicker, setShowTimePicker] = useState(false);
@@ -94,66 +96,72 @@ export default function NotificationScreen() {
   }, [user]);
 
   return (
-    <View style={styles.container}>
-      {fromScreen === 'permission' ? (
-        <MDRow style={styles.containerSkipAppBar}>
-          <MDPressable style={styles.buttonSkip} onPress={onSkipButtonPress}>
+    <SafeAreaView style={styles.containerSafeArea}>
+      <View style={styles.container}>
+        {fromScreen === 'permission' ? (
+          <MDRow style={styles.containerSkipAppBar}>
+            <MDPressable style={styles.buttonSkip} onPress={onSkipButtonPress}>
+              <MDText type="labelRegular" color={colors.text.alternative}>
+                건너띄기
+              </MDText>
+            </MDPressable>
+          </MDRow>
+        ) : (
+          <NotificationAppBar title="알림 시간" onBackButtonPress={onBackButtonPress} />
+        )}
+
+        <View style={styles.containerContent}>
+          <View style={styles.containerSun}>
+            <MDLargeSpeechBubble text="일어나서 바로 써볼까요?" />
+            <Image source={require('@/assets/images/img-sun-basic.png')} style={styles.imageSun} />
+          </View>
+          <View style={styles.containerTitle}>
+            <MDText type="titleSemiBold">알림을 받을 시간을 정해주세요</MDText>
             <MDText type="labelRegular" color={colors.text.alternative}>
-              건너띄기
+              나와의 약속을 만들어봐요
             </MDText>
+          </View>
+          <MDPressable style={styles.buttonTimePicker} onPress={onOpenTimePicker}>
+            <MDText type="bodyRegular">알림 시간</MDText>
+            {selectedAlarmTime && (
+              <MDText type="bodyRegular">{formatAlarmTime(selectedAlarmTime)}</MDText>
+            )}
           </MDPressable>
-        </MDRow>
-      ) : (
-        <NotificationAppBar title="알림 시간" onBackButtonPress={onBackButtonPress} />
-      )}
-
-      <View style={styles.containerContent}>
-        <View style={styles.containerSun}>
-          <MDLargeSpeechBubble text="일어나서 바로 써볼까요?" />
-          <Image source={require('@/assets/images/img-sun-basic.png')} style={styles.imageSun} />
         </View>
-        <View style={styles.containerTitle}>
-          <MDText type="titleSemiBold">알림을 받을 시간을 정해주세요</MDText>
-          <MDText type="labelRegular" color={colors.text.alternative}>
-            나와의 약속을 만들어봐요
-          </MDText>
+        <View style={styles.containerFooter}>
+          <MDButton title="완료" onPress={onCompleteButtonPress} />
         </View>
-        <MDPressable style={styles.buttonTimePicker} onPress={onOpenTimePicker}>
-          <MDText type="bodyRegular">알림 시간</MDText>
-          {selectedAlarmTime && (
-            <MDText type="bodyRegular">{formatAlarmTime(selectedAlarmTime)}</MDText>
-          )}
-        </MDPressable>
-      </View>
-      <View style={styles.containerFooter}>
-        <MDButton title="완료" onPress={onCompleteButtonPress} />
-      </View>
 
-      <TimerPickerModal
-        styles={{
-          container: { width: Dimensions.get('window').width * 0.8 },
-          confirmButton: { borderColor: colors.primary.normal, color: colors.primary.normal },
-        }}
-        modalProps={{ overlayOpacity: 0.2 }}
-        initialValue={selectedAlarmTime ?? { hours: 7, minutes: 0 }}
-        visible={showTimePicker}
-        hideSeconds
-        confirmButtonText="완료"
-        cancelButtonText="취소"
-        padHoursWithZero
-        hourLabel="시"
-        minuteLabel="분"
-        closeOnOverlayPress
-        setIsVisible={setShowTimePicker}
-        onConfirm={onTimePickerConfirm}
-        onCancel={onTimePickerCancel}
-      />
-    </View>
+        <TimerPickerModal
+          styles={{
+            container: { width: Dimensions.get('window').width * 0.8 },
+            confirmButton: { borderColor: colors.primary.normal, color: colors.primary.normal },
+          }}
+          modalProps={{ overlayOpacity: 0.2 }}
+          initialValue={selectedAlarmTime ?? { hours: 7, minutes: 0 }}
+          visible={showTimePicker}
+          hideSeconds
+          confirmButtonText="완료"
+          cancelButtonText="취소"
+          padHoursWithZero
+          hourLabel="시"
+          minuteLabel="분"
+          closeOnOverlayPress
+          setIsVisible={setShowTimePicker}
+          onConfirm={onTimePickerConfirm}
+          onCancel={onTimePickerCancel}
+        />
+      </View>
+    </SafeAreaView>
   );
 }
 
-const ScreenStyles = ({ colors }: { colors: MDColors }) =>
+const ScreenStyles = ({ colors, bottomInset }: { colors: MDColors, bottomInset: number }) =>
   StyleSheet.create({
+    containerSafeArea: {
+      flex: 1,
+      backgroundColor: colors.background.normal,
+    },
     container: {
       flex: 1,
       backgroundColor: colors.background.normal,
@@ -199,6 +207,6 @@ const ScreenStyles = ({ colors }: { colors: MDColors }) =>
     },
     containerFooter: {
       paddingHorizontal: 16,
-      paddingBottom: 60,
+      paddingBottom: 60 - bottomInset,
     },
   });

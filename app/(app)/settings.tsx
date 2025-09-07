@@ -12,6 +12,7 @@ import * as Notifications from 'expo-notifications';
 import { router } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { Linking, ScrollView, StyleSheet, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function SettingsScreen() {
   const colors = useThemeColor();
@@ -104,97 +105,97 @@ export default function SettingsScreen() {
   }, [isAlarmOn, pushToken]);
 
   return (
-    <View style={styles.container}>
-      <SettingAppBar title="설정" navigateBack={navigateBack} />
+    <SafeAreaView style={styles.containerSafeArea}>
+      <View style={styles.container}>
+        <SettingAppBar title="설정" navigateBack={navigateBack} />
 
-      <ScrollView contentContainerStyle={styles.containerContent} overScrollMode="never">
-        <View>
-          <SettingSection title="계정">
-            <SettingSectionListItem
-              label="계정 관리"
-              tailComponent={
-                <Image
-                  style={styles.icon}
-                  source={require('@/assets/images/ic-chevron_right.png')}
-                />
-              }
-              onPress={navigateToAccount}
-            />
-          </SettingSection>
+        <ScrollView contentContainerStyle={styles.containerContent} overScrollMode="never">
+          <View>
+            <SettingSection title="계정">
+              <SettingSectionListItem
+                label="계정 관리"
+                tailComponent={
+                  <Image
+                    style={styles.icon}
+                    source={require('@/assets/images/ic-chevron_right.png')}
+                  />
+                }
+                onPress={navigateToAccount}
+              />
+            </SettingSection>
 
-          <View style={styles.divider} />
+            <View style={styles.divider} />
 
-          <SettingSection title="시스템 설정">
-            <SettingSectionListItem
-              label="알림"
-              tailComponent={<MDSwitch checked={isAlarmOn ?? false} onChange={onAlarmToggle} />}
-            />
-            <SettingSectionListItem
-              label="알림 시간"
-              disabled={!isAlarmOn}
-              tailComponent={
-                <Image
-                  style={styles.icon}
-                  source={require('@/assets/images/ic-chevron_right.png')}
-                  tintColor={isAlarmOn ? colors.icon.normal : colors.icon.alternative}
-                />
-              }
-              onPress={navigateToAlarm}
-            />
-            <SettingSectionListItem
-              label="아침일기 목표"
-              tailComponent={
-                <Image
-                  style={styles.icon}
-                  source={require('@/assets/images/ic-chevron_right.png')}
-                />
-              }
-              onPress={navigateToGoal}
-            />
-          </SettingSection>
+            <SettingSection title="시스템 설정">
+              <SettingSectionListItem
+                label="알림"
+                tailComponent={<MDSwitch checked={isAlarmOn ?? false} onChange={onAlarmToggle} />}
+              />
+              <SettingSectionListItem
+                label="알림 시간"
+                disabled={!isAlarmOn}
+                tailComponent={
+                  <Image
+                    style={styles.icon}
+                    source={require('@/assets/images/ic-chevron_right.png')}
+                    tintColor={isAlarmOn ? colors.icon.normal : colors.icon.alternative}
+                  />
+                }
+                onPress={navigateToAlarm}
+              />
+              <SettingSectionListItem
+                label="아침일기 목표"
+                tailComponent={
+                  <Image
+                    style={styles.icon}
+                    source={require('@/assets/images/ic-chevron_right.png')}
+                  />
+                }
+                onPress={navigateToGoal}
+              />
+            </SettingSection>
 
-          <View style={styles.divider} />
+            <View style={styles.divider} />
 
-          <SettingSection title="소통">
-            <SettingSectionListItem label="의견 보내기" />
-            <SettingSectionListItem label="리뷰 남기기" />
-          </SettingSection>
+            <SettingSection title="소통">
+              <SettingSectionListItem label="의견 보내기" />
+              <SettingSectionListItem label="리뷰 남기기" />
+            </SettingSection>
 
-          <View style={styles.divider} />
+            <View style={styles.divider} />
 
-          <SettingSection title="정보">
-            <SettingSectionListItem label="이용약관" />
-            <SettingSectionListItem label="개인정보처리방침" />
-            <SettingSectionListItem
-              label="버전 정보 1.0.0"
-              tailComponent={
-                <MDText type="bodyRegular" color={colors.text.alternative}>
-                  최신 버전
-                </MDText>
-              }
-            />
-          </SettingSection>
-        </View>
-      </ScrollView>
+            <SettingSection title="정보">
+              <SettingSectionListItem label="이용약관" />
+              <SettingSectionListItem label="개인정보처리방침" />
+              <SettingSectionListItem
+                label="버전 정보 1.0.0"
+                tailComponent={
+                  <MDText type="bodyRegular" color={colors.text.alternative}>
+                    최신 버전
+                  </MDText>
+                }
+              />
+            </SettingSection>
+          </View>
+        </ScrollView>
 
-      <MDDefaultModal
-        visible={showPermissionModal}
-        title={'알림을 받으려면, 기기 설정에서 알림을 허용해주세요'}
-        negativeButton={{
-          text: '취소',
-          onPress: onClosePermissionModal,
-        }}
-        positiveButton={{
-          text: '알림 허용',
-          onPress: onOpenDeviceSettings,
-        }}
-      />
-    </View>
+        <MDDefaultModal
+          visible={showPermissionModal}
+          title={'알림을 받으려면, 기기 설정에서 알림을 허용해주세요'}
+          negativeButton={{ text: '취소', onPress: onClosePermissionModal }}
+          positiveButton={{ text: '알림 허용', onPress: onOpenDeviceSettings }}
+        />
+      </View>
+    </SafeAreaView>
   );
 }
 
 const screenStyles = ({ colors }: { colors: MDColors }) =>
   StyleSheet.create({
+    containerSafeArea: {
+      flex: 1,
+      backgroundColor: colors.background.normal,
+    },
     container: {
       flex: 1,
       backgroundColor: colors.background.normal,

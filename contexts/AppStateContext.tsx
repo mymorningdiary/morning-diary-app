@@ -8,7 +8,7 @@ const AppStateContext = createContext<{
   session?: string | null;
   hasVisited?: string | null;
   isLoading: boolean;
-  version?: AppVersion | null;
+  appVersion?: AppVersion | null;
   signIn: (token: string) => void;
   signOut: () => void;
   setHasVisited: (value: string | null) => void;
@@ -16,7 +16,7 @@ const AppStateContext = createContext<{
   session: null,
   hasVisited: null,
   isLoading: false,
-  version: null,
+  appVersion: null,
   signIn: () => null,
   signOut: () => null,
   setHasVisited: () => null,
@@ -42,7 +42,7 @@ export function AppStateProvider({ children }: PropsWithChildren) {
   const [[isSessionLoading, session], setSession] = useStorageState('session');
   const [[isVisitedLoading, hasVisited], setHasVisited] = useStorageState('hasVisited');
   const isLoading = isSessionLoading || isVisitedLoading;
-  const [version, setVersion] = useState<AppVersion | null>(null);
+  const [appVersion, setAppVersion] = useState<AppVersion | null>(null);
 
   const { data } = useQuery({
     queryKey: ['appVersion'],
@@ -60,14 +60,14 @@ export function AppStateProvider({ children }: PropsWithChildren) {
   globalSignOut = signOut;
 
   useEffect(() => {
-    console.log('[AppStateProvider] session:', session, 'hasVisited:', hasVisited);
-  }, [session, hasVisited]);
-
-  useEffect(() => {
     if (data?.code === 2000) {
-      setVersion(data.data);
+      setAppVersion(data.data);
     }
   }, [data]);
+
+  useEffect(() => {
+    console.log('[AppStateProvider] session:', session, 'hasVisited:', hasVisited);
+  }, [session, hasVisited]);
 
   return (
     <AppStateContext
@@ -75,7 +75,7 @@ export function AppStateProvider({ children }: PropsWithChildren) {
         session,
         hasVisited,
         isLoading,
-        version,
+        appVersion,
         signIn,
         signOut,
         setHasVisited,

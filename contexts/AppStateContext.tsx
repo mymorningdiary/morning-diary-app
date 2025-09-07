@@ -3,12 +3,16 @@ import { AppVersion } from '@/core/types';
 import { useStorageState } from '@/hooks/useStorageState';
 import { useQuery } from '@tanstack/react-query';
 import { createContext, type PropsWithChildren, use, useEffect, useState } from 'react';
+import { Platform } from 'react-native';
+import * as Application from 'expo-application';
+import semver from 'semver';
 
 const AppStateContext = createContext<{
   session?: string | null;
   hasVisited?: string | null;
   isLoading: boolean;
   appVersion?: AppVersion | null;
+  isForceUpdateNeeded: boolean;
   signIn: (token: string) => void;
   signOut: () => void;
   setHasVisited: (value: string | null) => void;
@@ -17,6 +21,7 @@ const AppStateContext = createContext<{
   hasVisited: null,
   isLoading: false,
   appVersion: null,
+  isForceUpdateNeeded: false,
   signIn: () => null,
   signOut: () => null,
   setHasVisited: () => null,
@@ -43,6 +48,7 @@ export function AppStateProvider({ children }: PropsWithChildren) {
   const [[isVisitedLoading, hasVisited], setHasVisited] = useStorageState('hasVisited');
   const isLoading = isSessionLoading || isVisitedLoading;
   const [appVersion, setAppVersion] = useState<AppVersion | null>(null);
+  const [isForceUpdateNeeded, setForceUpdateNeeded] = useState(false);
 
   const { data } = useQuery({
     queryKey: ['appVersion'],
@@ -62,6 +68,24 @@ export function AppStateProvider({ children }: PropsWithChildren) {
   useEffect(() => {
     if (data?.code === 2000) {
       setAppVersion(data.data);
+
+      // 강제 업데이트 로직
+      try {
+        const { android, ios } = data.data;
+        const minVersion = Platform.select({
+          android: android.minVersion,
+          ios: ios.minVersion,
+          default: null,
+        });
+        const currentVersion = Application.nativeApplicationVersion;
+        if (!currentVersion || !minVersion) return;
+
+        if (semver.lt(currentVersion, minVersion)) {
+          setForceUpdateNeeded(true);
+        }
+      } catch (e) {
+        console.error('Failed to compare version', e);
+      }
     }
   }, [data]);
 
@@ -76,6 +100,7 @@ export function AppStateProvider({ children }: PropsWithChildren) {
         hasVisited,
         isLoading,
         appVersion,
+        isForceUpdateNeeded,
         signIn,
         signOut,
         setHasVisited,

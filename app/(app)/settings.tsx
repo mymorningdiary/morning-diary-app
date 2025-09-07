@@ -38,7 +38,7 @@ export default function SettingsScreen() {
 
   const navigateToAlarm = async () => {
     router.push({
-      pathname: '/(app)/(notification)',
+      pathname: '/(app)/alarm-time',
     });
   };
 

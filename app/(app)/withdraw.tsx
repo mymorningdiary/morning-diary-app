@@ -1,9 +1,10 @@
 import { MDButton, MDText, MDView } from '@/components';
 import { useAppState } from '@/contexts/AppStateContext';
-import { useUser } from '@/contexts/UserContext';
+import { userAPI } from '@/core/api';
 import SettingAppBar from '@/domain/setting/SettingAppBar';
 import { useThemeColor } from '@/hooks';
 import { MDColors } from '@/types';
+import { useMutation } from '@tanstack/react-query';
 import { router } from 'expo-router';
 import { StyleSheet, View } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -14,13 +15,23 @@ export default function WithdrawScreen() {
   const styles = ScreenStyles({ colors, bottomInset: insets.bottom });
 
   const { signOut } = useAppState();
-  const { user } = useUser();
+
+  const { mutate } = useMutation({
+    mutationFn: () => userAPI.deleteUser(),
+    onSuccess: (res) => {
+      if (res.code === 2000) {
+        signOut();
+      }
+    },
+  });
 
   const onNavigateBack = () => {
     router.back();
   };
 
-  const onWithdraw = () => {};
+  const onWithdraw = () => {
+    mutate();
+  };
 
   return (
     <SafeAreaView style={styles.containerSafeArea}>

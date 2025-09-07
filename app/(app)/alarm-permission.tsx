@@ -5,11 +5,10 @@ import { MDColors } from '@/types';
 import { Image } from 'expo-image';
 import * as Notifications from 'expo-notifications';
 import { router } from 'expo-router';
-import { useMemo } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 
-export default function NotificationPermissionScreen() {
+export default function AlarmPermissionScreen() {
   const colors = useThemeColor();
   const insets = useSafeAreaInsets();
   const styles = ScreenStyles({ colors, bottomInset: insets.bottom });
@@ -18,7 +17,7 @@ export default function NotificationPermissionScreen() {
   const { mutate: updatePushToken } = useUpdatePushToken();
 
   const onSkipButtonPress = () => {
-     router.replace('/(app)');
+    router.replace('/(app)');
   };
 
   const onNextButtonPress = async () => {
@@ -27,7 +26,7 @@ export default function NotificationPermissionScreen() {
 
       if (granted === true && pushToken !== null) {
         updatePushToken({ pushToken });
-        router.replace({ pathname: '/(app)/(notification)', params: { fromScreen: 'permission' } });
+        router.replace({ pathname: '/(app)/alarm-time', params: { fromScreen: 'permission' } });
       } else {
         router.replace('/(app)');
       }
@@ -67,9 +66,9 @@ export default function NotificationPermissionScreen() {
   );
 }
 
-const ScreenStyles = ({ colors, bottomInset }: { colors: MDColors, bottomInset: number }) =>
+const ScreenStyles = ({ colors, bottomInset }: { colors: MDColors; bottomInset: number }) =>
   StyleSheet.create({
-     containerSafeArea: {
+    containerSafeArea: {
       flex: 1,
       backgroundColor: colors.background.normal,
     },

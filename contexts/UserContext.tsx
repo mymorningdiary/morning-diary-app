@@ -27,11 +27,11 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     console.log('[User State] getUserResponse: ', data);
-    
+
     if (data?.code === 2000) {
       setUser(data.data);
     }
   }, [data]);
 
   return <UserContext.Provider value={{ user }}>{children}</UserContext.Provider>;
-};
+}

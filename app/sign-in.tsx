@@ -33,7 +33,7 @@ export default function SignInScreen() {
         if (isExistUser) {
           router.replace('/(app)');
         } else {
-          router.replace('/(app)/(notification)/permission');
+          router.replace('/(app)/alarm-permission');
         }
       }
     } catch (e) {
@@ -114,7 +114,7 @@ const screenStyles = ({ colors }: { colors: MDColors }) =>
       flex: 1,
       alignItems: 'center',
       padding: 20,
-       backgroundColor: colors.background.normal
+      backgroundColor: colors.background.normal,
     },
     logoContainer: {
       width: '100%',

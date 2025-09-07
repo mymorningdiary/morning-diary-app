@@ -20,6 +20,10 @@ const userAPI = {
     const response = await apiClient.put('/users/alarm-time', body);
     return response.data;
   },
+  deleteUser: async (): Promise<ApiResponse<null>> => {
+    const response = await apiClient.patch('/users/status');
+    return response.data;
+  },
 };
 
 export default userAPI;

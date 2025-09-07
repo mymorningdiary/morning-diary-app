@@ -5,7 +5,7 @@ import { useThemeColor, useUpdateTextGoal } from '@/hooks';
 import useGetTextGoals from '@/hooks/useTextGoalQuery';
 import { MDColors } from '@/types';
 import { router } from 'expo-router';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -84,7 +84,7 @@ export default function TextGoalScreen() {
   );
 }
 
-const ScreenStyles = ({ colors, bottomInset }: { colors: MDColors, bottomInset: number }) =>
+const ScreenStyles = ({ colors, bottomInset }: { colors: MDColors; bottomInset: number }) =>
   StyleSheet.create({
     containerSafeArea: {
       flex: 1,

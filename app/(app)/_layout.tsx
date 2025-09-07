@@ -4,17 +4,18 @@ import { Stack } from 'expo-router';
 export default function AppLayout() {
   return (
     <UserProvider>
-      <Stack>
-        <Stack.Screen name="index" options={{ headerShown: false }} />
-        <Stack.Screen name="write-diary" options={{ headerShown: false }} />
-        <Stack.Screen name="update-diary" options={{ headerShown: false }} />
-        <Stack.Screen name="read-diary" options={{ headerShown: false }} />
-        <Stack.Screen name="first-write" options={{ headerShown: false }} />
-        <Stack.Screen name="settings" options={{ headerShown: false }} />
-        <Stack.Screen name="account" options={{ headerShown: false }} />
-        <Stack.Screen name="text-goal" options={{ headerShown: false }} />
-        <Stack.Screen name="(notification)" options={{ headerShown: false }} />
-        <Stack.Screen name="withdraw" options={{ headerShown: false }} />
+      <Stack screenOptions={{ headerShown: false }}>
+        <Stack.Screen name="index" />
+        <Stack.Screen name="write-diary" />
+        <Stack.Screen name="update-diary" />
+        <Stack.Screen name="read-diary" />
+        <Stack.Screen name="first-write" />
+        <Stack.Screen name="settings" />
+        <Stack.Screen name="account" />
+        <Stack.Screen name="text-goal" />
+        <Stack.Screen name="withdraw" />
+        <Stack.Screen name="alarm-time" />
+        <Stack.Screen name="alarm-permission" />
       </Stack>
     </UserProvider>
   );

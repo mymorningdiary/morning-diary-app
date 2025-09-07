@@ -25,7 +25,7 @@ interface AlarmTime {
   seconds: number;
 }
 
-export default function NotificationScreen() {
+export default function AlarmTimeScreen() {
   const colors = useThemeColor();
   const insets = useSafeAreaInsets();
   const styles = ScreenStyles({ colors, bottomInset: insets.bottom });
@@ -76,8 +76,8 @@ export default function NotificationScreen() {
     const newAlarmTime = dayjs().hour(hours).minute(minutes).second(0).format('HH:mm:ss');
 
     updateAlarmTime({ alarmTime: newAlarmTime });
-    if (fromScreen === 'login') {
-      router.replace('/(app)');
+    if (fromScreen === 'permission') {
+      router.replace('/');
     } else {
       router.back();
     }

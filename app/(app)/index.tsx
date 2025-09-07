@@ -17,7 +17,7 @@ import { StyleSheet } from 'react-native';
 import { DateData } from 'react-native-calendars';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-export default function IndexScreen() {
+export default function HomeScreen() {
   const colors = useThemeColor();
   const styles = ScreenStyles({ colors });
 

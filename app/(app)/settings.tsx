@@ -8,6 +8,7 @@ import SettingSection from '@/domain/setting/SettingSection';
 import SettingSectionListItem from '@/domain/setting/SettingSectionListItem';
 import { useThemeColor, useUpdatePushToken } from '@/hooks';
 import { MDColors } from '@/types';
+import { openStoreLink } from '@/utils/links';
 import * as Application from 'expo-application';
 import { Image } from 'expo-image';
 import * as Notifications from 'expo-notifications';
@@ -47,9 +48,7 @@ export default function SettingsScreen() {
       <MDPressable
         style={styles.buttonUpdateApp}
         disabled={!isUpdateNeeded}
-        onPress={() => {
-          // TODO: 스토어 앱 오픈
-        }}>
+        onPress={openStoreLink}>
         <MDText
           type="bodyRegular"
           color={isUpdateNeeded ? colors.primary.normal : colors.text.alternative}>
@@ -210,7 +209,7 @@ export default function SettingsScreen() {
                 }
                 onPress={onNavigateToWebView}
               />
-              <SettingSectionListItem label="리뷰 남기기" />
+              <SettingSectionListItem label="리뷰 남기기" onPress={openStoreLink} />
             </SettingSection>
 
             <View style={styles.divider} />

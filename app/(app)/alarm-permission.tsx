@@ -22,7 +22,9 @@ export default function AlarmPermissionScreen() {
 
   const onNextButtonPress = async () => {
     try {
-      const { granted } = await Notifications.requestPermissionsAsync();
+      const { granted } = await Notifications.requestPermissionsAsync({
+        ios: { allowAlert: true, allowBadge: true, allowSound: true },
+      });
 
       if (granted === true && pushToken !== null) {
         updatePushToken({ pushToken });

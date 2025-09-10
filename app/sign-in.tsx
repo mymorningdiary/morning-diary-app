@@ -1,4 +1,4 @@
-import { MDButton, MDText, MDView } from '@/components';
+import { MDButton, MDPressable, MDText, MDView } from '@/components';
 import { useAppState } from '@/contexts/AppStateContext';
 import { authAPI } from '@/core/api';
 import { useThemeColor } from '@/hooks/useThemeColor';
@@ -6,7 +6,7 @@ import { MDColors } from '@/types/types';
 import { login } from '@react-native-kakao/user';
 import { useMutation } from '@tanstack/react-query';
 import { router } from 'expo-router';
-import { Image, StyleSheet, TouchableOpacity } from 'react-native';
+import { Image, StyleSheet } from 'react-native';
 
 export default function SignInScreen() {
   const colors = useThemeColor();
@@ -41,6 +41,20 @@ export default function SignInScreen() {
     }
   };
 
+  const onNavigateToPrivacyTerms = () => {
+    router.push({
+      pathname: '/web-view',
+      params: { webviewURL: 'https://slashpage.com/morningdiary/xjqy1g2vwjn77m6vd54z' },
+    });
+  };
+
+  const onNavigateToUseTerms = () => {
+    router.push({
+      pathname: '/web-view',
+      params: { webviewURL: 'https://slashpage.com/morningdiary/ywk9j72986j94mgpqvnd' },
+    });
+  };
+
   return (
     <MDView style={styles.container}>
       <MDView style={styles.logoContainer}>
@@ -66,16 +80,12 @@ export default function SignInScreen() {
             <MDText type="caption1Regular" style={styles.termsText}>
               {`계속하기를 진행하시면 `}
             </MDText>
-            <TouchableOpacity
-              activeOpacity={0.8}
-              onPress={() => {
-                console.log('개인정보 처리방침 화면으로 이동');
-                // TODO: 개인정보 처리방침 화면으로 이동
-              }}>
+
+            <MDPressable onPress={onNavigateToPrivacyTerms}>
               <MDText type="caption1Regular" style={styles.linkText}>
                 {`개인정보 처리방침`}
               </MDText>
-            </TouchableOpacity>
+            </MDPressable>
 
             <MDText type="caption1Regular" style={styles.termsText}>
               {` 및 `}
@@ -83,16 +93,11 @@ export default function SignInScreen() {
           </MDView>
 
           <MDView direction="row">
-            <TouchableOpacity
-              activeOpacity={0.8}
-              onPress={() => {
-                console.log('이용약관 화면으로 이동');
-                // TODO: 이용약관 화면으로 이동
-              }}>
+            <MDPressable onPress={onNavigateToUseTerms}>
               <MDText type="caption1Regular" style={styles.linkText}>
                 {`이용약관`}
               </MDText>
-            </TouchableOpacity>
+            </MDPressable>
 
             <MDText type="caption1Regular" style={styles.termsText}>
               {`에 동의하게 됩니다.`}

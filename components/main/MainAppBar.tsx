@@ -14,9 +14,9 @@ export default function MainAppBar({ navigateToSetting }: MainAppBarProps) {
 
   return (
     <MDRow style={styles.container}>
-      <MDPressable style={styles.containerButton} onPress={() => {}}>
+      {/* <MDPressable style={styles.containerButton} onPress={() => {}}>
         <Image source={require('@/assets/images/ic-list.png')} style={styles.icon} />
-      </MDPressable>
+      </MDPressable> */}
 
       <MDPressable style={styles.containerButton} onPress={navigateToSetting}>
         <Image source={require('@/assets/images/ic-setting.png')} style={styles.icon} />
@@ -29,9 +29,8 @@ const appBarStyles = ({ colors }: { colors: MDColors }) =>
   StyleSheet.create({
     container: {
       height: 48,
-      justifyContent: 'space-between',
+      justifyContent: 'flex-end',
       alignItems: 'center',
-
       backgroundColor: colors.background.normal,
     },
     containerButton: {

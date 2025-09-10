@@ -36,42 +36,36 @@ export default function OnboardingScreen() {
   };
 
   return (
-    <SafeAreaView style={styles.containerSafeArea}>
-      <MDView style={styles.container}>
-        <MDView style={styles.indicatorContainer}>
-          {[0, 1].map((index) => (
-            <MDView key={index} style={[styles.dot, currentPage === index && styles.activeDot]} />
-          ))}
-        </MDView>
-
-        <PagerView
-          style={styles.container}
-          initialPage={0}
-          ref={pageRef}
-          onPageSelected={({ nativeEvent }) => handlePageSelected(nativeEvent.position)}>
-          <MDView key="1" style={styles.page}>
-            {/* <SpeechBubble text="의식의 흐름" /> */}
-            <Image source={require('@/assets/images/img_onboarding_1.png')} />
-          </MDView>
-          <MDView key="2" style={styles.page}>
-            <Image source={require('@/assets/images/img_onboarding_2.png')} />
-          </MDView>
-        </PagerView>
-
-        <MDView style={styles.bottomContainer}>
-          <MDButton title={bottomButtonTexts[currentPage]} onPress={handleBottomButtonPress} />
-        </MDView>
+    <MDView style={styles.container}>
+      <MDView style={styles.indicatorContainer}>
+        {[0, 1].map((index) => (
+          <MDView key={index} style={[styles.dot, currentPage === index && styles.activeDot]} />
+        ))}
       </MDView>
-    </SafeAreaView>
+
+      <PagerView
+        style={styles.container}
+        initialPage={0}
+        ref={pageRef}
+        onPageSelected={({ nativeEvent }) => handlePageSelected(nativeEvent.position)}>
+        <MDView key="1" style={styles.page}>
+          {/* <SpeechBubble text="의식의 흐름" /> */}
+          <Image source={require('@/assets/images/img_onboarding_1.png')} />
+        </MDView>
+        <MDView key="2" style={styles.page}>
+          <Image source={require('@/assets/images/img_onboarding_2.png')} />
+        </MDView>
+      </PagerView>
+
+      <MDView style={styles.bottomContainer}>
+        <MDButton title={bottomButtonTexts[currentPage]} onPress={handleBottomButtonPress} />
+      </MDView>
+    </MDView>
   );
 }
 
 const screenStyles = ({ colors, bottomInset }: { colors: MDColors; bottomInset: number }) =>
   StyleSheet.create({
-    containerSafeArea: {
-      flex: 1,
-      backgroundColor: colors.background.normal,
-    },
     container: {
       flex: 1,
       backgroundColor: colors.background.normal,

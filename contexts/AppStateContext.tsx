@@ -6,6 +6,7 @@ import { createContext, type PropsWithChildren, use, useEffect, useState } from 
 import { Platform } from 'react-native';
 import * as Application from 'expo-application';
 import semver from 'semver';
+import { setGlobalSignOutHandler } from '@/core/api/authHandlers';
 
 const AppStateContext = createContext<{
   session?: string | null;
@@ -63,7 +64,7 @@ export function AppStateProvider({ children }: PropsWithChildren) {
     setSession(null);
   };
 
-  globalSignOut = signOut;
+  setGlobalSignOutHandler(signOut);
 
   useEffect(() => {
     if (data?.code === 2000) {

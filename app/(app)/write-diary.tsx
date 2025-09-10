@@ -234,6 +234,7 @@ export default function WriteDiaryScreen() {
                 value={textState.active}
                 onChangeText={onTextChange}
                 placeholder="오늘 아침에는 어떤 생각이 떠오르나요?"
+                placeholderTextColor={colors.text.alternative}
                 multiline
                 scrollEnabled={false}
               />
@@ -294,5 +295,6 @@ const ScreenStyles = ({ colors, bottomInset }: { colors: MDColors; bottomInset: 
       fontWeight: '400',
       lineHeight: 26,
       fontSize: 16,
+      color: colors.text.normal,
     },
   });

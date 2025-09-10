@@ -83,6 +83,20 @@ export default function SettingsScreen() {
     });
   };
 
+  const onNavigateToPrivacyTerms = () => {
+    router.push({
+      pathname: '/web-view',
+      params: { webviewURL: 'https://slashpage.com/morningdiary/xjqy1g2vwjn77m6vd54z' },
+    });
+  };
+
+  const onNavigateToUseTerms = () => {
+    router.push({
+      pathname: '/web-view',
+      params: { webviewURL: 'https://slashpage.com/morningdiary/ywk9j72986j94mgpqvnd' },
+    });
+  };
+
   const onClosePermissionModal = () => {
     setShowPermissionModal(false);
   };
@@ -215,8 +229,8 @@ export default function SettingsScreen() {
             <View style={styles.divider} />
 
             <SettingSection title="정보">
-              <SettingSectionListItem label="이용약관" />
-              <SettingSectionListItem label="개인정보처리방침" />
+              <SettingSectionListItem label="이용약관" onPress={onNavigateToUseTerms} />
+              <SettingSectionListItem label="개인정보처리방침" onPress={onNavigateToPrivacyTerms} />
               <SettingSectionListItem
                 label={`버전 정보 ${Application.nativeApplicationVersion}`}
                 tailComponent={updateAppComponent}

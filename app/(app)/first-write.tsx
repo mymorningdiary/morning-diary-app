@@ -45,7 +45,7 @@ export default function FirstWriteScreen() {
   }, [currentPage, currentTextGoalId]);
 
   const onCloseButtonPress = () => {
-    router.replace('/(app)');
+    router.back();
   };
 
   const onPageSelected = (position: number) => {
@@ -58,7 +58,7 @@ export default function FirstWriteScreen() {
         updateTextGoal({ textGoalId: currentTextGoalId });
       }
 
-      router.replace('/(app)');
+      router.back();
     } else {
       pagerRef.current?.setPage(currentPage + 1);
     }
@@ -66,13 +66,13 @@ export default function FirstWriteScreen() {
 
   useEffect(() => {
     if (textLength === undefined || textLength === null) {
-      router.replace('/(app)');
+      router.back();
       return;
     }
 
     const parsedLength = Number(textLength);
     if (isNaN(parsedLength) || parsedLength < 0) {
-      router.replace('/(app)');
+      router.back();
       return;
     }
 
@@ -85,7 +85,7 @@ export default function FirstWriteScreen() {
   }, [textGoals]);
 
   return (
-    <SafeAreaView>
+    <SafeAreaView style={styles.containerSafeArea}>
       <View style={styles.container}>
         <AppBar onCloseButtonPress={onCloseButtonPress} />
 

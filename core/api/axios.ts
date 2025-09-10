@@ -1,11 +1,11 @@
 import axios, { AxiosError } from 'axios';
 import * as SecureStore from 'expo-secure-store';
+import { getGlobalSignOutHandler } from './authHandlers';
 import { ApiError } from './types';
-import { getAppStateHelpers } from '@/contexts/AppStateContext';
 
 const BASE_URL = 'https://api-dev.mymorningdiary.com'; // TODO: 실제 API URL로 변경 필요
 
-export const apiClient = axios.create({
+const apiClient = axios.create({
   baseURL: BASE_URL,
   timeout: 10000,
   headers: {
@@ -36,13 +36,13 @@ apiClient.interceptors.response.use(
         code: 0,
       };
       return Promise.reject(networkError);
-    } 
+    }
 
     const { status, data } = error.response;
     const authErrorCode = [4001, 4002, 4003];
 
     if (status === 401 || authErrorCode.includes(data?.code)) {
-      getAppStateHelpers().signOut();
+      getGlobalSignOutHandler()?.();
     }
 
     return Promise.reject(error.response.data);

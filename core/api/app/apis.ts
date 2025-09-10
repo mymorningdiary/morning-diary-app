@@ -1,6 +1,6 @@
 import { AppVersion } from '@/core/types';
-import apiClient from '../axios';
 import { ApiResponse } from '../types';
+import apiClient from '../axios';
 
 const appAPI = {
   getAppVersion: async (): Promise<ApiResponse<AppVersion>> => {

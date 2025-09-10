@@ -37,12 +37,14 @@ export default function MainDiaryContent({ diaryInfo, onDiaryItemPress }: MainDi
 const contentStyles = ({ colors }: { colors: MDColors }) =>
   StyleSheet.create({
     containerDiary: {
-      marginTop: 24,
+      flex: 1,
+      paddingTop: 24,
       paddingHorizontal: 16,
+      backgroundColor: colors.background.normal,
     },
     containerEmpty: {
-      marginTop: 40,
-      justifyContent: 'center',
+      flex: 1,
+      paddingTop: 40,
       alignItems: 'center',
     },
     image: {

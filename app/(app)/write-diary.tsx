@@ -189,7 +189,7 @@ export default function WriteDiaryScreen() {
     const { isFirstWrittenDiary, textLength } = writeDiaryResponse;
 
     if (isFirstWrittenDiary) {
-      router.push(`/first-write?textLength=${textLength}`);
+      router.replace({ pathname: '/first-write', params: { textLength } });
     } else {
       router.back();
     }

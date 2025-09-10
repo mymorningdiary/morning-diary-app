@@ -1,4 +1,3 @@
-import { useAuth } from '@/contexts/AuthContext3';
 import { diaryAPI } from '@/core/api';
 import { Diary } from '@/core/types';
 import { formatMonth, getTodayDateData, padToTwoDigits } from '@/utils/dates';

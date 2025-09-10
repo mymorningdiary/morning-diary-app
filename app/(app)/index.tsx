@@ -70,8 +70,15 @@ export default function HomeScreen() {
     if (userTextGoalLength === undefined) return;
 
     const todayDate = getTodayDateData();
-    const dateParam = `year=${todayDate.year}&month=${todayDate.month}&day=${todayDate.day}`;
-    router.push(`/write-diary?${dateParam}&textGoalLength=${userTextGoalLength}`);
+    router.push({
+      pathname: '/write-diary',
+      params: {
+        year: todayDate.year,
+        month: todayDate.month,
+        day: todayDate.day,
+        textGoalLength: userTextGoalLength,
+      },
+    });
   };
 
   const navigateToSetting = useCallback(() => {
@@ -87,7 +94,7 @@ export default function HomeScreen() {
   );
 
   useEffect(() => {
-    if (!selectedDate || diaryInfos.length === 0) return;
+    if (!selectedDate) return;
 
     const selectedDiaryInfo =
       diaryInfos.find((diary) => diary.writtenDate === selectedDate.dateString) ?? null;

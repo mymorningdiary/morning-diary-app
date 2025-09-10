@@ -147,6 +147,7 @@ export default function AlarmTimeScreen() {
           hourLabel="시"
           minuteLabel="분"
           closeOnOverlayPress
+          minuteInterval={5}
           setIsVisible={setShowTimePicker}
           onConfirm={onTimePickerConfirm}
           onCancel={onTimePickerCancel}

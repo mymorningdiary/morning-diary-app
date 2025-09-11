@@ -124,7 +124,8 @@ const screenStyles = ({ colors, bottomInset }: { colors: MDColors; bottomInset: 
     container: {
       flex: 1,
       alignItems: 'center',
-      padding: 20 - bottomInset,
+      paddingHorizontal: 20,
+      paddingBottom: 20 - bottomInset,
       backgroundColor: colors.background.normal,
     },
     logoContainer: {

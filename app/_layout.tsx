@@ -66,7 +66,7 @@ function RootNavigator() {
         <Stack.Screen name="(app)" options={{ headerShown: false }} />
       </Stack.Protected>
 
-      <Stack.Protected guard={!session && hasVisited === null}>
+      <Stack.Protected guard={!!session && hasVisited === null}>
         <Stack.Screen name="onboarding" options={{ headerShown: false }} />
       </Stack.Protected>
 

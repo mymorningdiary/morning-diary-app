@@ -7,10 +7,12 @@ import { login } from '@react-native-kakao/user';
 import { useMutation } from '@tanstack/react-query';
 import { router } from 'expo-router';
 import { Image, StyleSheet } from 'react-native';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default function SignInScreen() {
   const colors = useThemeColor();
-  const styles = screenStyles({ colors });
+  const insets = useSafeAreaInsets();
+  const styles = screenStyles({ colors, bottomInset: insets.bottom });
 
   const { signIn } = useAppState();
 
@@ -56,69 +58,73 @@ export default function SignInScreen() {
   };
 
   return (
-    <MDView style={styles.container}>
-      <MDView style={styles.logoContainer}>
-        <Image source={require('@/assets/images/img-logo.png')} />
-        <MDText type="labelRegular" style={styles.logoText}>
-          아침에 쓰는 내 마음 속 이야기
-        </MDText>
-      </MDView>
-
-      {/* <MDText>{keyHash}</MDText> */}
-
-      <MDView style={styles.bottomContainer}>
-        <MDButton
-          style={styles.kakaoSignInButton}
-          textStyle={styles.kakaoSignInButtonText}
-          title={'카카오 로그인'}
-          icon={require('@/assets/images/ic-kakao.png')}
-          onPress={kakaoSignIn}
-        />
-
-        <MDView style={styles.termsContainer}>
-          <MDView direction="row">
-            <MDText type="caption1Regular" style={styles.termsText}>
-              {`계속하기를 진행하시면 `}
-            </MDText>
-
-            <MDPressable onPress={onNavigateToPrivacyTerms}>
-              <MDText type="caption1Regular" style={styles.linkText}>
-                {`개인정보 처리방침`}
-              </MDText>
-            </MDPressable>
-
-            <MDText type="caption1Regular" style={styles.termsText}>
-              {` 및 `}
-            </MDText>
-          </MDView>
-
-          <MDView direction="row">
-            <MDPressable onPress={onNavigateToUseTerms}>
-              <MDText type="caption1Regular" style={styles.linkText}>
-                {`이용약관`}
-              </MDText>
-            </MDPressable>
-
-            <MDText type="caption1Regular" style={styles.termsText}>
-              {`에 동의하게 됩니다.`}
-            </MDText>
-          </MDView>
+    <SafeAreaView style={styles.containerSafeArea}>
+      <MDView style={styles.container}>
+        <MDView style={styles.logoContainer}>
+          <Image source={require('@/assets/images/img-logo.png')} />
+          <MDText type="labelRegular" style={styles.logoText}>
+            아침에 쓰는 내 마음 속 이야기
+          </MDText>
         </MDView>
 
-        <MDText type="caption2Regular" style={styles.copyrightText}>
-          © 2025 Morning Diary
-        </MDText>
+        <MDView style={styles.bottomContainer}>
+          <MDButton
+            style={styles.kakaoSignInButton}
+            textStyle={styles.kakaoSignInButtonText}
+            title={'카카오 로그인'}
+            icon={require('@/assets/images/ic-kakao.png')}
+            onPress={kakaoSignIn}
+          />
+
+          <MDView style={styles.termsContainer}>
+            <MDView direction="row">
+              <MDText type="caption1Regular" style={styles.termsText}>
+                {`계속하기를 진행하시면 `}
+              </MDText>
+
+              <MDPressable onPress={onNavigateToPrivacyTerms}>
+                <MDText type="caption1Regular" style={styles.linkText}>
+                  {`개인정보 처리방침`}
+                </MDText>
+              </MDPressable>
+
+              <MDText type="caption1Regular" style={styles.termsText}>
+                {` 및 `}
+              </MDText>
+            </MDView>
+
+            <MDView direction="row">
+              <MDPressable onPress={onNavigateToUseTerms}>
+                <MDText type="caption1Regular" style={styles.linkText}>
+                  {`이용약관`}
+                </MDText>
+              </MDPressable>
+
+              <MDText type="caption1Regular" style={styles.termsText}>
+                {`에 동의하게 됩니다.`}
+              </MDText>
+            </MDView>
+          </MDView>
+
+          <MDText type="caption2Regular" style={styles.copyrightText}>
+            © 2025 Morning Diary
+          </MDText>
+        </MDView>
       </MDView>
-    </MDView>
+    </SafeAreaView>
   );
 }
 
-const screenStyles = ({ colors }: { colors: MDColors }) =>
+const screenStyles = ({ colors, bottomInset }: { colors: MDColors; bottomInset: number }) =>
   StyleSheet.create({
+    containerSafeArea: {
+      flex: 1,
+      backgroundColor: colors.background.normal,
+    },
     container: {
       flex: 1,
       alignItems: 'center',
-      padding: 20,
+      padding: 20 - bottomInset,
       backgroundColor: colors.background.normal,
     },
     logoContainer: {

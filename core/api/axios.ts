@@ -6,6 +6,23 @@ import { Auth } from '../types';
 
 const BASE_URL = 'https://api-dev.mymorningdiary.com'; // TODO: 실제 API URL로 변경 필요
 
+const apiClient = axios.create({
+  baseURL: BASE_URL,
+  timeout: 10000,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
+
+// refresh token 전용 클라이언트 (interceptor 없음)
+const refreshClient = axios.create({
+  baseURL: BASE_URL,
+  timeout: 10000,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
+
 let isRefreshing = false;
 let refreshQueue: ((token: string | null) => void)[] = [];
 
@@ -17,23 +34,6 @@ function resolveQueue(token: string | null) {
   refreshQueue.forEach((callback) => callback(token));
   refreshQueue = [];
 }
-
-const apiClient = axios.create({
-  baseURL: BASE_URL,
-  timeout: 10000,
-  headers: {
-    'Content-Type': 'application/json',
-  },
-});
-
-// refresh token 전용 클라이언트 (interceptor 없음)
-export const refreshClient = axios.create({
-  baseURL: BASE_URL,
-  timeout: 10000,
-  headers: {
-    'Content-Type': 'application/json',
-  },
-});
 
 apiClient.interceptors.request.use(
   async (config) => {

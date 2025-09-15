@@ -1,12 +1,12 @@
 import appAPI from '@/core/api/app/apis';
-import { AppVersion } from '@/core/types';
+import { AppVersion, Auth } from '@/core/types';
 import { useStorageState } from '@/hooks/useStorageState';
 import { useQuery } from '@tanstack/react-query';
 import { createContext, type PropsWithChildren, use, useEffect, useState } from 'react';
 import { Platform } from 'react-native';
 import * as Application from 'expo-application';
 import semver from 'semver';
-import { setGlobalSignOutHandler } from '@/core/api/authHandlers';
+import { setGlobalSignInHandler, setGlobalSignOutHandler } from '@/core/api/authHandlers';
 
 const AppStateContext = createContext<{
   session?: string | null;
@@ -14,7 +14,7 @@ const AppStateContext = createContext<{
   isLoading: boolean;
   appVersion?: AppVersion | null;
   isForceUpdateNeeded: boolean;
-  signIn: ({ accessToken, refreshToken }: { accessToken: string; refreshToken: string }) => void;
+  signIn: ({ accessToken, refreshToken }: Auth) => void;
   signOut: () => void;
   setHasVisited: (value: string | null) => void;
 }>({
@@ -57,9 +57,11 @@ export function AppStateProvider({ children }: PropsWithChildren) {
     queryFn: () => appAPI.getAppVersion(),
   });
 
-  const signIn = ({ accessToken, refreshToken }: { accessToken: string; refreshToken: string }) => {
+  const signIn = ({ accessToken, refreshToken }: Auth) => {
     setSession(accessToken);
-    setRefreshToken(refreshToken);
+    if (refreshToken) {
+      setRefreshToken(refreshToken);
+    }
   };
 
   const signOut = () => {
@@ -67,6 +69,7 @@ export function AppStateProvider({ children }: PropsWithChildren) {
     setRefreshToken(null);
   };
 
+  setGlobalSignInHandler(signIn);
   setGlobalSignOutHandler(signOut);
 
   useEffect(() => {

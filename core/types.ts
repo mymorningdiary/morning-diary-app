@@ -6,8 +6,8 @@ export type User = {
 
 export type Auth = {
   accessToken: string;
-  refreshToken: string;
-  isExistUser: boolean;
+  refreshToken?: string;
+  isExistUser?: boolean;
 };
 
 export type Diary = {

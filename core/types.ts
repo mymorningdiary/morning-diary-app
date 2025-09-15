@@ -1,11 +1,3 @@
-import { Nullable } from '@/types/types';
-
-export type SessionInfo = {
-  accessToken?: Nullable<string>;
-  refreshToken?: Nullable<string>;
-  expiredAt?: Nullable<number>;
-};
-
 export type User = {
   alarmTime: string | null;
   textGoalId: number;
@@ -13,7 +5,8 @@ export type User = {
 };
 
 export type Auth = {
-  token: string;
+  accessToken: string;
+  refreshToken: string;
   isExistUser: boolean;
 };
 

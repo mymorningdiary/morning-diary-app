@@ -8,9 +8,8 @@ const authAPI = {
     const response = await apiClient.post('/auth/kakao/login', body);
     return response.data;
   },
-
-  autoLogin: async (): Promise<ApiResponse<Auth>> => {
-    const response = await apiClient.post('/auth/auto-login');
+  refreshToken: async (): Promise<ApiResponse<Auth>> => {
+    const response = await apiClient.post('auth/token');
     return response.data;
   },
 };

@@ -1,4 +1,3 @@
-import { useAuth } from '@/contexts/AuthContext3';
 import { ApiError, diaryAPI } from '@/core/api';
 import { PostDiariesResponse, UpdateDiaryResponse } from '@/core/api/diary/types';
 import { useMutation } from '@tanstack/react-query';

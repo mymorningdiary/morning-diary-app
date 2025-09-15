@@ -38,10 +38,11 @@ apiClient.interceptors.response.use(
       return Promise.reject(networkError);
     }
 
-    const { status, data } = error.response;
-    const authErrorCode = [4001, 4002, 4003];
+    const { data } = error.response;
+    const invalidAccessTokenCode = [4001, 4002, 4003];
+    const invalidRefreshTokenCode = [4004, 4005, 4006];
 
-    if (status === 401 || authErrorCode.includes(data?.code)) {
+    if (invalidAccessTokenCode.includes(data?.code)) {
       getGlobalSignOutHandler()?.();
     }
 

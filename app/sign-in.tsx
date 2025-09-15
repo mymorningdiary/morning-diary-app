@@ -28,10 +28,10 @@ export default function SignInScreen() {
       const response = await mutateAsync({ accessToken: user.accessToken });
 
       if (response.code === 2000) {
-        const { token, isExistUser } = response.data;
+        const { accessToken, refreshToken, isExistUser } = response.data;
         console.log('[SignInScreen] data:', response.data);
 
-        signIn(token);
+        signIn({ accessToken, refreshToken });
         if (isExistUser) {
           router.replace('/(app)');
         } else {

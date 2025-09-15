@@ -14,7 +14,7 @@ const AppStateContext = createContext<{
   isLoading: boolean;
   appVersion?: AppVersion | null;
   isForceUpdateNeeded: boolean;
-  signIn: (token: string) => void;
+  signIn: ({ accessToken, refreshToken }: { accessToken: string; refreshToken: string }) => void;
   signOut: () => void;
   setHasVisited: (value: string | null) => void;
 }>({
@@ -45,7 +45,8 @@ export function getAppStateHelpers() {
 }
 
 export function AppStateProvider({ children }: PropsWithChildren) {
-  const [[isSessionLoading, session], setSession] = useStorageState('session');
+  const [[isSessionLoading, session], setSession] = useStorageState('accessToken');
+  const [_, setRefreshToken] = useStorageState('refreshToken');
   const [[isVisitedLoading, hasVisited], setHasVisited] = useStorageState('hasVisited');
   const isLoading = isSessionLoading || isVisitedLoading;
   const [appVersion, setAppVersion] = useState<AppVersion | null>(null);
@@ -56,12 +57,14 @@ export function AppStateProvider({ children }: PropsWithChildren) {
     queryFn: () => appAPI.getAppVersion(),
   });
 
-  const signIn = (token: string) => {
-    setSession(token);
+  const signIn = ({ accessToken, refreshToken }: { accessToken: string; refreshToken: string }) => {
+    setSession(accessToken);
+    setRefreshToken(refreshToken);
   };
 
   const signOut = () => {
     setSession(null);
+    setRefreshToken(null);
   };
 
   setGlobalSignOutHandler(signOut);

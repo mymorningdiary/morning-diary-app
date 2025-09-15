@@ -2,7 +2,6 @@ import axios, { AxiosError, InternalAxiosRequestConfig } from 'axios';
 import * as SecureStore from 'expo-secure-store';
 import { getGlobalSignInHandler, getGlobalSignOutHandler } from './authHandlers';
 import { ApiError } from './types';
-import authAPI from './auth/apis';
 
 const BASE_URL = 'https://api-dev.mymorningdiary.com'; // TODO: 실제 API URL로 변경 필요
 
@@ -14,12 +13,17 @@ const apiClient = axios.create({
   },
 });
 
+// refresh token 전용 클라이언트 (interceptor 없음)
+export const refreshClient = axios.create({
+  baseURL: BASE_URL,
+  timeout: 10000,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
+
 apiClient.interceptors.request.use(
   async (config) => {
-    if (config.url?.includes('/auth/token')) {
-      return config;
-    }
-
     const accessToken = await SecureStore.getItemAsync('accessToken');
 
     // 요청 기본 정보 로그
@@ -80,7 +84,9 @@ apiClient.interceptors.response.use(
         if (refreshToken) {
           try {
             console.log('[Auth][RefreshToken Attempt]', { refreshToken });
-            const { data: refreshData } = await authAPI.refreshToken(refreshToken);
+            const { data: refreshData } = await refreshClient.post('/auth/token', undefined, {
+              headers: { Authorization: `Bearer ${refreshToken}` },
+            });
             const accessToken = refreshData?.accessToken;
 
             if (accessToken) {

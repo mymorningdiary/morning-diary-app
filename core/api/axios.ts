@@ -4,7 +4,7 @@ import { getGlobalSignInHandler, getGlobalSignOutHandler } from './authHandlers'
 import { ApiError, ApiResponse } from './types';
 import { Auth } from '../types';
 
-const BASE_URL = 'https://api-dev.mymorningdiary.com'; // TODO: 실제 API URL로 변경 필요
+const BASE_URL = process.env.EXPO_PUBLIC_API_URL;
 
 const apiClient = axios.create({
   baseURL: BASE_URL,

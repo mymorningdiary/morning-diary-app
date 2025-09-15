@@ -26,7 +26,10 @@ export default function RootLayout() {
   const colorScheme = useColorScheme();
 
   useEffect(() => {
-    initializeKakaoSDK('a243e903ae144e0e7d383fc00ef39d21'); // TODO: 환경변수 설정
+    const kakaoAppKey = process.env.EXPO_PUBLIC_KAKAO_APP_KEY;
+    if (kakaoAppKey) {
+      initializeKakaoSDK(kakaoAppKey);
+    }
   }, []);
 
   return (

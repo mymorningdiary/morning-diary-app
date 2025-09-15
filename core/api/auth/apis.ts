@@ -8,12 +8,6 @@ const authAPI = {
     const response = await apiClient.post('/auth/kakao/login', body);
     return response.data;
   },
-  refreshToken: async (refreshToken: string): Promise<ApiResponse<Auth>> => {
-    const response = await apiClient.post('/auth/token', undefined, {
-      headers: { Authorization: `Bearer ${refreshToken}` },
-    });
-    return response.data;
-  },
 };
 
 export default authAPI;

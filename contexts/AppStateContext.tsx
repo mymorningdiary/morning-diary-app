@@ -96,9 +96,9 @@ export function AppStateProvider({ children }: PropsWithChildren) {
     }
   }, [data]);
 
-  useEffect(() => {
-    console.log('[AppStateProvider] session:', session, 'hasVisited:', hasVisited);
-  }, [session, hasVisited]);
+  // useEffect(() => {
+  //   console.log('[AppStateProvider] session:', session, 'hasVisited:', hasVisited);
+  // }, [session, hasVisited]);
 
   return (
     <AppStateContext

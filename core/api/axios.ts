@@ -1,9 +1,22 @@
 import axios, { AxiosError, InternalAxiosRequestConfig } from 'axios';
 import * as SecureStore from 'expo-secure-store';
 import { getGlobalSignInHandler, getGlobalSignOutHandler } from './authHandlers';
-import { ApiError } from './types';
+import { ApiError, ApiResponse } from './types';
+import { Auth } from '../types';
 
 const BASE_URL = 'https://api-dev.mymorningdiary.com'; // TODO: 실제 API URL로 변경 필요
+
+let isRefreshing = false;
+let refreshQueue: ((token: string | null) => void)[] = [];
+
+function addToQueue(callback: (token: string | null) => void) {
+  refreshQueue.push(callback);
+}
+
+function resolveQueue(token: string | null) {
+  refreshQueue.forEach((callback) => callback(token));
+  refreshQueue = [];
+}
 
 const apiClient = axios.create({
   baseURL: BASE_URL,
@@ -79,33 +92,59 @@ apiClient.interceptors.response.use(
         );
 
         const originalRequest = config as InternalAxiosRequestConfig;
-        const refreshToken = await SecureStore.getItemAsync('refreshToken');
 
-        if (refreshToken) {
-          try {
-            console.log('[Auth][RefreshToken Attempt]', { refreshToken });
-            const { data: refreshData } = await refreshClient.post('/auth/token', undefined, {
-              headers: { Authorization: `Bearer ${refreshToken}` },
+        // 토큰 리프레시중 -> API 요청들 큐에 대기
+        if (isRefreshing) {
+          return new Promise((resolve, reject) => {
+            addToQueue((newToken) => {
+              if (newToken) {
+                originalRequest.headers.Authorization = `Bearer ${newToken}`;
+                resolve(apiClient(originalRequest));
+              } else {
+                reject(error);
+              }
             });
-            const accessToken = refreshData?.accessToken;
-
-            if (accessToken) {
-              console.log('[Auth][AccessToken Refreshed]', accessToken);
-              getGlobalSignInHandler()?.({ accessToken });
-
-              originalRequest.headers.Authorization = `Bearer ${accessToken}`;
-
-              return apiClient(originalRequest);
-            }
-          } catch (err) {
-            console.error('[Auth][RefreshToken Failed]', err);
-            getGlobalSignOutHandler()?.();
-          }
-        } else {
-          console.warn('[Auth][No RefreshToken Found]');
-          getGlobalSignOutHandler()?.();
+          });
         }
-        break;
+
+        isRefreshing = true;
+
+        try {
+          // 로컬에서 refreshToken 로드
+          const refreshToken = await SecureStore.getItemAsync('refreshToken');
+          if (!refreshToken) throw new Error('No refresh token');
+
+          // 리프레시 토큰 API 요청
+          console.log('[Auth][RefreshToken Attempt]', { refreshToken });
+          const { data: refreshTokenResponse } = await refreshClient.post<ApiResponse<Auth>>(
+            '/auth/token',
+            undefined,
+            {
+              headers: { Authorization: `Bearer ${refreshToken}` },
+            },
+          );
+
+          const newAccessToken = refreshTokenResponse?.data?.accessToken;
+          if (!newAccessToken) throw new Error('No new access token');
+
+          // newAccessToken -> 로컬 저장 및 AppContext state 변경
+          console.log('[Auth][AccessToken Refreshed]', newAccessToken);
+          getGlobalSignInHandler()?.({ accessToken: newAccessToken });
+
+          // 큐에 쌓인 API 요청들 실행
+          resolveQueue(newAccessToken);
+
+          // 현재 API 재시도
+          originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
+          return apiClient(originalRequest);
+        } catch (err) {
+          console.error('[Auth][RefreshToken Failed]', err);
+          resolveQueue(null); // 큐에 쌓인 API 요청들 모두 실패 (reject) 처리
+          getGlobalSignOutHandler()?.();
+          return Promise.reject(err);
+        } finally {
+          isRefreshing = false;
+        }
       }
       case 4004: // not exist refresh token
       case 4005: // invalid refresh token

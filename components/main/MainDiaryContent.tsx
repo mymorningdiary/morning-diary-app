@@ -44,7 +44,7 @@ const contentStyles = ({ colors }: { colors: MDColors }) =>
     },
     containerEmpty: {
       flex: 1,
-      paddingTop: 40,
+      justifyContent: 'center',
       alignItems: 'center',
     },
     image: {

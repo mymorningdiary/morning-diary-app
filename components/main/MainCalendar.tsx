@@ -223,8 +223,8 @@ const CalendarDay = ({ date, state, marking, onPress }: CalendarDayProps) => {
 const dayStyles = ({ colors }: { colors: MDColors }) =>
   StyleSheet.create({
     container: {
-      width: 36,
-      height: 36,
+      width: 40,
+      height: 40,
       alignItems: 'center',
       justifyContent: 'center',
       borderRadius: 100,

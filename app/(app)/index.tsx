@@ -113,7 +113,7 @@ export default function HomeScreen() {
           onDayPress={handleDayPress}
         />
 
-        <MDDivider marginHorizontal={16} />
+        <MDDivider style={{ marginTop: 8 }} marginHorizontal={16} />
 
         <MainDiaryContent diaryInfo={selectedDiaryInfo} onDiaryItemPress={navigateToReadDiary} />
 

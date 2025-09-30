@@ -16,7 +16,7 @@ import useGetTextGoals from '@/hooks/useTextGoalQuery';
 import { MDColors } from '@/types';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { ScrollView, StyleSheet, TextInput } from 'react-native';
+import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, TextInput } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -297,33 +297,38 @@ export default function UpdateDiaryScreen() {
             <MDProgressBar progress={progress} />
           </MDCol>
 
-          <ScrollView
-            ref={scrollViewRef}
-            contentContainerStyle={styles.containerScrollContent}
-            overScrollMode="never"
-            keyboardShouldPersistTaps="handled"
-            onContentSizeChange={handleContentSizeChange}>
-            <MDView style={styles.containerText}>
-              {textState.inactive.length > 0 && (
-                <MDText
-                  style={styles.inactiveText}
-                  type="bodyRegular"
-                  onPress={onInactiveTextPress}>
-                  {textState.inactive}
-                </MDText>
-              )}
-              <TextInput
-                ref={textInputRef}
-                style={styles.textInput}
-                value={textState.active}
-                onChangeText={onTextChange}
-                placeholderTextColor={colors.text.alternative}
-                multiline
-                scrollEnabled={false}
-                autoFocus
-              />
-            </MDView>
-          </ScrollView>
+          <KeyboardAvoidingView
+            style={styles.keyboardAvoidingView}
+            behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+            keyboardVerticalOffset={insets.top}>
+            <ScrollView
+              ref={scrollViewRef}
+              contentContainerStyle={styles.containerScrollContent}
+              overScrollMode="never"
+              keyboardShouldPersistTaps="handled"
+              onContentSizeChange={handleContentSizeChange}>
+              <MDView style={styles.containerText}>
+                {textState.inactive.length > 0 && (
+                  <MDText
+                    style={styles.inactiveText}
+                    type="bodyRegular"
+                    onPress={onInactiveTextPress}>
+                    {textState.inactive}
+                  </MDText>
+                )}
+                <TextInput
+                  ref={textInputRef}
+                  style={styles.textInput}
+                  value={textState.active}
+                  onChangeText={onTextChange}
+                  placeholderTextColor={colors.text.alternative}
+                  multiline
+                  scrollEnabled={false}
+                  autoFocus
+                />
+              </MDView>
+            </ScrollView>
+          </KeyboardAvoidingView>
         </MDView>
 
         <MDTopNotificationModal
@@ -375,6 +380,9 @@ const ScreenStyles = ({ colors, bottomInset }: { colors: MDColors; bottomInset: 
       flexGrow: 1,
     },
     containerText: {
+      flex: 1,
+    },
+    keyboardAvoidingView: {
       flex: 1,
     },
     inactiveText: {

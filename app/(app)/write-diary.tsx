@@ -17,7 +17,7 @@ import { useWriteDiary } from '@/hooks/useDiaryMutation';
 import { MDColors } from '@/types';
 import { router, useLocalSearchParams } from 'expo-router';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { ScrollView, StyleSheet, TextInput } from 'react-native';
+import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, TextInput } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -216,34 +216,39 @@ export default function WriteDiaryScreen() {
             <MDProgressBar progress={progress} />
           </MDCol>
 
-          <ScrollView
-            ref={scrollViewRef}
-            contentContainerStyle={styles.containerScrollContent}
-            overScrollMode="never"
-            keyboardShouldPersistTaps="handled"
-            onContentSizeChange={handleContentSizeChange}>
-            <MDView style={styles.containerText}>
-              {textState.inactive.length > 0 && (
-                <MDText
-                  style={styles.inactiveText}
-                  type="bodyRegular"
-                  onPress={onInactiveTextPress}>
-                  {textState.inactive}
-                </MDText>
-              )}
-              <TextInput
-                ref={textInputRef}
-                style={styles.textInput}
-                value={textState.active}
-                onChangeText={onTextChange}
-                placeholder="오늘 아침에는 어떤 생각이 떠오르나요?"
-                placeholderTextColor={colors.text.alternative}
-                multiline
-                scrollEnabled={false}
-                autoFocus
-              />
-            </MDView>
-          </ScrollView>
+          <KeyboardAvoidingView
+            style={styles.keyboardAvoidingView}
+            behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+            keyboardVerticalOffset={insets.top}>
+            <ScrollView
+              ref={scrollViewRef}
+              contentContainerStyle={styles.containerScrollContent}
+              overScrollMode="never"
+              keyboardShouldPersistTaps="handled"
+              onContentSizeChange={handleContentSizeChange}>
+              <MDView style={styles.containerText}>
+                {textState.inactive.length > 0 && (
+                  <MDText
+                    style={styles.inactiveText}
+                    type="bodyRegular"
+                    onPress={onInactiveTextPress}>
+                    {textState.inactive}
+                  </MDText>
+                )}
+                <TextInput
+                  ref={textInputRef}
+                  style={styles.textInput}
+                  value={textState.active}
+                  onChangeText={onTextChange}
+                  placeholder="오늘 아침에는 어떤 생각이 떠오르나요?"
+                  placeholderTextColor={colors.text.alternative}
+                  multiline
+                  scrollEnabled={false}
+                  autoFocus
+                />
+              </MDView>
+            </ScrollView>
+          </KeyboardAvoidingView>
         </MDView>
 
         <MDTopNotificationModal
@@ -295,6 +300,9 @@ const ScreenStyles = ({ colors, bottomInset }: { colors: MDColors; bottomInset: 
       flexGrow: 1,
     },
     containerText: {
+      flex: 1,
+    },
+    keyboardAvoidingView: {
       flex: 1,
     },
     inactiveText: {

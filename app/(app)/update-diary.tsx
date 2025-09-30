@@ -314,7 +314,6 @@ export default function UpdateDiaryScreen() {
                 style={styles.textInput}
                 value={textState.active}
                 onChangeText={onTextChange}
-                placeholder="오늘 아침에는 어떤 생각이 떠오르나요?"
                 placeholderTextColor={colors.text.alternative}
                 multiline
                 scrollEnabled={false}

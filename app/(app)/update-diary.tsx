@@ -1,5 +1,6 @@
 import { MDCol, MDProgressBar, MDText, MDView } from '@/components';
 import MDAssistant from '@/components/MDAssistant';
+import MDDefaultModal from '@/components/Modal/MDDefaultModal';
 import MDTopNotificationModal from '@/components/Modal/MDTopNotificationModal';
 import WriteAppBar, { formatDateToAppBarTitle } from '@/components/write/WriteAppBar';
 import {
@@ -77,6 +78,8 @@ export default function UpdateDiaryScreen() {
       {} as Record<ProgressKey, boolean>,
     ),
   );
+
+  const [showEndModal, setShowEndModal] = useState(false);
 
   const onTextChange = useCallback((text: string) => {
     // 즉시 active 텍스트 업데이트
@@ -284,7 +287,7 @@ export default function UpdateDiaryScreen() {
             date={appBarTitle}
             isCompleteButtonEnabled={textState.active.length + textState.inactive.length > 0}
             onCompleteButtonPress={onCompleteButtonPress}
-            onBackButtonPress={() => router.back()}
+            onBackButtonPress={() => setShowEndModal(true)}
           />
 
           <MDCol style={styles.containerProgressBar}>
@@ -330,6 +333,13 @@ export default function UpdateDiaryScreen() {
             text={assistantText}
           />
         </MDTopNotificationModal>
+
+        <MDDefaultModal
+          visible={showEndModal}
+          title={`일기쓰기를 종료할까요?\n종료 선택 시, 일기는 저장되지 않아요.`}
+          negativeButton={{ text: '계속 쓰기', onPress: () => setShowEndModal(false) }}
+          positiveButton={{ text: '종료', onPress: () => router.back() }}
+        />
       </SafeAreaView>
     </GestureHandlerRootView>
   );

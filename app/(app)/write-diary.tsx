@@ -201,7 +201,7 @@ export default function WriteDiaryScreen() {
         <MDView style={styles.container}>
           <WriteAppBar
             date={appBarTitle}
-            isCompleteButtonEnabled={progress >= 10}
+            isCompleteButtonEnabled={textState.active.length + textState.inactive.length > 0}
             onCompleteButtonPress={onCompleteButtonPress}
             onBackButtonPress={() => router.back()}
           />

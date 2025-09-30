@@ -33,7 +33,7 @@ export default function WriteAppBar({
       <MDText type="titleSemiBold" style={styles.title}>
         {date}
       </MDText>
-      <Pressable onPress={onCompleteButtonPress}>
+      <Pressable onPress={onCompleteButtonPress} disabled={!isCompleteButtonEnabled}>
         <MDText type="labelRegular" style={styles.textComplete}>
           완료
         </MDText>

@@ -240,6 +240,7 @@ export default function WriteDiaryScreen() {
                 placeholderTextColor={colors.text.alternative}
                 multiline
                 scrollEnabled={false}
+                autoFocus
               />
             </MDView>
           </ScrollView>
@@ -279,7 +280,6 @@ const ScreenStyles = ({ colors, bottomInset }: { colors: MDColors; bottomInset: 
     containerProgressBar: {
       paddingBottom: 24,
       gap: 16,
-      // backgroundColor: 'red',
     },
     textGoal: {
       height: 20,

@@ -320,6 +320,7 @@ export default function UpdateDiaryScreen() {
                 placeholderTextColor={colors.text.alternative}
                 multiline
                 scrollEnabled={false}
+                autoFocus
               />
             </MDView>
           </ScrollView>

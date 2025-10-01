@@ -27,18 +27,6 @@ const getAppName = () => {
   return '아침일기';
 };
 
-const getGoogleServices = () => {
-  if (IS_DEV) {
-    return 'com.mymorningdiary.morningdiary.dev';
-  }
-
-  if (IS_PREVIEW) {
-    return 'com.mymorningdiary.morningdiary.preview';
-  }
-
-  return 'com.mymorningdiary.morningdiary';
-};
-
 export default ({ config }: ConfigContext): ExpoConfig => ({
   ...config,
   name: getAppName(),
@@ -66,7 +54,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
       backgroundColor: '#ffffff',
     },
     package: getUniqueIdentifier(),
-    googleServicesFile: process.env.GOOGLE_SERVICES_JSON ?? '/local/path/to/google-services.json',
+    googleServicesFile: process.env.GOOGLE_SERVICES_JSON ?? './google-services.json',
   },
   web: {
     bundler: 'metro',

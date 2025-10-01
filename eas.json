@@ -39,6 +39,10 @@
     }
   },
   "submit": {
-    "production": {}
+    "production": {
+      "android": {
+        "serviceAccountKeyPath": "./api-service-account-morning-diary.json"
+      }
+    }
   }
 }

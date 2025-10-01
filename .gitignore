@@ -40,7 +40,7 @@ app-example
 CLAUDE.md
 
 google-services.json
-google-service-account.json
+api-service-account-morning-diary.json
 
 /ios
 /android

@@ -44,6 +44,9 @@
         "serviceAccountKeyPath": "./service-account-file.json",
         "track": "internal",
         "releaseStatus": "draft"
+      },
+      "ios": {
+        "ascAppId": "6753277971"
       }
     }
   }

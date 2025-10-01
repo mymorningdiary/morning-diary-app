@@ -8,6 +8,7 @@ import { useMutation } from '@tanstack/react-query';
 import { router } from 'expo-router';
 import { StyleSheet, View } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
+import { logout } from '@react-native-kakao/user';
 
 export default function WithdrawScreen() {
   const colors = useThemeColor();
@@ -18,9 +19,14 @@ export default function WithdrawScreen() {
 
   const { mutate } = useMutation({
     mutationFn: () => userAPI.deleteUser(),
-    onSuccess: (res) => {
+    onSuccess: async (res) => {
       if (res.code === 2000) {
-        signOut();
+        try {
+          await logout();
+          signOut();
+        } catch (e) {
+          console.error('Failed to sign out', e);
+        }
       }
     },
   });

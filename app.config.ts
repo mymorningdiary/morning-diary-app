@@ -2,6 +2,7 @@ import { ConfigContext, ExpoConfig } from 'expo/config';
 
 const IS_DEV = process.env.APP_VARIANT === 'development';
 const IS_PREVIEW = process.env.APP_VARIANT === 'preview';
+const KAKAO_NATIVE_APP_KEY = process.env.EXPO_PUBLIC_KAKAO_APP_KEY ?? '';
 
 const getUniqueIdentifier = () => {
   if (IS_DEV) {
@@ -83,7 +84,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     [
       '@react-native-kakao/core',
       {
-        nativeAppKey: process.env.EXPO_PUBLIC_KAKAO_APP_KEY ?? '',
+        nativeAppKey: KAKAO_NATIVE_APP_KEY,
         android: {
           authCodeHandlerActivity: true,
         },

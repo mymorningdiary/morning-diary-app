@@ -6,7 +6,6 @@ import { MDColors } from '@/types/types';
 import { login } from '@react-native-kakao/user';
 import { useMutation } from '@tanstack/react-query';
 import { router } from 'expo-router';
-import { useState } from 'react';
 import { Image, StyleSheet } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -14,8 +13,6 @@ export default function SignInScreen() {
   const colors = useThemeColor();
   const insets = useSafeAreaInsets();
   const styles = screenStyles({ colors, bottomInset: insets.bottom });
-
-  const [error, setError] = useState<string | null>(null);
 
   const { signIn } = useAppState();
 
@@ -43,7 +40,6 @@ export default function SignInScreen() {
       }
     } catch (e) {
       console.error('Failed to sign in', e);
-      setError(`Failed to sign in: ${JSON.stringify(e)}`);
     }
   };
 
@@ -69,12 +65,6 @@ export default function SignInScreen() {
           <MDText type="labelRegular" style={styles.logoText}>
             아침에 쓰는 내 마음 속 이야기
           </MDText>
-
-          {error && (
-            <MDText type="labelRegular" style={styles.logoText}>
-              {error}
-            </MDText>
-          )}
         </MDView>
 
         <MDView style={styles.bottomContainer}>

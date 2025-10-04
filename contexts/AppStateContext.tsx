@@ -53,7 +53,7 @@ export function AppStateProvider({ children }: PropsWithChildren) {
   const isLoading = isSessionLoading || isVisitedLoading;
 
   const [appVersion, setAppVersion] = useState<AppVersion | null>(null);
-  const [isUpdateNeeded, setUpdateNeeded] = useState(false); // 선택 업데이트
+  const [isUpdateNeeded, setUpdateNeeded] = useState(true); // 선택 업데이트
   const [isForceUpdateNeeded, setForceUpdateNeeded] = useState(false); // 강제 업데이트
 
   const { data } = useQuery({

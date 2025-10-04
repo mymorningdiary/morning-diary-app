@@ -2,7 +2,7 @@ import { MDPressable, MDRow, MDText } from '@/components';
 import { useThemeColor } from '@/hooks';
 import { MDColors } from '@/types';
 import { useMemo } from 'react';
-import { Dimensions, Modal, StyleSheet, View } from 'react-native';
+import { Dimensions, Modal, Pressable, StyleSheet, View } from 'react-native';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
@@ -17,15 +17,22 @@ interface Props {
     text: string;
     onPress: () => void;
   };
+  onClose?: () => void;
 }
 
-export default function MDDefaultModal({ visible, title, negativeButton, positiveButton }: Props) {
+export default function MDDefaultModal({
+  visible,
+  title,
+  negativeButton,
+  positiveButton,
+  onClose,
+}: Props) {
   const colors = useThemeColor();
   const styles = useMemo(() => ModalStyles({ colors }), [colors]);
 
   return (
     <Modal animationType="fade" visible={visible} transparent>
-      <View style={styles.overlay}>
+      <Pressable style={styles.overlay} onPress={onClose}>
         <View style={styles.containerContent}>
           <MDText type="bodyRegular" style={styles.title}>
             {title}
@@ -44,7 +51,7 @@ export default function MDDefaultModal({ visible, title, negativeButton, positiv
             )}
           </MDRow>
         </View>
-      </View>
+      </Pressable>
     </Modal>
   );
 }

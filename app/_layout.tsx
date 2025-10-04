@@ -1,3 +1,4 @@
+import MDDefaultModal from '@/components/Modal/MDDefaultModal';
 import { MDDarkTheme, MDLightTheme } from '@/constants/theme';
 import { AppStateProvider, useAppState } from '@/contexts/AppStateContext';
 import { NotificationProvider } from '@/contexts/NotificationContext';
@@ -8,7 +9,7 @@ import { ThemeProvider } from '@react-navigation/native';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import * as Notifications from 'expo-notifications';
 import { Stack } from 'expo-router';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useColorScheme } from 'react-native';
 
 Notifications.setNotificationHandler({
@@ -47,7 +48,8 @@ export default function RootLayout() {
 }
 
 function RootNavigator() {
-  const { session, hasVisited, isLoading, isForceUpdateNeeded } = useAppState();
+  const { session, hasVisited, isLoading, isUpdateNeeded, isForceUpdateNeeded } = useAppState();
+  const [showUpdateAppModal, setShowUpdateAppModal] = useState(false);
 
   useEffect(() => {
     console.log('[RootNavigator] session:', session, 'hasVisited:', hasVisited);
@@ -59,25 +61,39 @@ function RootNavigator() {
     }
   }, [isForceUpdateNeeded]);
 
+  useEffect(() => {
+    if (isUpdateNeeded) {
+      setShowUpdateAppModal(true);
+    }
+  }, [isUpdateNeeded]);
+
   if (isLoading || isForceUpdateNeeded) {
     return null;
   }
 
   return (
-    <Stack>
-      <Stack.Protected guard={!!session}>
-        <Stack.Screen name="(app)" options={{ headerShown: false }} />
-      </Stack.Protected>
+    <>
+      <MDDefaultModal
+        visible={showUpdateAppModal}
+        title={`아침일기가 사용성 개선을 위해 업데이트를 준비했어요.\n지금 바로 만나보세요 🌞`}
+        positiveButton={{ text: '업데이트 하기', onPress: openStoreLink }}
+        onClose={() => setShowUpdateAppModal(false)}
+      />
+      <Stack>
+        <Stack.Protected guard={!!session}>
+          <Stack.Screen name="(app)" options={{ headerShown: false }} />
+        </Stack.Protected>
 
-      <Stack.Protected guard={!session && hasVisited === null}>
-        <Stack.Screen name="onboarding" options={{ headerShown: false }} />
-      </Stack.Protected>
+        <Stack.Protected guard={!session && hasVisited === null}>
+          <Stack.Screen name="onboarding" options={{ headerShown: false }} />
+        </Stack.Protected>
 
-      <Stack.Protected guard={!session && hasVisited === 'true'}>
-        <Stack.Screen name="sign-in" options={{ headerShown: false }} />
-      </Stack.Protected>
+        <Stack.Protected guard={!session && hasVisited === 'true'}>
+          <Stack.Screen name="sign-in" options={{ headerShown: false }} />
+        </Stack.Protected>
 
-      <Stack.Screen name="web-view" options={{ headerShown: false }} />
-    </Stack>
+        <Stack.Screen name="web-view" options={{ headerShown: false }} />
+      </Stack>
+    </>
   );
 }

@@ -8,9 +8,10 @@ import { initializeKakaoSDK } from '@react-native-kakao/core';
 import { ThemeProvider } from '@react-navigation/native';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import * as Notifications from 'expo-notifications';
-import { Stack } from 'expo-router';
+import { Redirect, Stack } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { useColorScheme } from 'react-native';
+import ForceUpdateScreen from './force-update';
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -56,19 +57,17 @@ function RootNavigator() {
   }, [session, hasVisited]);
 
   useEffect(() => {
-    if (isForceUpdateNeeded) {
-      openStoreLink();
-    }
-  }, [isForceUpdateNeeded]);
-
-  useEffect(() => {
     if (isUpdateNeeded) {
       setShowUpdateAppModal(true);
     }
   }, [isUpdateNeeded]);
 
-  if (isLoading || isForceUpdateNeeded) {
+  if (isLoading) {
     return null;
+  }
+
+  if (isForceUpdateNeeded) {
+    return <ForceUpdateScreen />;
   }
 
   return (
@@ -79,20 +78,20 @@ function RootNavigator() {
         positiveButton={{ text: '업데이트 하기', onPress: openStoreLink }}
         onClose={() => setShowUpdateAppModal(false)}
       />
-      <Stack>
+      <Stack screenOptions={{ headerShown: false }}>
         <Stack.Protected guard={!!session}>
-          <Stack.Screen name="(app)" options={{ headerShown: false }} />
+          <Stack.Screen name="(app)" />
         </Stack.Protected>
 
         <Stack.Protected guard={!session && hasVisited === null}>
-          <Stack.Screen name="onboarding" options={{ headerShown: false }} />
+          <Stack.Screen name="onboarding" />
         </Stack.Protected>
 
         <Stack.Protected guard={!session && hasVisited === 'true'}>
-          <Stack.Screen name="sign-in" options={{ headerShown: false }} />
+          <Stack.Screen name="sign-in" />
         </Stack.Protected>
 
-        <Stack.Screen name="web-view" options={{ headerShown: false }} />
+        <Stack.Screen name="web-view" />
       </Stack>
     </>
   );

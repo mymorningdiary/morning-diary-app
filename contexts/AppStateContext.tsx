@@ -13,6 +13,7 @@ const AppStateContext = createContext<{
   hasVisited?: string | null;
   isLoading: boolean;
   appVersion?: AppVersion | null;
+  isUpdateNeeded: boolean;
   isForceUpdateNeeded: boolean;
   signIn: ({ accessToken, refreshToken }: Auth) => void;
   signOut: () => void;
@@ -22,6 +23,7 @@ const AppStateContext = createContext<{
   hasVisited: null,
   isLoading: false,
   appVersion: null,
+  isUpdateNeeded: false,
   isForceUpdateNeeded: false,
   signIn: () => null,
   signOut: () => null,
@@ -49,8 +51,10 @@ export function AppStateProvider({ children }: PropsWithChildren) {
   const [_, setRefreshToken] = useStorageState('refreshToken');
   const [[isVisitedLoading, hasVisited], setHasVisited] = useStorageState('hasVisited');
   const isLoading = isSessionLoading || isVisitedLoading;
+
   const [appVersion, setAppVersion] = useState<AppVersion | null>(null);
-  const [isForceUpdateNeeded, setForceUpdateNeeded] = useState(false);
+  const [isUpdateNeeded, setUpdateNeeded] = useState(false); // 선택 업데이트
+  const [isForceUpdateNeeded, setForceUpdateNeeded] = useState(false); // 강제 업데이트
 
   const { data } = useQuery({
     queryKey: ['appVersion'],
@@ -76,29 +80,37 @@ export function AppStateProvider({ children }: PropsWithChildren) {
     if (data?.code === 2000) {
       setAppVersion(data.data);
 
-      // 강제 업데이트 로직
       try {
         const { android, ios } = data.data;
+        const version = Platform.select({
+          android: android.version,
+          ios: ios.version,
+          default: null,
+        });
         const minVersion = Platform.select({
           android: android.minVersion,
           ios: ios.minVersion,
           default: null,
         });
-        const currentVersion = Application.nativeApplicationVersion;
-        if (!currentVersion || !minVersion) return;
 
-        if (semver.lt(currentVersion, minVersion)) {
+        const currentVersion = Application.nativeApplicationVersion;
+        if (currentVersion === null) return;
+
+        // 강제 업데이트 활성화
+        if (minVersion && semver.lt(currentVersion, minVersion)) {
           setForceUpdateNeeded(true);
+          return;
+        }
+
+        // 선택 업데이트 활성화
+        if (version && semver.lt(currentVersion, version)) {
+          setUpdateNeeded(true);
         }
       } catch (e) {
         console.error('Failed to compare version', e);
       }
     }
   }, [data]);
-
-  // useEffect(() => {
-  //   console.log('[AppStateProvider] session:', session, 'hasVisited:', hasVisited);
-  // }, [session, hasVisited]);
 
   return (
     <AppStateContext
@@ -107,6 +119,7 @@ export function AppStateProvider({ children }: PropsWithChildren) {
         hasVisited,
         isLoading,
         appVersion,
+        isUpdateNeeded,
         isForceUpdateNeeded,
         signIn,
         signOut,

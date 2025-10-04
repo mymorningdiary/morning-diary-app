@@ -14,9 +14,8 @@ import { Image } from 'expo-image';
 import * as Notifications from 'expo-notifications';
 import { router } from 'expo-router';
 import { useEffect, useMemo, useState } from 'react';
-import { Linking, Platform, ScrollView, StyleSheet, View } from 'react-native';
+import { Linking, ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import semver from 'semver';
 
 export default function SettingsScreen() {
   const colors = useThemeColor();
@@ -28,22 +27,9 @@ export default function SettingsScreen() {
   const { pushToken } = useNotification();
   const { mutate: updatePushToken } = useUpdatePushToken();
 
-  const { appVersion } = useAppState();
+  const { isUpdateNeeded } = useAppState();
 
-  const updateAppComponent = useMemo(() => {
-    if (!appVersion) return null;
-
-    const { android, ios } = appVersion;
-    const latestVersion = Platform.select({
-      android: android.version,
-      ios: ios.version,
-      default: null,
-    });
-    const currentVersion = Application.nativeApplicationVersion;
-
-    if (!currentVersion || !latestVersion) return null;
-    const isUpdateNeeded = semver.lt(currentVersion, latestVersion);
-
+  const UpdateAppComponent = useMemo(() => {
     return (
       <MDPressable
         style={styles.buttonUpdateApp}
@@ -56,7 +42,7 @@ export default function SettingsScreen() {
         </MDText>
       </MDPressable>
     );
-  }, [appVersion, colors, styles]);
+  }, [colors, styles, isUpdateNeeded]);
 
   const navigateBack = () => {
     router.back();
@@ -233,7 +219,7 @@ export default function SettingsScreen() {
               <SettingSectionListItem label="개인정보처리방침" onPress={onNavigateToPrivacyTerms} />
               <SettingSectionListItem
                 label={`버전 정보 ${Application.nativeApplicationVersion}`}
-                tailComponent={updateAppComponent}
+                tailComponent={UpdateAppComponent}
               />
             </SettingSection>
           </View>

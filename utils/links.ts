@@ -19,8 +19,8 @@ export const openLink = async (url: string) => {
 };
 
 const STORE_LINKS = {
-  IOS_APP: 'itms-apps://apps.apple.com/id/app/id6741846743',
-  IOS_WEB: 'https://apps.apple.com/app/id6741846743',
+  IOS_APP: 'itms-apps://apps.apple.com/id/app/id6753277971',
+  IOS_WEB: 'https://apps.apple.com/app/id6753277971',
   ANDROID_APP: 'market://details?id=com.mymorningdiary.morningdiary',
   ANDROID_WEB: 'https://play.google.com/store/apps/details?id=com.mymorningdiary.morningdiary',
 };

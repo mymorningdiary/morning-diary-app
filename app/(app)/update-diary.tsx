@@ -282,7 +282,7 @@ export default function UpdateDiaryScreen() {
         },
       });
     }
-  }, [updateDiaryResponse]);
+  }, [updateDiaryResponse, year, month, day]);
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
@@ -383,6 +383,7 @@ const ScreenStyles = ({ colors, bottomInset }: { colors: MDColors; bottomInset: 
     containerScrollContent: {
       paddingHorizontal: 24,
       flexGrow: 1,
+      paddingBottom: 40,
     },
     containerText: {
       flex: 1,

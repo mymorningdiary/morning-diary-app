@@ -275,7 +275,12 @@ export default function UpdateDiaryScreen() {
     const { diaryId } = updateDiaryResponse;
 
     if (diaryId) {
-      router.back();
+      router.replace({
+        pathname: '/(app)',
+        params: {
+          writtenDate: `${year}-${month.toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`,
+        },
+      });
     }
   }, [updateDiaryResponse]);
 

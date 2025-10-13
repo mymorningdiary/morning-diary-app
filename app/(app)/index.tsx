@@ -11,7 +11,8 @@ import { useGetDiaries, useThemeColor } from '@/hooks';
 import useGetTextGoals from '@/hooks/useTextGoalQuery';
 import { MDColors, Nullable } from '@/types';
 import { formatMonth, getTodayDateData } from '@/utils/dates';
-import { router, useFocusEffect } from 'expo-router';
+import dayjs from 'dayjs';
+import { router, useFocusEffect, useLocalSearchParams } from 'expo-router';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { StyleSheet } from 'react-native';
 import { DateData } from 'react-native-calendars';
@@ -27,6 +28,16 @@ export default function HomeScreen() {
 
   const { selectedMonth, writtenDates, diaryInfos, handleMonthChange, refetch } = useGetDiaries();
   const { textGoals } = useGetTextGoals();
+
+  const { writtenDate } = useLocalSearchParams<{ writtenDate?: string }>();
+
+  const [currentDate, setCurrentDate] = useState(dayjs().format('YYYY-MM-DD'));
+
+  useEffect(() => {
+    if (writtenDate) {
+      setCurrentDate(writtenDate);
+    }
+  }, [writtenDate]);
 
   // 다른 화면에서 돌아올 때 (화면 포커스에만 반응)
   useFocusEffect(
@@ -108,6 +119,7 @@ export default function HomeScreen() {
         <MainAppBar navigateToSetting={navigateToSetting} />
 
         <MainCalendar
+          currentDate={currentDate}
           markedDates={markedDates}
           onMonthChange={handleMonthChange}
           onDayPress={handleDayPress}

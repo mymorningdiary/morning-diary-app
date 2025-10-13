@@ -22,7 +22,7 @@ export default function FirstWriteScreen() {
   const insets = useSafeAreaInsets();
   const styles = ScreenStyles({ colors, bottomInset: insets.bottom });
 
-  const { textLength } = useLocalSearchParams();
+  const { textLength, writtenDate } = useLocalSearchParams();
 
   const pagerRef = useRef<PagerView>(null);
 
@@ -45,7 +45,7 @@ export default function FirstWriteScreen() {
   }, [currentPage, currentTextGoalId]);
 
   const onCloseButtonPress = () => {
-    router.back();
+    router.replace({ pathname: '/(app)', params: { writtenDate } });
   };
 
   const onPageSelected = (position: number) => {
@@ -58,7 +58,7 @@ export default function FirstWriteScreen() {
         updateTextGoal({ textGoalId: currentTextGoalId });
       }
 
-      router.back();
+      router.replace({ pathname: '/(app)', params: { writtenDate } });
     } else {
       pagerRef.current?.setPage(currentPage + 1);
     }
@@ -66,18 +66,18 @@ export default function FirstWriteScreen() {
 
   useEffect(() => {
     if (textLength === undefined || textLength === null) {
-      router.back();
+      router.replace({ pathname: '/(app)', params: { writtenDate } });
       return;
     }
 
     const parsedLength = Number(textLength);
     if (isNaN(parsedLength) || parsedLength < 0) {
-      router.back();
+      router.replace({ pathname: '/(app)', params: { writtenDate } });
       return;
     }
 
     setWrittenTextLength(parsedLength);
-  }, [textLength]);
+  }, [textLength, writtenDate]);
 
   useEffect(() => {
     const defaultTextGoal = textGoals?.find((textGoal) => textGoal.isDefault);

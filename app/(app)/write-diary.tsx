@@ -192,11 +192,22 @@ export default function WriteDiaryScreen() {
     const { isFirstWrittenDiary, textLength } = writeDiaryResponse;
 
     if (isFirstWrittenDiary) {
-      router.replace({ pathname: '/first-write', params: { textLength } });
+      router.replace({
+        pathname: '/first-write',
+        params: {
+          textLength,
+          writtenDate: `${year}-${month.toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`,
+        },
+      });
     } else {
-      router.back();
+      router.replace({
+        pathname: '/(app)',
+        params: {
+          writtenDate: `${year}-${month.toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`,
+        },
+      });
     }
-  }, [writeDiaryResponse]);
+  }, [writeDiaryResponse, year, month, day]);
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>

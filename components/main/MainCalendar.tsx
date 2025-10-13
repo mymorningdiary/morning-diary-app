@@ -37,12 +37,14 @@ type MarkedDate = {
 };
 
 type MainCalendarProps = {
+  currentDate: string;
   markedDates: MarkedDate;
   onMonthChange: (month: DateData) => void;
   onDayPress: (day?: DateData) => void;
 };
 
 export default function MainCalendar({
+  currentDate,
   markedDates,
   onMonthChange,
   onDayPress,
@@ -80,7 +82,7 @@ export default function MainCalendar({
           },
         },
       }}
-      initialDate={formatCalendarDate()}
+      initialDate={currentDate}
       minDate={undefined}
       maxDate={today}
       onDayPress={onDayPress}

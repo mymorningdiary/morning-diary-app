@@ -1,7 +1,7 @@
 export const INACTIVE_TEXT_LEN = 50;
 export const INACTIVATE_TEXT_TIME = 1500;
 export const INACTIVE_INPUT_TIME = 5000;
-export const ASSISTANT_SHOW_TIME = 3000;
+export const ASSISTANT_SHOW_TIME = 5000;
 
 export const PROGRESS_MESSAGES = {
   10: '잠든 생각들을 깨워봐요',

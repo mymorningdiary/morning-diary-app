@@ -4,6 +4,7 @@ import MDDefaultModal from '@/components/Modal/MDDefaultModal';
 import MDTopNotificationModal from '@/components/Modal/MDTopNotificationModal';
 import { WriteAppBar } from '@/components/write';
 import { formatDateToAppBarTitle } from '@/components/write/WriteAppBar';
+import { WRITING_HINT_MESSAGES } from '@/constants/messages';
 import {
   ASSISTANT_SHOW_TIME,
   INACTIVATE_TEXT_TIME,
@@ -15,6 +16,7 @@ import {
 import { useThemeColor } from '@/hooks';
 import { useWriteDiary } from '@/hooks/useDiaryMutation';
 import { MDColors } from '@/types';
+import { getRandomMessage } from '@/utils/arrays';
 import { router, useLocalSearchParams } from 'expo-router';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, TextInput } from 'react-native';
@@ -251,7 +253,7 @@ export default function WriteDiaryScreen() {
                   style={styles.textInput}
                   value={textState.active}
                   onChangeText={onTextChange}
-                  placeholder="오늘 아침에는 어떤 생각이 떠오르나요?"
+                  placeholder={getRandomMessage(WRITING_HINT_MESSAGES)}
                   placeholderTextColor={colors.text.alternative}
                   multiline
                   scrollEnabled={false}

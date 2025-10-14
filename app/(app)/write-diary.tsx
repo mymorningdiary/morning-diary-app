@@ -171,10 +171,12 @@ export default function WriteDiaryScreen() {
 
   // 어시스턴트 - 목표율 달성
   useEffect(() => {
-    const message = PROGRESS_MESSAGES[progress as keyof typeof PROGRESS_MESSAGES];
-    if (message && !isShowProgressAssistant[progress as ProgressKey]) {
-      showAssistant(message);
-      setIsShowProgressAssistant((prev) => ({ ...prev, [progress as ProgressKey]: true }));
+    const progressKey = progress as ProgressKey;
+    const messages = PROGRESS_MESSAGES[progressKey];
+
+    if (messages && !isShowProgressAssistant[progressKey]) {
+      showAssistant(getRandomMessage(messages));
+      setIsShowProgressAssistant((prev) => ({ ...prev, [progressKey]: true }));
     }
   }, [progress, showAssistant, isShowProgressAssistant]);
 

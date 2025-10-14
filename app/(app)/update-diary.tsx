@@ -3,6 +3,7 @@ import MDAssistant from '@/components/MDAssistant';
 import MDDefaultModal from '@/components/Modal/MDDefaultModal';
 import MDTopNotificationModal from '@/components/Modal/MDTopNotificationModal';
 import WriteAppBar, { formatDateToAppBarTitle } from '@/components/write/WriteAppBar';
+import { ASSISTANT_PAUSE_MESSAGES } from '@/constants/messages';
 import {
   ASSISTANT_SHOW_TIME,
   INACTIVATE_TEXT_TIME,
@@ -14,6 +15,7 @@ import {
 import { useGetDiary, useThemeColor, useUpdateDiary } from '@/hooks';
 import useGetTextGoals from '@/hooks/useTextGoalQuery';
 import { MDColors } from '@/types';
+import { getRandomMessage } from '@/utils/arrays';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, TextInput } from 'react-native';
@@ -154,7 +156,7 @@ export default function UpdateDiaryScreen() {
 
       if (timeSinceLastInput >= INACTIVE_INPUT_TIME) {
         if (progress === 100) return;
-        showAssistant('생각의 꼬리를 물어서 일기를 써보면 새로운 생각을 마주할 수 있어요');
+        showAssistant(getRandomMessage(ASSISTANT_PAUSE_MESSAGES));
         if (timerRef?.current) {
           clearInterval(timerRef.current);
         }
@@ -181,10 +183,12 @@ export default function UpdateDiaryScreen() {
 
   // 어시스턴트 - 목표율 달성
   useEffect(() => {
-    const message = PROGRESS_MESSAGES[progress as keyof typeof PROGRESS_MESSAGES];
-    if (message && !isShowProgressAssistant[progress as ProgressKey]) {
-      showAssistant(message);
-      setIsShowProgressAssistant((prev) => ({ ...prev, [progress as ProgressKey]: true }));
+    const progressKey = progress as ProgressKey;
+    const messages = PROGRESS_MESSAGES[progressKey];
+
+    if (messages && !isShowProgressAssistant[progressKey]) {
+      showAssistant(getRandomMessage(messages));
+      setIsShowProgressAssistant((prev) => ({ ...prev, [progressKey]: true }));
     }
   }, [progress, showAssistant, isShowProgressAssistant]);
 
@@ -198,56 +202,14 @@ export default function UpdateDiaryScreen() {
     return () => clearTimeout(timer);
   }, [isShowAssistant]);
 
-  // 어시스턴트 - 5초 부동 타이머 + 텍스트 비활성화 (부동 1.5초 후)
-  useEffect(() => {
-    const checkInactivity = () => {
-      if (textState.active.length === 0) return;
-      const now = Date.now();
-      const timeSinceLastInput = now - lastInputTimeRef.current;
-
-      if (timeSinceLastInput >= INACTIVATE_TEXT_TIME) {
-        if (debounceTimerRef.current) {
-          clearTimeout(debounceTimerRef.current);
-        }
-
-        debounceTimerRef.current = setTimeout(() => {
-          inactivateText();
-        }, 300);
-      }
-
-      if (timeSinceLastInput >= INACTIVE_INPUT_TIME) {
-        if (progress === 100) return;
-        showAssistant('생각의 꼬리를 물어서 일기를 써보면 새로운 생각을 마주할 수 있어요');
-        if (timerRef?.current) {
-          clearInterval(timerRef.current);
-        }
-      }
-    };
-
-    // 텍스트가 변경될 때마다 마지막 입력 시간 업데이트
-    lastInputTimeRef.current = Date.now();
-
-    // 이전 타이머 클리어
-    if (timerRef?.current !== null) {
-      clearInterval(timerRef.current);
-    }
-
-    // 새로운 타이머 설정
-    timerRef.current = setInterval(checkInactivity, 1000);
-
-    return () => {
-      if (timerRef?.current) {
-        clearInterval(timerRef.current);
-      }
-    };
-  }, [textState.active, progress, showAssistant, inactivateText]);
-
   // 어시스턴트 - 목표율 달성
   useEffect(() => {
-    const message = PROGRESS_MESSAGES[progress as keyof typeof PROGRESS_MESSAGES];
-    if (message && !isShowProgressAssistant[progress as ProgressKey]) {
-      showAssistant(message);
-      setIsShowProgressAssistant((prev) => ({ ...prev, [progress as ProgressKey]: true }));
+    const progressKey = progress as ProgressKey;
+    const messages = PROGRESS_MESSAGES[progressKey];
+
+    if (messages && !isShowProgressAssistant[progressKey]) {
+      showAssistant(getRandomMessage(messages));
+      setIsShowProgressAssistant((prev) => ({ ...prev, [progressKey]: true }));
     }
   }, [progress, showAssistant, isShowProgressAssistant]);
 

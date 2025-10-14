@@ -6,6 +6,7 @@ export default function AppLayout() {
     <UserProvider>
       <Stack screenOptions={{ headerShown: false }}>
         <Stack.Screen name="index" />
+        <Stack.Screen name="diary-list" />
         <Stack.Screen name="write-diary" />
         <Stack.Screen name="update-diary" />
         <Stack.Screen name="read-diary" />

@@ -1,29 +1,22 @@
 import { useThemeColor } from '@/hooks';
 import { MDColors } from '@/types';
+import { router } from 'expo-router';
 import { Image, StyleSheet } from 'react-native';
-import { MDRow } from '../MDRow';
 import MDPressable from '../MDPressable';
+import { MDRow } from '../MDRow';
 
-interface MainAppBarProps {
-  onNavigateToSetting: () => void;
-  onNavigateToDiaryList: () => void;
-}
-
-export default function MainAppBar({
-  onNavigateToSetting,
-  onNavigateToDiaryList,
-}: MainAppBarProps) {
+export default function DiaryListAppBar() {
   const colors = useThemeColor();
   const styles = appBarStyles({ colors });
 
+  const onNavigateBack = () => {
+    router.back();
+  };
+
   return (
     <MDRow style={styles.container}>
-      <MDPressable style={styles.containerButton} onPress={onNavigateToDiaryList}>
-        <Image source={require('@/assets/images/ic-list.png')} style={styles.icon} />
-      </MDPressable>
-
-      <MDPressable style={styles.containerButton} onPress={onNavigateToSetting}>
-        <Image source={require('@/assets/images/ic-setting.png')} style={styles.icon} />
+      <MDPressable style={styles.buttonBack} onPress={onNavigateBack}>
+        <Image source={require('@/assets/images/ic-chevron_left.png')} style={styles.icon} />
       </MDPressable>
     </MDRow>
   );
@@ -37,11 +30,10 @@ const appBarStyles = ({ colors }: { colors: MDColors }) =>
       alignItems: 'center',
       backgroundColor: colors.background.normal,
     },
-    containerButton: {
+    buttonBack: {
       height: '100%',
-      paddingHorizontal: 16,
-      alignItems: 'center',
       justifyContent: 'center',
+      paddingHorizontal: 12,
     },
     icon: {
       width: 24,

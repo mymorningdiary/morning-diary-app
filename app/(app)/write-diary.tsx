@@ -4,7 +4,7 @@ import MDDefaultModal from '@/components/Modal/MDDefaultModal';
 import MDTopNotificationModal from '@/components/Modal/MDTopNotificationModal';
 import { WriteAppBar } from '@/components/write';
 import { formatDateToAppBarTitle } from '@/components/write/WriteAppBar';
-import { WRITING_HINT_MESSAGES } from '@/constants/messages';
+import { ASSISTANT_PAUSE_MESSAGES, WRITING_HINT_MESSAGES } from '@/constants/messages';
 import {
   ASSISTANT_SHOW_TIME,
   INACTIVATE_TEXT_TIME,
@@ -144,7 +144,7 @@ export default function WriteDiaryScreen() {
 
       if (timeSinceLastInput >= INACTIVE_INPUT_TIME) {
         if (progress === 100) return;
-        showAssistant('생각의 꼬리를 물어서 일기를 써보면 새로운 생각을 마주할 수 있어요');
+        showAssistant(getRandomMessage(ASSISTANT_PAUSE_MESSAGES));
         if (timerRef?.current) {
           clearInterval(timerRef.current);
         }

@@ -92,9 +92,16 @@ export default function HomeScreen() {
     });
   };
 
-  const navigateToSetting = useCallback(() => {
+  const onNavigateToSetting = useCallback(() => {
     router.push('/settings');
   }, []);
+
+  const onNavigateToDiaryList = () => {
+    router.replace({
+      pathname: '/(app)/diary-list',
+      params: { date: dayjs(currentDate, 'YYYY-MM-DD').format('YY년 M월') },
+    });
+  };
 
   const navigateToReadDiary = useCallback(
     (diary: Diary) => {
@@ -116,7 +123,10 @@ export default function HomeScreen() {
   return (
     <SafeAreaView style={styles.containerSafeArea}>
       <MDCol style={styles.container}>
-        <MainAppBar navigateToSetting={navigateToSetting} />
+        <MainAppBar
+          onNavigateToSetting={onNavigateToSetting}
+          onNavigateToDiaryList={onNavigateToDiaryList}
+        />
 
         <MainCalendar
           currentDate={currentDate}

@@ -94,7 +94,7 @@ export default function ReadDiaryScreen() {
   );
 }
 
-const ScreenStyles = ({ colors, bottomInset }: { colors: MDColors, bottomInset: number }) =>
+const ScreenStyles = ({ colors, bottomInset }: { colors: MDColors; bottomInset: number }) =>
   StyleSheet.create({
     containerSafeArea: {
       flex: 1,

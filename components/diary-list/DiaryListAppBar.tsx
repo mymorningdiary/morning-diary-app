@@ -1,17 +1,16 @@
 import { useThemeColor } from '@/hooks';
 import { MDColors } from '@/types';
-import { router } from 'expo-router';
 import { Image, StyleSheet } from 'react-native';
 import MDPressable from '../MDPressable';
 import { MDRow } from '../MDRow';
 
-export default function DiaryListAppBar() {
+interface Props {
+  onNavigateBack: () => void;
+}
+
+export default function DiaryListAppBar({ onNavigateBack }: Props) {
   const colors = useThemeColor();
   const styles = appBarStyles({ colors });
-
-  const onNavigateBack = () => {
-    router.back();
-  };
 
   return (
     <MDRow style={styles.container}>

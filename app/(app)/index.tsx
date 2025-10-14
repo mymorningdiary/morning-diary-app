@@ -97,10 +97,7 @@ export default function HomeScreen() {
   }, []);
 
   const onNavigateToDiaryList = () => {
-    router.replace({
-      pathname: '/(app)/diary-list',
-      params: { date: dayjs(currentDate, 'YYYY-MM-DD').format('YY년 M월') },
-    });
+    router.push(`/diary-list?date=${selectedMonth}`);
   };
 
   const navigateToReadDiary = useCallback(

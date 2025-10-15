@@ -1,7 +1,9 @@
 import { MDButton, MDLargeSpeechBubble, MDPressable, MDRow, MDText } from '@/components';
+import { useNotification } from '@/contexts/NotificationContext';
 import { useUser } from '@/contexts/UserContext';
+import { appManager } from '@/core/storage';
 import NotificationAppBar from '@/domain/notification/NotificationAppBar';
-import { useThemeColor, useUpdateAlarmTime } from '@/hooks';
+import { useThemeColor, useUpdateAlarmTime, useUpdatePushToken } from '@/hooks';
 import { MDColors } from '@/types';
 import dayjs from 'dayjs';
 import { Image } from 'expo-image';
@@ -42,6 +44,9 @@ export default function AlarmTimeScreen() {
   const { user } = useUser();
 
   const { mutate: updateAlarmTime } = useUpdateAlarmTime();
+  const { mutate: updatePushToken } = useUpdatePushToken();
+
+  const { pushToken } = useNotification();
 
   const onBackButtonPress = () => {
     router.back();
@@ -83,6 +88,15 @@ export default function AlarmTimeScreen() {
     }
   };
 
+  const updateNotification = async () => {
+    try {
+      await appManager.markAlarmOn();
+      updatePushToken({ pushToken });
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
   useEffect(() => {
     if (user === null || user.alarmTime === null) return;
 
@@ -94,6 +108,10 @@ export default function AlarmTimeScreen() {
       seconds: 0,
     });
   }, [user]);
+
+  useEffect(() => {
+    updateNotification();
+  }, []);
 
   return (
     <SafeAreaView style={styles.containerSafeArea}>

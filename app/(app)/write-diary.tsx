@@ -53,6 +53,7 @@ export default function WriteDiaryScreen() {
     active: '',
     inactive: '',
   });
+  const [showPlaceholder, setShowPlaceholder] = useState(true);
 
   const progress = useMemo(() => {
     const totalTextCnt = textState.active.length + textState.inactive.length;
@@ -74,13 +75,20 @@ export default function WriteDiaryScreen() {
 
   const [showEndModal, setShowEndModal] = useState(false);
 
-  const onTextChange = useCallback((text: string) => {
-    // 즉시 active 텍스트 업데이트
-    setTextState((prev) => ({
-      ...prev,
-      active: text,
-    }));
-  }, []);
+  const onTextChange = useCallback(
+    (text: string) => {
+      // 즉시 active 텍스트 업데이트
+      setTextState((prev) => ({
+        ...prev,
+        active: text,
+      }));
+
+      if (showPlaceholder && text.length > 0) {
+        setShowPlaceholder(false);
+      }
+    },
+    [showPlaceholder],
+  );
 
   const handleContentSizeChange = useCallback(() => {
     scrollViewRef.current?.scrollToEnd({ animated: true });
@@ -250,16 +258,23 @@ export default function WriteDiaryScreen() {
                     {textState.inactive}
                   </MDText>
                 )}
+                {showPlaceholder && (
+                  <MDText
+                    style={styles.hintText}
+                    type="bodyRegular"
+                    color={colors.text.alternative}>
+                    {getRandomMessage(WRITING_HINT_MESSAGES)}
+                  </MDText>
+                )}
                 <TextInput
                   ref={textInputRef}
                   style={styles.textInput}
                   value={textState.active}
                   onChangeText={onTextChange}
-                  placeholder={getRandomMessage(WRITING_HINT_MESSAGES)}
-                  placeholderTextColor={colors.text.alternative}
-                  multiline
                   scrollEnabled={false}
+                  multiline
                   autoFocus
+                  autoCorrect={false}
                 />
               </MDView>
             </ScrollView>
@@ -330,5 +345,10 @@ const ScreenStyles = ({ colors, bottomInset }: { colors: MDColors; bottomInset: 
       lineHeight: 26,
       fontSize: 16,
       color: colors.text.normal,
+    },
+    hintText: {
+      position: 'absolute',
+      left: Platform.OS === 'android' ? 8 : 4,
+      top: Platform.OS === 'android' ? 10 : 4,
     },
   });

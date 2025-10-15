@@ -31,7 +31,8 @@ export default function DiaryListScreen() {
 
   const onNavigateToReadDiary = (diary: Diary) => {
     const writtenDate = dayjs(diary.writtenDate, 'YYYY-MM-DD');
-    const dateParam = `year=${writtenDate.year}&month=${writtenDate.month}&day=${writtenDate.day}`;
+    const dateParam = `year=${writtenDate.year()}&month=${writtenDate.month() + 1}&day=${writtenDate.date()}`;
+
     router.push(`/read-diary?${dateParam}&diaryId=${diary.diaryId}`);
   };
 

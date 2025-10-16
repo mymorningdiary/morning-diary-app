@@ -8,7 +8,7 @@ import { initializeKakaoSDK } from '@react-native-kakao/core';
 import { ThemeProvider } from '@react-navigation/native';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import * as Notifications from 'expo-notifications';
-import { Redirect, Stack } from 'expo-router';
+import { Stack } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { useColorScheme } from 'react-native';
 import ForceUpdateScreen from './force-update';
@@ -79,16 +79,16 @@ function RootNavigator() {
         onClose={() => setShowUpdateAppModal(false)}
       />
       <Stack screenOptions={{ headerShown: false }}>
-        <Stack.Protected guard={!!session}>
-          <Stack.Screen name="(app)" />
-        </Stack.Protected>
-
-        <Stack.Protected guard={!session && hasVisited === null}>
+        <Stack.Protected guard={!session && hasVisited === false}>
           <Stack.Screen name="onboarding" />
         </Stack.Protected>
 
-        <Stack.Protected guard={!session && hasVisited === 'true'}>
+        <Stack.Protected guard={!session && hasVisited === true}>
           <Stack.Screen name="sign-in" />
+        </Stack.Protected>
+
+        <Stack.Protected guard={!!session && hasVisited === true}>
+          <Stack.Screen name="(app)" />
         </Stack.Protected>
 
         <Stack.Screen name="web-view" />

@@ -160,49 +160,6 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
             },
           ],
         },
-        ios: {
-          fonts: [
-            {
-              fontFamily: 'Pretendard',
-              fontDefinitions: [
-                {
-                  path: './assets/fonts/Pretendard-Regular.ttf',
-                  weight: 400,
-                },
-                {
-                  path: './assets/fonts/Pretendard-Medium.ttf',
-                  weight: 500,
-                },
-                {
-                  path: './assets/fonts/Pretendard-SemiBold.ttf',
-                  weight: 600,
-                },
-                {
-                  path: './assets/fonts/Pretendard-Bold.ttf',
-                  weight: 700,
-                },
-              ],
-            },
-            {
-              fontFamily: 'Roboto',
-              fontDefinitions: [
-                {
-                  path: './assets/fonts/Roboto-Regular.ttf',
-                  weight: 400,
-                },
-              ],
-            },
-            {
-              fontFamily: 'Inter',
-              fontDefinitions: [
-                {
-                  path: './assets/fonts/Inter-Regular.ttf',
-                  weight: 400,
-                },
-              ],
-            },
-          ],
-        },
       },
     ],
   ],

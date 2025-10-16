@@ -14,7 +14,7 @@ export default function OnboardingScreen() {
   const styles = screenStyles({ colors, bottomInset: insets.bottom });
 
   const router = useRouter();
-  const { setHasVisited } = useAppState();
+  const { markVisited } = useAppState();
 
   const pageRef = useRef<PagerView>(null);
   const [currentPage, setCurrentPage] = useState(0);
@@ -23,7 +23,7 @@ export default function OnboardingScreen() {
   const handleBottomButtonPress = () => {
     if (currentPage === 1) {
       // 온보딩 완료 시 방문 여부 저장 후 로그인 화면으로
-      setHasVisited('true');
+      markVisited();
       router.replace('/sign-in');
     } else {
       pageRef.current?.setPage(currentPage + 1);

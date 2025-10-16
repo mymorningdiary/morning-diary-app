@@ -7,17 +7,18 @@ import { Platform } from 'react-native';
 import * as Application from 'expo-application';
 import semver from 'semver';
 import { setGlobalSignInHandler, setGlobalSignOutHandler } from '@/core/api/authHandlers';
+import { appManager } from '@/core/storage';
 
 const AppStateContext = createContext<{
-  session?: string | null;
-  hasVisited?: string | null;
+  session: string | null;
+  hasVisited: boolean | null;
   isLoading: boolean;
   appVersion?: AppVersion | null;
   isUpdateNeeded: boolean;
   isForceUpdateNeeded: boolean;
   signIn: ({ accessToken, refreshToken }: Auth) => void;
   signOut: () => void;
-  setHasVisited: (value: string | null) => void;
+  markVisited: () => void;
 }>({
   session: null,
   hasVisited: null,
@@ -27,7 +28,7 @@ const AppStateContext = createContext<{
   isForceUpdateNeeded: false,
   signIn: () => null,
   signOut: () => null,
-  setHasVisited: () => null,
+  markVisited: () => null,
 });
 
 export function useAppState() {
@@ -49,8 +50,8 @@ export function getAppStateHelpers() {
 export function AppStateProvider({ children }: PropsWithChildren) {
   const [[isSessionLoading, session], setSession] = useStorageState('accessToken');
   const [_, setRefreshToken] = useStorageState('refreshToken');
-  const [[isVisitedLoading, hasVisited], setHasVisited] = useStorageState('hasVisited');
-  const isLoading = isSessionLoading || isVisitedLoading;
+  const [hasVisited, setHasVisited] = useState<boolean | null>(null);
+  const isLoading = isSessionLoading || hasVisited === null;
 
   const [appVersion, setAppVersion] = useState<AppVersion | null>(null);
   const [isUpdateNeeded, setUpdateNeeded] = useState(false); // 선택 업데이트
@@ -73,8 +74,30 @@ export function AppStateProvider({ children }: PropsWithChildren) {
     setRefreshToken(null);
   };
 
+  const markVisited = () => {
+    try {
+      appManager.markVisited();
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setHasVisited(true);
+    }
+  };
+
   setGlobalSignInHandler(signIn);
   setGlobalSignOutHandler(signOut);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const visited = await appManager.hasVisited();
+        setHasVisited(visited);
+      } catch (e) {
+        console.error(e);
+        markVisited();
+      }
+    })();
+  }, []);
 
   useEffect(() => {
     if (data?.code === 2000) {
@@ -123,7 +146,7 @@ export function AppStateProvider({ children }: PropsWithChildren) {
         isForceUpdateNeeded,
         signIn,
         signOut,
-        setHasVisited,
+        markVisited,
       }}>
       {children}
     </AppStateContext>

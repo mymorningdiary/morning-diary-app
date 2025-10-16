@@ -8,7 +8,8 @@ const SCREEN_WIDTH = Dimensions.get('window').width;
 
 interface Props {
   visible: boolean;
-  title: string;
+  title?: string;
+  subtitle?: string;
   negativeButton?: {
     text: string;
     onPress: () => void;
@@ -23,6 +24,7 @@ interface Props {
 export default function MDDefaultModal({
   visible,
   title,
+  subtitle,
   negativeButton,
   positiveButton,
   onClose,
@@ -34,9 +36,18 @@ export default function MDDefaultModal({
     <Modal animationType="fade" visible={visible} transparent>
       <Pressable style={styles.overlay} onPress={onClose}>
         <View style={styles.containerContent}>
-          <MDText type="bodyRegular" style={styles.title}>
-            {title}
-          </MDText>
+          <View style={styles.containerTitle}>
+            {title && (
+              <MDText type="bodySemiBold" style={styles.title}>
+                {title}
+              </MDText>
+            )}
+            {subtitle && (
+              <MDText type="bodyRegular" style={styles.title}>
+                {subtitle}
+              </MDText>
+            )}
+          </View>
 
           <MDRow style={styles.containerButton}>
             {negativeButton && (
@@ -63,14 +74,16 @@ const ModalStyles = ({ colors }: { colors: MDColors }) =>
       backgroundColor: colors.fill.dim,
       justifyContent: 'center',
       alignItems: 'center',
-      padding: 24,
     },
     containerContent: {
       width: SCREEN_WIDTH * 0.8,
       backgroundColor: colors.background.normal,
       borderRadius: 24,
-      gap: 12,
       padding: 24,
+      gap: 12,
+    },
+    containerTitle: {
+      gap: 16,
     },
     title: {
       color: colors.text.normal,

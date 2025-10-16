@@ -123,13 +123,13 @@ export function AppStateProvider({ children }: PropsWithChildren) {
         if (currentVersion === null) return;
 
         // 강제 업데이트 활성화
-        if (minVersion && semver.lt(currentVersion, minVersion)) {
-          setForceUpdateNeeded(true);
-          return;
-        }
+        // if (minVersion && semver.lt(currentVersion, minVersion)) {
+        //   setForceUpdateNeeded(true);
+        //   return;
+        // }
 
         // 선택 업데이트 활성화
-        if (version && semver.lt(currentVersion, version)) {
+        if (true) {
           setUpdateNeeded(true);
         }
       } catch (e) {

@@ -74,8 +74,10 @@ function RootNavigator() {
     <>
       <MDDefaultModal
         visible={showUpdateAppModal}
-        title={`아침일기가 사용성 개선을 위해 업데이트를 준비했어요.\n지금 바로 만나보세요 🌞`}
+        title={'새로운 버전이 나왔어요!'}
+        subtitle={`아침일기가 사용성 개선을 위해 업데이트를 준비했어요. 지금 바로 만나보세요 🌞`}
         positiveButton={{ text: '업데이트 하기', onPress: openStoreLink }}
+        negativeButton={{ text: '취소', onPress: () => setShowUpdateAppModal(false) }}
         onClose={() => setShowUpdateAppModal(false)}
       />
       <Stack screenOptions={{ headerShown: false }}>

@@ -100,6 +100,111 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
         faceIDPermission: 'Allow $(PRODUCT_NAME) to access your Face ID biometric data.',
       },
     ],
+    [
+      'expo-font',
+      {
+        fonts: [
+          './assets/fonts/Pretendard-Bold.ttf',
+          './assets/fonts/Pretendard-SemiBold.ttf',
+          './assets/fonts/Pretendard-Medium.ttf',
+          './assets/fonts/Pretendard-Regular.ttf',
+          './assets/fonts/Roboto-Regular.ttf',
+          './assets/fonts/Inter-Regular.ttf',
+        ],
+        android: {
+          fonts: [
+            {
+              fontFamily: 'Pretendard',
+              fontDefinitions: [
+                {
+                  path: './assets/fonts/Pretendard-Regular.ttf',
+                  weight: 400,
+                  style: 'normal',
+                },
+                {
+                  path: './assets/fonts/Pretendard-Medium.ttf',
+                  weight: 500,
+                  style: 'normal',
+                },
+                {
+                  path: './assets/fonts/Pretendard-SemiBold.ttf',
+                  weight: 600,
+                  style: 'normal',
+                },
+                {
+                  path: './assets/fonts/Pretendard-Bold.ttf',
+                  weight: 700,
+                  style: 'normal',
+                },
+              ],
+            },
+            {
+              fontFamily: 'Roboto',
+              fontDefinitions: [
+                {
+                  path: './assets/fonts/Roboto-Regular.ttf',
+                  weight: 400,
+                  style: 'normal',
+                },
+              ],
+            },
+            {
+              fontFamily: 'Inter',
+              fontDefinitions: [
+                {
+                  path: './assets/fonts/Inter-Regular.ttf',
+                  weight: 400,
+                  style: 'normal',
+                },
+              ],
+            },
+          ],
+        },
+        ios: {
+          fonts: [
+            {
+              fontFamily: 'Pretendard',
+              fontDefinitions: [
+                {
+                  path: './assets/fonts/Pretendard-Regular.ttf',
+                  weight: 400,
+                },
+                {
+                  path: './assets/fonts/Pretendard-Medium.ttf',
+                  weight: 500,
+                },
+                {
+                  path: './assets/fonts/Pretendard-SemiBold.ttf',
+                  weight: 600,
+                },
+                {
+                  path: './assets/fonts/Pretendard-Bold.ttf',
+                  weight: 700,
+                },
+              ],
+            },
+            {
+              fontFamily: 'Roboto',
+              fontDefinitions: [
+                {
+                  path: './assets/fonts/Roboto-Regular.ttf',
+                  weight: 400,
+                },
+              ],
+            },
+            {
+              fontFamily: 'Inter',
+              fontDefinitions: [
+                {
+                  path: './assets/fonts/Inter-Regular.ttf',
+                  weight: 400,
+                },
+              ],
+            },
+          ],
+        },
+      },
+    ],
   ],
   experiments: {
     typedRoutes: true,

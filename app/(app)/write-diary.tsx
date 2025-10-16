@@ -340,8 +340,8 @@ const ScreenStyles = ({ colors, bottomInset }: { colors: MDColors; bottomInset: 
       color: colors.text.alternative,
     },
     textInput: {
-      fontFamily: 'Pretendard-Regular',
-      fontWeight: '400',
+      fontFamily: 'Pretendard',
+      fontWeight: 400,
       lineHeight: 26,
       fontSize: 16,
       color: colors.text.normal,

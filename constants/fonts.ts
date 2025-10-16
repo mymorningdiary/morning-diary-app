@@ -1,32 +1,32 @@
 import { FontFamily } from '@/types/types';
 
 const PretendardBold: FontFamily = {
-  fontFamily: 'Pretendard-Bold',
+  fontFamily: 'Pretendard',
   fontWeight: 700,
 };
 
 const PretendardSemiBold: FontFamily = {
-  fontFamily: 'Pretendard-SemiBold',
+  fontFamily: 'Pretendard',
   fontWeight: 600,
 };
 
 const PretendardMedium: FontFamily = {
-  fontFamily: 'Pretendard-Medium',
+  fontFamily: 'Pretendard',
   fontWeight: 500,
 };
 
 const PretendardRegular: FontFamily = {
-  fontFamily: 'Pretendard-Regular',
+  fontFamily: 'Pretendard',
   fontWeight: 400,
 };
 
 const RobotoRegular: FontFamily = {
-  fontFamily: 'Roboto-Regular',
+  fontFamily: 'Roboto',
   fontWeight: 400,
 };
 
 const InterRegular: FontFamily = {
-  fontFamily: 'Inter-Regular',
+  fontFamily: 'Inter',
   fontWeight: 400,
 };
 

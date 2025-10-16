@@ -15,13 +15,7 @@ export type MDTheme = Theme & {
 };
 
 export type FontFamily = {
-  fontFamily:
-    | 'Pretendard-Bold'
-    | 'Pretendard-SemiBold'
-    | 'Pretendard-Medium'
-    | 'Pretendard-Regular'
-    | 'Roboto-Regular'
-    | 'Inter-Regular';
+  fontFamily: 'Pretendard' | 'Roboto' | 'Inter';
   fontWeight: 700 | 600 | 500 | 400 | 400 | 400;
 };
 

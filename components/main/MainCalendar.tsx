@@ -124,7 +124,8 @@ const calendarStyles = ({ colors }: { colors: MDColors }) =>
       gap: 2,
     },
     dayText: {
-      fontFamily: 'Roboto-Regular',
+      fontFamily: 'Roboto',
+      fontWeight: 400,
       color: colors.text.brand,
       fontSize: 13,
       lineHeight: 18,

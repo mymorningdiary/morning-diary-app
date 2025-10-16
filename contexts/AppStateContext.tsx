@@ -123,7 +123,7 @@ export function AppStateProvider({ children }: PropsWithChildren) {
         if (currentVersion === null) return;
 
         // 강제 업데이트 활성화
-        if (true) {
+        if (minVersion && semver.lt(currentVersion, minVersion)) {
           setForceUpdateNeeded(true);
           return;
         }

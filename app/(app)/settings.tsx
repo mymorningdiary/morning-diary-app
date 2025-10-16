@@ -227,7 +227,7 @@ export default function SettingsScreen() {
 
         <MDDefaultModal
           visible={showPermissionModal}
-          title={'알림을 받으려면, 기기 설정에서 알림을 허용해주세요'}
+          subtitle={'알림을 받으려면, 기기 설정에서 알림을 허용해주세요'}
           negativeButton={{ text: '취소', onPress: onClosePermissionModal }}
           positiveButton={{ text: '알림 허용', onPress: onOpenDeviceSettings }}
         />

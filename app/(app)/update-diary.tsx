@@ -309,7 +309,7 @@ export default function UpdateDiaryScreen() {
 
         <MDDefaultModal
           visible={showEndModal}
-          title={`일기쓰기를 종료할까요?\n종료 선택 시, 일기는 저장되지 않아요.`}
+          subtitle={`일기쓰기를 종료할까요?\n종료 선택 시, 일기는 저장되지 않아요.`}
           negativeButton={{ text: '계속 쓰기', onPress: () => setShowEndModal(false) }}
           positiveButton={{ text: '종료', onPress: () => router.back() }}
         />

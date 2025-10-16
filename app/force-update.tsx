@@ -15,7 +15,10 @@ export default function ForceUpdateScreen() {
     <SafeAreaView style={styles.containerSafeArea}>
       <MDView style={styles.container}>
         <View style={styles.contentContainer}>
-          <MDText type="bodyRegular" style={styles.title}>
+          <MDText type="titleSemiBold" style={styles.title}>
+            {`새로운 버전이 나왔어요!`}
+          </MDText>
+          <MDText type="labelRegular" style={styles.title}>
             {`아침일기가 사용성 개선을 위해 업데이트를 준비했어요.\n지금 바로 만나보세요 🌞`}
           </MDText>
         </View>
@@ -41,6 +44,7 @@ const screenStyles = ({ colors, bottomInset }: { colors: MDColors; bottomInset: 
       flex: 1,
       alignItems: 'center',
       justifyContent: 'center',
+      gap: 4,
     },
     title: {
       textAlign: 'center',

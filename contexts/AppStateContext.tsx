@@ -1,13 +1,16 @@
 import appAPI from '@/core/api/app/apis';
+import {
+  setGlobalClearAuthTokenHandler,
+  setGlobalSetAuthTokenHandler,
+} from '@/core/api/authHandlers';
+import { appManager } from '@/core/storage';
 import { AppVersion, Auth } from '@/core/types';
 import { useStorageState } from '@/hooks/useStorageState';
 import { useQuery } from '@tanstack/react-query';
+import * as Application from 'expo-application';
 import { createContext, type PropsWithChildren, use, useEffect, useState } from 'react';
 import { Platform } from 'react-native';
-import * as Application from 'expo-application';
 import semver from 'semver';
-import { setGlobalSignInHandler, setGlobalSignOutHandler } from '@/core/api/authHandlers';
-import { appManager } from '@/core/storage';
 
 const AppStateContext = createContext<{
   session: string | null;
@@ -16,8 +19,8 @@ const AppStateContext = createContext<{
   appVersion?: AppVersion | null;
   isUpdateNeeded: boolean;
   isForceUpdateNeeded: boolean;
-  signIn: ({ accessToken, refreshToken }: Auth) => void;
-  signOut: () => void;
+  setAuthToken: ({ accessToken, refreshToken }: Auth) => void;
+  clearAuthToken: () => void;
   markVisited: () => void;
 }>({
   session: null,
@@ -26,8 +29,8 @@ const AppStateContext = createContext<{
   appVersion: null,
   isUpdateNeeded: false,
   isForceUpdateNeeded: false,
-  signIn: () => null,
-  signOut: () => null,
+  setAuthToken: () => null,
+  clearAuthToken: () => null,
   markVisited: () => null,
 });
 
@@ -62,14 +65,14 @@ export function AppStateProvider({ children }: PropsWithChildren) {
     queryFn: () => appAPI.getAppVersion(),
   });
 
-  const signIn = ({ accessToken, refreshToken }: Auth) => {
+  const setAuthToken = ({ accessToken, refreshToken }: Auth) => {
     setSession(accessToken);
     if (refreshToken) {
       setRefreshToken(refreshToken);
     }
   };
 
-  const signOut = () => {
+  const clearAuthToken = () => {
     setSession(null);
     setRefreshToken(null);
   };
@@ -84,8 +87,8 @@ export function AppStateProvider({ children }: PropsWithChildren) {
     }
   };
 
-  setGlobalSignInHandler(signIn);
-  setGlobalSignOutHandler(signOut);
+  setGlobalSetAuthTokenHandler(setAuthToken);
+  setGlobalClearAuthTokenHandler(clearAuthToken);
 
   useEffect(() => {
     (async () => {
@@ -144,8 +147,8 @@ export function AppStateProvider({ children }: PropsWithChildren) {
         appVersion,
         isUpdateNeeded,
         isForceUpdateNeeded,
-        signIn,
-        signOut,
+        setAuthToken,
+        clearAuthToken,
         markVisited,
       }}>
       {children}

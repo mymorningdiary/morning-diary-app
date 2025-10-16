@@ -1,28 +1,31 @@
 import { Auth } from '../types';
 
-let globalSignInHandler: (({ accessToken, refreshToken }: Auth) => void) | null = null;
-let globalSignOutHandler: (() => void) | null = null;
+let globalSetAuthTokenHandler: (({ accessToken, refreshToken }: Auth) => void) | null = null;
 
-export const setGlobalSignInHandler = (handler: ({ accessToken, refreshToken }: Auth) => void) => {
-  globalSignInHandler = handler;
+export const setGlobalSetAuthTokenHandler = (
+  handler: ({ accessToken, refreshToken }: Auth) => void,
+) => {
+  globalSetAuthTokenHandler = handler;
 };
 
-export const getGlobalSignInHandler = () => {
-  if (!globalSignInHandler) {
-    console.warn('Global sign in handler not initialized');
+export const getGlobalSetAuthTokenHandler = () => {
+  if (!globalSetAuthTokenHandler) {
+    console.warn('Global setAuthToken handler not initialized');
     return () => {};
   }
-  return globalSignInHandler;
+  return globalSetAuthTokenHandler;
 };
 
-export const setGlobalSignOutHandler = (handler: () => void) => {
-  globalSignOutHandler = handler;
+let globalClearAuthTokenHandler: (() => void) | null = null;
+
+export const setGlobalClearAuthTokenHandler = (handler: () => void) => {
+  globalClearAuthTokenHandler = handler;
 };
 
-export const getGlobalSignOutHandler = () => {
-  if (!globalSignOutHandler) {
-    console.warn('Global sign out handler not initialized');
+export const getGlobalClearAuthTokenHandler = () => {
+  if (!globalClearAuthTokenHandler) {
+    console.warn('Global clearAuthToken handler not initialized');
     return () => {};
   }
-  return globalSignOutHandler;
+  return globalClearAuthTokenHandler;
 };

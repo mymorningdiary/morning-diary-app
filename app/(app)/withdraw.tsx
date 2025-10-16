@@ -15,7 +15,7 @@ export default function WithdrawScreen() {
   const insets = useSafeAreaInsets();
   const styles = ScreenStyles({ colors, bottomInset: insets.bottom });
 
-  const { signOut } = useAppState();
+  const { clearAuthToken } = useAppState();
 
   const { mutate } = useMutation({
     mutationFn: () => userAPI.deleteUser(),
@@ -23,7 +23,7 @@ export default function WithdrawScreen() {
       if (res.code === 2000) {
         try {
           await logout();
-          signOut();
+          clearAuthToken();
         } catch (e) {
           console.error('Failed to sign out', e);
         }

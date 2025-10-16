@@ -1,8 +1,8 @@
 import axios, { AxiosError, InternalAxiosRequestConfig } from 'axios';
 import * as SecureStore from 'expo-secure-store';
-import { getGlobalSignInHandler, getGlobalSignOutHandler } from './authHandlers';
-import { ApiError, ApiResponse } from './types';
 import { Auth } from '../types';
+import { getGlobalClearAuthTokenHandler, getGlobalSetAuthTokenHandler } from './authHandlers';
+import { ApiError, ApiResponse } from './types';
 
 const BASE_URL = process.env.EXPO_PUBLIC_API_URL;
 
@@ -82,7 +82,7 @@ apiClient.interceptors.response.use(
         console.warn(
           `[API][AccessToken Invalid] url=${requestUrl}, code=${data?.code}, status=${status}`,
         );
-        getGlobalSignOutHandler()?.();
+        getGlobalClearAuthTokenHandler()?.();
         break;
       case 4003: {
         // expired access token
@@ -129,7 +129,7 @@ apiClient.interceptors.response.use(
 
           // newAccessToken -> 로컬 저장 및 AppContext state 변경
           console.log('[Auth][AccessToken Refreshed]', newAccessToken);
-          getGlobalSignInHandler()?.({ accessToken: newAccessToken });
+          getGlobalSetAuthTokenHandler()?.({ accessToken: newAccessToken });
 
           // 큐에 쌓인 API 요청들 실행
           resolveQueue(newAccessToken);
@@ -140,7 +140,7 @@ apiClient.interceptors.response.use(
         } catch (err) {
           console.error('[Auth][RefreshToken Failed]', err);
           resolveQueue(null); // 큐에 쌓인 API 요청들 모두 실패 (reject) 처리
-          getGlobalSignOutHandler()?.();
+          getGlobalClearAuthTokenHandler()?.();
           return Promise.reject(err);
         } finally {
           isRefreshing = false;
@@ -152,7 +152,7 @@ apiClient.interceptors.response.use(
         console.warn(
           `[API][RefreshToken Invalid/Expired] url=${requestUrl}, code=${data?.code}, status=${status}`,
         );
-        getGlobalSignOutHandler()?.();
+        getGlobalClearAuthTokenHandler()?.();
         break;
     }
 

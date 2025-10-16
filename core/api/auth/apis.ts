@@ -4,8 +4,12 @@ import { ApiResponse } from '../types';
 import { PostAuthKakaoSignInRequest } from './types';
 
 const authAPI = {
-  kakaoSignIn: async (body: PostAuthKakaoSignInRequest): Promise<ApiResponse<Auth>> => {
+  signIn: async (body: PostAuthKakaoSignInRequest): Promise<ApiResponse<Auth>> => {
     const response = await apiClient.post('/auth/kakao/login', body);
+    return response.data;
+  },
+  signOut: async (): Promise<ApiResponse<null>> => {
+    const response = await apiClient.post('/auth/logout');
     return response.data;
   },
 };

@@ -14,10 +14,10 @@ export default function SignInScreen() {
   const insets = useSafeAreaInsets();
   const styles = screenStyles({ colors, bottomInset: insets.bottom });
 
-  const { signIn } = useAppState();
+  const { setAuthToken } = useAppState();
 
   const { mutateAsync, isPending } = useMutation({
-    mutationFn: authAPI.kakaoSignIn,
+    mutationFn: authAPI.signIn,
   });
 
   const kakaoSignIn = async () => {
@@ -31,7 +31,7 @@ export default function SignInScreen() {
         const { accessToken, refreshToken, isExistUser } = response.data;
         console.log('[SignInScreen] data:', response.data);
 
-        signIn({ accessToken, refreshToken });
+        setAuthToken({ accessToken, refreshToken });
         if (isExistUser) {
           router.replace('/(app)');
         } else {

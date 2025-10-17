@@ -81,7 +81,7 @@ function RootNavigator() {
         onClose={() => setShowUpdateAppModal(false)}
       />
       <Stack screenOptions={{ headerShown: false }}>
-        <Stack.Protected guard={!session && hasVisited === false}>
+        <Stack.Protected guard={hasVisited === false}>
           <Stack.Screen name="onboarding" />
         </Stack.Protected>
 

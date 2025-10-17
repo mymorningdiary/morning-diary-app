@@ -95,6 +95,10 @@ export function AppStateProvider({ children }: PropsWithChildren) {
       try {
         const visited = await appManager.hasVisited();
         setHasVisited(visited);
+
+        if (visited === false) {
+          clearAuthToken();
+        }
       } catch (e) {
         console.error(e);
         markVisited();

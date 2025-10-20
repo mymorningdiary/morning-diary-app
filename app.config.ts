@@ -40,6 +40,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   ios: {
     supportsTablet: false,
     bundleIdentifier: getUniqueIdentifier(),
+    googleServicesFile: './GoogleService-Info.plist',
     infoPlist: {
       ITSAppUsesNonExemptEncryption: false,
     },
@@ -159,6 +160,16 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
               ],
             },
           ],
+        },
+      },
+    ],
+    '@react-native-firebase/app',
+    '@react-native-firebase/crashlytics',
+    [
+      'expo-build-properties',
+      {
+        ios: {
+          useFrameworks: 'static',
         },
       },
     ],

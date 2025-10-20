@@ -14,9 +14,11 @@ import { formatMonth, getTodayDateData } from '@/utils/dates';
 import dayjs from 'dayjs';
 import { router, useFocusEffect, useLocalSearchParams } from 'expo-router';
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { StyleSheet } from 'react-native';
+import { Button, StyleSheet } from 'react-native';
 import { DateData } from 'react-native-calendars';
 import { SafeAreaView } from 'react-native-safe-area-context';
+
+import crashlytics from '@react-native-firebase/crashlytics';
 
 export default function HomeScreen() {
   const colors = useThemeColor();
@@ -133,6 +135,12 @@ export default function HomeScreen() {
         />
 
         <MDDivider style={{ marginTop: 8 }} marginHorizontal={16} />
+        <Button
+          title="Crash"
+          onPress={() => {
+            crashlytics().crash();
+          }}
+        />
 
         <MainDiaryContent diaryInfo={selectedDiaryInfo} onDiaryItemPress={navigateToReadDiary} />
 

@@ -16,6 +16,10 @@ import { router } from 'expo-router';
 import { useEffect, useMemo, useState } from 'react';
 import { Linking, ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import Constants from 'expo-constants';
+
+import crashlytics from '@react-native-firebase/crashlytics';
+const APP_VARIANT = Constants.expoConfig?.extra?.appVariant;
 
 export default function SettingsScreen() {
   const colors = useThemeColor();
@@ -222,6 +226,15 @@ export default function SettingsScreen() {
                 tailComponent={UpdateAppComponent}
               />
             </SettingSection>
+
+            {APP_VARIANT === 'preview' && (
+              <SettingSection title="테스트">
+                <SettingSectionListItem
+                  label="[Dev] crash test"
+                  onPress={() => crashlytics().crash()}
+                />
+              </SettingSection>
+            )}
           </View>
         </ScrollView>
 

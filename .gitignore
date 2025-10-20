@@ -41,6 +41,7 @@ CLAUDE.md
 
 google-services.json
 service-account-file.json
+GoogleService-info.plist
 
 /ios
 /android

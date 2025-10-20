@@ -28,6 +28,9 @@
       "channel": "preview",
       "env": {
         "APP_VARIANT": "preview"
+      },
+      "ios": {
+        "buildArtifactPaths": ["ios/build/*"]
       }
     },
     "production": {
@@ -35,6 +38,9 @@
       "channel": "production",
       "env": {
         "APP_VARIANT": "production"
+      },
+      "ios": {
+        "buildArtifactPaths": ["ios/build/*"]
       }
     }
   },

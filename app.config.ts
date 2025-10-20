@@ -184,6 +184,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     eas: {
       projectId: '295098dc-51af-4553-b9ca-a7bbf5514d8c',
     },
+    appVariant: process.env.APP_VARIANT,
   },
   owner: 'morning-diary',
   runtimeVersion: '1.0.0',

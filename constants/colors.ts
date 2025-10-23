@@ -56,6 +56,7 @@ export const Colors = {
     line: {
       normal: ColorPalette.brown[98],
       alternative: ColorPalette.brown[90],
+      enabled: ColorPalette.brown[50],
     },
     fill: {
       normal: ColorPalette.white,
@@ -89,6 +90,7 @@ export const Colors = {
     line: {
       normal: ColorPalette.brown[98],
       alternative: ColorPalette.brown[90],
+      enabled: ColorPalette.brown[50],
     },
     fill: {
       normal: ColorPalette.white,

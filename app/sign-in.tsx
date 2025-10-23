@@ -68,6 +68,9 @@ export default function SignInScreen() {
         </MDView>
 
         <MDView style={styles.bottomContainer}>
+          <MDPressable onPress={() => router.push('/sign-up')}>
+            <MDText>회원가입</MDText>
+          </MDPressable>
           <MDButton
             style={styles.kakaoSignInButton}
             textStyle={styles.kakaoSignInButtonText}

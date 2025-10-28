@@ -1,11 +1,11 @@
-import { MDView } from '@/components';
+import { MDButton, MDView } from '@/components';
 import MDTextField from '@/components/MDTextField';
 import SignUpAppBar from '@/domain/sign-up/components/SignUpAppBar';
 import { useThemeColor } from '@/hooks';
 import { MDColors } from '@/types';
 import { router } from 'expo-router';
 import { useRef, useState } from 'react';
-import { SafeAreaView, StyleSheet, TextInput } from 'react-native';
+import { SafeAreaView, StyleSheet, TextInput, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default function SignUpScreen() {
@@ -20,17 +20,21 @@ export default function SignUpScreen() {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
 
-  const onChangeEmail = (text: string) => {
+  const [canSignUp, setCanSignUp] = useState(false);
+
+  const handleChangeEmail = (text: string) => {
     setEmail(text);
   };
 
-  const onChangePassword = (text: string) => {
+  const handleChangePassword = (text: string) => {
     setPassword(text);
   };
 
-  const onChangeConfirmPassword = (text: string) => {
+  const handleChangeConfirmPassword = (text: string) => {
     setConfirmPassword(text);
   };
+
+  const handleSignUp = () => {};
 
   return (
     <SafeAreaView style={styles.containerSafeArea}>
@@ -45,7 +49,7 @@ export default function SignUpScreen() {
             returnKeyType="next"
             keyboardType="email-address"
             inputMode="email"
-            onChangeText={onChangeEmail}
+            onChangeText={handleChangeEmail}
             onSubmitEditing={() => passwordRef?.current?.focus()}
           />
 
@@ -56,7 +60,7 @@ export default function SignUpScreen() {
             value={password}
             secureTextEntry
             returnKeyType="next"
-            onChangeText={onChangePassword}
+            onChangeText={handleChangePassword}
             onSubmitEditing={() => confirmPasswordRef?.current?.focus()}
           />
 
@@ -67,9 +71,15 @@ export default function SignUpScreen() {
             value={confirmPassword}
             secureTextEntry
             returnKeyType="done"
-            onChangeText={onChangeConfirmPassword}
+            onChangeText={handleChangeConfirmPassword}
           />
         </MDView>
+
+        <View style={{ flex: 1 }} />
+
+        <View style={styles.bottomSection}>
+          <MDButton title={'가입하기'} disabled={!canSignUp} onPress={handleSignUp} />
+        </View>
       </MDView>
     </SafeAreaView>
   );
@@ -90,5 +100,8 @@ const ScreenStyles = ({ colors, bottomInset }: { colors: MDColors; bottomInset: 
       paddingTop: 16,
       paddingHorizontal: 16,
       gap: 24,
+    },
+    bottomSection: {
+      paddingHorizontal: 16,
     },
   });

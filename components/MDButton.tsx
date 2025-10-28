@@ -54,16 +54,15 @@ const buttonStyles = ({ colors, disabled }: { colors: MDColors; disabled: boolea
   StyleSheet.create({
     container: {
       flexDirection: 'row',
+      height: 48,
       borderRadius: 16,
-      paddingVertical: 12,
-      paddingHorizontal: 24,
       alignItems: 'center',
       justifyContent: 'center',
       backgroundColor: disabled ? colors.fill.alternative : colors.primary.normal,
       gap: 8,
     },
     text: {
-      color: disabled ? colors.text.normal : colors.text.inversion,
+      color: disabled ? colors.text.alternative : colors.text.inversion,
     },
     icon: {
       width: 24,

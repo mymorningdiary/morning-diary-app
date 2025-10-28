@@ -46,6 +46,7 @@ const MDTextField = forwardRef<TextInput, Props>(({ label, error, ...props }, re
 const TextFieldStyles = ({ colors }: { colors: MDColors }) =>
   StyleSheet.create({
     container: {
+      width: '100%',
       gap: 4,
     },
     textInputBox: {

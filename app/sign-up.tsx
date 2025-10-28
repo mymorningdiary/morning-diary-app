@@ -1,4 +1,4 @@
-import { MDButton, MDView } from '@/components';
+import { MDButton, MDText } from '@/components';
 import MDTextField from '@/components/MDTextField';
 import SignUpAppBar from '@/domain/sign-up/components/SignUpAppBar';
 import { useThemeColor } from '@/hooks';
@@ -20,6 +20,9 @@ export default function SignUpScreen() {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
 
+  const [canRequestCode, setCanRequestCode] = useState(false);
+  const [showVerifyCode, setShowVerifyCode] = useState(true);
+  const [time, setTime] = useState(0);
   const [canSignUp, setCanSignUp] = useState(false);
 
   const handleChangeEmail = (text: string) => {
@@ -34,24 +37,36 @@ export default function SignUpScreen() {
     setConfirmPassword(text);
   };
 
+  const handleRequestCode = () => {};
+
   const handleSignUp = () => {};
 
   return (
     <SafeAreaView style={styles.containerSafeArea}>
-      <MDView style={styles.container}>
+      <View style={styles.container}>
         <SignUpAppBar onNavigateBack={() => router.back()} />
 
-        <MDView style={styles.inputSection}>
-          <MDTextField
-            label="이메일"
-            placeholder="morning-diary@example.com"
-            value={email}
-            returnKeyType="next"
-            keyboardType="email-address"
-            inputMode="email"
-            onChangeText={handleChangeEmail}
-            onSubmitEditing={() => passwordRef?.current?.focus()}
-          />
+        <View style={styles.content}>
+          <View style={styles.textFieldRow}>
+            <MDTextField
+              label="이메일"
+              placeholder="morning-diary@example.com"
+              value={email}
+              returnKeyType="next"
+              keyboardType="email-address"
+              inputMode="email"
+              onChangeText={handleChangeEmail}
+              onSubmitEditing={() => passwordRef?.current?.focus()}
+            />
+
+            <MDButton
+              style={styles.requestCodeButton}
+              textType="labelRegular"
+              title={'인증 요청'}
+              disabled={!canRequestCode}
+              onPress={handleRequestCode}
+            />
+          </View>
 
           <MDTextField
             ref={passwordRef}
@@ -73,14 +88,14 @@ export default function SignUpScreen() {
             returnKeyType="done"
             onChangeText={handleChangeConfirmPassword}
           />
-        </MDView>
+        </View>
 
         <View style={{ flex: 1 }} />
 
-        <View style={styles.bottomSection}>
+        <View style={styles.footer}>
           <MDButton title={'가입하기'} disabled={!canSignUp} onPress={handleSignUp} />
         </View>
-      </MDView>
+      </View>
     </SafeAreaView>
   );
 }
@@ -96,12 +111,23 @@ const ScreenStyles = ({ colors, bottomInset }: { colors: MDColors; bottomInset: 
       paddingBottom: 20 - bottomInset,
       backgroundColor: colors.background.normal,
     },
-    inputSection: {
+    content: {
+      flex: 1,
       paddingTop: 16,
       paddingHorizontal: 16,
       gap: 24,
     },
-    bottomSection: {
+    textFieldRow: {
+      flexDirection: 'row',
+      alignItems: 'flex-end',
+      gap: 12,
+    },
+    requestCodeButton: {
+      width: 72,
+      height: 32,
+      borderRadius: 8,
+    },
+    footer: {
       paddingHorizontal: 16,
     },
   });

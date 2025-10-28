@@ -32,3 +32,11 @@ export const checkToday = ({ year, month, day }: { year: number; month: number; 
   const today = getTodayDateData();
   return year === today.year && month === today.month && day === today.day;
 };
+
+export const msToMMSS = (ms: number) => {
+  const totalSec = Math.floor(ms / 1000);
+  const m = Math.floor(totalSec / 60);
+  const s = totalSec % 60;
+
+  return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+};

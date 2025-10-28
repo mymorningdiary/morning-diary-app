@@ -1,52 +1,55 @@
 import { useThemeColor } from '@/hooks';
 import { MDColors } from '@/types';
 import { forwardRef, useState } from 'react';
-import { StyleSheet, TextInput, TextInputProps, View } from 'react-native';
+import { StyleProp, StyleSheet, TextInput, TextInputProps, View, ViewStyle } from 'react-native';
 import { MDText } from './MDText';
 
 interface Props extends TextInputProps {
+  containerStyle?: StyleProp<ViewStyle>;
   label?: string;
   error?: string;
 }
 
-const MDTextField = forwardRef<TextInput, Props>(({ label, error, ...props }, ref) => {
-  const colors = useThemeColor();
-  const styles = TextFieldStyles({ colors });
+const MDTextField = forwardRef<TextInput, Props>(
+  ({ containerStyle, label, error, ...props }, ref) => {
+    const colors = useThemeColor();
+    const styles = TextFieldStyles({ colors });
 
-  const [isFocused, setIsFocused] = useState(false);
+    const [isFocused, setIsFocused] = useState(false);
 
-  return (
-    <View style={styles.container}>
-      {label && <MDText type="labelSemiBold">{label}</MDText>}
-      <View style={[styles.textInputBox, isFocused && { borderBottomColor: colors.line.enabled }]}>
-        <TextInput
-          ref={ref}
-          style={styles.textInput}
-          placeholderTextColor={colors.text.alternative}
-          allowFontScaling={false}
-          autoCorrect={false}
-          spellCheck={false}
-          autoCapitalize="none"
-          cursorColor={colors.text.brand}
-          onFocus={() => setIsFocused(true)}
-          onBlur={() => setIsFocused(false)}
-          {...props}
-        />
+    return (
+      <View style={[styles.container, containerStyle]}>
+        {label && <MDText type="labelSemiBold">{label}</MDText>}
+        <View
+          style={[styles.textInputBox, isFocused && { borderBottomColor: colors.line.enabled }]}>
+          <TextInput
+            ref={ref}
+            style={styles.textInput}
+            placeholderTextColor={colors.text.alternative}
+            allowFontScaling={false}
+            autoCorrect={false}
+            spellCheck={false}
+            autoCapitalize="none"
+            cursorColor={colors.text.brand}
+            onFocus={() => setIsFocused(true)}
+            onBlur={() => setIsFocused(false)}
+            {...props}
+          />
+        </View>
+
+        {error && (
+          <MDText type="caption1Regular" color={colors.text.alternative}>
+            {error}
+          </MDText>
+        )}
       </View>
-
-      {error && (
-        <MDText type="caption1Regular" color={colors.text.alternative}>
-          {error}
-        </MDText>
-      )}
-    </View>
-  );
-});
+    );
+  },
+);
 
 const TextFieldStyles = ({ colors }: { colors: MDColors }) =>
   StyleSheet.create({
     container: {
-      width: '100%',
       gap: 4,
     },
     textInputBox: {

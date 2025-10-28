@@ -3,30 +3,40 @@ import MDTextField from '@/components/MDTextField';
 import SignUpAppBar from '@/domain/sign-up/components/SignUpAppBar';
 import { useThemeColor } from '@/hooks';
 import { MDColors } from '@/types';
+import { msToMMSS } from '@/utils/dates';
 import { router } from 'expo-router';
 import { useRef, useState } from 'react';
 import { SafeAreaView, StyleSheet, TextInput, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+
+const MAX_OTP_MS = 180_001;
+const MAX_CODE_LEN = 6;
 
 export default function SignUpScreen() {
   const colors = useThemeColor();
   const insets = useSafeAreaInsets();
   const styles = ScreenStyles({ colors, bottomInset: insets.bottom });
 
+  const otpRef = useRef<TextInput | null>(null);
   const passwordRef = useRef<TextInput | null>(null);
   const confirmPasswordRef = useRef<TextInput | null>(null);
 
   const [email, setEmail] = useState('');
+  const [otp, setOTP] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
 
-  const [canRequestCode, setCanRequestCode] = useState(false);
-  const [showVerifyCode, setShowVerifyCode] = useState(true);
-  const [time, setTime] = useState(0);
+  const [canRequestOTP, setCanRequestOTP] = useState(false);
+  const [showVerifyOTP, setShowVerifyOTP] = useState(true);
+  const [remainingTime, setRemainingTime] = useState(MAX_OTP_MS);
   const [canSignUp, setCanSignUp] = useState(false);
 
   const handleChangeEmail = (text: string) => {
     setEmail(text);
+  };
+
+  const handleChangeOTP = (text: string) => {
+    setOTP(text);
   };
 
   const handleChangePassword = (text: string) => {
@@ -37,7 +47,7 @@ export default function SignUpScreen() {
     setConfirmPassword(text);
   };
 
-  const handleRequestCode = () => {};
+  const handleRequestOTP = () => {};
 
   const handleSignUp = () => {};
 
@@ -49,6 +59,7 @@ export default function SignUpScreen() {
         <View style={styles.content}>
           <View style={styles.textFieldRow}>
             <MDTextField
+              containerStyle={{ flex: 1 }}
               label="이메일"
               placeholder="morning-diary@example.com"
               value={email}
@@ -63,10 +74,32 @@ export default function SignUpScreen() {
               style={styles.requestCodeButton}
               textType="labelRegular"
               title={'인증 요청'}
-              disabled={!canRequestCode}
-              onPress={handleRequestCode}
+              disabled={!canRequestOTP}
+              onPress={handleRequestOTP}
             />
           </View>
+
+          {showVerifyOTP && (
+            <View style={styles.textFieldRow}>
+              <MDTextField
+                ref={otpRef}
+                containerStyle={{ flex: 1 }}
+                label="인증 번호"
+                placeholder="이메일을 확인해주세요"
+                value={otp}
+                returnKeyType="next"
+                keyboardType="decimal-pad"
+                inputMode="numeric"
+                maxLength={MAX_CODE_LEN}
+                onChangeText={handleChangeOTP}
+                onSubmitEditing={() => passwordRef?.current?.focus()}
+              />
+
+              <MDText type="labelRegular" color={colors.text.alternative}>
+                {msToMMSS(remainingTime)}
+              </MDText>
+            </View>
+          )}
 
           <MDTextField
             ref={passwordRef}

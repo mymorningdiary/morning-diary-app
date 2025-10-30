@@ -8,10 +8,13 @@ interface Props extends TextInputProps {
   containerStyle?: StyleProp<ViewStyle>;
   label?: string;
   error?: string;
+  helperText?: string | null;
+  isValid?: boolean;
+  suffix?: React.ReactNode;
 }
 
 const MDTextField = forwardRef<TextInput, Props>(
-  ({ containerStyle, label, error, ...props }, ref) => {
+  ({ containerStyle, label, helperText, isValid, suffix, ...props }, ref) => {
     const colors = useThemeColor();
     const styles = TextFieldStyles({ colors });
 
@@ -20,8 +23,7 @@ const MDTextField = forwardRef<TextInput, Props>(
     return (
       <View style={[styles.container, containerStyle]}>
         {label && <MDText type="labelSemiBold">{label}</MDText>}
-        <View
-          style={[styles.textInputBox, isFocused && { borderBottomColor: colors.line.enabled }]}>
+        <View style={[styles.row, isFocused && { borderBottomColor: colors.line.enabled }]}>
           <TextInput
             ref={ref}
             style={styles.textInput}
@@ -35,11 +37,18 @@ const MDTextField = forwardRef<TextInput, Props>(
             onBlur={() => setIsFocused(false)}
             {...props}
           />
+          {suffix}
         </View>
 
-        {error && (
+        {isValid && helperText && (
           <MDText type="caption1Regular" color={colors.text.alternative}>
-            {error}
+            {helperText}
+          </MDText>
+        )}
+
+        {!isValid && helperText && (
+          <MDText type="caption1Regular" color={colors.text.alternative}>
+            {helperText}
           </MDText>
         )}
       </View>
@@ -52,12 +61,13 @@ const TextFieldStyles = ({ colors }: { colors: MDColors }) =>
     container: {
       gap: 4,
     },
-    textInputBox: {
+    row: {
       width: '100%',
       flexDirection: 'row',
       borderBottomWidth: 1,
       borderBottomColor: colors.line.normal,
       alignItems: 'center',
+      gap: 12,
     },
     textInput: {
       flex: 1,
@@ -69,6 +79,9 @@ const TextFieldStyles = ({ colors }: { colors: MDColors }) =>
       paddingVertical: 0,
       paddingHorizontal: 0,
       textAlignVertical: 'center',
+    },
+    textInputWithTail: {
+      paddingRight: 8,
     },
   });
 

@@ -6,7 +6,15 @@ import { MDColors } from '@/types';
 import { msToMMSS } from '@/utils/dates';
 import { router } from 'expo-router';
 import { useRef, useState } from 'react';
-import { SafeAreaView, StyleSheet, TextInput, View } from 'react-native';
+import {
+  KeyboardAvoidingView,
+  Platform,
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  TextInput,
+  View,
+} from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const MAX_OTP_MS = 180_001;
@@ -52,11 +60,16 @@ export default function SignUpScreen() {
   const handleSignUp = () => {};
 
   return (
-    <SafeAreaView style={styles.containerSafeArea}>
-      <View style={styles.container}>
-        <SignUpAppBar onNavigateBack={() => router.back()} />
-
-        <View style={styles.content}>
+    <SafeAreaView style={styles.safeArea}>
+      <SignUpAppBar onNavigateBack={() => router.back()} />
+      <KeyboardAvoidingView
+        style={styles.keyboardAvoider}
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+        <ScrollView
+          style={styles.scroll}
+          contentContainerStyle={styles.scrollContent}
+          overScrollMode="never"
+          keyboardShouldPersistTaps="handled">
           <View style={styles.textFieldRow}>
             <MDTextField
               containerStyle={{ flex: 1 }}
@@ -121,33 +134,34 @@ export default function SignUpScreen() {
             returnKeyType="done"
             onChangeText={handleChangeConfirmPassword}
           />
-        </View>
-
-        <View style={{ flex: 1 }} />
+        </ScrollView>
 
         <View style={styles.footer}>
           <MDButton title={'가입하기'} disabled={!canSignUp} onPress={handleSignUp} />
         </View>
-      </View>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 }
 
 const ScreenStyles = ({ colors, bottomInset }: { colors: MDColors; bottomInset: number }) =>
   StyleSheet.create({
-    containerSafeArea: {
+    safeArea: {
       flex: 1,
       backgroundColor: colors.background.normal,
     },
-    container: {
+    keyboardAvoider: {
       flex: 1,
-      paddingBottom: 20 - bottomInset,
       backgroundColor: colors.background.normal,
     },
-    content: {
+    scroll: {
       flex: 1,
-      paddingTop: 16,
+    },
+    scrollContent: {
+      flexGrow: 1,
       paddingHorizontal: 16,
+      paddingTop: 16,
+      paddingBottom: bottomInset + 80, // 버튼 높이 + 여유
       gap: 24,
     },
     textFieldRow: {
@@ -161,6 +175,8 @@ const ScreenStyles = ({ colors, bottomInset }: { colors: MDColors; bottomInset: 
       borderRadius: 8,
     },
     footer: {
+      paddingTop: 16,
       paddingHorizontal: 16,
+      paddingBottom: 60 - bottomInset,
     },
   });

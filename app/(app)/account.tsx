@@ -26,7 +26,7 @@ export default function AccountScreen() {
   const { user } = useUser();
 
   const { mutateAsync } = useMutation({
-    mutationFn: authAPI.signOut,
+    mutationFn: authAPI.postLogout,
   });
 
   const navigateBack = useCallback(() => {

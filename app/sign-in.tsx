@@ -17,7 +17,7 @@ export default function SignInScreen() {
   const { setAuthToken } = useAppState();
 
   const { mutateAsync, isPending } = useMutation({
-    mutationFn: authAPI.signIn,
+    mutationFn: authAPI.postKakaoLogin,
   });
 
   const kakaoSignIn = async () => {

@@ -1,14 +1,31 @@
 import { Auth } from '@/core/types';
 import apiClient from '../axios';
 import { ApiResponse } from '../types';
-import { PostAuthKakaoSignInRequest } from './types';
+import {
+  PostAuthSignUpRequest,
+  PostAuthKakaoLoginInRequest,
+  PostAuthVerifyEmailRequest,
+  PostAuthDuplicateEmailRequest,
+} from './types';
 
 const authAPI = {
-  signIn: async (body: PostAuthKakaoSignInRequest): Promise<ApiResponse<Auth>> => {
+  postKakaoLogin: async (body: PostAuthKakaoLoginInRequest): Promise<ApiResponse<Auth>> => {
     const response = await apiClient.post('/auth/kakao/login', body);
     return response.data;
   },
-  signOut: async (): Promise<ApiResponse<null>> => {
+  postSignUp: async (body: PostAuthSignUpRequest): Promise<ApiResponse<Auth>> => {
+    const response = await apiClient.post('/auth/sign-up', body);
+    return response.data;
+  },
+  postVerifyEmail: async (body: PostAuthVerifyEmailRequest): Promise<ApiResponse<null>> => {
+    const response = await apiClient.post('/auth/verify-email', body);
+    return response.data;
+  },
+  postDuplicateEmail: async (body: PostAuthDuplicateEmailRequest): Promise<ApiResponse<null>> => {
+    const response = await apiClient.post('/auth/duplicate-email', body);
+    return response.data;
+  },
+  postLogout: async (): Promise<ApiResponse<null>> => {
     const response = await apiClient.post('/auth/logout');
     return response.data;
   },

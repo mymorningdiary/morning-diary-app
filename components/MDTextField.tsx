@@ -41,7 +41,7 @@ const MDTextField = forwardRef<TextInput, Props>(
         </View>
 
         {isValid && helperText && (
-          <MDText type="caption1Regular" color={colors.text.alternative}>
+          <MDText type="caption1Regular" color={colors.primary.normal}>
             {helperText}
           </MDText>
         )}

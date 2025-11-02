@@ -314,7 +314,7 @@ export default function SignUpScreen() {
           keyboardShouldPersistTaps="handled">
           <MDTextField
             ref={emailRef}
-            label="이메일"
+            label="아이디"
             placeholder="이메일 주소"
             returnKeyType="done"
             keyboardType="email-address"

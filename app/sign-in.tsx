@@ -6,7 +6,7 @@ import { MDColors } from '@/types/types';
 import { login } from '@react-native-kakao/user';
 import { useMutation } from '@tanstack/react-query';
 import { router } from 'expo-router';
-import { Image, StyleSheet } from 'react-native';
+import { Image, StyleSheet, View } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default function SignInScreen() {
@@ -57,6 +57,12 @@ export default function SignInScreen() {
     });
   };
 
+  const navigateToSignInEmail = () => {
+    router.push({
+      pathname: '/sign-in-email',
+    });
+  };
+
   return (
     <SafeAreaView style={styles.containerSafeArea}>
       <MDView style={styles.container}>
@@ -68,16 +74,22 @@ export default function SignInScreen() {
         </MDView>
 
         <MDView style={styles.bottomContainer}>
-          <MDPressable onPress={() => router.push('/sign-up')}>
-            <MDText>회원가입</MDText>
-          </MDPressable>
-          <MDButton
-            style={styles.kakaoSignInButton}
-            textStyle={styles.kakaoSignInButtonText}
-            title={'카카오 로그인'}
-            icon={require('@/assets/images/ic-kakao.png')}
-            onPress={kakaoSignIn}
-          />
+          <View style={styles.buttonContainer}>
+            <MDButton
+              style={styles.emailSignInButton}
+              textStyle={styles.emailSignInButtonText}
+              title={'이메일로 계속하기'}
+              icon={require('@/assets/images/ic-mail.png')}
+              onPress={navigateToSignInEmail}
+            />
+            <MDButton
+              style={styles.kakaoSignInButton}
+              textStyle={styles.kakaoSignInButtonText}
+              title={'카카오 로그인'}
+              icon={require('@/assets/images/ic-kakao.png')}
+              onPress={kakaoSignIn}
+            />
+          </View>
 
           <MDView style={styles.termsContainer}>
             <MDView direction="row">
@@ -140,6 +152,17 @@ const screenStyles = ({ colors, bottomInset }: { colors: MDColors; bottomInset: 
     },
     logoText: {
       color: colors.text.alternative,
+    },
+    buttonContainer: {
+      gap: 10,
+    },
+    emailSignInButton: {
+      backgroundColor: colors.fill.normal,
+      borderWidth: 1,
+      borderColor: colors.line.alternative,
+    },
+    emailSignInButtonText: {
+      color: colors.text.normal,
     },
     kakaoSignInButton: {
       backgroundColor: colors.kakao,

@@ -1,5 +1,6 @@
 import { MDButton, MDText } from '@/components';
 import MDTextField from '@/components/MDTextField';
+import { useAppState } from '@/contexts/AppStateContext';
 import { ApiError, authAPI } from '@/core/api';
 import mailAPI from '@/core/api/mail/apis';
 import SignUpAppBar from '@/domain/sign-up/components/SignUpAppBar';
@@ -11,6 +12,7 @@ import { router } from 'expo-router';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import {
   ActivityIndicator,
+  InteractionManager,
   KeyboardAvoidingView,
   Platform,
   SafeAreaView,
@@ -23,10 +25,11 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const MAX_OTP_MS = 180_001;
 const MAX_CODE_LEN = 6;
+const MAX_PASSWORD_LEN = 15;
 
 const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 const OTP_REGEX = /^\d{6}$/;
-const PASSWORD_REGEX = /^(?=.[a-zA-Z])(?=.[!@#$%^+=-])(?=.[0-9]).{8,15}$/;
+const PASSWORD_REGEX = /^(?=.*[a-zA-Z])(?=.*[!@#$%^+=-])(?=.*[0-9]).{8,15}$/;
 
 interface FormFieldState {
   value: string;
@@ -43,6 +46,7 @@ export default function SignUpScreen() {
   const otpRef = useRef<TextInput | null>(null);
   const passwordRef = useRef<TextInput | null>(null);
   const confirmPasswordRef = useRef<TextInput | null>(null);
+
   const otpTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const { mutateAsync: checkDuplicateEmail, isPending: isDuplicatePending } = useMutation({
@@ -54,6 +58,10 @@ export default function SignUpScreen() {
   const { mutateAsync: verifyOTP, isPending: isVerifyOTPPending } = useMutation({
     mutationFn: authAPI.postVerifyEmail,
   });
+  const { mutateAsync: signUp, isPending: isSignUpPending } = useMutation({
+    mutationFn: authAPI.postSignUp,
+  });
+  const { setAuthToken } = useAppState();
 
   const [email, setEmail] = useState<FormFieldState>({
     value: '',
@@ -65,8 +73,16 @@ export default function SignUpScreen() {
     helperText: null,
     isValid: false,
   });
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
+  const [password, setPassword] = useState<FormFieldState>({
+    value: '',
+    helperText: null,
+    isValid: false,
+  });
+  const [confirmPassword, setConfirmPassword] = useState<FormFieldState>({
+    value: '',
+    helperText: null,
+    isValid: false,
+  });
 
   const isEmailPending = isDuplicatePending || isOTPPending;
   const [isEmailSuccess, setEmailSuccess] = useState(false);
@@ -74,7 +90,9 @@ export default function SignUpScreen() {
   const [otpTime, setOTPTime] = useState(MAX_OTP_MS);
   const [isOTPSuccess, setOTPSuccess] = useState(false);
 
-  const [canSignUp, setCanSignUp] = useState(false);
+  const canSignUp = useMemo(() => {
+    return isEmailSuccess && isOTPSuccess && password.isValid && confirmPassword.isValid;
+  }, [isEmailSuccess, isOTPSuccess, password.isValid, confirmPassword.isValid]);
 
   const handleChangeEmail = (value: string) => {
     const isValid = EMAIL_REGEX.test(value);
@@ -93,16 +111,36 @@ export default function SignUpScreen() {
     setOTP({ value, helperText: null, isValid });
   };
 
-  const handleChangePassword = (text: string) => {
-    setPassword(text);
+  const validateConfirmPassword = (p1: string, p2: string) => {
+    const isValid = p1 === p2;
+    return { isValid, helperText: isValid ? '비밀번호가 일치해요' : '비밀번호가 일치하지 않아요' };
   };
 
-  const handleChangeConfirmPassword = (text: string) => {
-    setConfirmPassword(text);
+  const handleChangePassword = (value: string) => {
+    const isValid = PASSWORD_REGEX.test(value);
+    const helperText = isValid ? '사용 가능한 비밀번호에요' : '사용 불가능한 비밀번호에요';
+
+    if (confirmPassword.value.length > 0) {
+      const validation = validateConfirmPassword(value, confirmPassword.value);
+      setConfirmPassword((prev) => ({
+        ...prev,
+        helperText: validation.helperText,
+        isValid: validation.isValid,
+      }));
+    }
+
+    setPassword({ value, helperText, isValid });
+  };
+
+  const handleChangeConfirmPassword = (value: string) => {
+    const { isValid, helperText } = validateConfirmPassword(password.value, value);
+
+    setConfirmPassword({ value, helperText, isValid });
   };
 
   const handleRequestOTP = async () => {
     if (!email.isValid || isEmailPending) return;
+    setEmailSuccess(false);
     emailRef.current?.blur();
 
     try {
@@ -156,7 +194,6 @@ export default function SignUpScreen() {
     clearOTPTimer();
     setOTPTime(MAX_OTP_MS);
     setOTP({ value: '', helperText: null, isValid: false });
-    otpRef.current?.focus();
 
     otpTimerRef.current = setInterval(() => {
       setOTPTime((prev) => {
@@ -176,6 +213,7 @@ export default function SignUpScreen() {
       const res = await verifyOTP({ email: email.value, authenticationNumber: value });
       if (res.code === 2000) {
         clearOTPTimer();
+        setOTP((prev) => ({ ...prev, helperText: '인증되었어요', isValid: true }));
         setOTPSuccess(true);
         passwordRef.current?.focus();
       }
@@ -184,7 +222,9 @@ export default function SignUpScreen() {
 
       switch (error.code) {
         case 4402:
-        case 4403: {
+        case 4403:
+        case 4405:
+        case 4406: {
           setOTP((prev) => ({
             ...prev,
             helperText: '인증번호가 잘못 입력되었어요',
@@ -195,27 +235,69 @@ export default function SignUpScreen() {
         case 4404: {
           clearOTPTimer();
           setOTPTime(0);
-          setOTP((prev) => ({ ...prev, helperText: '인증 시간이 만료되었어요', isValid: false }));
+          setOTP((prev) => ({ ...prev, helperText: '인증시간이 만료되었어요', isValid: false }));
           break;
         }
       }
     }
   };
 
-  const handleSignUp = () => {};
+  const handleSignUp = async () => {
+    if (isSignUpPending) return;
+
+    try {
+      const res = await signUp({ email: email.value, password: password.value });
+      if (res.code === 2000) {
+        const { accessToken, refreshToken, isExistUser } = res.data;
+
+        setAuthToken({ accessToken, refreshToken });
+        if (isExistUser) {
+          router.replace('/(app)');
+        } else {
+          router.replace('/(app)/alarm-permission');
+        }
+      }
+    } catch (error: any) {
+      console.error('Failed to verify otp', error);
+
+      switch (error.code) {
+        case 4009:
+        case 4010: {
+          setPassword((prev) => ({
+            ...prev,
+            helperText: '사용 불가능한 비밀번호에요',
+            isValid: false,
+          }));
+          setConfirmPassword((prev) => ({
+            ...prev,
+            helperText: null,
+            isValid: false,
+          }));
+          break;
+        }
+      }
+    }
+  };
 
   useEffect(() => {
     if (otpTime <= 0) {
-      setOTP((prev) => ({ ...prev, helperText: '인증시간이 만료되었습니다', isValid: false }));
+      setOTP((prev) => ({ ...prev, helperText: '인증시간이 만료되었어요', isValid: false }));
     }
   }, [otpTime]);
 
   useEffect(() => {
+    if (!isEmailSuccess) return;
+
+    const task = InteractionManager.runAfterInteractions(() => {
+      otpRef.current?.focus();
+    });
+
+    return () => task.cancel();
+  }, [isEmailSuccess]);
+
+  useEffect(() => {
     return () => {
-      if (otpTimerRef.current) {
-        clearInterval(otpTimerRef.current);
-        otpTimerRef.current = null;
-      }
+      clearOTPTimer();
     };
   }, []);
 
@@ -233,7 +315,7 @@ export default function SignUpScreen() {
           <MDTextField
             ref={emailRef}
             label="이메일"
-            placeholder="morning-diary@example.com"
+            placeholder="이메일 주소"
             returnKeyType="done"
             keyboardType="email-address"
             inputMode="email"
@@ -276,10 +358,11 @@ export default function SignUpScreen() {
           <MDTextField
             ref={passwordRef}
             label="비밀번호"
-            placeholder="영문+숫자+특수문자 포함 8자리"
-            value={password}
+            placeholder="영문,숫자,특수문자 포함 8자리 이상"
+            maxLength={MAX_PASSWORD_LEN}
             secureTextEntry
             returnKeyType="next"
+            {...password}
             onChangeText={handleChangePassword}
             onSubmitEditing={() => confirmPasswordRef?.current?.focus()}
           />
@@ -287,10 +370,11 @@ export default function SignUpScreen() {
           <MDTextField
             ref={confirmPasswordRef}
             label="비밀번호 확인"
-            placeholder="영문+숫자+특수문자 포함 8자리"
-            value={confirmPassword}
+            placeholder="영문,숫자,특수문자 포함 8자리 이상"
+            maxLength={MAX_PASSWORD_LEN}
             secureTextEntry
             returnKeyType="done"
+            {...confirmPassword}
             onChangeText={handleChangeConfirmPassword}
           />
         </ScrollView>
@@ -299,7 +383,7 @@ export default function SignUpScreen() {
           <MDButton title={'가입하기'} disabled={!canSignUp} onPress={handleSignUp} />
         </View>
       </KeyboardAvoidingView>
-      {(isEmailPending || isVerifyOTPPending) && (
+      {(isEmailPending || isVerifyOTPPending || isSignUpPending) && (
         <View
           style={[StyleSheet.absoluteFillObject, styles.loading]}
           onStartShouldSetResponder={() => true}>

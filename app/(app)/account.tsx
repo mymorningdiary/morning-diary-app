@@ -51,7 +51,9 @@ export default function AccountScreen() {
 
       if (response.code === 2000) {
         clearAuthToken();
-        await logout();
+        if (user?.loginType === 'KAKAO') {
+          await logout();
+        }
       }
     } catch (e) {
       console.error('Failed to sign out', e);
@@ -71,9 +73,11 @@ export default function AccountScreen() {
               <SettingSectionListItem
                 label={user?.email ?? ''}
                 tailComponent={
-                  <MDText type="bodyRegular" color={colors.text.alternative}>
-                    카카오 연동
-                  </MDText>
+                  user?.loginType === 'KAKAO' ? (
+                    <MDText type="bodyRegular" color={colors.text.alternative}>
+                      카카오 연동
+                    </MDText>
+                  ) : undefined
                 }
               />
             </SettingSection>

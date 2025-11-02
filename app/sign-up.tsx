@@ -21,10 +21,11 @@ import {
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-const MAX_OTP_MS = 180_001;
+const MAX_OTP_MS = 30_001;
 const MAX_CODE_LEN = 6;
 
 const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+const OTP_REGEX = /^\d{6}$/;
 const PASSWORD_REGEX = /^(?=.[a-zA-Z])(?=.[!@#$%^+=-])(?=.[0-9]).{8,15}$/;
 
 interface FormFieldState {
@@ -42,6 +43,7 @@ export default function SignUpScreen() {
   const otpRef = useRef<TextInput | null>(null);
   const passwordRef = useRef<TextInput | null>(null);
   const confirmPasswordRef = useRef<TextInput | null>(null);
+  const otpTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const { mutateAsync: checkDuplicateEmail, isPending: isDuplicatePending } = useMutation({
     mutationFn: authAPI.postDuplicateEmail,
@@ -55,29 +57,35 @@ export default function SignUpScreen() {
     helperText: null,
     isValid: false,
   });
-
-  const [otp, setOTP] = useState('');
+  const [otp, setOTP] = useState<FormFieldState>({
+    value: '',
+    helperText: null,
+    isValid: false,
+  });
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
 
-  const [remainingTime, setRemainingTime] = useState(MAX_OTP_MS);
-  const [canSignUp, setCanSignUp] = useState(false);
+  const isEmailPending = isDuplicatePending || isOTPPending;
   const [isEmailSuccess, setEmailSuccess] = useState(false);
 
-  const isEmailPending = isDuplicatePending || isOTPPending;
+  const [otpTime, setOTPTime] = useState(MAX_OTP_MS);
+  const [isOTPSuccess, setOTPSuccess] = useState(false);
+
+  const [canSignUp, setCanSignUp] = useState(false);
 
   const handleChangeEmail = (value: string) => {
     const isValid = EMAIL_REGEX.test(value);
     if (!isValid && isEmailSuccess) {
-      setRemainingTime(0);
       setEmailSuccess(false);
     }
 
     setEmail({ value, helperText: null, isValid });
   };
 
-  const handleChangeOTP = (text: string) => {
-    setOTP(text);
+  const handleChangeOTP = (value: string) => {
+    const isValid = OTP_REGEX.test(value);
+
+    setOTP({ value, helperText: null, isValid });
   };
 
   const handleChangePassword = (text: string) => {
@@ -105,7 +113,7 @@ export default function SignUpScreen() {
             isValid: true,
           }));
           setEmailSuccess(true);
-          otpRef.current?.focus();
+          startOTPTimer();
         }
       }
     } catch (error: any) {
@@ -132,6 +140,30 @@ export default function SignUpScreen() {
     }
   };
 
+  const clearOTPTimer = () => {
+    if (otpTimerRef.current) {
+      clearInterval(otpTimerRef.current);
+      otpTimerRef.current = null;
+    }
+  };
+
+  const startOTPTimer = () => {
+    clearOTPTimer();
+    setOTPTime(MAX_OTP_MS);
+    setOTP((prev) => ({ ...prev, helperText: null }));
+    otpRef.current?.focus();
+
+    otpTimerRef.current = setInterval(() => {
+      setOTPTime((prev) => {
+        if (prev <= 1000) {
+          clearOTPTimer();
+          return 0;
+        }
+        return prev - 1000;
+      });
+    }, 1000);
+  };
+
   const handleSignUp = () => {};
 
   useEffect(() => {
@@ -139,6 +171,21 @@ export default function SignUpScreen() {
       otpRef?.current?.focus();
     }
   }, [isEmailSuccess]);
+
+  useEffect(() => {
+    if (otpTime === 0) {
+      setOTP((prev) => ({ ...prev, helperText: '인증시간이 만료되었습니다', isValid: false }));
+    }
+  }, [otpTime]);
+
+  useEffect(() => {
+    return () => {
+      if (otpTimerRef.current) {
+        clearInterval(otpTimerRef.current);
+        otpTimerRef.current = null;
+      }
+    };
+  }, []);
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -158,6 +205,7 @@ export default function SignUpScreen() {
             returnKeyType="done"
             keyboardType="email-address"
             inputMode="email"
+            editable={!(email.isValid && isEmailSuccess)}
             {...email}
             onChangeText={handleChangeEmail}
             onSubmitEditing={handleRequestOTP}
@@ -177,16 +225,17 @@ export default function SignUpScreen() {
               ref={otpRef}
               label="인증 번호"
               placeholder="이메일을 확인해주세요"
-              value={otp}
               returnKeyType="next"
               keyboardType="decimal-pad"
               inputMode="numeric"
               maxLength={MAX_CODE_LEN}
+              editable={otpTime > 0}
+              {...otp}
               onChangeText={handleChangeOTP}
               onSubmitEditing={() => passwordRef?.current?.focus()}
               suffix={
                 <MDText type="labelRegular" color={colors.text.alternative}>
-                  {msToMMSS(remainingTime)}
+                  {msToMMSS(otpTime)}
                 </MDText>
               }
             />

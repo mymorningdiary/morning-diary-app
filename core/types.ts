@@ -2,6 +2,7 @@ export type User = {
   alarmTime: string | null;
   textGoalId: number;
   email: string | null;
+  loginType: string;
 };
 
 export type Auth = {

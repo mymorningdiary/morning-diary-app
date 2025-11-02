@@ -7,6 +7,11 @@ export interface PostAuthSignUpRequest {
   password: string;
 }
 
+export interface PostAuthSignInRequest {
+  email: string;
+  password: string;
+}
+
 export interface PostAuthVerifyEmailRequest {
   email: string;
   authenticationNumber: string;

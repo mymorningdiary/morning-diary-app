@@ -21,7 +21,7 @@ import {
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-const MAX_OTP_MS = 30_001;
+const MAX_OTP_MS = 180_001;
 const MAX_CODE_LEN = 6;
 
 const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -50,6 +50,9 @@ export default function SignUpScreen() {
   });
   const { mutateAsync: requestOTP, isPending: isOTPPending } = useMutation({
     mutationFn: mailAPI.postAuthenticationNumber,
+  });
+  const { mutateAsync: verifyOTP, isPending: isVerifyOTPPending } = useMutation({
+    mutationFn: authAPI.postVerifyEmail,
   });
 
   const [email, setEmail] = useState<FormFieldState>({
@@ -84,7 +87,9 @@ export default function SignUpScreen() {
 
   const handleChangeOTP = (value: string) => {
     const isValid = OTP_REGEX.test(value);
-
+    if (isEmailSuccess && isValid) {
+      handleVerifyOTP(value);
+    }
     setOTP({ value, helperText: null, isValid });
   };
 
@@ -150,7 +155,7 @@ export default function SignUpScreen() {
   const startOTPTimer = () => {
     clearOTPTimer();
     setOTPTime(MAX_OTP_MS);
-    setOTP((prev) => ({ ...prev, helperText: null }));
+    setOTP({ value: '', helperText: null, isValid: false });
     otpRef.current?.focus();
 
     otpTimerRef.current = setInterval(() => {
@@ -164,16 +169,43 @@ export default function SignUpScreen() {
     }, 1000);
   };
 
+  const handleVerifyOTP = async (value: string) => {
+    if (isVerifyOTPPending) return;
+
+    try {
+      const res = await verifyOTP({ email: email.value, authenticationNumber: value });
+      if (res.code === 2000) {
+        clearOTPTimer();
+        setOTPSuccess(true);
+        passwordRef.current?.focus();
+      }
+    } catch (error: any) {
+      console.error('Failed to verify otp', error);
+
+      switch (error.code) {
+        case 4402:
+        case 4403: {
+          setOTP((prev) => ({
+            ...prev,
+            helperText: '인증번호가 잘못 입력되었어요',
+            isValid: false,
+          }));
+          break;
+        }
+        case 4404: {
+          clearOTPTimer();
+          setOTPTime(0);
+          setOTP((prev) => ({ ...prev, helperText: '인증 시간이 만료되었어요', isValid: false }));
+          break;
+        }
+      }
+    }
+  };
+
   const handleSignUp = () => {};
 
   useEffect(() => {
-    if (isEmailSuccess) {
-      otpRef?.current?.focus();
-    }
-  }, [isEmailSuccess]);
-
-  useEffect(() => {
-    if (otpTime === 0) {
+    if (otpTime <= 0) {
       setOTP((prev) => ({ ...prev, helperText: '인증시간이 만료되었습니다', isValid: false }));
     }
   }, [otpTime]);
@@ -213,8 +245,8 @@ export default function SignUpScreen() {
               <MDButton
                 style={styles.otpButton}
                 textType="labelRegular"
-                title={isEmailSuccess ? '재요청' : '인증 요청'}
-                disabled={!email.isValid}
+                title={isEmailSuccess ? (isOTPSuccess ? '인증완료' : '재요청') : '인증 요청'}
+                disabled={!email.isValid || isOTPSuccess}
                 onPress={handleRequestOTP}
               />
             }
@@ -229,7 +261,7 @@ export default function SignUpScreen() {
               keyboardType="decimal-pad"
               inputMode="numeric"
               maxLength={MAX_CODE_LEN}
-              editable={otpTime > 0}
+              editable={otpTime > 0 && !isOTPSuccess}
               {...otp}
               onChangeText={handleChangeOTP}
               onSubmitEditing={() => passwordRef?.current?.focus()}
@@ -267,7 +299,7 @@ export default function SignUpScreen() {
           <MDButton title={'가입하기'} disabled={!canSignUp} onPress={handleSignUp} />
         </View>
       </KeyboardAvoidingView>
-      {isEmailPending && (
+      {(isEmailPending || isVerifyOTPPending) && (
         <View
           style={[StyleSheet.absoluteFillObject, styles.loading]}
           onStartShouldSetResponder={() => true}>

@@ -1,9 +1,11 @@
 import { MDButton } from '@/components';
 import MDTextField from '@/components/MDTextField';
 import { useAppState } from '@/contexts/AppStateContext';
+import { authAPI } from '@/core/api';
 import SignInAppBar from '@/domain/sign-in/components/SignInAppBar';
 import { useThemeColor } from '@/hooks';
 import { MDColors } from '@/types';
+import { useMutation } from '@tanstack/react-query';
 import { router } from 'expo-router';
 import { useRef, useState } from 'react';
 import {
@@ -37,6 +39,10 @@ export default function SignInEmailScreen() {
   const emailRef = useRef<TextInput | null>(null);
   const passwordRef = useRef<TextInput | null>(null);
 
+  const { mutateAsync: signIn, isPending: isSignInPending } = useMutation({
+    mutationFn: authAPI.postSignIn,
+  });
+
   const { setAuthToken } = useAppState();
 
   const [email, setEmail] = useState<FormFieldState>({
@@ -51,18 +57,104 @@ export default function SignInEmailScreen() {
   });
 
   const handleChangeEmail = (value: string) => {
-    setEmail({ value, helperText: null, isValid: false });
+    setEmail((prev) => ({ ...prev, value, helperText: null }));
   };
 
   const handleChangePassword = (value: string) => {
-    const isValid = PASSWORD_REGEX.test(value);
-    setPassword({ value, helperText: null, isValid: false });
+    setPassword((prev) => ({ ...prev, value, helperText: null }));
+  };
+
+  const validateEmail = () => {
+    const isEmailValid = EMAIL_REGEX.test(email.value);
+    const helperText = isEmailValid ? null : '이메일을 올바르게 입력해주세요';
+
+    setEmail((prev) => ({
+      ...prev,
+      helperText,
+      isValid: isEmailValid,
+    }));
+
+    return isEmailValid;
+  };
+
+  const validatePassword = () => {
+    const isPasswordValid = PASSWORD_REGEX.test(password.value);
+    const helperText = isPasswordValid
+      ? null
+      : '비밀번호를 입력해주세요 (영문자+숫자+특수문자 8-15자)';
+
+    setPassword((prev) => ({
+      ...prev,
+      helperText,
+      isValid: isPasswordValid,
+    }));
+
+    return isPasswordValid;
   };
 
   const handleSignIn = async () => {
+    if (!validateEmail()) return;
+    if (!validatePassword()) return;
+
     try {
+      const res = await signIn({ email: email.value, password: password.value });
+      if (res.code === 2000) {
+        const { accessToken, refreshToken, isExistUser } = res.data;
+
+        setAuthToken({ accessToken, refreshToken });
+        if (isExistUser) {
+          router.replace('/(app)');
+        } else {
+          router.replace('/(app)/alarm-permission');
+        }
+      }
     } catch (error: any) {
       console.error('Failed to verify otp', error);
+
+      switch (error.code) {
+        case 4000: {
+          setEmail((prev) => ({
+            ...prev,
+            helperText: '존재하지 않는 사용자에요',
+            isValid: false,
+          }));
+          break;
+        }
+        case 4007:
+        case 4008: {
+          setEmail((prev) => ({
+            ...prev,
+            helperText: '이메일을 올바르게 입력해주세요',
+            isValid: false,
+          }));
+          break;
+        }
+        case 4009:
+        case 4010: {
+          setPassword((prev) => ({
+            ...prev,
+            helperText: '비밀번호를 입력해주세요 (영문자+숫자+특수문자 8-15자)',
+            isValid: false,
+          }));
+          break;
+        }
+        case 4012: {
+          setPassword((prev) => ({
+            ...prev,
+            helperText: '비밀번호가 일치하지 않아요',
+            isValid: false,
+          }));
+          break;
+        }
+        case 4013: {
+          setEmail((prev) => ({
+            ...prev,
+            helperText: 'SNS 연동 사용자에요',
+            isValid: false,
+          }));
+          break;
+        }
+      }
     }
   };
 
@@ -118,7 +210,7 @@ export default function SignInEmailScreen() {
           />
         </View>
       </KeyboardAvoidingView>
-      {false && (
+      {isSignInPending && (
         <View
           style={[StyleSheet.absoluteFillObject, styles.loading]}
           onStartShouldSetResponder={() => true}>

@@ -3,6 +3,7 @@ import apiClient from '../axios';
 import { ApiResponse } from '../types';
 import {
   PostAuthSignUpRequest,
+  PostAuthSignInRequest,
   PostAuthKakaoLoginInRequest,
   PostAuthVerifyEmailRequest,
   PostAuthDuplicateEmailRequest,
@@ -15,6 +16,10 @@ const authAPI = {
   },
   postSignUp: async (body: PostAuthSignUpRequest): Promise<ApiResponse<Auth>> => {
     const response = await apiClient.post('/auth/sign-up', body);
+    return response.data;
+  },
+  postSignIn: async (body: PostAuthSignInRequest): Promise<ApiResponse<Auth>> => {
+    const response = await apiClient.post('/auth/sign-in', body);
     return response.data;
   },
   postVerifyEmail: async (body: PostAuthVerifyEmailRequest): Promise<ApiResponse<null>> => {

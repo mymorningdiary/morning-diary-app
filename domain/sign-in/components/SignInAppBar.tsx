@@ -7,14 +7,14 @@ interface Props {
   onNavigateBack: () => void;
 }
 
-export default function SignUpAppBar({ onNavigateBack }: Props) {
+export default function SignInAppBar({ onNavigateBack }: Props) {
   const colors = useThemeColor();
   const styles = appBarStyles({ colors });
 
   return (
     <MDRow style={styles.container}>
       <MDText type="titleSemiBold" style={styles.title}>
-        {'회원가입'}
+        {'로그인'}
       </MDText>
       <MDPressable style={styles.buttonBack} onPress={onNavigateBack}>
         <Image source={require('@/assets/images/ic-chevron_left.png')} style={styles.icon} />

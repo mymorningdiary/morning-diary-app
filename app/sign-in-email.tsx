@@ -21,10 +21,10 @@ import {
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-const MAX_PASSWORD_LEN = 15;
+const MAX_PASSWORD_LEN = 64;
 
 const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-const PASSWORD_REGEX = /^(?=.*[a-zA-Z])(?=.*[!@#$%^+=-])(?=.*[0-9]).{8,15}$/;
+const PASSWORD_REGEX = /^(?=.*[a-zA-Z])(?=.*[!@#$%^+=-])(?=.*[0-9]).{10,64}$/;
 
 interface FormFieldState {
   value: string;
@@ -82,7 +82,7 @@ export default function SignInEmailScreen() {
     const isPasswordValid = PASSWORD_REGEX.test(password.value);
     const helperText = isPasswordValid
       ? null
-      : '비밀번호를 입력해주세요 (영문자+숫자+특수문자 8-15자)';
+      : '비밀번호를 입력해주세요 (영문자+숫자+특수문자 10-64자)';
 
     setPassword((prev) => ({
       ...prev,
@@ -110,7 +110,7 @@ export default function SignInEmailScreen() {
         }
       }
     } catch (error: any) {
-      Logger('SignInEmailScreen').error('Failed to verify otp', error);
+      Logger('SignInEmailScreen').error('Failed to sign up', error);
 
       switch (error.code) {
         case 4000: {
@@ -134,7 +134,7 @@ export default function SignInEmailScreen() {
         case 4010: {
           setPassword((prev) => ({
             ...prev,
-            helperText: '비밀번호를 입력해주세요 (영문자+숫자+특수문자 8-15자)',
+            helperText: '비밀번호를 입력해주세요 (영문자+숫자+특수문자 10-64자)',
             isValid: false,
           }));
           break;

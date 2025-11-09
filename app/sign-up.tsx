@@ -26,11 +26,11 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const MAX_OTP_MS = 180_001;
 const MAX_CODE_LEN = 6;
-const MAX_PASSWORD_LEN = 15;
+const MAX_PASSWORD_LEN = 64;
 
 const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 const OTP_REGEX = /^\d{6}$/;
-const PASSWORD_REGEX = /^(?=.*[a-zA-Z])(?=.*[!@#$%^+=-])(?=.*[0-9]).{8,15}$/;
+const PASSWORD_REGEX = /^(?=.*[a-zA-Z])(?=.*[!@#$%^+=-])(?=.*[0-9]).{10,64}$/;
 
 interface FormFieldState {
   value: string;
@@ -259,7 +259,7 @@ export default function SignUpScreen() {
         }
       }
     } catch (error: any) {
-      Logger('SignUpScreen').error('Failed to verify otp', error);
+      Logger('SignUpScreen').error('Failed to sign up', error);
 
       switch (error.code) {
         case 4009:
@@ -359,7 +359,7 @@ export default function SignUpScreen() {
           <MDTextField
             ref={passwordRef}
             label="비밀번호"
-            placeholder="영문,숫자,특수문자 포함 8자리 이상"
+            placeholder="영문,숫자,특수문자 포함 10자리 이상"
             maxLength={MAX_PASSWORD_LEN}
             secureTextEntry
             returnKeyType="next"
@@ -371,7 +371,7 @@ export default function SignUpScreen() {
           <MDTextField
             ref={confirmPasswordRef}
             label="비밀번호 확인"
-            placeholder="영문,숫자,특수문자 포함 8자리 이상"
+            placeholder="영문,숫자,특수문자 포함 10자리 이상"
             maxLength={MAX_PASSWORD_LEN}
             secureTextEntry
             returnKeyType="done"

@@ -5,6 +5,7 @@ import { appManager } from '@/core/storage';
 import NotificationAppBar from '@/domain/notification/NotificationAppBar';
 import { useThemeColor, useUpdateAlarmTime, useUpdatePushToken } from '@/hooks';
 import { MDColors } from '@/types';
+import { Logger } from '@/utils/logs';
 import dayjs from 'dayjs';
 import { Image } from 'expo-image';
 import { router, useLocalSearchParams } from 'expo-router';
@@ -93,7 +94,7 @@ export default function AlarmTimeScreen() {
       await appManager.markAlarmOn();
       updatePushToken({ pushToken });
     } catch (e) {
-      console.error(e);
+      Logger('AlarmTimeScreen').error('Failed to update push token', e);
     }
   };
 

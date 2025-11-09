@@ -1,3 +1,4 @@
+import { Logger } from '@/utils/logs';
 import Constants from 'expo-constants';
 import * as Device from 'expo-device';
 import * as Notifications from 'expo-notifications';
@@ -31,7 +32,7 @@ export const NotificationProvider: React.FC<NotificationProviderProps> = ({ chil
       const projectId =
         Constants?.expoConfig?.extra?.eas?.projectId ?? Constants?.easConfig?.projectId;
       if (!projectId) {
-        console.error('Project ID not found');
+        Logger('NotificationProvider').error('Failed to find project ID');
         return;
       }
 
@@ -43,7 +44,7 @@ export const NotificationProvider: React.FC<NotificationProviderProps> = ({ chil
 
       setPushToken(pushTokenString);
     } catch (e) {
-      console.error('Failed to fetch expo pushToken:', e);
+      Logger('NotificationProvider').error('Failed to fetch expo pushToken', e);
     }
   };
 
@@ -67,12 +68,16 @@ export const NotificationProvider: React.FC<NotificationProviderProps> = ({ chil
     initializeNotifications();
 
     const notificationListener = Notifications.addNotificationReceivedListener((notification) => {
-      // console.log('🔔 Notification Received: ', notification);
+      Logger('NotificationProvider').debug('🔔 Notification Received:', notification);
       setNotification(notification);
     });
 
     const responseListener = Notifications.addNotificationResponseReceivedListener((response) => {
-      // console.log('🔔 Notification Response: ', JSON.stringify(response, null, 2), JSON.stringify(response.notification.request.content.data, null, 2));
+      Logger('NotificationProvider').debug(
+        '🔔 Notification Response: ',
+        JSON.stringify(response, null, 2),
+        JSON.stringify(response.notification.request.content.data, null, 2),
+      );
     });
 
     return () => {

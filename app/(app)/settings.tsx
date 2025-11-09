@@ -19,6 +19,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import Constants from 'expo-constants';
 
 import crashlytics from '@react-native-firebase/crashlytics';
+import { Logger } from '@/utils/logs';
 const APP_VARIANT = Constants.expoConfig?.extra?.appVariant;
 
 export default function SettingsScreen() {
@@ -112,7 +113,7 @@ export default function SettingsScreen() {
         }
       }
     } catch (error) {
-      console.error('알림 설정 중 오류:', error);
+      Logger('SettingsScreen').error('Failed to request permission', error);
     }
   };
 
@@ -128,7 +129,7 @@ export default function SettingsScreen() {
           setIsAlarmOn(false);
         }
       } catch (error) {
-        console.error(error);
+        Logger('SettingsScreen').error('Failed to check alarm on', error);
       }
     })();
   }, []);
@@ -145,7 +146,7 @@ export default function SettingsScreen() {
         appManager.clearAlarmOn();
       }
     } catch (error) {
-      console.error(error);
+      Logger('SettingsScreen').error('Failed to update pushToken', error);
     }
   }, [isAlarmOn, pushToken]);
 

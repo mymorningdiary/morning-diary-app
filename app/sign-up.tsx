@@ -7,6 +7,7 @@ import SignUpAppBar from '@/domain/sign-up/components/SignUpAppBar';
 import { useThemeColor } from '@/hooks';
 import { MDColors } from '@/types';
 import { msToMMSS } from '@/utils/dates';
+import { Logger } from '@/utils/logs';
 import { useMutation } from '@tanstack/react-query';
 import { router } from 'expo-router';
 import { useEffect, useMemo, useRef, useState } from 'react';
@@ -160,7 +161,7 @@ export default function SignUpScreen() {
         }
       }
     } catch (error: any) {
-      console.error('Failed to request otp', error);
+      Logger('SignUpScreen').error('Failed to request otp', error);
 
       switch (error.code) {
         case 4008: {
@@ -218,7 +219,7 @@ export default function SignUpScreen() {
         passwordRef.current?.focus();
       }
     } catch (error: any) {
-      console.error('Failed to verify otp', error);
+      Logger('SignUpScreen').error('Failed to verify otp', error);
 
       switch (error.code) {
         case 4402:
@@ -258,7 +259,7 @@ export default function SignUpScreen() {
         }
       }
     } catch (error: any) {
-      console.error('Failed to verify otp', error);
+      Logger('SignUpScreen').error('Failed to verify otp', error);
 
       switch (error.code) {
         case 4009:

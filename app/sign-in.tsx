@@ -3,6 +3,7 @@ import { useAppState } from '@/contexts/AppStateContext';
 import { authAPI } from '@/core/api';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { MDColors } from '@/types/types';
+import { Logger } from '@/utils/logs';
 import { login } from '@react-native-kakao/user';
 import { useMutation } from '@tanstack/react-query';
 import { router } from 'expo-router';
@@ -29,7 +30,6 @@ export default function SignInScreen() {
 
       if (response.code === 2000) {
         const { accessToken, refreshToken, isExistUser } = response.data;
-        console.log('[SignInScreen] data:', response.data);
 
         setAuthToken({ accessToken, refreshToken });
         if (isExistUser) {
@@ -39,7 +39,7 @@ export default function SignInScreen() {
         }
       }
     } catch (e) {
-      console.error('Failed to sign in', e);
+      Logger('SignInScreen').error('Failed to sign in', e);
     }
   };
 

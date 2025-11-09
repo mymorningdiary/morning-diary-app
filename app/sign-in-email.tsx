@@ -5,6 +5,7 @@ import { authAPI } from '@/core/api';
 import SignInAppBar from '@/domain/sign-in/components/SignInAppBar';
 import { useThemeColor } from '@/hooks';
 import { MDColors } from '@/types';
+import { Logger } from '@/utils/logs';
 import { useMutation } from '@tanstack/react-query';
 import { router } from 'expo-router';
 import { useRef, useState } from 'react';
@@ -109,7 +110,7 @@ export default function SignInEmailScreen() {
         }
       }
     } catch (error: any) {
-      console.error('Failed to verify otp', error);
+      Logger('SignInEmailScreen').error('Failed to verify otp', error);
 
       switch (error.code) {
         case 4000: {

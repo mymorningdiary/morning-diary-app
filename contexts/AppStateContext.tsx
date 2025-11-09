@@ -6,6 +6,7 @@ import {
 import { appManager } from '@/core/storage';
 import { AppVersion, Auth } from '@/core/types';
 import { useStorageState } from '@/hooks/useStorageState';
+import { Logger } from '@/utils/logs';
 import { useQuery } from '@tanstack/react-query';
 import * as Application from 'expo-application';
 import { createContext, type PropsWithChildren, use, useEffect, useState } from 'react';
@@ -81,7 +82,7 @@ export function AppStateProvider({ children }: PropsWithChildren) {
     try {
       appManager.markVisited();
     } catch (e) {
-      console.error(e);
+      Logger('AppStateProvider').error('Failed to mark visited', e);
     } finally {
       setHasVisited(true);
     }
@@ -100,7 +101,7 @@ export function AppStateProvider({ children }: PropsWithChildren) {
           clearAuthToken();
         }
       } catch (e) {
-        console.error(e);
+        Logger('AppStateProvider').error('Failed to check visited', e);
         markVisited();
       }
     })();
@@ -137,7 +138,7 @@ export function AppStateProvider({ children }: PropsWithChildren) {
           setUpdateNeeded(true);
         }
       } catch (e) {
-        console.error('Failed to compare version', e);
+        Logger('AppStateProvider').error('Failed to compare version', e);
       }
     }
   }, [data]);

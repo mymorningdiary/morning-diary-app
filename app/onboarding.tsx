@@ -1,4 +1,4 @@
-import { MDButton, MDText, MDView } from '@/components';
+import { MDButton, MDLargeSpeechBubble, MDText, MDView } from '@/components';
 import { useAppState } from '@/contexts/AppStateContext';
 import { useThemeColor } from '@/hooks';
 import { MDColors } from '@/types';
@@ -52,7 +52,11 @@ export default function OnboardingScreen() {
           <MDView key="1" style={styles.page}>
             {/* <SpeechBubble text="의식의 흐름" /> */}
             <View style={styles.containerOnboarding1}>
-              <Image source={require('@/assets/images/img-onboarding_1.png')} />
+              <View style={{ alignItems: 'center', gap: 5 }}>
+                <MDLargeSpeechBubble style={{ width: 100 }} text="의식의 흐름" />
+                <Image source={require('@/assets/images/img-onboarding_1.png')} />
+              </View>
+
               <View>
                 <MDText type="titleSemiBold" color={colors.text.brand} align="center">
                   {`'나'를 발견하는 `}

@@ -12,6 +12,7 @@ import { Stack } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { useColorScheme } from 'react-native';
 import ForceUpdateScreen from './force-update';
+import { Logger } from '@/utils/logs';
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -53,7 +54,7 @@ function RootNavigator() {
   const [showUpdateAppModal, setShowUpdateAppModal] = useState(false);
 
   useEffect(() => {
-    console.log('[RootNavigator] session:', session, 'hasVisited:', hasVisited);
+    Logger('RootLayout').debug('session:', session, 'hasVisited:', hasVisited);
   }, [session, hasVisited]);
 
   useEffect(() => {

@@ -9,6 +9,7 @@ import { router } from 'expo-router';
 import { StyleSheet, View } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { logout } from '@react-native-kakao/user';
+import { Logger } from '@/utils/logs';
 
 export default function WithdrawScreen() {
   const colors = useThemeColor();
@@ -25,7 +26,7 @@ export default function WithdrawScreen() {
           await logout();
           clearAuthToken();
         } catch (e) {
-          console.error('Failed to sign out', e);
+          Logger('WithdrawScreen').error('Failed to sign out', e);
         }
       }
     },

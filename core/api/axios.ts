@@ -3,6 +3,7 @@ import * as SecureStore from 'expo-secure-store';
 import { Auth } from '../types';
 import { getGlobalClearAuthTokenHandler, getGlobalSetAuthTokenHandler } from './authHandlers';
 import { ApiError, ApiResponse } from './types';
+import { Logger } from '@/utils/logs';
 
 const BASE_URL = process.env.EXPO_PUBLIC_API_URL;
 
@@ -40,7 +41,7 @@ apiClient.interceptors.request.use(
     const accessToken = await SecureStore.getItemAsync('accessToken');
 
     // 요청 기본 정보 로그
-    console.log(`[API][Request] ${config.method?.toUpperCase()} ${config.baseURL}${config.url}`, {
+    Logger('apiClient').debug(`${config.method?.toUpperCase()} ${config.baseURL}${config.url}`, {
       hasAccessToken: !!accessToken,
       headers: config.headers,
       params: config.params,
@@ -54,7 +55,7 @@ apiClient.interceptors.request.use(
     return config;
   },
   (error) => {
-    console.error('[API][Request Error]', error);
+    Logger('apiClient').error('Failed to request', error);
     return Promise.reject(error);
   },
 );
@@ -68,7 +69,7 @@ apiClient.interceptors.response.use(
         status: 0,
         code: 0,
       };
-      console.warn('[API][NetworkError]', error.config?.url, networkError);
+      Logger('apiClient').error('NetworkError', error.config?.url, networkError);
       return Promise.reject(networkError);
     }
 
@@ -79,16 +80,17 @@ apiClient.interceptors.response.use(
       case 4000: // not exist user
       case 4001: // not exist access token
       case 4002: // invalid access token
-        console.warn(
-          `[API][AccessToken Invalid] url=${requestUrl}, code=${data?.code}, status=${status}`,
+        Logger('apiClient').error(
+          'AccessToken Invalid',
+          `url=${requestUrl}, code=${data?.code}, status=${status}`,
         );
         getGlobalClearAuthTokenHandler()?.();
         break;
       case 4003: {
         // expired access token
-
-        console.warn(
-          `[API][AccessToken Expired] url=${requestUrl}, code=${data?.code}, status=${status}`,
+        Logger('apiClient').error(
+          'AccessToken Expired',
+          `url=${requestUrl}, code=${data?.code}, status=${status}`,
         );
 
         const originalRequest = config as InternalAxiosRequestConfig;
@@ -115,7 +117,7 @@ apiClient.interceptors.response.use(
           if (!refreshToken) throw new Error('No refresh token');
 
           // 리프레시 토큰 API 요청
-          console.log('[Auth][RefreshToken Attempt]', { refreshToken });
+          Logger('apiClient').debug('RefreshToken Attempt', { refreshToken });
           const { data: refreshTokenResponse } = await refreshClient.post<ApiResponse<Auth>>(
             '/auth/token',
             undefined,
@@ -128,7 +130,7 @@ apiClient.interceptors.response.use(
           if (!newAccessToken) throw new Error('No new access token');
 
           // newAccessToken -> 로컬 저장 및 AppContext state 변경
-          console.log('[Auth][AccessToken Refreshed]', newAccessToken);
+          Logger('apiClient').debug('AccessToken Refreshed', newAccessToken);
           getGlobalSetAuthTokenHandler()?.({ accessToken: newAccessToken });
 
           // 큐에 쌓인 API 요청들 실행
@@ -138,7 +140,7 @@ apiClient.interceptors.response.use(
           originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
           return apiClient(originalRequest);
         } catch (err) {
-          console.error('[Auth][RefreshToken Failed]', err);
+          Logger('apiClient').error('RefreshToken Failed', err);
           resolveQueue(null); // 큐에 쌓인 API 요청들 모두 실패 (reject) 처리
           getGlobalClearAuthTokenHandler()?.();
           return Promise.reject(err);
@@ -149,8 +151,9 @@ apiClient.interceptors.response.use(
       case 4004: // not exist refresh token
       case 4005: // invalid refresh token
       case 4006: // expired refresh token
-        console.warn(
-          `[API][RefreshToken Invalid/Expired] url=${requestUrl}, code=${data?.code}, status=${status}`,
+        Logger('apiClient').error(
+          'RefreshToken Invalid/Expired',
+          `url=${requestUrl}, code=${data?.code}, status=${status}`,
         );
         getGlobalClearAuthTokenHandler()?.();
         break;

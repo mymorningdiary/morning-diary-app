@@ -1,5 +1,6 @@
 import { Linking } from 'react-native';
 import { Platform } from 'react-native';
+import { Logger } from './logs';
 
 export const openLink = async (url: string) => {
   try {
@@ -10,10 +11,10 @@ export const openLink = async (url: string) => {
       return true;
     }
 
-    console.error(`Cannot open link: ${url}`);
+    Logger('openLink').error(`Cannot open link: ${url}`);
     return false;
   } catch (e) {
-    console.error(`Error opening link ${url}:`, e);
+    Logger('openLink').error(`Error opening link ${url}:`, e);
     return false;
   }
 };
@@ -43,14 +44,14 @@ export const openStoreLink = async () => {
       const isWebLinkOpened = await openLink(webLink);
 
       if (!isWebLinkOpened) {
-        console.error(`Failed to open both store links: ${appLink} & ${webLink}`);
+        Logger('openStoreLink').error(`Failed to open both store links: ${appLink} & ${webLink}`);
         return false;
       }
     }
 
     return true;
   } catch (e) {
-    console.error('Error opening store:', e);
+    Logger('openStoreLink').error('Error opening store', e);
     return false;
   }
 };

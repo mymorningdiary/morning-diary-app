@@ -1,6 +1,7 @@
 import { userAPI } from '@/core/api';
 import { User } from '@/core/types';
 import { Nullable } from '@/types';
+import { Logger } from '@/utils/logs';
 import { useQuery } from '@tanstack/react-query';
 import { createContext, use, useEffect, useState } from 'react';
 
@@ -26,7 +27,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
   });
 
   useEffect(() => {
-    console.log('[User State] getUserResponse: ', data);
+    Logger('UserProvider').debug('user:', data);
 
     if (data?.code === 2000) {
       setUser(data.data);

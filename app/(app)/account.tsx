@@ -15,6 +15,7 @@ import { useCallback, useState } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { logout } from '@react-native-kakao/user';
+import { Logger } from '@/utils/logs';
 
 export default function AccountScreen() {
   const colors = useThemeColor();
@@ -56,7 +57,7 @@ export default function AccountScreen() {
         }
       }
     } catch (e) {
-      console.error('Failed to sign out', e);
+      Logger('AccountScreen').error('Failed to sign out', e);
     } finally {
       closeLogoutModal();
     }

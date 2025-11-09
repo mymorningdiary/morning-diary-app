@@ -1,5 +1,6 @@
 import { ApiError, diaryAPI } from '@/core/api';
 import { PostDiariesResponse, UpdateDiaryResponse } from '@/core/api/diary/types';
+import { Logger } from '@/utils/logs';
 import { useMutation } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
 import { useState } from 'react';
@@ -18,7 +19,7 @@ export const useWriteDiary = () => {
       }
     },
     onError: (error: AxiosError<ApiError>) => {
-      console.error('[Diary Mutation] Failed to write diary:', error.response?.data);
+      Logger('useWriteDiary').error('Failed to write diary', error);
     },
   });
 

@@ -2,6 +2,7 @@ import { MDButton, MDLargeSpeechBubble, MDPressable, MDRow, MDText } from '@/com
 import { useNotification } from '@/contexts/NotificationContext';
 import { useThemeColor, useUpdatePushToken } from '@/hooks';
 import { MDColors } from '@/types';
+import { Logger } from '@/utils/logs';
 import { Image } from 'expo-image';
 import * as Notifications from 'expo-notifications';
 import { router } from 'expo-router';
@@ -33,7 +34,7 @@ export default function AlarmPermissionScreen() {
         router.replace('/(app)');
       }
     } catch (error) {
-      console.error(error);
+      Logger('AlarmPermissionScreen').error('Failed to update pushToken', error);
     }
   };
 

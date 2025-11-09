@@ -1,5 +1,6 @@
 import { MDButton, MDLargeSpeechBubble, MDPressable, MDRow, MDText } from '@/components';
 import { useNotification } from '@/contexts/NotificationContext';
+import { appManager } from '@/core/storage';
 import { useThemeColor, useUpdatePushToken } from '@/hooks';
 import { MDColors } from '@/types';
 import { Logger } from '@/utils/logs';
@@ -28,6 +29,7 @@ export default function AlarmPermissionScreen() {
       });
 
       if (granted === true && pushToken !== null) {
+        appManager.markAlarmOn();
         updatePushToken({ pushToken });
         router.replace({ pathname: '/(app)/alarm-time', params: { fromScreen: 'permission' } });
       } else {

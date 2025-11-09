@@ -120,7 +120,7 @@ export default function AlarmTimeScreen() {
           <MDRow style={styles.containerSkipAppBar}>
             <MDPressable style={styles.buttonSkip} onPress={onSkipButtonPress}>
               <MDText type="labelRegular" color={colors.text.alternative}>
-                건너띄기
+                건너뛰기
               </MDText>
             </MDPressable>
           </MDRow>

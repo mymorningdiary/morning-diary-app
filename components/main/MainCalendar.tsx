@@ -6,6 +6,10 @@ import { Calendar, DateData, LocaleConfig } from 'react-native-calendars';
 import { DayProps } from 'react-native-calendars/src/calendar/day';
 import { MDText } from '../MDText';
 import { MDView } from '../MDView';
+import { useFocusEffect } from 'expo-router';
+import { useCallback, useState } from 'react';
+import dayjs from 'dayjs';
+import { Logger } from '@/utils/logs';
 
 LocaleConfig.locales['kr'] = {
   monthNames: [
@@ -51,7 +55,14 @@ export default function MainCalendar({
 }: MainCalendarProps) {
   const colors = useThemeColor();
   const styles = calendarStyles({ colors });
-  const today = formatCalendarDate();
+  const [today, setToday] = useState<string>(dayjs().format('YYYY-MM-DD'));
+
+  useFocusEffect(
+    useCallback(() => {
+      Logger('MainCalendar').debug(dayjs().format('YYYY-MM-DD'));
+      setToday(dayjs().format('YYYY-MM-DD'));
+    }, []),
+  );
 
   return (
     <Calendar

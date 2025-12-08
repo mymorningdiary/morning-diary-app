@@ -1,15 +1,16 @@
 import { useThemeColor } from '@/hooks';
 import { MDColors } from '@/types';
-import { formatCalendarDate } from '@/utils/dates';
-import { StyleSheet, TouchableOpacity } from 'react-native';
+import { Logger } from '@/utils/logs';
+import dayjs from 'dayjs';
+import { useFocusEffect } from 'expo-router';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { AppState, StyleSheet, TouchableOpacity } from 'react-native';
 import { Calendar, DateData, LocaleConfig } from 'react-native-calendars';
 import { DayProps } from 'react-native-calendars/src/calendar/day';
 import { MDText } from '../MDText';
 import { MDView } from '../MDView';
-import { useFocusEffect } from 'expo-router';
-import { useCallback, useState } from 'react';
-import dayjs from 'dayjs';
-import { Logger } from '@/utils/logs';
+import { useIsFocused } from '@react-navigation/native';
+import { useOnForeground } from '@/hooks/useOnForeground';
 
 LocaleConfig.locales['kr'] = {
   monthNames: [
@@ -59,10 +60,13 @@ export default function MainCalendar({
 
   useFocusEffect(
     useCallback(() => {
-      Logger('MainCalendar').debug(dayjs().format('YYYY-MM-DD'));
       setToday(dayjs().format('YYYY-MM-DD'));
     }, []),
   );
+
+  useOnForeground(() => {
+    setToday(dayjs().format('YYYY-MM-DD'));
+  });
 
   return (
     <Calendar

@@ -13,6 +13,7 @@ import { useEffect, useState } from 'react';
 import { useColorScheme } from 'react-native';
 import ForceUpdateScreen from './force-update';
 import { Logger } from '@/utils/logs';
+import analytics from '@react-native-firebase/analytics';
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -33,6 +34,18 @@ export default function RootLayout() {
     if (kakaoAppKey) {
       initializeKakaoSDK(kakaoAppKey);
     }
+  }, []);
+
+  useEffect(() => {
+    async function initializeAnalytics() {
+      try {
+        await analytics().setAnalyticsCollectionEnabled(true);
+        Logger('Root').debug('Success to initialize firebase analytics');
+      } catch (error) {
+        Logger('Root').warn('Failed to initialize firebase analytics', error);
+      }
+    }
+    initializeAnalytics();
   }, []);
 
   return (

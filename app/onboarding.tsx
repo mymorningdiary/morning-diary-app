@@ -45,7 +45,7 @@ export default function OnboardingScreen() {
         </MDView>
 
         <PagerView
-          style={styles.container}
+          style={{ flex: 1 }}
           initialPage={0}
           ref={pageRef}
           onPageSelected={({ nativeEvent }) => handlePageSelected(nativeEvent.position)}>
@@ -134,16 +134,16 @@ const screenStyles = ({ colors, bottomInset }: { colors: MDColors; bottomInset: 
     },
     containerOnboarding1: {
       flex: 1,
+      width: '100%',
       justifyContent: 'center',
       alignItems: 'center',
-      paddingHorizontal: 24,
       gap: 40,
     },
     containerOnboarding2: {
       flex: 1,
+      width: '100%',
       justifyContent: 'center',
       alignItems: 'center',
-      paddingHorizontal: 24,
       gap: 40,
     },
   });

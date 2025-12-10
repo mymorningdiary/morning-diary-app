@@ -26,12 +26,11 @@ export default function HomeScreen() {
   const [selectedDiaryInfo, setSelectedDiaryInfo] = useState<Nullable<Diary>>(null);
   const [isTodayWritten, setIsTodayWritten] = useState(false);
 
+  const [currentDate, setCurrentDate] = useState(dayjs().format('YYYY-MM-DD'));
   const { selectedMonth, writtenDates, diaryInfos, handleMonthChange, refetch } = useGetDiaries();
   const { textGoals } = useGetTextGoals();
 
   const { writtenDate } = useLocalSearchParams<{ writtenDate?: string }>();
-
-  const [currentDate, setCurrentDate] = useState(dayjs().format('YYYY-MM-DD'));
 
   useEffect(() => {
     if (writtenDate) {
@@ -128,6 +127,7 @@ export default function HomeScreen() {
         <MainCalendar
           currentDate={currentDate}
           markedDates={markedDates}
+          onDateChange={setCurrentDate}
           onMonthChange={handleMonthChange}
           onDayPress={handleDayPress}
         />

@@ -1,16 +1,18 @@
 import { useThemeColor } from '@/hooks';
+import { useOnForeground } from '@/hooks/useOnForeground';
 import { MDColors } from '@/types';
-import { Logger } from '@/utils/logs';
 import dayjs from 'dayjs';
 import { useFocusEffect } from 'expo-router';
-import { useCallback, useEffect, useRef, useState } from 'react';
-import { AppState, StyleSheet, TouchableOpacity } from 'react-native';
+import { useCallback, useState } from 'react';
+import { Image, StyleSheet, TouchableOpacity } from 'react-native';
 import { Calendar, DateData, LocaleConfig } from 'react-native-calendars';
 import { DayProps } from 'react-native-calendars/src/calendar/day';
+import MDPressable from '../MDPressable';
 import { MDText } from '../MDText';
 import { MDView } from '../MDView';
-import { useIsFocused } from '@react-navigation/native';
-import { useOnForeground } from '@/hooks/useOnForeground';
+
+const leftArrowIcon = require('@/assets/images/ic-chevron_left.png');
+const rightArrowIcon = require('@/assets/images/ic-chevron_right.png');
 
 LocaleConfig.locales['kr'] = {
   monthNames: [
@@ -44,6 +46,7 @@ type MarkedDate = {
 type MainCalendarProps = {
   currentDate: string;
   markedDates: MarkedDate;
+  onDateChange: (date: string) => void;
   onMonthChange: (month: DateData) => void;
   onDayPress: (day?: DateData) => void;
 };
@@ -51,6 +54,7 @@ type MainCalendarProps = {
 export default function MainCalendar({
   currentDate,
   markedDates,
+  onDateChange,
   onMonthChange,
   onDayPress,
 }: MainCalendarProps) {
@@ -104,7 +108,7 @@ export default function MainCalendar({
       monthFormat={'yyyy MM'}
       onMonthChange={onMonthChange}
       markedDates={markedDates}
-      renderHeader={(date: string) => <CalendarHeader date={date} />}
+      renderHeader={(date: string) => <CalendarHeader date={date} onDateChange={onDateChange} />}
       dayComponent={({ date, state, marking }: DayProps & { date?: DateData }) => (
         <CalendarDay
           date={date}
@@ -155,9 +159,10 @@ const calendarStyles = ({ colors }: { colors: MDColors }) =>
 
 type CalendarHeaderProps = {
   date: string;
+  onDateChange: (date: string) => void;
 };
 
-const CalendarHeader = ({ date }: CalendarHeaderProps) => {
+const CalendarHeader = ({ date, onDateChange }: CalendarHeaderProps) => {
   const colors = useThemeColor();
   const styles = headerStyles({ colors });
 
@@ -169,11 +174,32 @@ const CalendarHeader = ({ date }: CalendarHeaderProps) => {
     return `${year}년 ${month}월`;
   };
 
+  const goToMonth = (offset: number) => {
+    const target = dayjs(date).add(offset, 'month').startOf('month');
+    onDateChange(target.format('YYYY-MM-DD'));
+  };
+
+  const handlePrevPress = () => {
+    goToMonth(-1);
+  };
+
+  const handleNextPress = () => {
+    goToMonth(1);
+  };
+
   return (
     <MDView style={styles.container}>
+      <MDPressable onPress={handlePrevPress} hitSlop={30}>
+        <Image source={leftArrowIcon} style={styles.arrowIcon} />
+      </MDPressable>
+
       <MDText type="heading2SemiBold" style={styles.text}>
         {formatCalendarHeaderDate(date)}
       </MDText>
+
+      <MDPressable onPress={handleNextPress} hitSlop={30}>
+        <Image source={rightArrowIcon} style={styles.arrowIcon} />
+      </MDPressable>
     </MDView>
   );
 };
@@ -181,11 +207,19 @@ const CalendarHeader = ({ date }: CalendarHeaderProps) => {
 const headerStyles = ({ colors }: { colors: MDColors }) =>
   StyleSheet.create({
     container: {
+      flexDirection: 'row',
       paddingTop: 16,
       paddingBottom: 24,
+      alignItems: 'center',
+      gap: 12,
     },
     text: {
       color: colors.text.brand,
+    },
+    arrowIcon: {
+      width: 16,
+      height: 16,
+      tintColor: colors.icon.normal,
     },
   });
 

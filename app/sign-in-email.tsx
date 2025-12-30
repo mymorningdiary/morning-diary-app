@@ -4,6 +4,8 @@ import { useAppState } from '@/contexts/AppStateContext';
 import { authAPI } from '@/core/api';
 import SignInAppBar from '@/domain/sign-in/components/SignInAppBar';
 import { useThemeColor } from '@/hooks';
+import { LoginEmailPage } from '@/src/pages/login-email';
+
 import { MDColors } from '@/types';
 import { Logger } from '@/utils/logs';
 import { useMutation } from '@tanstack/react-query';
@@ -33,193 +35,195 @@ interface FormFieldState {
 }
 
 export default function SignInEmailScreen() {
-  const colors = useThemeColor();
-  const insets = useSafeAreaInsets();
-  const styles = ScreenStyles({ colors, bottomInset: insets.bottom });
+  // const colors = useThemeColor();
+  // const insets = useSafeAreaInsets();
+  // const styles = ScreenStyles({ colors, bottomInset: insets.bottom });
 
-  const emailRef = useRef<TextInput | null>(null);
-  const passwordRef = useRef<TextInput | null>(null);
+  // const emailRef = useRef<TextInput | null>(null);
+  // const passwordRef = useRef<TextInput | null>(null);
 
-  const { mutateAsync: signIn, isPending: isSignInPending } = useMutation({
-    mutationFn: authAPI.postSignIn,
-  });
+  // const { mutateAsync: signIn, isPending: isSignInPending } = useMutation({
+  //   mutationFn: authAPI.postSignIn,
+  // });
 
-  const { setAuthToken } = useAppState();
+  // const { setAuthToken } = useAppState();
 
-  const [email, setEmail] = useState<FormFieldState>({
-    value: '',
-    helperText: null,
-    isValid: false,
-  });
-  const [password, setPassword] = useState<FormFieldState>({
-    value: '',
-    helperText: null,
-    isValid: false,
-  });
+  // const [email, setEmail] = useState<FormFieldState>({
+  //   value: '',
+  //   helperText: null,
+  //   isValid: false,
+  // });
+  // const [password, setPassword] = useState<FormFieldState>({
+  //   value: '',
+  //   helperText: null,
+  //   isValid: false,
+  // });
 
-  const handleChangeEmail = (value: string) => {
-    setEmail((prev) => ({ ...prev, value, helperText: null }));
-  };
+  // const handleChangeEmail = (value: string) => {
+  //   setEmail((prev) => ({ ...prev, value, helperText: null }));
+  // };
 
-  const handleChangePassword = (value: string) => {
-    setPassword((prev) => ({ ...prev, value, helperText: null }));
-  };
+  // const handleChangePassword = (value: string) => {
+  //   setPassword((prev) => ({ ...prev, value, helperText: null }));
+  // };
 
-  const validateEmail = () => {
-    const isEmailValid = EMAIL_REGEX.test(email.value);
-    const helperText = isEmailValid ? null : '이메일을 올바르게 입력해주세요';
+  // const validateEmail = () => {
+  //   const isEmailValid = EMAIL_REGEX.test(email.value);
+  //   const helperText = isEmailValid ? null : '이메일을 올바르게 입력해주세요';
 
-    setEmail((prev) => ({
-      ...prev,
-      helperText,
-      isValid: isEmailValid,
-    }));
+  //   setEmail((prev) => ({
+  //     ...prev,
+  //     helperText,
+  //     isValid: isEmailValid,
+  //   }));
 
-    return isEmailValid;
-  };
+  //   return isEmailValid;
+  // };
 
-  const validatePassword = () => {
-    const isPasswordValid = PASSWORD_REGEX.test(password.value);
-    const helperText = isPasswordValid
-      ? null
-      : '비밀번호를 입력해주세요 (영문자+숫자+특수문자 10-64자)';
+  // const validatePassword = () => {
+  //   const isPasswordValid = PASSWORD_REGEX.test(password.value);
+  //   const helperText = isPasswordValid
+  //     ? null
+  //     : '비밀번호를 입력해주세요 (영문자+숫자+특수문자 10-64자)';
 
-    setPassword((prev) => ({
-      ...prev,
-      helperText,
-      isValid: isPasswordValid,
-    }));
+  //   setPassword((prev) => ({
+  //     ...prev,
+  //     helperText,
+  //     isValid: isPasswordValid,
+  //   }));
 
-    return isPasswordValid;
-  };
+  //   return isPasswordValid;
+  // };
 
-  const handleSignIn = async () => {
-    if (!validateEmail()) return;
-    if (!validatePassword()) return;
+  // const handleSignIn = async () => {
+  //   if (!validateEmail()) return;
+  //   if (!validatePassword()) return;
 
-    try {
-      const res = await signIn({ email: email.value, password: password.value });
-      if (res.code === 2000) {
-        const { accessToken, refreshToken, isExistUser } = res.data;
+  //   try {
+  //     const res = await signIn({ email: email.value, password: password.value });
+  //     if (res.code === 2000) {
+  //       const { accessToken, refreshToken, isExistUser } = res.data;
 
-        setAuthToken({ accessToken, refreshToken });
-        if (isExistUser) {
-          router.replace('/(app)');
-        } else {
-          router.replace('/(app)/alarm-permission');
-        }
-      }
-    } catch (error: any) {
-      Logger('SignInEmailScreen').error('Failed to sign up', error);
+  //       setAuthToken({ accessToken, refreshToken });
+  //       if (isExistUser) {
+  //         router.replace('/(app)');
+  //       } else {
+  //         router.replace('/(app)/alarm-permission');
+  //       }
+  //     }
+  //   } catch (error: any) {
+  //     Logger('SignInEmailScreen').error('Failed to sign up', error);
 
-      switch (error.code) {
-        case 4000: {
-          setEmail((prev) => ({
-            ...prev,
-            helperText: '존재하지 않는 사용자에요',
-            isValid: false,
-          }));
-          break;
-        }
-        case 4007:
-        case 4008: {
-          setEmail((prev) => ({
-            ...prev,
-            helperText: '이메일을 올바르게 입력해주세요',
-            isValid: false,
-          }));
-          break;
-        }
-        case 4009:
-        case 4010: {
-          setPassword((prev) => ({
-            ...prev,
-            helperText: '비밀번호를 입력해주세요 (영문자+숫자+특수문자 10-64자)',
-            isValid: false,
-          }));
-          break;
-        }
-        case 4012: {
-          setPassword((prev) => ({
-            ...prev,
-            helperText: '비밀번호가 일치하지 않아요',
-            isValid: false,
-          }));
-          break;
-        }
-        case 4013: {
-          setEmail((prev) => ({
-            ...prev,
-            helperText: 'SNS 연동 사용자에요',
-            isValid: false,
-          }));
-          break;
-        }
-      }
-    }
-  };
+  //     switch (error.code) {
+  //       case 4000: {
+  //         setEmail((prev) => ({
+  //           ...prev,
+  //           helperText: '존재하지 않는 사용자에요',
+  //           isValid: false,
+  //         }));
+  //         break;
+  //       }
+  //       case 4007:
+  //       case 4008: {
+  //         setEmail((prev) => ({
+  //           ...prev,
+  //           helperText: '이메일을 올바르게 입력해주세요',
+  //           isValid: false,
+  //         }));
+  //         break;
+  //       }
+  //       case 4009:
+  //       case 4010: {
+  //         setPassword((prev) => ({
+  //           ...prev,
+  //           helperText: '비밀번호를 입력해주세요 (영문자+숫자+특수문자 10-64자)',
+  //           isValid: false,
+  //         }));
+  //         break;
+  //       }
+  //       case 4012: {
+  //         setPassword((prev) => ({
+  //           ...prev,
+  //           helperText: '비밀번호가 일치하지 않아요',
+  //           isValid: false,
+  //         }));
+  //         break;
+  //       }
+  //       case 4013: {
+  //         setEmail((prev) => ({
+  //           ...prev,
+  //           helperText: 'SNS 연동 사용자에요',
+  //           isValid: false,
+  //         }));
+  //         break;
+  //       }
+  //     }
+  //   }
+  // };
 
-  const navigateToSignUp = () => {
-    router.push({
-      pathname: '/sign-up',
-    });
-  };
+  // const navigateToSignUp = () => {
+  //   router.push({
+  //     pathname: '/sign-up',
+  //   });
+  // };
 
-  return (
-    <SafeAreaView style={styles.safeArea}>
-      <SignInAppBar onNavigateBack={() => router.back()} />
-      <KeyboardAvoidingView
-        style={styles.keyboardAvoider}
-        behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
-        <ScrollView
-          style={styles.scroll}
-          contentContainerStyle={styles.scrollContent}
-          overScrollMode="never"
-          keyboardShouldPersistTaps="handled">
-          <MDTextField
-            ref={emailRef}
-            label="아이디"
-            placeholder="이메일 주소"
-            returnKeyType="next"
-            keyboardType="email-address"
-            inputMode="email"
-            {...email}
-            onChangeText={handleChangeEmail}
-            onSubmitEditing={() => passwordRef.current?.focus()}
-          />
+  // return (
+  //   <SafeAreaView style={styles.safeArea}>
+  //     <SignInAppBar onNavigateBack={() => router.back()} />
+  //     <KeyboardAvoidingView
+  //       style={styles.keyboardAvoider}
+  //       behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+  //       <ScrollView
+  //         style={styles.scroll}
+  //         contentContainerStyle={styles.scrollContent}
+  //         overScrollMode="never"
+  //         keyboardShouldPersistTaps="handled">
+  //         <MDTextField
+  //           ref={emailRef}
+  //           label="아이디"
+  //           placeholder="이메일 주소"
+  //           returnKeyType="next"
+  //           keyboardType="email-address"
+  //           inputMode="email"
+  //           {...email}
+  //           onChangeText={handleChangeEmail}
+  //           onSubmitEditing={() => passwordRef.current?.focus()}
+  //         />
 
-          <MDTextField
-            ref={passwordRef}
-            label="비밀번호"
-            placeholder="비밀번호"
-            maxLength={MAX_PASSWORD_LEN}
-            secureTextEntry
-            returnKeyType="done"
-            {...password}
-            onChangeText={handleChangePassword}
-            onSubmitEditing={handleSignIn}
-          />
-        </ScrollView>
+  //         <MDTextField
+  //           ref={passwordRef}
+  //           label="비밀번호"
+  //           placeholder="비밀번호"
+  //           maxLength={MAX_PASSWORD_LEN}
+  //           secureTextEntry
+  //           returnKeyType="done"
+  //           {...password}
+  //           onChangeText={handleChangePassword}
+  //           onSubmitEditing={handleSignIn}
+  //         />
+  //       </ScrollView>
 
-        <View style={styles.footer}>
-          <MDButton title={'로그인'} onPress={handleSignIn} />
-          <MDButton
-            style={styles.signUpButton}
-            textStyle={styles.signUpButtonText}
-            title={'회원가입'}
-            onPress={navigateToSignUp}
-          />
-        </View>
-      </KeyboardAvoidingView>
-      {isSignInPending && (
-        <View
-          style={[StyleSheet.absoluteFillObject, styles.loading]}
-          onStartShouldSetResponder={() => true}>
-          <ActivityIndicator color={colors.primary.normal} size={'large'} />
-        </View>
-      )}
-    </SafeAreaView>
-  );
+  //       <View style={styles.footer}>
+  //         <MDButton title={'로그인'} onPress={handleSignIn} />
+  //         <MDButton
+  //           style={styles.signUpButton}
+  //           textStyle={styles.signUpButtonText}
+  //           title={'회원가입'}
+  //           onPress={navigateToSignUp}
+  //         />
+  //       </View>
+  //     </KeyboardAvoidingView>
+  //     {isSignInPending && (
+  //       <View
+  //         style={[StyleSheet.absoluteFillObject, styles.loading]}
+  //         onStartShouldSetResponder={() => true}>
+  //         <ActivityIndicator color={colors.primary.normal} size={'large'} />
+  //       </View>
+  //     )}
+  //   </SafeAreaView>
+  // );
+
+  return <LoginEmailPage />;
 }
 
 const ScreenStyles = ({ colors, bottomInset }: { colors: MDColors; bottomInset: number }) =>

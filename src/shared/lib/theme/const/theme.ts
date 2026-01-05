@@ -7,7 +7,7 @@ export const MDLightTheme = {
     ...DefaultTheme.colors,
     custom: Colors.light,
   },
-};
+} as const;
 
 export const MDDarkTheme = {
   ...DarkTheme,
@@ -15,4 +15,4 @@ export const MDDarkTheme = {
     ...DarkTheme.colors,
     custom: Colors.dark,
   },
-};
+} as const;

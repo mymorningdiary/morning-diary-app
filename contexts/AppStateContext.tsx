@@ -127,6 +127,8 @@ export function AppStateProvider({ children }: PropsWithChildren) {
         const currentVersion = Application.nativeApplicationVersion;
         if (currentVersion === null) return;
 
+        Logger('AppState').debug('minVersion: ', minVersion, 'currentVersion: ', currentVersion);
+
         // 강제 업데이트 활성화
         if (minVersion && semver.lt(currentVersion, minVersion)) {
           setForceUpdateNeeded(true);

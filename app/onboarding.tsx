@@ -24,7 +24,7 @@ export default function OnboardingScreen() {
     if (currentPage === 1) {
       // 온보딩 완료 시 방문 여부 저장 후 로그인 화면으로
       markVisited();
-      router.replace('/sign-in');
+      router.replace('/login');
     } else {
       pageRef.current?.setPage(currentPage + 1);
       setCurrentPage(currentPage + 1);

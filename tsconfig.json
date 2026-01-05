@@ -4,6 +4,7 @@
     "baseUrl": ".",
     "strict": true,
     "paths": {
+      "@pages/*": ["./src/pages/*"],
       "@shared/*": ["./src/shared/*"],
       "@/*": ["./*"], // 이게 앞에 있으면 다른 별칭이 꼬임
     }

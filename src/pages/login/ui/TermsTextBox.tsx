@@ -28,6 +28,10 @@ export function TermsTextBox() {
         </Text>
         {`에 동의하게 됩니다.`}
       </MDText>
+
+      <MDText type="caption2Regular" align="center">
+        © 2025 Morning Diary
+      </MDText>
     </View>
   );
 }
@@ -36,6 +40,7 @@ const BoxStyles = StyleSheet.create({
   container: {
     alignItems: 'center',
     justifyContent: 'center',
+    gap: 12,
   },
   linkText: {
     textDecorationLine: 'underline',

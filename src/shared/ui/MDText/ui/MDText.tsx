@@ -2,13 +2,20 @@ import { useThemeColor } from '@/hooks';
 import { MDFonts, MDFontsType } from '@shared/lib/theme';
 import { Text, TextProps, TextStyle } from 'react-native';
 
-interface Props extends TextProps {
+interface MDTextProps extends TextProps {
   type?: MDFontsType;
   color?: string;
   align?: TextStyle['textAlign'];
 }
 
-export function MDText({ style, type = 'bodyRegular', color, align, children, ...rest }: Props) {
+export function MDText({
+  style,
+  type = 'bodyRegular',
+  color,
+  align,
+  children,
+  ...rest
+}: MDTextProps) {
   const { text } = useThemeColor();
 
   return (

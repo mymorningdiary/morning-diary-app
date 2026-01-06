@@ -74,7 +74,7 @@ export function MDButton({
         <>
           {PrefixIcon ? (
             <View style={{ marginRight: iconSpacing }}>
-              <PrefixIcon width={iconSize} height={iconSize} />
+              <PrefixIcon width={iconSize} height={iconSize} color={variantTokens.iconColor} />
             </View>
           ) : null}
           <MDText type={textType} color={variantTokens.textColor}>
@@ -82,7 +82,7 @@ export function MDButton({
           </MDText>
           {SuffixIcon ? (
             <View style={{ marginLeft: iconSpacing }}>
-              <SuffixIcon width={iconSize} height={iconSize} />
+              <SuffixIcon width={iconSize} height={iconSize} color={variantTokens.iconColor} />
             </View>
           ) : null}
         </>

@@ -2,7 +2,7 @@ import { StyleSheet, ViewStyle } from 'react-native';
 
 import { MDColorsType, MDFontsType } from '@shared/lib/theme';
 
-export type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'outline';
+export type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'outline' | 'kakao';
 export type ButtonSize = 'large' | 'medium' | 'small';
 
 export interface ButtonVariantToken {
@@ -103,6 +103,13 @@ const getVariantTokensMap = (colors: MDColorsType): Record<ButtonVariant, Button
     iconColor: colors.icon.normal,
     borderColor: colors.line.alternative,
     borderWidth: 1,
+  },
+  kakao: {
+    backgroundColor: colors.kakao,
+    textColor: colors.text.normal,
+    iconColor: colors.icon.normal,
+    borderColor: 'transparent',
+    borderWidth: 0,
   },
 });
 

@@ -1,1 +1,1 @@
-import { MDLogo } from './ui/MDLogo';
+export { MDLogo } from './ui/MDLogo';

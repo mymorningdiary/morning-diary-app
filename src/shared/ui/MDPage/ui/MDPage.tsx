@@ -1,3 +1,4 @@
+import { MDColorsType, useThemeColor } from '@shared/lib/theme';
 import { StyleProp, StyleSheet, ViewStyle } from 'react-native';
 import { SafeAreaView, SafeAreaViewProps, useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -7,6 +8,9 @@ interface MDPageProps extends SafeAreaViewProps {
 }
 
 export function MDPage({ style, includeBottomSafeArea = false, edges, ...rest }: MDPageProps) {
+  const colors = useThemeColor();
+  const styles = MDPageStyles({ colors });
+
   const insets = useSafeAreaInsets();
   const flattened = StyleSheet.flatten(style);
   const basePaddingBottom =
@@ -20,8 +24,20 @@ export function MDPage({ style, includeBottomSafeArea = false, edges, ...rest }:
   return (
     <SafeAreaView
       edges={edges}
-      style={[style, typeof adjustedPadding === 'number' && { paddingBottom: adjustedPadding }]}
+      style={[
+        styles.container,
+        style,
+        typeof adjustedPadding === 'number' && { paddingBottom: adjustedPadding },
+      ]}
       {...rest}
     />
   );
 }
+
+const MDPageStyles = ({ colors }: { colors: MDColorsType }) =>
+  StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: colors.background.normal,
+    },
+  });

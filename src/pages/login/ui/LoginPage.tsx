@@ -1,10 +1,12 @@
+import { StyleSheet, View } from 'react-native';
+
 import { IconKakao, IconMail } from '@assets/icons';
 
 import { MDColorsType, useThemeColor } from '@shared/lib/theme';
 import { MDButton } from '@shared/ui/MDButton';
-import { MDLogo } from '@shared/ui/MDLogo/ui/MDLogo';
 import { MDPage } from '@shared/ui/MDPage';
-import { StyleSheet, View } from 'react-native';
+import { MDLogo } from '@shared/ui/MDLogo';
+
 import { TermsTextBox } from './TermsTextBox';
 
 export function LoginPage() {
@@ -16,8 +18,8 @@ export function LoginPage() {
       <MDLogo style={styles.logoContent} />
 
       <View style={styles.buttonContent}>
-        <MDButton variant="outline" label="이메일로 계속하기" prefix={IconMail} />
-        <MDButton variant="kakao" label="카카오로 계속하기" prefix={IconKakao} />
+        <MDButton variant="outline" prefix={IconMail} label="이메일로 계속하기" />
+        <MDButton variant="kakao" prefix={IconKakao} label="카카오로 계속하기" />
       </View>
 
       <TermsTextBox />
@@ -28,8 +30,6 @@ export function LoginPage() {
 const PageStyles = ({ colors }: { colors: MDColorsType }) =>
   StyleSheet.create({
     container: {
-      flex: 1,
-      backgroundColor: colors.background.normal,
       paddingBottom: 60,
     },
     logoContent: {

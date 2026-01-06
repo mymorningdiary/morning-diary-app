@@ -2,16 +2,14 @@ import { StyleSheet, View } from 'react-native';
 
 import { IconKakao, IconMail } from '@assets/icons';
 
-import { MDColorsType, useThemeColor } from '@shared/lib/theme';
 import { MDButton } from '@shared/ui/MDButton';
-import { MDPage } from '@shared/ui/MDPage';
 import { MDLogo } from '@shared/ui/MDLogo';
+import { MDPage } from '@shared/ui/MDPage';
 
 import { TermsTextBox } from './TermsTextBox';
 
 export function LoginPage() {
-  const colors = useThemeColor();
-  const styles = PageStyles({ colors });
+  const styles = PageStyles;
 
   return (
     <MDPage style={styles.container}>
@@ -27,20 +25,19 @@ export function LoginPage() {
   );
 }
 
-const PageStyles = ({ colors }: { colors: MDColorsType }) =>
-  StyleSheet.create({
-    container: {
-      paddingBottom: 60,
-    },
-    logoContent: {
-      flex: 1,
-      alignItems: 'center',
-      justifyContent: 'center',
-      alignSelf: 'stretch',
-    },
-    buttonContent: {
-      paddingHorizontal: 16,
-      gap: 10,
-      marginBottom: 24,
-    },
-  });
+const PageStyles = StyleSheet.create({
+  container: {
+    paddingBottom: 60,
+  },
+  logoContent: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    alignSelf: 'stretch',
+  },
+  buttonContent: {
+    paddingHorizontal: 16,
+    gap: 10,
+    marginBottom: 24,
+  },
+});

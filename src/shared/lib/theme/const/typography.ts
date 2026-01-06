@@ -30,7 +30,7 @@ const InterRegular: FontFamily = {
   fontWeight: 400,
 };
 
-export const Typography = {
+export const MDFonts = {
   heading1Medium: {
     ...PretendardMedium,
     fontSize: 24,

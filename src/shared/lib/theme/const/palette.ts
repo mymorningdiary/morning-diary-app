@@ -1,4 +1,4 @@
-export const ColorPalette = {
+export const MDPalette = {
   black: '#000000',
   white: '#FFFFFF',
   kakao: '#FEE500',

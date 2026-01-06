@@ -1,4 +1,9 @@
-export type { MDColors } from './types/colors';
-export type { MDTypography } from './types/fonts';
-export type { MDTheme } from './types/theme';
+export type { MDColorsType } from './types/colors';
+export { MDColors } from './const/colors';
+
+export type { MDFontsType } from './types/fonts';
+export { MDFonts } from './const/typography';
+
+export type { MDThemeType } from './types/theme';
+
 export { useThemeColor } from './hooks/useThemeColor';

@@ -1,8 +1,3 @@
-import { Typography } from '../const/typography';
+import { MDFonts } from '../const/typography';
 
-export type FontFamily = {
-  fontFamily: 'Pretendard' | 'Roboto' | 'Inter';
-  fontWeight: 700 | 600 | 500 | 400 | 400 | 400;
-};
-
-export type MDTypography = keyof typeof Typography;
+export type MDFontsType = keyof typeof MDFonts;

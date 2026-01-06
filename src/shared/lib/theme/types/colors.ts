@@ -1,3 +1,3 @@
-import { Colors } from '../const/colors';
+import { MDColors } from '../const/colors';
 
-export type MDColors = typeof Colors.light;
+export type MDColorsType = typeof MDColors.light;

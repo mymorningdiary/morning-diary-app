@@ -1,11 +1,11 @@
 import { DarkTheme, DefaultTheme } from '@react-navigation/native';
-import { Colors } from './colors';
+import { MDColors } from './colors';
 
 export const MDLightTheme = {
   ...DefaultTheme,
   colors: {
     ...DefaultTheme.colors,
-    custom: Colors.light,
+    custom: MDColors.light,
   },
 } as const;
 
@@ -13,6 +13,6 @@ export const MDDarkTheme = {
   ...DarkTheme,
   colors: {
     ...DarkTheme.colors,
-    custom: Colors.dark,
+    custom: MDColors.dark,
   },
 } as const;

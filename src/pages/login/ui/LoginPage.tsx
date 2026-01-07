@@ -13,6 +13,10 @@ import { TermsTextBox } from './TermsTextBox';
 export function LoginPage() {
   const styles = PageStyles;
 
+  const handleLogin = (isExistUser: boolean) => {
+    router.replace(isExistUser ? '/(app)' : '/(app)/alarm-permission');
+  };
+
   return (
     <MDPage style={styles.container}>
       <MDLogo style={styles.logoContent} />
@@ -24,7 +28,7 @@ export function LoginPage() {
           label="이메일로 계속하기"
           onPress={() => router.push('/login-email')}
         />
-        <KakaoLoginButton />
+        <KakaoLoginButton onLogin={handleLogin} />
       </View>
 
       <TermsTextBox />

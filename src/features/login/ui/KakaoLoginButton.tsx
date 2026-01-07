@@ -2,8 +2,12 @@ import { IconKakao } from '@assets/icons';
 import { MDButton } from '@shared/ui/MDButton';
 import { useKakaoLogin } from '../model/useKakaoLogin';
 
-export function KakaoLoginButton() {
-  const { loginWithKakao } = useKakaoLogin();
+interface Props {
+  onLogin: (isExistUser: boolean) => void;
+}
+
+export function KakaoLoginButton({ onLogin }: Props) {
+  const { loginWithKakao } = useKakaoLogin({ onLogin });
 
   return (
     <MDButton

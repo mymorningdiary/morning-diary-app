@@ -1,5 +1,4 @@
-import { useAppState } from '@/contexts/AppStateContext';
-import { postKakaoLogin } from '@entities/auth';
+import { postKakaoLogin, useAuth } from '@entities/auth';
 import { login } from '@react-native-kakao/user';
 import { Logger } from '@shared/lib/log';
 import { useMutation } from '@tanstack/react-query';
@@ -9,7 +8,7 @@ interface Props {
 }
 
 export function useKakaoLogin({ onLogin }: Props) {
-  const { setAuthToken } = useAppState();
+  const { setAuth } = useAuth();
   const { mutateAsync, isPending } = useMutation({ mutationFn: postKakaoLogin });
 
   const loginWithKakao = async () => {
@@ -21,8 +20,8 @@ export function useKakaoLogin({ onLogin }: Props) {
 
       if (res.code === 2000) {
         const { accessToken, refreshToken, isExistUser } = res.data;
-        setAuthToken({ accessToken, refreshToken });
 
+        setAuth({ accessToken, refreshToken });
         onLogin(isExistUser ?? false);
       }
     } catch (e) {

@@ -1,4 +1,3 @@
-import { Auth } from '@shared/api/types';
 import { createContext, use } from 'react';
 
 export interface SessionContextType {

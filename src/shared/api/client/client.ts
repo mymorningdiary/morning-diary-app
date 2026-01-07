@@ -1,9 +1,10 @@
 import axios, { InternalAxiosRequestConfig } from 'axios';
 import * as SecureStore from 'expo-secure-store';
 import { API_URL } from '../../config';
-import { Logger } from '../../lib';
+
 import { ApiResponse, Auth } from '../types';
 import { getGlobalClearAuthTokenHandler, getGlobalSetAuthTokenHandler } from './handlers';
+import { Logger } from '@shared/lib/log';
 
 const INSTANCE_TIMEOUT = 10000;
 const INSTANCE_HEADER = {

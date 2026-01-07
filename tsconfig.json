@@ -5,7 +5,10 @@
     "strict": true,
     "paths": {
       "@pages/*": ["./src/pages/*"],
+      "@features/*": ["./src/features/*"],
+      "@entities/*": ["./src/entities/*"],
       "@shared/*": ["./src/shared/*"],
+
       "@assets/*": ["./assets/*"],
       "@/*": ["./*"], // 이게 앞에 있으면 다른 별칭이 꼬임
     }

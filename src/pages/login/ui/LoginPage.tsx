@@ -1,7 +1,9 @@
 import { StyleSheet, View } from 'react-native';
+import { router } from 'expo-router';
 
-import { IconKakao, IconMail } from '@assets/icons';
+import { IconMail } from '@assets/icons';
 
+import { KakaoLoginButton } from '@features/login';
 import { MDButton } from '@shared/ui/MDButton';
 import { MDLogo } from '@shared/ui/MDLogo';
 import { MDPage } from '@shared/ui/MDPage';
@@ -16,8 +18,13 @@ export function LoginPage() {
       <MDLogo style={styles.logoContent} />
 
       <View style={styles.buttonContent}>
-        <MDButton variant="outline" prefix={IconMail} label="이메일로 계속하기" />
-        <MDButton variant="kakao" prefix={IconKakao} label="카카오로 계속하기" />
+        <MDButton
+          variant="outline"
+          prefix={IconMail}
+          label="이메일로 계속하기"
+          onPress={() => router.push('/login-email')}
+        />
+        <KakaoLoginButton />
       </View>
 
       <TermsTextBox />

@@ -9,9 +9,16 @@ import { MDLogo } from '@shared/ui/MDLogo';
 import { MDPage } from '@shared/ui/MDPage';
 
 import { TermsTextBox } from './TermsTextBox';
+import { useToastStore } from '@shared/lib/toast';
 
 export function LoginPage() {
   const styles = PageStyles;
+  const { show } = useToastStore.getState();
+
+  const handleEmailPress = () => {
+    show({ message: 'A', variant: 'info' });
+    // router.push('/login-email');
+  };
 
   const handleLogin = (isExistUser: boolean) => {
     router.replace(isExistUser ? '/(app)' : '/(app)/alarm-permission');
@@ -26,7 +33,7 @@ export function LoginPage() {
           variant="outline"
           prefix={IconMail}
           label="이메일로 계속하기"
-          onPress={() => router.push('/login-email')}
+          onPress={handleEmailPress}
         />
         <KakaoLoginButton onLogin={handleLogin} />
       </View>

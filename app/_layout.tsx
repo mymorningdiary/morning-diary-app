@@ -14,6 +14,7 @@ import { useColorScheme } from 'react-native';
 import ForceUpdateScreen from './force-update';
 import { Logger } from '@/utils/logs';
 import analytics from '@react-native-firebase/analytics';
+import { MDToast } from '@shared/ui/MDToast';
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -94,6 +95,7 @@ function RootNavigator() {
         negativeButton={{ text: '취소', onPress: () => setShowUpdateAppModal(false) }}
         onClose={() => setShowUpdateAppModal(false)}
       />
+      <MDToast />
       <Stack screenOptions={{ headerShown: false }}>
         <Stack.Protected guard={hasVisited === false}>
           <Stack.Screen name="onboarding" />

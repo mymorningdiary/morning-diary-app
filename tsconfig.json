@@ -4,6 +4,7 @@
     "baseUrl": ".",
     "strict": true,
     "paths": {
+      "@application/*": ["./src/application/*"],
       "@pages/*": ["./src/pages/*"],
       "@features/*": ["./src/features/*"],
       "@entities/*": ["./src/entities/*"],

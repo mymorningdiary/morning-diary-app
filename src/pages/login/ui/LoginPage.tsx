@@ -3,25 +3,27 @@ import { router } from 'expo-router';
 
 import { IconMail } from '@assets/icons';
 
-import { KakaoLoginButton } from '@features/login';
 import { MDButton } from '@shared/ui/MDButton';
 import { MDLogo } from '@shared/ui/MDLogo';
 import { MDPage } from '@shared/ui/MDPage';
+import { useToastStore } from '@shared/lib/toast';
+import { KakaoLoginButton } from '@features/login';
 
 import { TermsTextBox } from './TermsTextBox';
-import { useToastStore } from '@shared/lib/toast';
 
 export function LoginPage() {
   const styles = PageStyles;
-  const { show } = useToastStore.getState();
 
   const handleEmailPress = () => {
-    show({ message: 'A', variant: 'info' });
-    // router.push('/login-email');
+    router.push('/login-email');
   };
 
-  const handleLogin = (isExistUser: boolean) => {
+  const handleLoginSuccess = (isExistUser: boolean) => {
     router.replace(isExistUser ? '/(app)' : '/(app)/alarm-permission');
+  };
+
+  const handleLoginError = (message: string) => {
+    useToastStore.getState().show({ message, variant: 'error' });
   };
 
   return (
@@ -35,7 +37,7 @@ export function LoginPage() {
           label="이메일로 계속하기"
           onPress={handleEmailPress}
         />
-        <KakaoLoginButton onLogin={handleLogin} />
+        <KakaoLoginButton onSuccess={handleLoginSuccess} onError={handleLoginError} />
       </View>
 
       <TermsTextBox />

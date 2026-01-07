@@ -3,18 +3,14 @@ import { MDButton } from '@shared/ui/MDButton';
 import { useKakaoLogin } from '../model/useKakaoLogin';
 
 interface Props {
-  onLogin: (isExistUser: boolean) => void;
+  onSuccess: (isExistUser: boolean) => void;
+  onError: (message: string) => void;
 }
 
-export function KakaoLoginButton({ onLogin }: Props) {
-  const { loginWithKakao } = useKakaoLogin({ onLogin });
+export function KakaoLoginButton({ onSuccess, onError }: Props) {
+  const { kakaoLogin } = useKakaoLogin({ onSuccess, onError });
 
   return (
-    <MDButton
-      variant="kakao"
-      prefix={IconKakao}
-      label={'카카오로 계속하기'}
-      onPress={loginWithKakao}
-    />
+    <MDButton variant="kakao" prefix={IconKakao} label={'카카오로 계속하기'} onPress={kakaoLogin} />
   );
 }

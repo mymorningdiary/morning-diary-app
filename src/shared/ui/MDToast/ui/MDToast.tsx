@@ -2,9 +2,9 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { Animated, Pressable, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { useThemeColor } from '@/hooks';
 import { useToastStore } from '@shared/lib/toast/store';
 import { MDText } from '@shared/ui/MDText';
+import { useThemeColor } from '@shared/lib/theme';
 
 const AUTO_HIDE_MS = 2000;
 const ANIMATION_MS = 200;
@@ -35,14 +35,14 @@ export function MDToast() {
         };
       case 'error':
         return {
-          backgroundColor: colors.fill.dim,
+          backgroundColor: 'black',
           textColor: colors.text.inversion,
           accentColor: 'red',
         };
       case 'info':
       default:
         return {
-          backgroundColor: colors.fill.dim,
+          backgroundColor: 'black',
           textColor: colors.text.inversion,
           accentColor: 'lightblue',
         };

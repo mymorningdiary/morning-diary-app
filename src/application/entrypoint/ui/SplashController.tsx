@@ -11,6 +11,10 @@ export function SplashController() {
   const isReady = !isSessionLoading && !isVisitedLoading;
 
   useEffect(() => {
+    void SplashScreen.preventAutoHideAsync();
+  }, []);
+
+  useEffect(() => {
     if (isReady) {
       void SplashScreen.hideAsync();
     }

@@ -1,20 +1,22 @@
+import * as Notifications from 'expo-notifications';
 import { useEffect } from 'react';
 import { useColorScheme } from 'react-native';
-import { SplashScreen } from 'expo-router';
-import * as Notifications from 'expo-notifications';
 
+import analytics from '@react-native-firebase/analytics';
+import { initializeKakaoSDK } from '@react-native-kakao/core';
 import { ThemeProvider } from '@react-navigation/native';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
-import { initializeKakaoSDK } from '@react-native-kakao/core';
-import analytics from '@react-native-firebase/analytics';
-
-import { NotificationProvider } from '@/contexts/NotificationContext';
-
-import { MDDarkTheme, MDLightTheme } from '@shared/lib/theme';
-import { Logger } from '@shared/lib/log';
 import { SessionProvider } from '@application/providers/SessionProvider';
 import { AppRouter } from '@application/routes';
+import { Logger } from '@shared/lib/log';
+import {
+  getPushToken,
+  registerNotificationListeners,
+  setupNotificationChannel,
+  useNotificationStore,
+} from '@shared/lib/notifications';
+import { MDDarkTheme, MDLightTheme } from '@shared/lib/theme';
 import { SplashController } from './SplashController';
 
 Notifications.setNotificationHandler({
@@ -31,10 +33,7 @@ const queryClient = new QueryClient();
 export function AppEntry() {
   const colorScheme = useColorScheme();
 
-  useEffect(() => {
-    void SplashScreen.preventAutoHideAsync();
-  }, []);
-
+  // Kakao SDK 초기화
   useEffect(() => {
     const kakaoAppKey = process.env.EXPO_PUBLIC_KAKAO_APP_KEY;
     if (kakaoAppKey) {
@@ -42,6 +41,7 @@ export function AppEntry() {
     }
   }, []);
 
+  // Firebase Analytics 초기화
   useEffect(() => {
     async function initializeAnalytics() {
       try {
@@ -51,17 +51,41 @@ export function AppEntry() {
         Logger('AppEntry').warn('Failed to initialize firebase analytics', error);
       }
     }
+
     initializeAnalytics();
+  }, []);
+
+  // Notification 초기화
+  useEffect(() => {
+    let cleanup: (() => void) | undefined;
+
+    const init = async () => {
+      await setupNotificationChannel();
+
+      const token = await getPushToken();
+      useNotificationStore.getState().setPushToken(token);
+
+      cleanup = registerNotificationListeners({
+        onReceive: (n) => useNotificationStore.getState().setNotification(n),
+        onResponse: (r) => {
+          Logger('Notification').debug('🔔 Notification Response', r);
+        },
+      });
+    };
+
+    init();
+
+    return () => {
+      if (cleanup) cleanup();
+    };
   }, []);
 
   return (
     <ThemeProvider value={colorScheme === 'dark' ? MDDarkTheme : MDLightTheme}>
       <QueryClientProvider client={queryClient}>
         <SessionProvider>
-          <NotificationProvider>
-            <SplashController />
-            <AppRouter />
-          </NotificationProvider>
+          <SplashController />
+          <AppRouter />
         </SessionProvider>
       </QueryClientProvider>
     </ThemeProvider>

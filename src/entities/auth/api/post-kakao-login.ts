@@ -1,4 +1,4 @@
-import { apiClient } from '@shared/api/client';
+import { instance } from '@shared/api/client';
 import { ApiResponse, Auth } from '@shared/api/types';
 
 interface PostAuthKakaoLoginRequest {
@@ -8,6 +8,6 @@ interface PostAuthKakaoLoginRequest {
 export const postKakaoLogin = async (
   body: PostAuthKakaoLoginRequest,
 ): Promise<ApiResponse<Auth>> => {
-  const response = await apiClient.post('/auth/kakao/login', body);
+  const response = await instance.post('/auth/kakao/login', body);
   return response.data;
 };

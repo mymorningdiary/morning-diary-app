@@ -1,5 +1,5 @@
-export type Auth = {
+export interface Auth {
   accessToken: string;
   refreshToken?: string;
   isExistUser?: boolean;
-};
+}

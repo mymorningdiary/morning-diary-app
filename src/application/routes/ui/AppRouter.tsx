@@ -1,18 +1,24 @@
 import { Logger } from '@/utils/logs';
 import { useVisited } from '@features/onboarding';
+import { useAuthStore } from '@shared/lib/auth';
+
 import { MDToast } from '@shared/ui/MDToast';
 import { Stack } from 'expo-router';
 import { useEffect } from 'react';
-import { useSession } from '../../providers/SessionProvider';
 
 export function AppRouter() {
-  const { session, isLoading: isSessionLoading } = useSession();
+  const accessToken = useAuthStore((s) => s.accessToken);
+  const isAuthLoaded = useAuthStore((s) => s.isAuthLoaded);
   const { isFirstVisit, isLoading: isVisitedLoading } = useVisited();
-  const isLoading = isSessionLoading || isVisitedLoading || isFirstVisit === null;
+  const isLoading = !isAuthLoaded || isVisitedLoading || isFirstVisit === null;
 
   useEffect(() => {
-    Logger('AppRouter').debug('session:', session, 'isFirstVisit:', isFirstVisit);
-  }, [session, isFirstVisit]);
+    Logger('AppRouter').debug('isAuthLoaded:', isAuthLoaded, 'accessToken:', accessToken);
+  }, [isAuthLoaded, accessToken]);
+
+  useEffect(() => {
+    Logger('AppRouter').debug('isFirstVisit:', isFirstVisit);
+  }, [isFirstVisit]);
 
   if (isLoading) {
     return null;
@@ -25,13 +31,13 @@ export function AppRouter() {
           <Stack.Screen name="onboarding" />
         </Stack.Protected>
 
-        <Stack.Protected guard={!session && isFirstVisit === false}>
+        <Stack.Protected guard={!accessToken && isFirstVisit === false}>
           <Stack.Screen name="login" />
           <Stack.Screen name="sign-in-email" />
           <Stack.Screen name="sign-up" />
         </Stack.Protected>
 
-        <Stack.Protected guard={!!session && isFirstVisit === false}>
+        <Stack.Protected guard={!!accessToken && isFirstVisit === false}>
           <Stack.Screen name="(app)" />
         </Stack.Protected>
 

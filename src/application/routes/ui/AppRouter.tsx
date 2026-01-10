@@ -1,4 +1,5 @@
 import { Logger } from '@/utils/logs';
+import { useAppVersion } from '@entities/version';
 import { useVisited } from '@features/onboarding';
 import { useAuthStore } from '@shared/lib/auth';
 
@@ -12,6 +13,8 @@ export function AppRouter() {
   const { isFirstVisit, isLoading: isVisitedLoading } = useVisited();
   const isLoading = !isAuthLoaded || isVisitedLoading || isFirstVisit === null;
 
+  const { versionStatus } = useAppVersion();
+
   useEffect(() => {
     Logger('AppRouter').debug('isAuthLoaded:', isAuthLoaded, 'accessToken:', accessToken);
   }, [isAuthLoaded, accessToken]);
@@ -22,6 +25,10 @@ export function AppRouter() {
 
   if (isLoading) {
     return null;
+  }
+
+  if (versionStatus === 'ok') {
+    return <></>;
   }
 
   return (

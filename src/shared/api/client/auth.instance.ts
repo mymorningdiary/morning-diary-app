@@ -38,7 +38,7 @@ authInstance.interceptors.request.use(
   },
 );
 
-// 여러 API가 동시에 여러 401이여도 refresh 요청은 1번만 수행, 나머지는 요청을 기다렸다가 재시도
+// 여러 API가 동시에 401이여도 refresh 요청은 1번만 수행, 나머지는 요청을 기다렸다가 재시도
 let refreshPromise: Promise<string> | null = null;
 
 authInstance.interceptors.response.use(
@@ -62,6 +62,10 @@ authInstance.interceptors.response.use(
       // RETRY: 이전 refresh 완료 직후 도착한 401은 최신 토큰으로 재시도
       if (currentAccessToken && sentAccessToken !== `Bearer ${currentAccessToken}`) {
         // 이미 최신 토큰이 있다면 refresh 없이 재시도
+        Logger('authInstance').debug('retry request without refreshing', {
+          url: `${originalRequest.baseURL ?? ''}${originalRequest.url ?? ''}`,
+        });
+
         originalRequest.headers = setAuthHeader(originalRequest.headers, currentAccessToken);
         return authInstance(originalRequest);
       }

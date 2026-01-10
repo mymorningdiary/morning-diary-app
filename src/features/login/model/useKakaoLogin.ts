@@ -29,7 +29,7 @@ export function useKakaoLogin({ onSuccess, onError }: Props) {
         onError('카카오 로그인에 실패했습니다');
       }
     } catch (e) {
-      Logger('useKakaoLogin').warn('Failed to kakao login', e);
+      Logger('useKakaoLogin').error('Failed to kakao login', e);
       onError('카카오 로그인에 실패했습니다');
     }
   };

@@ -10,7 +10,7 @@ export function ForceUpdatePage() {
 
   return (
     <MDPage style={styles.container}>
-      <View>
+      <View style={styles.textContent}>
         <MDText type="titleSemiBold" align="center">
           {`새로운 버전이 나왔어요!`}
         </MDText>

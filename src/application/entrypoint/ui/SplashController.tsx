@@ -8,7 +8,7 @@ export function SplashController() {
   const isAuthLoaded = useAuthStore((s) => s.isAuthLoaded);
   const { isLoading: isVisitedLoading } = useVisited();
 
-  const isReady = !isAuthLoaded && !isVisitedLoading;
+  const isReady = isAuthLoaded && !isVisitedLoading;
 
   useEffect(() => {
     void SplashScreen.preventAutoHideAsync();

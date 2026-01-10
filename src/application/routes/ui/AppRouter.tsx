@@ -1,6 +1,7 @@
 import { Logger } from '@/utils/logs';
 import { useAppVersion } from '@entities/version';
 import { useVisited } from '@features/onboarding';
+import { ForceUpdatePage } from '@pages/force-update';
 import { useAuthStore } from '@shared/lib/auth';
 
 import { MDToast } from '@shared/ui/MDToast';
@@ -27,8 +28,8 @@ export function AppRouter() {
     return null;
   }
 
-  if (versionStatus === 'ok') {
-    return <></>;
+  if (versionStatus === 'force') {
+    return <ForceUpdatePage />;
   }
 
   return (

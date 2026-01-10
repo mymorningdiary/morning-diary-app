@@ -23,13 +23,13 @@ export function compareAppVersion(appVersion: AppVersion): VersionStatus {
     const localVersion = Application.nativeApplicationVersion;
     if (localVersion === null) return 'ok';
 
-    Logger('AppState').debug(
-      'remote',
+    Logger('compare-app-version').debug(
+      'remote:',
       {
         version: remoteVersion,
         minVersion: remoteMinVersion,
       },
-      'local',
+      '/ local:',
       {
         version: localVersion,
       },
@@ -47,7 +47,7 @@ export function compareAppVersion(appVersion: AppVersion): VersionStatus {
 
     return 'ok';
   } catch (e) {
-    Logger('AppStateProvider').error('Failed to compare version', e);
+    Logger('compare-app-version').error('Failed to compare version', e);
     return 'ok';
   }
 }

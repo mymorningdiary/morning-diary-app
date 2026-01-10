@@ -7,7 +7,6 @@ import { initializeKakaoSDK } from '@react-native-kakao/core';
 import { ThemeProvider } from '@react-navigation/native';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
-import { SessionProvider } from '@application/providers/SessionProvider';
 import { AppRouter } from '@application/routes';
 import { Logger } from '@shared/lib/log';
 import {
@@ -83,10 +82,8 @@ export function AppEntry() {
   return (
     <ThemeProvider value={colorScheme === 'dark' ? MDDarkTheme : MDLightTheme}>
       <QueryClientProvider client={queryClient}>
-        <SessionProvider>
-          <SplashController />
-          <AppRouter />
-        </SessionProvider>
+        <SplashController />
+        <AppRouter />
       </QueryClientProvider>
     </ThemeProvider>
   );

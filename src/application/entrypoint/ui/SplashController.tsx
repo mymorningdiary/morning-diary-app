@@ -1,14 +1,14 @@
 import { SplashScreen } from 'expo-router';
 import { useEffect } from 'react';
 
-import { useSession } from '@application/providers/SessionProvider';
 import { useVisited } from '@features/onboarding';
+import { useAuthStore } from '@shared/lib/auth';
 
 export function SplashController() {
-  const { isLoading: isSessionLoading } = useSession();
+  const isAuthLoaded = useAuthStore((s) => s.isAuthLoaded);
   const { isLoading: isVisitedLoading } = useVisited();
 
-  const isReady = !isSessionLoading && !isVisitedLoading;
+  const isReady = !isAuthLoaded && !isVisitedLoading;
 
   useEffect(() => {
     void SplashScreen.preventAutoHideAsync();

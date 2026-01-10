@@ -9,10 +9,8 @@ interface AuthState {
   accessToken: string | null;
   refreshToken: string | null;
   isAuthLoaded: boolean;
-  setAccessToken: (accessToken: string) => void;
-  setRefreshToken: (refreshToken: string) => void;
-  removeAccessToken: () => void;
-  removeRefreshToken: () => void;
+  setAccessToken: (accessToken: string | null) => void;
+  setRefreshToken: (refreshToken: string | null) => void;
   setIsAuthLoaded: (isAuthLoaded: boolean) => void;
 }
 
@@ -41,8 +39,6 @@ export const useAuthStore = create<AuthState>()(
       isAuthLoaded: false,
       setAccessToken: (accessToken) => set({ accessToken }),
       setRefreshToken: (refreshToken) => set({ refreshToken }),
-      removeAccessToken: () => set({ accessToken: null }),
-      removeRefreshToken: () => set({ refreshToken: null }),
       setIsAuthLoaded: (isAuthLoaded) => set({ isAuthLoaded }),
     }),
     {

@@ -1,15 +1,16 @@
 import { Auth } from '@shared/api/types';
-import { useStorageState } from '@shared/lib/store';
+import { useAuthStore } from '@shared/lib/auth';
 
 export function useAuth() {
-  const [[isLoading, accessToken], setAccessToken] = useStorageState('accessToken');
-  const [_, setRefreshToken] = useStorageState('refreshToken');
+  const accessToken = useAuthStore((s) => s.accessToken);
+  const refreshToken = useAuthStore((s) => s.refreshToken);
+  const isLoading = useAuthStore((s) => !s.isAuthLoaded);
+  const setAccessToken = useAuthStore((s) => s.setAccessToken);
+  const setRefreshToken = useAuthStore((s) => s.setRefreshToken);
 
   const setAuth = ({ accessToken, refreshToken }: Auth) => {
     setAccessToken(accessToken);
-    if (refreshToken) {
-      setRefreshToken(refreshToken);
-    }
+    setRefreshToken(refreshToken ?? null);
   };
 
   const clearAuth = () => {
@@ -17,5 +18,5 @@ export function useAuth() {
     setRefreshToken(null);
   };
 
-  return { accessToken, isLoading, setAuth, clearAuth };
+  return { accessToken, refreshToken, isLoading, setAuth, clearAuth };
 }

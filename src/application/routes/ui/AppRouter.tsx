@@ -1,8 +1,9 @@
 import { Logger } from '@/utils/logs';
+import { useAuth } from '@entities/auth';
 import { useAppVersion } from '@entities/version';
 import { useVisited } from '@features/onboarding';
 import { ForceUpdatePage } from '@pages/force-update';
-import { useAuthStore } from '@shared/lib/auth';
+
 import { openMarketApp } from '@shared/lib/links';
 
 import { MDToast } from '@shared/ui/MDToast';
@@ -11,8 +12,7 @@ import { SplashScreen, Stack } from 'expo-router';
 import { useEffect, useState } from 'react';
 
 export function AppRouter() {
-  const accessToken = useAuthStore((s) => s.accessToken);
-  const isAuthLoaded = useAuthStore((s) => s.isAuthLoaded);
+  const { accessToken, isLoaded: isAuthLoaded } = useAuth();
   const { isFirstVisit, isLoaded: isVisitLoaded } = useVisited();
   const isReady = isAuthLoaded && isVisitLoaded;
 

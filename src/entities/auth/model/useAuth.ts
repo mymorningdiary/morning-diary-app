@@ -4,7 +4,7 @@ import { useAuthStore } from '@shared/lib/auth';
 export function useAuth() {
   const accessToken = useAuthStore((s) => s.accessToken);
   const refreshToken = useAuthStore((s) => s.refreshToken);
-  const isLoading = useAuthStore((s) => !s.isAuthLoaded);
+  const isLoaded = useAuthStore((s) => s.isAuthLoaded);
   const setAccessToken = useAuthStore((s) => s.setAccessToken);
   const setRefreshToken = useAuthStore((s) => s.setRefreshToken);
 
@@ -18,5 +18,5 @@ export function useAuth() {
     setRefreshToken(null);
   };
 
-  return { accessToken, refreshToken, isLoading, setAuth, clearAuth };
+  return { accessToken, refreshToken, isLoaded, setAuth, clearAuth };
 }

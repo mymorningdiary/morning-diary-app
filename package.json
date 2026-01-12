@@ -67,6 +67,7 @@
   "devDependencies": {
     "@babel/core": "^7.25.2",
     "@csark0812/zustand-expo-devtools": "^2.1.6",
+    "@dev-plugins/react-query": "^0.4.0",
     "@types/jest": "^29.5.12",
     "@types/react": "~19.0.10",
     "babel-plugin-module-resolver": "^5.0.2",

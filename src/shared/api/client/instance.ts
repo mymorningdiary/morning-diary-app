@@ -15,7 +15,7 @@ export const instance = axios.create({
 
 instance.interceptors.request.use(
   async (config) => {
-    Logger('instance').debug(`${config.method?.toUpperCase()} ${config.baseURL}${config.url}`, {
+    Logger('AXIOS').debug(`${config.method?.toUpperCase()} ${config.baseURL}${config.url}`, {
       params: config.params,
       data: config.data,
     });
@@ -32,7 +32,7 @@ instance.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config;
 
-    Logger('instance').debug('response error', {
+    Logger('AXIOS').debug('response error', {
       status: error.response?.status,
       url: `${originalRequest?.baseURL ?? ''}${originalRequest?.url ?? ''}`,
       retry: originalRequest?._retry,

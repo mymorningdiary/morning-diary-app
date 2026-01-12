@@ -17,7 +17,6 @@ import {
   useNotificationStore,
 } from '@shared/lib/notifications';
 import { MDDarkTheme, MDLightTheme } from '@shared/lib/theme';
-import { SplashController } from './SplashController';
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -85,7 +84,6 @@ export function AppEntry() {
   return (
     <ThemeProvider value={colorScheme === 'dark' ? MDDarkTheme : MDLightTheme}>
       <QueryClientProvider client={queryClient}>
-        <SplashController />
         <AppRouter />
       </QueryClientProvider>
     </ThemeProvider>

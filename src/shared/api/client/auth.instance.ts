@@ -22,7 +22,7 @@ authInstance.interceptors.request.use(
     const accessToken = useAuthStore.getState().accessToken;
 
     // 요청 기본 정보 로그
-    Logger('authInstance').debug(`${config.method?.toUpperCase()} ${config.baseURL}${config.url}`, {
+    Logger('AXIOS(AUTH)').debug(`${config.method?.toUpperCase()} ${config.baseURL}${config.url}`, {
       params: config.params,
       data: config.data,
     });
@@ -49,7 +49,7 @@ authInstance.interceptors.response.use(
     const sentAccessToken = AxiosHeaders.from(originalRequest.headers ?? {}).get('Authorization');
 
     // 응답 에러 로그
-    Logger('authInstance').debug('response error', {
+    Logger('AXIOS(AUTH)').debug('response error', {
       status: error.response?.status,
       url: `${originalRequest?.baseURL ?? ''}${originalRequest?.url ?? ''}`,
       retry: originalRequest?._retry,
@@ -62,7 +62,7 @@ authInstance.interceptors.response.use(
       // RETRY: 이전 refresh 완료 직후 도착한 401은 최신 토큰으로 재시도
       if (currentAccessToken && sentAccessToken !== `Bearer ${currentAccessToken}`) {
         // 이미 최신 토큰이 있다면 refresh 없이 재시도
-        Logger('authInstance').debug('retry request without refreshing', {
+        Logger('AXIOS(AUTH)').debug('retry request without refreshing', {
           url: `${originalRequest.baseURL ?? ''}${originalRequest.url ?? ''}`,
         });
 
@@ -71,7 +71,7 @@ authInstance.interceptors.response.use(
       }
 
       // REFRESH 시작 로그
-      Logger('authInstance').debug('refresh start', {
+      Logger('AXIOS(AUTH)').debug('refresh start', {
         url: `${originalRequest.baseURL ?? ''}${originalRequest.url ?? ''}`,
       });
 
@@ -88,14 +88,14 @@ authInstance.interceptors.response.use(
         originalRequest.headers = setAuthHeader(originalRequest.headers, newAccessToken);
 
         // REFRESH 이후 원 요청 재시도
-        Logger('authInstance').debug('retry request', {
+        Logger('AXIOS(AUTH)').debug('retry request', {
           url: `${originalRequest.baseURL ?? ''}${originalRequest.url ?? ''}`,
         });
 
         return authInstance(originalRequest);
       } catch (error) {
         // REFRESH 실패 시 인증 상태 초기화
-        Logger('authInstance').error('refresh failed', error);
+        Logger('AXIOS(AUTH)').error('refresh failed', error);
         useAuthStore.setState({ accessToken: null });
         useAuthStore.setState({ refreshToken: null });
       }

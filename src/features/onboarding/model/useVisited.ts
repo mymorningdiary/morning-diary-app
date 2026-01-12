@@ -1,28 +1,28 @@
 import { Logger } from '@/utils/logs';
 import { useCallback, useEffect, useState } from 'react';
-import { getIsFirstVisit, setIsFirstVisit } from '../api/storage';
+import { loadIsFirstVisit, saveIsFirstVisit } from '../api/storage';
 
 export function useVisited() {
-  const [isFirstVisit, setIsFirstVisitState] = useState<boolean | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isFirstVisit, setIsFirstVisit] = useState<boolean | null>(null);
+  const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
     let isMounted = true;
 
     (async () => {
       try {
-        const firstVisit = await getIsFirstVisit();
+        const firstVisit = await loadIsFirstVisit();
         if (isMounted) {
-          setIsFirstVisitState(firstVisit);
+          setIsFirstVisit(firstVisit);
         }
       } catch (error) {
         Logger('useVisited').error('Failed to read visited state', error);
         if (isMounted) {
-          setIsFirstVisitState(true);
+          setIsFirstVisit(true);
         }
       } finally {
         if (isMounted) {
-          setIsLoading(false);
+          setIsLoaded(true);
         }
       }
     })();
@@ -35,18 +35,18 @@ export function useVisited() {
   const markVisited = useCallback(() => {
     (async () => {
       try {
-        await setIsFirstVisit(false);
+        await saveIsFirstVisit(false);
       } catch (error) {
         Logger('useVisited').error('Failed to store visited state', error);
       } finally {
-        setIsFirstVisitState(false);
+        setIsFirstVisit(false);
       }
     })();
   }, []);
 
   return {
     isFirstVisit,
-    isLoading,
+    isLoaded,
     markVisited,
   };
 }

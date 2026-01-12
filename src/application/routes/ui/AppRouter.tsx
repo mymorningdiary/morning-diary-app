@@ -7,23 +7,17 @@ import { openMarketApp } from '@shared/lib/links';
 
 import { MDToast } from '@shared/ui/MDToast';
 import { MDModal } from '@shared/ui/Modal';
-import { Stack } from 'expo-router';
+import { SplashScreen, Stack } from 'expo-router';
 import { useEffect, useState } from 'react';
 
 export function AppRouter() {
   const accessToken = useAuthStore((s) => s.accessToken);
   const isAuthLoaded = useAuthStore((s) => s.isAuthLoaded);
-  const { isFirstVisit, isLoading: isVisitedLoading } = useVisited();
-  const isLoading = !isAuthLoaded || isVisitedLoading || isFirstVisit === null;
+  const { isFirstVisit, isLoaded: isVisitLoaded } = useVisited();
+  const isReady = isAuthLoaded && isVisitLoaded;
 
   const { versionStatus } = useAppVersion();
   const [showUpdateModal, setShowUpdateModal] = useState(false);
-
-  useEffect(() => {
-    if (versionStatus === 'warn') {
-      setShowUpdateModal(true);
-    }
-  }, [versionStatus]);
 
   useEffect(() => {
     Logger('AppRouter').debug('isAuthLoaded:', isAuthLoaded, 'accessToken:', accessToken);
@@ -33,7 +27,23 @@ export function AppRouter() {
     Logger('AppRouter').debug('isFirstVisit:', isFirstVisit);
   }, [isFirstVisit]);
 
-  if (isLoading) {
+  useEffect(() => {
+    void SplashScreen.preventAutoHideAsync();
+  }, []);
+
+  useEffect(() => {
+    if (isReady) {
+      void SplashScreen.hideAsync();
+    }
+  }, [isReady]);
+
+  useEffect(() => {
+    if (versionStatus === 'warn') {
+      setShowUpdateModal(true);
+    }
+  }, [versionStatus]);
+
+  if (!isReady) {
     return null;
   }
 

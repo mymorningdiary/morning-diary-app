@@ -2,11 +2,11 @@ import * as Notifications from 'expo-notifications';
 import { useEffect } from 'react';
 import { useColorScheme } from 'react-native';
 
-import analytics from '@react-native-firebase/analytics';
 import { initializeKakaoSDK } from '@react-native-kakao/core';
 import { ThemeProvider } from '@react-navigation/native';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useReactQueryDevTools } from '@dev-plugins/react-query';
+import firebase from '@shared/lib/firebase';
 
 import { AppRouter } from '@application/routes';
 import { Logger } from '@shared/lib/log';
@@ -47,7 +47,7 @@ export function AppEntry() {
   useEffect(() => {
     async function initializeAnalytics() {
       try {
-        await analytics().setAnalyticsCollectionEnabled(true);
+        await firebase.analytics().setAnalyticsCollectionEnabled(true);
         Logger('AppEntry').debug('Success to initialize firebase analytics');
       } catch (error) {
         Logger('AppEntry').warn('Failed to initialize firebase analytics', error);

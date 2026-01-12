@@ -1,7 +1,8 @@
 import { Platform } from 'react-native';
-import { create } from 'zustand';
+import { create, type StateCreator } from 'zustand';
 import * as SecureStore from 'expo-secure-store';
 import { persist, createJSONStorage } from 'zustand/middleware';
+import { devtools } from '@csark0812/zustand-expo-devtools';
 
 // FSD 예외: 도메인 로직 -> entities/auth에 위치해야 하나 shared/api에서 필요해 shared/lib에 위치
 // 대안으로 app 레이어 provider 주입을 고려했으나 흐름이 직관적이지 않아 제외
@@ -31,26 +32,34 @@ const storage = createJSONStorage<AuthPersist>(() => ({
   },
 }));
 
-export const useAuthStore = create<AuthState>()(
-  persist(
-    (set, get) => ({
-      accessToken: null,
-      refreshToken: null,
-      isAuthLoaded: false,
-      setAccessToken: (accessToken) => set({ accessToken }),
-      setRefreshToken: (refreshToken) => set({ refreshToken }),
-      setIsAuthLoaded: (isAuthLoaded) => set({ isAuthLoaded }),
+const authPersist = persist(
+  (set, get) => ({
+    accessToken: null,
+    refreshToken: null,
+    isAuthLoaded: false,
+    setAccessToken: (accessToken: string | null) => set({ accessToken }),
+    setRefreshToken: (refreshToken: string | null) => set({ refreshToken }),
+    setIsAuthLoaded: (isAuthLoaded: boolean) => set({ isAuthLoaded }),
+  }),
+  {
+    name: 'auth-store',
+    partialize: (state: AuthState): AuthPersist => ({
+      accessToken: state.accessToken,
+      refreshToken: state.refreshToken,
     }),
-    {
-      name: 'auth-store',
-      partialize: (state): AuthPersist => ({
-        accessToken: state.accessToken,
-        refreshToken: state.refreshToken,
-      }),
-      storage,
-      onRehydrateStorage: (state) => {
-        return () => state.setIsAuthLoaded(true);
-      },
+    storage,
+    onRehydrateStorage: (state) => {
+      return () => state.setIsAuthLoaded(true);
     },
-  ),
+  },
 );
+
+const authStoreCreator: StateCreator<AuthState, [], [['zustand/persist', AuthPersist]]> = __DEV__
+  ? (devtools(authPersist, { name: 'auth-store' }) as StateCreator<
+      AuthState,
+      [],
+      [['zustand/persist', AuthPersist]]
+    >)
+  : authPersist;
+
+export const useAuthStore = create<AuthState>()(authStoreCreator);

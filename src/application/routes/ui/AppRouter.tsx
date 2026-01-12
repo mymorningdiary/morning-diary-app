@@ -3,8 +3,10 @@ import { useAppVersion } from '@entities/version';
 import { useVisited } from '@features/onboarding';
 import { ForceUpdatePage } from '@pages/force-update';
 import { useAuthStore } from '@shared/lib/auth';
+import { openMarketApp } from '@shared/lib/links';
 
 import { MDToast } from '@shared/ui/MDToast';
+import { MDModal } from '@shared/ui/Modal';
 import { Stack } from 'expo-router';
 import { useEffect } from 'react';
 
@@ -52,6 +54,14 @@ export function AppRouter() {
         <Stack.Screen name="web-view" />
       </Stack>
       <MDToast />
+      <MDModal
+        visible={true}
+        title={'새로운 버전이 나왔어요!'}
+        subtitle={`아침일기가 사용성 개선을 위해 업데이트를 준비했어요. 지금 바로 만나보세요 🌞`}
+        positive={{ text: '업데이트 하기', onPress: openMarketApp }}
+        negative={{ text: '취소', onPress: () => {} }}
+        onClose={() => {}}
+      />
     </>
   );
 }

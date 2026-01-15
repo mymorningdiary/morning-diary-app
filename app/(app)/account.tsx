@@ -1,5 +1,4 @@
 import { MDText } from '@/components';
-import { useAppState } from '@/contexts/AppStateContext';
 import { useUser } from '@/contexts/UserContext';
 import { authAPI } from '@/core/api';
 import LogoutModal from '@/domain/setting/LogoutModal';
@@ -8,14 +7,15 @@ import SettingSection from '@/domain/setting/SettingSection';
 import SettingSectionListItem from '@/domain/setting/SettingSectionListItem';
 import { useThemeColor } from '@/hooks';
 import { MDColors } from '@/types';
+import { Logger } from '@/utils/logs';
+import { useAuth } from '@entities/auth';
+import { logout } from '@react-native-kakao/user';
 import { useMutation } from '@tanstack/react-query';
 import { Image } from 'expo-image';
 import { router } from 'expo-router';
 import { useCallback, useState } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { logout } from '@react-native-kakao/user';
-import { Logger } from '@/utils/logs';
 
 export default function AccountScreen() {
   const colors = useThemeColor();
@@ -23,7 +23,8 @@ export default function AccountScreen() {
 
   const [isOpenLogoutModal, setIsOpenLogoutModal] = useState(false);
 
-  const { clearAuthToken } = useAppState();
+  // const { clearAuthToken } = useAppState();
+  const { clearAuth } = useAuth();
   const { user } = useUser();
 
   const { mutateAsync } = useMutation({
@@ -51,7 +52,7 @@ export default function AccountScreen() {
       const response = await mutateAsync();
 
       if (response.code === 2000) {
-        clearAuthToken();
+        clearAuth();
         if (user?.loginType === 'KAKAO') {
           await logout();
         }

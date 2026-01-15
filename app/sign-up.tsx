@@ -1,13 +1,13 @@
 import { MDButton, MDText } from '@/components';
 import MDTextField from '@/components/MDTextField';
-import { useAppState } from '@/contexts/AppStateContext';
-import { ApiError, authAPI } from '@/core/api';
+import { authAPI } from '@/core/api';
 import mailAPI from '@/core/api/mail/apis';
 import SignUpAppBar from '@/domain/sign-up/components/SignUpAppBar';
 import { useThemeColor } from '@/hooks';
 import { MDColors } from '@/types';
 import { msToMMSS } from '@/utils/dates';
 import { Logger } from '@/utils/logs';
+import { useAuth } from '@entities/auth';
 import { useMutation } from '@tanstack/react-query';
 import { router } from 'expo-router';
 import { useEffect, useMemo, useRef, useState } from 'react';
@@ -62,7 +62,8 @@ export default function SignUpScreen() {
   const { mutateAsync: signUp, isPending: isSignUpPending } = useMutation({
     mutationFn: authAPI.postSignUp,
   });
-  const { setAuthToken } = useAppState();
+  // const { setAuthToken } = useAppState();
+  const { setAuth } = useAuth();
 
   const [email, setEmail] = useState<FormFieldState>({
     value: '',
@@ -251,7 +252,7 @@ export default function SignUpScreen() {
       if (res.code === 2000) {
         const { accessToken, refreshToken, isExistUser } = res.data;
 
-        setAuthToken({ accessToken, refreshToken });
+        setAuth({ accessToken, refreshToken });
         if (isExistUser) {
           router.replace('/(app)');
         } else {

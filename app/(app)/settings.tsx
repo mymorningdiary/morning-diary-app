@@ -1,6 +1,5 @@
 import { MDPressable, MDSwitch, MDText } from '@/components';
 import MDDefaultModal from '@/components/Modal/MDDefaultModal';
-import { useAppState } from '@/contexts/AppStateContext';
 import { useNotification } from '@/contexts/NotificationContext';
 import { appManager } from '@/core/storage';
 import SettingAppBar from '@/domain/setting/SettingAppBar';
@@ -10,16 +9,17 @@ import { useThemeColor, useUpdatePushToken } from '@/hooks';
 import { MDColors } from '@/types';
 import { openStoreLink } from '@/utils/links';
 import * as Application from 'expo-application';
+import Constants from 'expo-constants';
 import { Image } from 'expo-image';
 import * as Notifications from 'expo-notifications';
 import { router } from 'expo-router';
 import { useEffect, useMemo, useState } from 'react';
 import { Linking, ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import Constants from 'expo-constants';
 
-import crashlytics from '@react-native-firebase/crashlytics';
 import { Logger } from '@/utils/logs';
+import { useAppVersion } from '@entities/version';
+import crashlytics from '@react-native-firebase/crashlytics';
 const APP_VARIANT = Constants.expoConfig?.extra?.appVariant;
 
 export default function SettingsScreen() {
@@ -32,7 +32,9 @@ export default function SettingsScreen() {
   const { pushToken } = useNotification();
   const { mutate: updatePushToken } = useUpdatePushToken();
 
-  const { isUpdateNeeded } = useAppState();
+  // const { isUpdateNeeded } = useAppState();
+  const { versionStatus } = useAppVersion();
+  const isUpdateNeeded = versionStatus !== 'ok';
 
   const UpdateAppComponent = useMemo(() => {
     return (

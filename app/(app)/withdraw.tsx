@@ -1,22 +1,23 @@
 import { MDButton, MDText, MDView } from '@/components';
-import { useAppState } from '@/contexts/AppStateContext';
 import { userAPI } from '@/core/api';
 import SettingAppBar from '@/domain/setting/SettingAppBar';
 import { useThemeColor } from '@/hooks';
 import { MDColors } from '@/types';
+import { Logger } from '@/utils/logs';
+import { useAuth } from '@entities/auth';
+import { logout } from '@react-native-kakao/user';
 import { useMutation } from '@tanstack/react-query';
 import { router } from 'expo-router';
 import { StyleSheet, View } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
-import { logout } from '@react-native-kakao/user';
-import { Logger } from '@/utils/logs';
 
 export default function WithdrawScreen() {
   const colors = useThemeColor();
   const insets = useSafeAreaInsets();
   const styles = ScreenStyles({ colors, bottomInset: insets.bottom });
 
-  const { clearAuthToken } = useAppState();
+  // const { clearAuthToken } = useAppState();
+  const { clearAuth } = useAuth();
 
   const { mutate } = useMutation({
     mutationFn: () => userAPI.deleteUser(),
@@ -24,7 +25,7 @@ export default function WithdrawScreen() {
       if (res.code === 2000) {
         try {
           await logout();
-          clearAuthToken();
+          clearAuth();
         } catch (e) {
           Logger('WithdrawScreen').error('Failed to sign out', e);
         }

@@ -1,9 +1,9 @@
 import { MDButton, MDLargeSpeechBubble, MDPressable, MDRow, MDText } from '@/components';
-import { useNotification } from '@/contexts/NotificationContext';
 import { appManager } from '@/core/storage';
 import { useThemeColor, useUpdatePushToken } from '@/hooks';
 import { MDColors } from '@/types';
 import { Logger } from '@/utils/logs';
+import { useNotificationStore } from '@shared/lib/notifications';
 import { Image } from 'expo-image';
 import * as Notifications from 'expo-notifications';
 import { router } from 'expo-router';
@@ -15,7 +15,8 @@ export default function AlarmPermissionScreen() {
   const insets = useSafeAreaInsets();
   const styles = ScreenStyles({ colors, bottomInset: insets.bottom });
 
-  const { pushToken } = useNotification();
+  // const { pushToken } = useNotification();
+  const pushToken = useNotificationStore((s) => s.pushToken);
   const { mutate: updatePushToken } = useUpdatePushToken();
 
   const onSkipButtonPress = () => {

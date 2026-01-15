@@ -1,6 +1,5 @@
 import { MDPressable, MDSwitch, MDText } from '@/components';
 import MDDefaultModal from '@/components/Modal/MDDefaultModal';
-import { useNotification } from '@/contexts/NotificationContext';
 import { appManager } from '@/core/storage';
 import SettingAppBar from '@/domain/setting/SettingAppBar';
 import SettingSection from '@/domain/setting/SettingSection';
@@ -20,6 +19,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Logger } from '@/utils/logs';
 import { useAppVersion } from '@entities/version';
 import crashlytics from '@react-native-firebase/crashlytics';
+import { useNotificationStore } from '@shared/lib/notifications';
 const APP_VARIANT = Constants.expoConfig?.extra?.appVariant;
 
 export default function SettingsScreen() {
@@ -29,7 +29,8 @@ export default function SettingsScreen() {
   const [showPermissionModal, setShowPermissionModal] = useState(false);
   const [isAlarmOn, setIsAlarmOn] = useState<boolean | null>(null);
 
-  const { pushToken } = useNotification();
+  // const { pushToken } = useNotification();
+  const pushToken = useNotificationStore((s) => s.pushToken);
   const { mutate: updatePushToken } = useUpdatePushToken();
 
   // const { isUpdateNeeded } = useAppState();

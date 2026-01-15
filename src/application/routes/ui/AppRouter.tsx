@@ -3,6 +3,7 @@ import { useAuth } from '@entities/auth';
 import { useAppVersion } from '@entities/version';
 import { useVisited } from '@features/onboarding';
 import { ForceUpdatePage } from '@pages/force-update';
+import { getKeyHashAndroid } from '@react-native-kakao/core';
 
 import { openMarketApp } from '@shared/lib/links';
 
@@ -43,6 +44,14 @@ export function AppRouter() {
     }
   }, [versionStatus]);
 
+  useEffect(() => {
+    const getToken = async () => {
+      const token = await getKeyHashAndroid();
+      console.log(token);
+    };
+    getToken();
+  }, []);
+
   if (!isReady) {
     return null;
   }
@@ -60,7 +69,7 @@ export function AppRouter() {
 
         <Stack.Protected guard={!accessToken && isFirstVisit === false}>
           <Stack.Screen name="login" />
-          <Stack.Screen name="sign-in-email" />
+          <Stack.Screen name="login-email" />
           <Stack.Screen name="sign-up" />
         </Stack.Protected>
 

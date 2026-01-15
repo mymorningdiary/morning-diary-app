@@ -42,7 +42,15 @@ authInstance.interceptors.request.use(
 let refreshPromise: Promise<string> | null = null;
 
 authInstance.interceptors.response.use(
-  (response) => response,
+  (response) => {
+    Logger('AXIOS(AUTH)').debug('response', {
+      status: response.status,
+      url: `${response.config.baseURL ?? ''}${response.config.url ?? ''}`,
+      data: response.data,
+    });
+
+    return response;
+  },
   async (error) => {
     const originalRequest = error.config;
     const currentAccessToken = useAuthStore.getState().accessToken;

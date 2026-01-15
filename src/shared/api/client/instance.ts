@@ -28,7 +28,15 @@ instance.interceptors.request.use(
 );
 
 instance.interceptors.response.use(
-  (response) => response,
+  (response) => {
+    Logger('AXIOS').debug('response', {
+      status: response.status,
+      url: `${response.config.baseURL ?? ''}${response.config.url ?? ''}`,
+      data: response.data,
+    });
+
+    return response;
+  },
   async (error) => {
     const originalRequest = error.config;
 

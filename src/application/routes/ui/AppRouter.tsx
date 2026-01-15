@@ -20,11 +20,11 @@ export function AppRouter() {
   const [showUpdateModal, setShowUpdateModal] = useState(false);
 
   useEffect(() => {
-    Logger('AppRouter').debug('isAuthLoaded:', isAuthLoaded, 'accessToken:', accessToken);
+    Logger('AppRouter').debug('isAuthLoaded:', isAuthLoaded, ', accessToken:', accessToken);
   }, [isAuthLoaded, accessToken]);
 
   useEffect(() => {
-    Logger('AppRouter').debug('isVisitLoaded:', isVisitLoaded, 'isFirstVisit:', isFirstVisit);
+    Logger('AppRouter').debug('isVisitLoaded:', isVisitLoaded, ', isFirstVisit:', isFirstVisit);
   }, [isVisitLoaded, isFirstVisit]);
 
   useEffect(() => {

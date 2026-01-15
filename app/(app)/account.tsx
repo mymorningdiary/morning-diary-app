@@ -1,5 +1,5 @@
 import { MDText } from '@/components';
-import { useUser } from '@/contexts/UserContext';
+
 import { authAPI } from '@/core/api';
 import LogoutModal from '@/domain/setting/LogoutModal';
 import SettingAppBar from '@/domain/setting/SettingAppBar';
@@ -9,6 +9,7 @@ import { useThemeColor } from '@/hooks';
 import { MDColors } from '@/types';
 import { Logger } from '@/utils/logs';
 import { useAuth } from '@entities/auth';
+import { useUser } from '@entities/user';
 import { logout } from '@react-native-kakao/user';
 import { useMutation } from '@tanstack/react-query';
 import { Image } from 'expo-image';

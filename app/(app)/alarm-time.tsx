@@ -1,8 +1,9 @@
 import { MDButton, MDLargeSpeechBubble, MDPressable, MDRow, MDText } from '@/components';
-import { useUser } from '@/contexts/UserContext';
+
 import NotificationAppBar from '@/domain/notification/NotificationAppBar';
 import { useThemeColor, useUpdateAlarmTime } from '@/hooks';
 import { MDColors } from '@/types';
+import { useUser } from '@entities/user';
 import dayjs from 'dayjs';
 import { Image } from 'expo-image';
 import { router, useLocalSearchParams } from 'expo-router';

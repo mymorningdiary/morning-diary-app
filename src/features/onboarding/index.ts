@@ -1,1 +1,1 @@
-export { useVisited } from './model/useVisited';
+export { useVisit } from './model/useVisit';

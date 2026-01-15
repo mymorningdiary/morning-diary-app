@@ -9,10 +9,10 @@ import { devtools } from '@csark0812/zustand-expo-devtools';
 interface AuthState {
   accessToken: string | null;
   refreshToken: string | null;
-  isAuthLoaded: boolean;
+  isLoaded: boolean;
   setAccessToken: (accessToken: string | null) => void;
   setRefreshToken: (refreshToken: string | null) => void;
-  setIsAuthLoaded: (isAuthLoaded: boolean) => void;
+  setIsLoaded: (isLoaded: boolean) => void;
 }
 
 type AuthPersist = Pick<AuthState, 'accessToken' | 'refreshToken'>;
@@ -36,10 +36,10 @@ const authPersist = persist(
   (set, get) => ({
     accessToken: null,
     refreshToken: null,
-    isAuthLoaded: false,
+    isLoaded: false,
     setAccessToken: (accessToken: string | null) => set({ accessToken }),
     setRefreshToken: (refreshToken: string | null) => set({ refreshToken }),
-    setIsAuthLoaded: (isAuthLoaded: boolean) => set({ isAuthLoaded }),
+    setIsLoaded: (isLoaded: boolean) => set({ isLoaded }),
   }),
   {
     name: 'auth-store',
@@ -49,7 +49,7 @@ const authPersist = persist(
     }),
     storage,
     onRehydrateStorage: (state) => {
-      return () => state.setIsAuthLoaded(true);
+      return () => state.setIsLoaded(true);
     },
   },
 );

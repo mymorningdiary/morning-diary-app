@@ -1,9 +1,10 @@
 import { MDButton, MDLargeSpeechBubble, MDText, MDView } from '@/components';
 import { useThemeColor } from '@/hooks';
 import { MDColors } from '@/types';
-import { useVisited } from '@features/onboarding';
+import { useVisit } from '@features/onboarding';
+import { Logger } from '@shared/lib/log';
 import { useRouter } from 'expo-router';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { Image, StyleSheet, View } from 'react-native';
 import PagerView from 'react-native-pager-view';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -14,7 +15,7 @@ export default function OnboardingScreen() {
   const styles = screenStyles({ colors, bottomInset: insets.bottom });
 
   const router = useRouter();
-  const { markVisited } = useVisited();
+  const { markVisited } = useVisit();
 
   const pageRef = useRef<PagerView>(null);
   const [currentPage, setCurrentPage] = useState(0);
@@ -22,7 +23,9 @@ export default function OnboardingScreen() {
 
   const handleBottomButtonPress = () => {
     if (currentPage === 1) {
+      Logger('Onboarding').debug('click');
       // 온보딩 완료 시 방문 여부 저장 후 로그인 화면으로
+      markVisited();
       router.replace('/login');
     } else {
       pageRef.current?.setPage(currentPage + 1);
@@ -33,10 +36,6 @@ export default function OnboardingScreen() {
   const handlePageSelected = (position: number) => {
     setCurrentPage(position);
   };
-
-  useEffect(() => {
-    markVisited();
-  }, []);
 
   return (
     <SafeAreaView style={styles.containerSafeArea}>

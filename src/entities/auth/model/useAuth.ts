@@ -4,7 +4,7 @@ import { useAuthStore } from '@shared/lib/auth';
 export function useAuth() {
   const accessToken = useAuthStore((s) => s.accessToken);
   const refreshToken = useAuthStore((s) => s.refreshToken);
-  const isLoaded = useAuthStore((s) => s.isAuthLoaded);
+  const isLoaded = useAuthStore((s) => s.isLoaded);
   const setAccessToken = useAuthStore((s) => s.setAccessToken);
   const setRefreshToken = useAuthStore((s) => s.setRefreshToken);
 

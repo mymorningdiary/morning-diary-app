@@ -1,9 +1,8 @@
 import { Logger } from '@/utils/logs';
 import { useAuth } from '@entities/auth';
 import { useAppVersion } from '@entities/version';
-import { useVisited } from '@features/onboarding';
+import { useVisit } from '@features/onboarding';
 import { ForceUpdatePage } from '@pages/force-update';
-import { getKeyHashAndroid } from '@react-native-kakao/core';
 
 import { openMarketApp } from '@shared/lib/links';
 
@@ -14,7 +13,7 @@ import { useEffect, useState } from 'react';
 
 export function AppRouter() {
   const { accessToken, isLoaded: isAuthLoaded } = useAuth();
-  const { isFirstVisit, isLoaded: isVisitLoaded } = useVisited();
+  const { isFirstVisit, isLoaded: isVisitLoaded } = useVisit();
   const isReady = isAuthLoaded && isVisitLoaded;
 
   const { versionStatus } = useAppVersion();
@@ -25,8 +24,8 @@ export function AppRouter() {
   }, [isAuthLoaded, accessToken]);
 
   useEffect(() => {
-    Logger('AppRouter').debug('isFirstVisit:', isFirstVisit);
-  }, [isFirstVisit]);
+    Logger('AppRouter').debug('isVisitLoaded:', isVisitLoaded, 'isFirstVisit:', isFirstVisit);
+  }, [isVisitLoaded, isFirstVisit]);
 
   useEffect(() => {
     void SplashScreen.preventAutoHideAsync();
@@ -44,14 +43,6 @@ export function AppRouter() {
     }
   }, [versionStatus]);
 
-  useEffect(() => {
-    const getToken = async () => {
-      const token = await getKeyHashAndroid();
-      console.log(token);
-    };
-    getToken();
-  }, []);
-
   if (!isReady) {
     return null;
   }
@@ -63,7 +54,7 @@ export function AppRouter() {
   return (
     <>
       <Stack screenOptions={{ headerShown: false }}>
-        <Stack.Protected guard={isFirstVisit === true}>
+        <Stack.Protected guard={isFirstVisit !== false}>
           <Stack.Screen name="onboarding" />
         </Stack.Protected>
 

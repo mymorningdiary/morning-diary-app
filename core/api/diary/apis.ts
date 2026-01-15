@@ -1,5 +1,5 @@
 import { Diaries, Diary } from '@/core/types';
-import apiClient from '../axios';
+import { authInstance } from '@shared/api/client';
 import { ApiResponse } from '../types';
 import {
   GetDiariesRequest,
@@ -11,19 +11,19 @@ import {
 
 const diaryAPI = {
   getDiaries: async (params: GetDiariesRequest): Promise<ApiResponse<Diaries>> => {
-    const response = await apiClient.get('/diaries', { params });
+    const response = await authInstance.get('/diaries', { params });
     return response.data;
   },
   postDiaries: async (body: PostDiariesRequest): Promise<ApiResponse<PostDiariesResponse>> => {
-    const response = await apiClient.post('/diaries', body);
+    const response = await authInstance.post('/diaries', body);
     return response.data;
   },
   getDiary: async ({ diaryId }: { diaryId: number }): Promise<ApiResponse<Diary>> => {
-    const response = await apiClient.get(`/diaries/${diaryId}`);
+    const response = await authInstance.get(`/diaries/${diaryId}`);
     return response.data;
   },
   deleteDiary: async ({ diaryId }: { diaryId: number }): Promise<ApiResponse<null>> => {
-    const response = await apiClient.delete(`/diaries/${diaryId}`);
+    const response = await authInstance.delete(`/diaries/${diaryId}`);
     return response.data;
   },
   updateDiary: async ({
@@ -33,7 +33,7 @@ const diaryAPI = {
     diaryId: number;
     body: UpdateDiaryRequest;
   }): Promise<ApiResponse<UpdateDiaryResponse>> => {
-    const response = await apiClient.put(`/diaries/${diaryId}`, body);
+    const response = await authInstance.put(`/diaries/${diaryId}`, body);
     return response.data;
   },
 };

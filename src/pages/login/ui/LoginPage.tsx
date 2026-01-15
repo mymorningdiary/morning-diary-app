@@ -1,4 +1,4 @@
-import { StyleSheet, View } from 'react-native';
+import { Platform, StyleSheet, View } from 'react-native';
 import { router } from 'expo-router';
 
 import { IconMail } from '@assets/icons';
@@ -7,7 +7,7 @@ import { MDButton } from '@shared/ui/MDButton';
 import { MDLogo } from '@shared/ui/MDLogo';
 import { MDPage } from '@shared/ui/MDPage';
 import { useToastStore } from '@shared/lib/toast';
-import { KakaoLoginButton } from '@features/login';
+import { AppleLoginButton, KakaoLoginButton } from '@features/login';
 
 import { TermsTextBox } from './TermsTextBox';
 
@@ -38,6 +38,10 @@ export function LoginPage() {
           onPress={handleEmailPress}
         />
         <KakaoLoginButton onSuccess={handleLoginSuccess} onError={handleLoginError} />
+
+        {Platform.OS === 'ios' && (
+          <AppleLoginButton onSuccess={handleLoginSuccess} onError={handleLoginError} />
+        )}
       </View>
 
       <TermsTextBox />

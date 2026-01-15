@@ -48,6 +48,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     config: {
       usesNonExemptEncryption: false,
     },
+    usesAppleSignIn: true,
   },
   android: {
     adaptiveIcon: {
@@ -173,6 +174,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
         },
       },
     ],
+    'expo-apple-authentication',
   ],
   experiments: {
     typedRoutes: true,

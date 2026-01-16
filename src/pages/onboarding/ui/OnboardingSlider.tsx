@@ -1,7 +1,9 @@
-import { MDColorsType, useThemeColor } from '@shared/lib/theme';
 import { RefObject } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import PagerView from 'react-native-pager-view';
+
+import { OnboardingSlide1 } from './OnboardingSlide1';
+import { MDColorsType, useThemeColor } from '@shared/lib/theme';
 
 interface Props {
   ref?: RefObject<PagerView | null>;
@@ -17,9 +19,7 @@ export function OnboardingSlider({ ref, onSwipe }: Props) {
       ref={ref}
       style={styles.container}
       onPageSelected={({ nativeEvent }) => onSwipe?.(nativeEvent.position)}>
-      <View key="1" style={{ backgroundColor: 'red' }}>
-        <Text>1</Text>
-      </View>
+      <OnboardingSlide1 key="1" />
       <View key="2" style={{ backgroundColor: 'blue' }}>
         <Text>2</Text>
       </View>

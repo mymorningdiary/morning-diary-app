@@ -3,6 +3,7 @@ import { useAuth } from '@entities/auth';
 import { useAppVersion } from '@entities/version';
 import { useVisit } from '@features/onboarding';
 import { ForceUpdatePage } from '@pages/force-update';
+import { OnboardingPage } from '@pages/onboarding';
 
 import { openMarketApp } from '@shared/lib/links';
 
@@ -50,6 +51,8 @@ export function AppRouter() {
   if (versionStatus === 'force') {
     return <ForceUpdatePage />;
   }
+
+  return <OnboardingPage />;
 
   return (
     <>

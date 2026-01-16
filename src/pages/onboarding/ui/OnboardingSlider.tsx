@@ -4,7 +4,6 @@ import PagerView from 'react-native-pager-view';
 
 import { OnboardingSlide1 } from './OnboardingSlide1';
 import { OnboardingSlide2 } from './OnboardingSlide2';
-import { MDColorsType, useThemeColor } from '@shared/lib/theme';
 
 interface Props {
   sliderRef?: RefObject<PagerView | null>;
@@ -12,8 +11,7 @@ interface Props {
 }
 
 export function OnboardingSlider({ sliderRef, onSwipe }: Props) {
-  const colors = useThemeColor();
-  const styles = SliderStyles({ colors });
+  const styles = SliderStyles;
 
   return (
     <PagerView
@@ -26,9 +24,8 @@ export function OnboardingSlider({ sliderRef, onSwipe }: Props) {
   );
 }
 
-const SliderStyles = ({ colors }: { colors: MDColorsType }) =>
-  StyleSheet.create({
-    container: {
-      flex: 1,
-    },
-  });
+const SliderStyles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+});

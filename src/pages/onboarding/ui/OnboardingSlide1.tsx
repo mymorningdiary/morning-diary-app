@@ -11,7 +11,8 @@ export function OnboardingSlide1() {
 
   return (
     <View style={styles.container}>
-      <Image style={styles.image} source={ImgOnboarding1} />
+      <Image style={styles.image} source={ImgOnboarding1} contentFit="contain" />
+
       <View style={styles.textContent}>
         <MDText type="titleSemiBold" color={colors.text.brand} align="center">
           {`'나'를 발견하는 `}
@@ -20,6 +21,7 @@ export function OnboardingSlide1() {
           </MDText>
           {`이나 쓰는 아침 일기`}
         </MDText>
+
         <MDText type="labelRegular" color={colors.text.alternative} align="center">
           {`기상 직후 45분 동안은 사람의 방어기제가\n활동하지 않는 유일한 시간이에요.\n\n아침일기를 쓰면 새로운 ‘나’를 발견할지도 몰라요.`}
         </MDText>

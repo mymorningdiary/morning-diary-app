@@ -52,8 +52,6 @@ export function AppRouter() {
     return <ForceUpdatePage />;
   }
 
-  return <OnboardingPage />;
-
   return (
     <>
       <Stack screenOptions={{ headerShown: false }}>

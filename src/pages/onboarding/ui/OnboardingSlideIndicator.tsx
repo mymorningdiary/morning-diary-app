@@ -1,6 +1,6 @@
 import { MDColorsType, useThemeColor } from '@shared/lib/theme';
 import { StyleSheet, View } from 'react-native';
-import { SLIDE_CNT } from './OnboardingPage';
+import { SLIDE_CNT } from '../model/constants';
 
 interface Props {
   position: number;

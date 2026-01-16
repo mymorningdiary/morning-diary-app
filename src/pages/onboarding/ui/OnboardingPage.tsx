@@ -1,14 +1,13 @@
-import { MDPage } from '@shared/ui/MDPage';
-import { StyleSheet, View } from 'react-native';
-import { OnboardingSlideIndicator } from './OnboardingSlideIndicator';
-import { useRef, useState } from 'react';
-import { OnboardingSlider } from './OnboardingSlider';
-import { MDButton } from '@shared/ui/MDButton';
-import PagerView from 'react-native-pager-view';
 import { useVisit } from '@features/onboarding';
+import { MDButton } from '@shared/ui/MDButton';
+import { MDPage } from '@shared/ui/MDPage';
 import { router } from 'expo-router';
-
-export const SLIDE_CNT = 2;
+import { useRef, useState } from 'react';
+import { StyleSheet } from 'react-native';
+import PagerView from 'react-native-pager-view';
+import { OnboardingSlideIndicator } from './OnboardingSlideIndicator';
+import { OnboardingSlider } from './OnboardingSlider';
+import { SLIDE_CNT } from '../model/constants';
 
 export function OnboardingPage() {
   const styles = PageStyles;
@@ -32,7 +31,7 @@ export function OnboardingPage() {
   return (
     <MDPage style={styles.container}>
       <OnboardingSlideIndicator position={currentPosition} />
-      <OnboardingSlider ref={sliderRef} onSwipe={(p) => setCurrentPosition(p)} />
+      <OnboardingSlider sliderRef={sliderRef} onSwipe={(p) => setCurrentPosition(p)} />
 
       <MDButton
         style={{ marginHorizontal: 16 }}

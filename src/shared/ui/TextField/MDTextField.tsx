@@ -7,6 +7,12 @@ import { MDText } from '@shared/ui/Text';
 
 type FieldStatus = 'default' | 'success' | 'error';
 
+export interface MDFieldState {
+  value?: string;
+  status?: FieldStatus;
+  message?: string | null;
+}
+
 interface Props extends TextInputProps {
   fieldStyle?: StyleProp<ViewStyle>;
   label?: string;
@@ -20,6 +26,7 @@ export const MDTextField = forwardRef<TextInput, Props>(
     {
       fieldStyle,
       label,
+      value,
       status = 'default',
       message,
       suffix,
@@ -37,21 +44,10 @@ export const MDTextField = forwardRef<TextInput, Props>(
 
     const [isFocused, setIsFocused] = useState(false);
 
-    const helperColor =
-      status === 'error'
-        ? colors.text.normal
-        : status === 'success'
-          ? colors.primary.normal
-          : colors.text.alternative;
+    const messageColor = status === 'error' ? colors.text.alternative : colors.primary.normal;
 
     const inputBorderColor =
-      status === 'error'
-        ? colors.text.normal
-        : isFocused
-          ? colors.line.enabled
-          : status === 'success'
-            ? colors.primary.normal
-            : colors.line.normal;
+      (value && value.length > 0) || isFocused ? colors.line.enabled : colors.line.normal;
 
     const handleFocus: TextInputProps['onFocus'] = (event) => {
       setIsFocused(true);
@@ -89,7 +85,7 @@ export const MDTextField = forwardRef<TextInput, Props>(
         </View>
 
         {message && (
-          <MDText type="caption1Regular" color={helperColor}>
+          <MDText type="caption1Regular" color={messageColor}>
             {message}
           </MDText>
         )}

@@ -1,11 +1,13 @@
-import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { Pressable, ScrollView, StyleSheet, TextInput, View } from 'react-native';
 
 import { MDColorsType, useThemeColor } from '@shared/lib/theme';
 
-import { useState } from 'react';
-import MDTextField from '@shared/ui/TextField/MDTextField';
+import { useRef, useState } from 'react';
+
 import { MDButton } from '@shared/ui/Button';
 import { MDText } from '@shared/ui/Text';
+import { MDFieldState, MDTextField } from '@shared/ui/TextField';
+import { validateEmail, validatePassword } from '@shared/lib/validation';
 
 interface Props {
   onGoSignUp?: () => void;
@@ -17,31 +19,62 @@ export function LoginEmailForm({ onGoSignUp, onGoResetPassword, bottomSpacing = 
   const colors = useThemeColor();
   const styles = FormStyles({ colors });
 
-  const [email, setEmail] = useState<string>();
-  const [password, setPassword] = useState<string>();
+  const emailRef = useRef<TextInput | null>(null);
+  const passwordRef = useRef<TextInput | null>(null);
 
-  const handleSubmit = () => {};
+  const [email, setEmail] = useState<MDFieldState>({});
+  const [password, setPassword] = useState<MDFieldState>({});
+
+  const handleEmailChange = (value: string) => {
+    setEmail({ value, status: 'default', message: null });
+  };
+
+  const handlePasswordChange = (value: string) => {
+    setPassword({ value, status: 'default', message: null });
+  };
+
+  const handleSubmit = () => {
+    const emailValidation = validateEmail(email.value);
+    const passwordValidation = validatePassword(password.value);
+
+    setEmail((prev) => ({
+      ...prev,
+      status: emailValidation.isValid ? 'success' : 'error',
+      message: emailValidation.message,
+    }));
+
+    setPassword((prev) => ({
+      ...prev,
+      status: passwordValidation.isValid ? 'success' : 'error',
+      message: passwordValidation.message,
+    }));
+
+    if (!emailValidation.isValid || !passwordValidation.isValid) return;
+  };
 
   return (
     <>
       <ScrollView overScrollMode="never" showsVerticalScrollIndicator={false} bounces={false}>
         <View style={styles.textFieldContent}>
           <MDTextField
+            ref={emailRef}
             label="아이디"
             placeholder="이메일 주소"
             returnKeyType="next"
             keyboardType="email-address"
-            value={email}
-            onChangeText={(s) => setEmail(s)}
+            {...email}
+            onChangeText={handleEmailChange}
+            onSubmitEditing={() => passwordRef.current?.focus()}
           />
 
           <MDTextField
+            ref={passwordRef}
             label="비밀번호"
             placeholder="비밀번호"
             secureTextEntry
             returnKeyType="done"
-            value={password}
-            onChangeText={(s) => setPassword(s)}
+            {...password}
+            onChangeText={handlePasswordChange}
             onSubmitEditing={handleSubmit}
           />
         </View>

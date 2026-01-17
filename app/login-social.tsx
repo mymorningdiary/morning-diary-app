@@ -1,3 +1,1 @@
-import { LoginSocialPage } from '@pages/login';
-
-export default LoginSocialPage;
+export { LoginSocialPage as default } from '@pages/login';

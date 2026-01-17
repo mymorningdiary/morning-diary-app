@@ -48,7 +48,6 @@ export function OnboardingPage() {
 
       <MDButton
         style={{ marginHorizontal: 16 }}
-        fullWidth={false}
         label={currentButtonLabel}
         onPress={handleNextButtonPress}
       />

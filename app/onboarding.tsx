@@ -1,3 +1,1 @@
-import { OnboardingPage } from '@pages/onboarding';
-
-export default OnboardingPage;
+export { OnboardingPage as default } from '@pages/onboarding';

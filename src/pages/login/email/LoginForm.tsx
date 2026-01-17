@@ -1,29 +1,18 @@
-import { useRef, useState } from 'react';
-import { Pressable, ScrollView, StyleSheet, TextInput, View } from 'react-native';
+import { useEffect, useRef, useState } from 'react';
+import { ScrollView, StyleSheet, TextInput, View } from 'react-native';
 
 import { useLoginEmail } from '@features/login';
-import { useThemeColor } from '@shared/lib/theme';
 import { PASSWORD_MAX_LEN, validateEmail, validatePassword } from '@shared/lib/validation';
 import { MDButton } from '@shared/ui/Button';
-import { MDText } from '@shared/ui/Text';
 import { MDFieldState, MDTextField } from '@shared/ui/TextField';
 
 interface Props {
-  bottomSpacing?: number;
-  onGoSignUp?: () => void;
-  onGoResetPassword?: () => void;
+  keyboardSpacing?: number;
   onLoginSuccess?: (isExistUser: boolean) => void;
   onLoginError?: (message: string) => void;
 }
 
-export function LoginForm({
-  bottomSpacing = 0,
-  onGoSignUp,
-  onGoResetPassword,
-  onLoginSuccess,
-  onLoginError,
-}: Props) {
-  const colors = useThemeColor();
+export function LoginForm({ keyboardSpacing = 0, onLoginSuccess, onLoginError }: Props) {
   const styles = FormStyles;
 
   const emailRef = useRef<TextInput | null>(null);
@@ -57,7 +46,8 @@ export function LoginForm({
     setPassword({ value, status: 'default', message: null });
   };
 
-  const handleSubmit = async () => {
+  // 폼 유효성 검사
+  const validateForm = () => {
     const emailValue = email.value ?? '';
     const passwordValue = password.value ?? '';
 
@@ -78,16 +68,33 @@ export function LoginForm({
 
     if (!emailValidation.isValid) {
       emailRef.current?.focus();
-      return;
+      return null;
     }
 
     if (!passwordValidation.isValid) {
       passwordRef.current?.focus();
-      return;
+      return null;
     }
 
-    loginEmail({ email: emailValue, password: passwordValue });
+    return { email: emailValue, password: passwordValue };
   };
+
+  // 로그인 요청
+  const handleSubmit = () => {
+    const form = validateForm();
+    if (form) {
+      loginEmail({ email: form.email, password: form.password });
+    }
+  };
+
+  // 화면 진입시 포커싱 자동
+  useEffect(() => {
+    const id = setTimeout(() => {
+      emailRef.current?.focus();
+    }, 0);
+
+    return () => clearTimeout(id);
+  }, []);
 
   return (
     <>
@@ -118,16 +125,12 @@ export function LoginForm({
         </View>
       </ScrollView>
 
-      <View style={[styles.buttonContent, { paddingBottom: bottomSpacing }]}>
-        <MDButton label="로그인" loading={isPending} onPress={handleSubmit} />
-        <MDButton variant="outline" label="회원가입" onPress={onGoSignUp} />
-
-        <Pressable hitSlop={10} onPress={onGoResetPassword}>
-          <MDText type="labelRegular" color={colors.text.alternative}>
-            비밀번호 재설정
-          </MDText>
-        </Pressable>
-      </View>
+      <MDButton
+        style={{ marginHorizontal: 16, marginVertical: keyboardSpacing }}
+        label="로그인"
+        loading={isPending}
+        onPress={handleSubmit}
+      />
     </>
   );
 }
@@ -138,10 +141,5 @@ const FormStyles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingBottom: 60,
     gap: 24,
-  },
-  buttonContent: {
-    alignItems: 'center',
-    paddingHorizontal: 16,
-    gap: 10,
   },
 });

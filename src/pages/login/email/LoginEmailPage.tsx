@@ -1,4 +1,4 @@
-import { KeyboardAvoidingView, Platform, StyleSheet } from 'react-native';
+import { KeyboardAvoidingView, Platform, Pressable, StyleSheet, View } from 'react-native';
 import { router } from 'expo-router';
 
 import { MDAppBar } from '@shared/ui/AppBar';
@@ -7,20 +7,19 @@ import { useKeyboardVisible } from '@shared/lib/keyboard';
 import { useToastStore } from '@shared/lib/toast';
 
 import { LoginForm } from './LoginForm';
+import { MDButton } from '@shared/ui/Button';
+import { MDText } from '@shared/ui/Text';
+import { useThemeColor } from '@shared/lib/theme';
 
 const KEYBOARD_SPACING = 16;
 
 export function LoginEmailPage() {
+  const colors = useThemeColor();
   const styles = PageStyles;
   const keyboardVisible = useKeyboardVisible();
 
-  const handleGoSignUp = () => {
-    // 회원가입 화면 이동
-  };
-
-  const handleGoResetPassword = () => {
-    // 비밀번호 재설정 화면 이동
-  };
+  // 키보드 show일 때 폼만 노출, 로그인 버튼만 보이게 (android 대응)
+  const showOtherButtons = Platform.OS === 'ios' || !keyboardVisible;
 
   const handleLoginSuccess = (isExistUser: boolean) => {
     // router.replace(isExistUser ? '/(app)' : '/(app)/alarm-permission');
@@ -42,13 +41,23 @@ export function LoginEmailPage() {
         style={{ flex: 1 }}
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
         <LoginForm
-          bottomSpacing={keyboardVisible ? KEYBOARD_SPACING : 0}
-          onGoSignUp={handleGoSignUp}
-          onGoResetPassword={handleGoResetPassword}
+          keyboardSpacing={keyboardVisible ? KEYBOARD_SPACING : 0}
           onLoginSuccess={handleLoginSuccess}
           onLoginError={handleLoginError}
         />
       </KeyboardAvoidingView>
+
+      {showOtherButtons && (
+        <View style={[styles.buttonContent]}>
+          <MDButton variant="outline" label="회원가입" onPress={() => {}} />
+
+          <Pressable hitSlop={10} onPress={() => {}}>
+            <MDText type="labelRegular" color={colors.text.alternative}>
+              비밀번호 재설정
+            </MDText>
+          </Pressable>
+        </View>
+      )}
     </MDPage>
   );
 }
@@ -56,5 +65,11 @@ export function LoginEmailPage() {
 const PageStyles = StyleSheet.create({
   container: {
     paddingBottom: 60,
+  },
+  buttonContent: {
+    marginTop: 10,
+    paddingHorizontal: 16,
+    alignItems: 'center',
+    gap: 10,
   },
 });

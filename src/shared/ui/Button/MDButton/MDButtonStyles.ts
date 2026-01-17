@@ -70,7 +70,6 @@ export const ButtonBaseStyles = StyleSheet.create({
     justifyContent: 'center',
   },
   fullWidth: {
-    width: '100%',
     alignSelf: 'stretch',
   },
 });

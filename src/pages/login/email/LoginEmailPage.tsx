@@ -5,6 +5,7 @@ import { MDPage } from '@shared/ui/Layout';
 import { router } from 'expo-router';
 import { LoginEmailForm } from './LoginEmailForm';
 import { useKeyboardVisible } from '@shared/lib/keyboard';
+import { useToastStore } from '@shared/lib/toast';
 
 const KEYBOARD_SPACING = 16;
 
@@ -20,6 +21,15 @@ export function LoginEmailPage() {
     // 비밀번호 재설정 화면 이동
   };
 
+  const handleLoginSuccess = (isExistUser: boolean) => {
+    // router.replace(isExistUser ? '/(app)' : '/(app)/alarm-permission');
+    router.replace('/(app)');
+  };
+
+  const handleLoginError = (message: string) => {
+    useToastStore.getState().show({ type: 'error', message });
+  };
+
   return (
     <MDPage
       style={[
@@ -31,9 +41,11 @@ export function LoginEmailPage() {
         style={{ flex: 1 }}
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
         <LoginEmailForm
+          bottomSpacing={keyboardVisible ? KEYBOARD_SPACING : 0}
           onGoSignUp={handleGoSignUp}
           onGoResetPassword={handleGoResetPassword}
-          bottomSpacing={keyboardVisible ? KEYBOARD_SPACING : 0}
+          onLoginSuccess={handleLoginSuccess}
+          onLoginError={handleLoginError}
         />
       </KeyboardAvoidingView>
     </MDPage>

@@ -8,14 +8,24 @@ import { MDButton } from '@shared/ui/Button';
 import { MDText } from '@shared/ui/Text';
 import { MDFieldState, MDTextField } from '@shared/ui/TextField';
 import { validateEmail, validatePassword } from '@shared/lib/validation';
+import { useLoginEmail } from '@features/login';
+import { Logger } from '@shared/lib/log';
 
 interface Props {
+  bottomSpacing?: number;
   onGoSignUp?: () => void;
   onGoResetPassword?: () => void;
-  bottomSpacing?: number;
+  onLoginSuccess?: (isExistUser: boolean) => void;
+  onLoginError?: (message: string) => void;
 }
 
-export function LoginEmailForm({ onGoSignUp, onGoResetPassword, bottomSpacing = 0 }: Props) {
+export function LoginEmailForm({
+  bottomSpacing = 0,
+  onGoSignUp,
+  onGoResetPassword,
+  onLoginSuccess,
+  onLoginError,
+}: Props) {
   const colors = useThemeColor();
   const styles = FormStyles({ colors });
 
@@ -25,6 +35,21 @@ export function LoginEmailForm({ onGoSignUp, onGoResetPassword, bottomSpacing = 
   const [email, setEmail] = useState<MDFieldState>({});
   const [password, setPassword] = useState<MDFieldState>({});
 
+  const { loginEmail, isPending } = useLoginEmail({
+    onSuccess: onLoginSuccess,
+    onError: ({ type, message }) => {
+      if (type === 'email') {
+        setEmail((prev) => ({ ...prev, status: 'error', message }));
+        return;
+      }
+      if (type === 'password') {
+        setPassword((prev) => ({ ...prev, status: 'error', message }));
+        return;
+      }
+      onLoginError?.(message);
+    },
+  });
+
   const handleEmailChange = (value: string) => {
     setEmail({ value, status: 'default', message: null });
   };
@@ -33,9 +58,13 @@ export function LoginEmailForm({ onGoSignUp, onGoResetPassword, bottomSpacing = 
     setPassword({ value, status: 'default', message: null });
   };
 
-  const handleSubmit = () => {
-    const emailValidation = validateEmail(email.value);
-    const passwordValidation = validatePassword(password.value);
+  const handleSubmit = async () => {
+    const emailValue = email.value ?? '';
+    const passwordValue = password.value ?? '';
+    Logger('LoginEmailForm').debug('email: ', emailValue, 'password: ', passwordValue);
+
+    const emailValidation = validateEmail(emailValue);
+    const passwordValidation = validatePassword(passwordValue);
 
     setEmail((prev) => ({
       ...prev,
@@ -50,6 +79,8 @@ export function LoginEmailForm({ onGoSignUp, onGoResetPassword, bottomSpacing = 
     }));
 
     if (!emailValidation.isValid || !passwordValidation.isValid) return;
+
+    loginEmail({ email: emailValue, password: passwordValue });
   };
 
   return (
@@ -81,8 +112,9 @@ export function LoginEmailForm({ onGoSignUp, onGoResetPassword, bottomSpacing = 
       </ScrollView>
 
       <View style={[styles.buttonContent, { paddingBottom: bottomSpacing }]}>
-        <MDButton label="로그인" onPress={handleSubmit} />
+        <MDButton label="로그인" loading={isPending} onPress={handleSubmit} />
         <MDButton variant="outline" label="회원가입" onPress={onGoSignUp} />
+
         <Pressable hitSlop={10} onPress={onGoResetPassword}>
           <MDText type="labelRegular" color={colors.text.alternative}>
             비밀번호 재설정

@@ -1,0 +1,69 @@
+import { postAuthSignIn, useAuth } from '@entities/auth';
+import { Logger } from '@shared/lib/log';
+
+import { useMutation } from '@tanstack/react-query';
+
+interface Props {
+  onSuccess?: (isExistUser: boolean) => void;
+  onError?: ({ type, message }: { type?: 'email' | 'password'; message: string }) => void;
+}
+
+export function useLoginEmail({ onSuccess, onError }: Props) {
+  const { setAuth } = useAuth();
+  const { mutateAsync, isPending } = useMutation({ mutationFn: postAuthSignIn });
+
+  const loginEmail = async ({ email, password }: { email: string; password: string }) => {
+    if (isPending) return;
+
+    try {
+      const res = await mutateAsync({ email, password });
+
+      if (res.code === 2000) {
+        const { accessToken, refreshToken, isExistUser } = res.data;
+
+        setAuth({ accessToken, refreshToken });
+        onSuccess?.(isExistUser ?? false);
+      } else {
+        onError?.({ message: '로그인에 실패했습니다' });
+      }
+    } catch (error: any) {
+      Logger('useLoginEmail').error('Failed to login with email:', error.message);
+
+      switch (error.code) {
+        case 4000: {
+          onError?.({ type: 'email', message: '존재하지 않는 사용자에요' });
+          break;
+        }
+        case 4007:
+        case 4008: {
+          onError?.({ type: 'email', message: '이메일을 올바르게 입력해주세요' });
+          break;
+        }
+        case 4009:
+        case 4010: {
+          onError?.({
+            type: 'password',
+            message: '비밀번호를 입력해주세요 (영문자+숫자+특수문자 10-64자)',
+          });
+          break;
+        }
+        case 4012: {
+          onError?.({
+            type: 'password',
+            message: '비밀번호가 일치하지 않아요',
+          });
+          break;
+        }
+        case 4013: {
+          onError?.({ type: 'email', message: 'SNS 연동 사용자에요' });
+          break;
+        }
+        default: {
+          onError?.({ message: '로그인에 실패했습니다' });
+        }
+      }
+    }
+  };
+
+  return { loginEmail, isPending };
+}

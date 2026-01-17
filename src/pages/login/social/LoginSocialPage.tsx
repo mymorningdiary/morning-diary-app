@@ -23,7 +23,7 @@ export function LoginSocialPage() {
   };
 
   const handleLoginError = (message: string) => {
-    useToastStore.getState().show({ message, variant: 'error' });
+    useToastStore.getState().show({ type: 'error', message });
   };
 
   return (

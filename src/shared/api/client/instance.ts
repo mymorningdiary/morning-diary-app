@@ -30,8 +30,8 @@ instance.interceptors.request.use(
 instance.interceptors.response.use(
   (response) => {
     Logger('AXIOS').debug('response', {
-      status: response.status,
       url: `${response.config.baseURL ?? ''}${response.config.url ?? ''}`,
+      status: response.status,
       data: response.data,
     });
 
@@ -41,11 +41,12 @@ instance.interceptors.response.use(
     const originalRequest = error.config;
 
     Logger('AXIOS').debug('response error', {
-      status: error.response?.status,
       url: `${originalRequest?.baseURL ?? ''}${originalRequest?.url ?? ''}`,
+      status: error.response?.status,
+      data: error.response?.data,
       retry: originalRequest?._retry,
     });
 
-    return Promise.reject(error);
+    return Promise.reject(error.response?.data ?? error);
   },
 );

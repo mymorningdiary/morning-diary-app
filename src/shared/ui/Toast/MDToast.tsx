@@ -17,7 +17,7 @@ interface ToastStyleTokens {
 }
 
 export function MDToast() {
-  const { visible, message, variant, hide } = useToastStore();
+  const { type, visible, message, hide } = useToastStore();
   const colors = useThemeColor();
   const insets = useSafeAreaInsets();
   const [isRendered, setIsRendered] = useState(visible);
@@ -26,7 +26,7 @@ export function MDToast() {
   const translateY = useRef(new Animated.Value(12)).current;
 
   const tokens: ToastStyleTokens = useMemo(() => {
-    switch (variant) {
+    switch (type) {
       case 'success':
         return {
           backgroundColor: colors.primary.normal,
@@ -47,7 +47,7 @@ export function MDToast() {
           accentColor: 'lightblue',
         };
     }
-  }, [colors, variant]);
+  }, [colors, type]);
 
   useEffect(() => {
     if (visible) {

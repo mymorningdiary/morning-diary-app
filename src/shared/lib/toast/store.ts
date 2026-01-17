@@ -1,24 +1,24 @@
 import { create } from 'zustand';
 
-type ToastVariant = 'info' | 'success' | 'error';
+type ToastType = 'info' | 'success' | 'error';
 
 type ShowToastParams = {
+  type?: ToastType;
   message: string;
-  variant?: ToastVariant;
 };
 
 type ToastState = {
+  type: ToastType;
   visible: boolean;
   message: string;
-  variant: ToastVariant;
   show: (params: ShowToastParams) => void;
   hide: () => void;
 };
 
 export const useToastStore = create<ToastState>((set) => ({
+  type: 'info',
   visible: false,
   message: '',
-  variant: 'info',
-  show: ({ message, variant = 'info' }) => set({ visible: true, message, variant }),
-  hide: () => set({ visible: false, message: '', variant: 'info' }),
+  show: ({ type = 'info', message }) => set({ type, visible: true, message }),
+  hide: () => set({ type: 'info', visible: false, message: '' }),
 }));

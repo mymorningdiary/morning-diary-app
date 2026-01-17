@@ -26,7 +26,7 @@ export function MDModal({ visible, title, subtitle, negative, positive, onClose 
   const styles = useMemo(() => ModalStyles({ colors }), [colors]);
 
   return (
-    <Modal animationType="fade" visible={visible} transparent>
+    <Modal animationType="fade" visible={visible} transparent onRequestClose={onClose}>
       <Pressable style={styles.overlay} onPress={onClose}>
         <View style={styles.container}>
           <View style={styles.textContent}>

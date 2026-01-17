@@ -1,16 +1,14 @@
-import { Logger } from '@/utils/logs';
-import { useAuth } from '@entities/auth';
-import { useAppVersion } from '@entities/version';
-import { useVisit } from '@features/onboarding';
-import { ForceUpdatePage } from '@pages/force-update';
-import { OnboardingPage } from '@pages/onboarding';
-
-import { openMarketApp } from '@shared/lib/links';
-
-import { MDToast } from '@shared/ui/MDToast';
-import { MDModal } from '@shared/ui/Modal';
 import { SplashScreen, Stack } from 'expo-router';
 import { useEffect, useState } from 'react';
+
+import { ForceUpdatePage } from '@pages/force-update';
+import { useVisit } from '@features/onboarding';
+import { useAuth } from '@entities/auth';
+import { useAppVersion } from '@entities/version';
+import { MDToast } from '@shared/ui/MDToast';
+import { MDModal } from '@shared/ui/Modal';
+import { Logger } from '@shared/lib/log';
+import { openMarketApp } from '@shared/lib/links';
 
 export function AppRouter() {
   const { accessToken, isLoaded: isAuthLoaded } = useAuth();
@@ -51,8 +49,6 @@ export function AppRouter() {
   if (versionStatus === 'force') {
     return <ForceUpdatePage />;
   }
-
-  return <OnboardingPage />;
 
   return (
     <>

@@ -1,5 +1,5 @@
 import { IconKakao } from '@assets/icons';
-import { MDButton } from '@shared/ui/MDButton';
+import { MDButton } from '@shared/ui/Button';
 import { useKakaoLogin } from '../model/useKakaoLogin';
 
 interface Props {

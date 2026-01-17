@@ -4,8 +4,8 @@ import { StyleSheet } from 'react-native';
 import PagerView from 'react-native-pager-view';
 
 import { useVisit } from '@features/onboarding';
-import { MDButton } from '@shared/ui/MDButton';
-import { MDPage } from '@shared/ui/MDPage';
+import { MDButton } from '@shared/ui/Button';
+import { MDPage } from '@shared/ui/Layout';
 
 import { OnboardingSlideIndicator } from './OnboardingSlideIndicator';
 import { OnboardingSlider } from './OnboardingSlider';

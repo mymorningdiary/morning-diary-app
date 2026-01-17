@@ -1,7 +1,7 @@
 import { StyleSheet, View } from 'react-native';
 import { Image } from 'expo-image';
 
-import { MDText } from '@shared/ui/MDText';
+import { MDText } from '@shared/ui/Text';
 import { useThemeColor } from '@shared/lib/theme';
 import { ImgOnboarding2 } from '@assets/images';
 

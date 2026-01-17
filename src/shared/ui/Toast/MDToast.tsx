@@ -3,7 +3,7 @@ import { Animated, Pressable, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { useToastStore } from '@shared/lib/toast/store';
-import { MDText } from '@shared/ui/MDText';
+import { MDText } from '@shared/ui/Text';
 import { useThemeColor } from '@shared/lib/theme';
 
 const AUTO_HIDE_MS = 2000;

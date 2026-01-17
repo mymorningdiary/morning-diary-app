@@ -30,7 +30,7 @@ export function useAppleLogin({ onSuccess, onError }: Props) {
         //   onSuccess(isExistUser ?? false);
         // } else {
         //   onError('애플 로그인에 실패했습니다');
-        // }
+        // } v
       }
     } catch (e) {
       Logger('useAppleLogin').error('Failed to apple login', e);

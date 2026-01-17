@@ -1,6 +1,7 @@
-import { MDColorsType, useThemeColor } from '@shared/lib/theme';
 import { StyleProp, StyleSheet, ViewStyle } from 'react-native';
 import { SafeAreaView, SafeAreaViewProps, useSafeAreaInsets } from 'react-native-safe-area-context';
+
+import { MDColorsType, useThemeColor } from '@shared/lib/theme';
 
 interface MDPageProps extends SafeAreaViewProps {
   includeBottomSafeArea?: boolean;

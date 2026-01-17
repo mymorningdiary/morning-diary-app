@@ -1,0 +1,1 @@
+export { MDPage } from './MDPage';

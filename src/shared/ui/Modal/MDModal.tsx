@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { Dimensions, Modal, Pressable, StyleSheet, View } from 'react-native';
 
-import { MDText } from '../MDText';
+import { MDText } from '../Text';
 import { MDColorsType, useThemeColor } from '@shared/lib/theme';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;

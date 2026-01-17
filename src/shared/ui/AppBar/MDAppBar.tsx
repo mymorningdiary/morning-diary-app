@@ -3,7 +3,7 @@ import { Pressable, StyleSheet, View } from 'react-native';
 import { IconChevronLeft, IconClose } from '@assets/icons';
 import { MDColorsType, useThemeColor } from '@shared/lib/theme';
 
-import { MDText } from '../MDText';
+import { MDText } from '../Text';
 
 interface Props {
   title?: string;

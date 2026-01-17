@@ -3,9 +3,9 @@ import { router } from 'expo-router';
 
 import { IconMail } from '@assets/icons';
 
-import { MDButton } from '@shared/ui/MDButton';
-import { MDLogo } from '@shared/ui/MDLogo';
-import { MDPage } from '@shared/ui/MDPage';
+import { MDButton } from '@shared/ui/Button';
+import { MDLogo } from '@shared/ui/Logo';
+import { MDPage } from '@shared/ui/Layout';
 import { useToastStore } from '@shared/lib/toast';
 import { AppleLoginButton, KakaoLoginButton } from '@features/login';
 

@@ -6,10 +6,10 @@ import {
   View,
   ViewStyle,
 } from 'react-native';
+import { SvgProps } from 'react-native-svg';
 
 import { useThemeColor } from '@shared/lib/theme';
-import { MDText } from '@shared/ui/MDText';
-import { SvgProps } from 'react-native-svg';
+
 import {
   ButtonBaseStyles,
   ButtonSize,
@@ -17,6 +17,7 @@ import {
   getButtonSizeConfig,
   getVariantTokens,
 } from './MDButtonStyles';
+import { MDText } from '@shared/ui/Text';
 
 export interface MDButtonProps extends Omit<PressableProps, 'style'> {
   label: string;

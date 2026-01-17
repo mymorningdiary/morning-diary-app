@@ -1,6 +1,6 @@
 import { TERMS_URL_PRIVACY, TERMS_URL_USE } from '@shared/config/legal';
 import { useThemeColor } from '@shared/lib/theme';
-import { MDText } from '@shared/ui/MDText';
+import { MDText } from '@shared/ui/Text';
 import { router } from 'expo-router';
 import { StyleSheet, Text, View } from 'react-native';
 

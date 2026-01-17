@@ -5,7 +5,7 @@ import { ForceUpdatePage } from '@pages/force-update';
 import { useVisit } from '@features/onboarding';
 import { useAuth } from '@entities/auth';
 import { useAppVersion } from '@entities/version';
-import { MDToast } from '@shared/ui/MDToast';
+import { MDToast } from '@shared/ui/Toast';
 import { MDModal } from '@shared/ui/Modal';
 import { Logger } from '@shared/lib/log';
 import { openMarketApp } from '@shared/lib/links';

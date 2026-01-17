@@ -1,8 +1,8 @@
 import { StyleSheet, View } from 'react-native';
 
-import { MDPage } from '@shared/ui/MDPage';
-import { MDText } from '@shared/ui/MDText';
-import { MDButton } from '@shared/ui/MDButton';
+import { MDPage } from '@shared/ui/Layout';
+import { MDText } from '@shared/ui/Text';
+import { MDButton } from '@shared/ui/Button';
 import { openMarketApp } from '@shared/lib/links';
 
 export function ForceUpdatePage() {

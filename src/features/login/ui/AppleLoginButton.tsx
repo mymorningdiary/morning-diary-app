@@ -3,8 +3,9 @@ import {
   AppleAuthenticationButtonType,
   AppleAuthenticationButtonStyle,
 } from 'expo-apple-authentication';
+
 import { useAppleLogin } from '../model/useAppleLogin';
-import { getButtonSizeConfig } from '@shared/ui/MDButton';
+import { getButtonSizeConfig } from '@shared/ui/Button';
 
 interface Props {
   onSuccess: (isExistUser: boolean) => void;

@@ -1,6 +1,7 @@
+import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
+
 import { ImgSunBasic, ImgTextLogo } from '@assets/images';
 import { Image } from 'expo-image';
-import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
 
 interface MDLogoProps {
   style?: StyleProp<ViewStyle>;
@@ -11,8 +12,8 @@ export function MDLogo({ style }: MDLogoProps) {
 
   return (
     <View style={[styles.container, style]}>
-      <Image source={ImgSunBasic} style={{ width: 93, height: 93 }} />
-      <Image source={ImgTextLogo} style={{ width: 105, height: 44 }} />
+      <Image contentFit="contain" source={ImgSunBasic} style={{ width: 93, height: 93 }} />
+      <Image contentFit="contain" source={ImgTextLogo} style={{ width: 105, height: 44 }} />
     </View>
   );
 }

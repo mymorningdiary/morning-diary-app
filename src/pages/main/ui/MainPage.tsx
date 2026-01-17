@@ -1,8 +1,8 @@
 import { StyleSheet } from 'react-native';
 
-import { MDPage } from '@shared/ui/MDPage';
+import { MDPage } from '@shared/ui/Layout';
 
-import { MDText } from '@shared/ui/MDText';
+import { MDText } from '@shared/ui/Text';
 import { useUser } from '@entities/user';
 
 export function MainPage() {

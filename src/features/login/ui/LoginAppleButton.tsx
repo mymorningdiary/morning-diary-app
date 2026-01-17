@@ -4,16 +4,17 @@ import {
   AppleAuthenticationButtonStyle,
 } from 'expo-apple-authentication';
 
-import { useAppleLogin } from '../model/useAppleLogin';
 import { getButtonSizeConfig } from '@shared/ui/Button';
+
+import { useLoginApple } from '../model/useLoginApple';
 
 interface Props {
   onSuccess: (isExistUser: boolean) => void;
   onError: (message: string) => void;
 }
 
-export function AppleLoginButton({ onSuccess, onError }: Props) {
-  const { appleLogin } = useAppleLogin({ onSuccess, onError });
+export function LoginAppleButton({ onSuccess, onError }: Props) {
+  const { appleLogin } = useLoginApple({ onSuccess, onError });
 
   return (
     <AppleAuthenticationButton

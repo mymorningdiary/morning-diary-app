@@ -4,11 +4,11 @@ import { useMutation } from '@tanstack/react-query';
 import { signInAsync, AppleAuthenticationScope } from 'expo-apple-authentication';
 
 interface Props {
-  onSuccess: (isExistUser: boolean) => void;
-  onError: (message: string) => void;
+  onSuccess?: (isExistUser: boolean) => void;
+  onError?: (message: string) => void;
 }
 
-export function useAppleLogin({ onSuccess, onError }: Props) {
+export function useLoginApple({ onSuccess, onError }: Props) {
   const { setAuth } = useAuth();
   const { mutateAsync, isPending } = useMutation({ mutationFn: postKakaoLogin });
 
@@ -40,7 +40,7 @@ export function useAppleLogin({ onSuccess, onError }: Props) {
         // handle other errors
       }
 
-      onError('애플 로그인에 실패했습니다');
+      onError?.('애플 로그인에 실패했습니다');
     }
   };
 

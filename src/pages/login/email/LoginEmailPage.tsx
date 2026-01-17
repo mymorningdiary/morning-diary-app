@@ -1,11 +1,12 @@
 import { KeyboardAvoidingView, Platform, StyleSheet } from 'react-native';
+import { router } from 'expo-router';
 
 import { MDAppBar } from '@shared/ui/AppBar';
 import { MDPage } from '@shared/ui/Layout';
-import { router } from 'expo-router';
-import { LoginEmailForm } from './LoginEmailForm';
 import { useKeyboardVisible } from '@shared/lib/keyboard';
 import { useToastStore } from '@shared/lib/toast';
+
+import { LoginForm } from './LoginForm';
 
 const KEYBOARD_SPACING = 16;
 
@@ -40,7 +41,7 @@ export function LoginEmailPage() {
       <KeyboardAvoidingView
         style={{ flex: 1 }}
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
-        <LoginEmailForm
+        <LoginForm
           bottomSpacing={keyboardVisible ? KEYBOARD_SPACING : 0}
           onGoSignUp={handleGoSignUp}
           onGoResetPassword={handleGoResetPassword}

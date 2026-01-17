@@ -1,13 +1,13 @@
 import { Platform, StyleSheet, View } from 'react-native';
 import { router } from 'expo-router';
 
-import { IconMail } from '@assets/icons';
+import { LoginAppleButton, LoginKakaoButton } from '@features/login';
 
+import { IconMail } from '@assets/icons';
 import { MDButton } from '@shared/ui/Button';
 import { MDLogo } from '@shared/ui/Logo';
 import { MDPage } from '@shared/ui/Layout';
 import { useToastStore } from '@shared/lib/toast';
-import { AppleLoginButton, KakaoLoginButton } from '@features/login';
 
 import { TermsTextBox } from './TermsTextBox';
 
@@ -37,10 +37,10 @@ export function LoginSocialPage() {
           label="이메일로 계속하기"
           onPress={handleEmailPress}
         />
-        <KakaoLoginButton onSuccess={handleLoginSuccess} onError={handleLoginError} />
+        <LoginKakaoButton onSuccess={handleLoginSuccess} onError={handleLoginError} />
 
         {Platform.OS === 'ios' && (
-          <AppleLoginButton onSuccess={handleLoginSuccess} onError={handleLoginError} />
+          <LoginAppleButton onSuccess={handleLoginSuccess} onError={handleLoginError} />
         )}
       </View>
 

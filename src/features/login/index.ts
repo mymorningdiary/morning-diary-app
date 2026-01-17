@@ -1,3 +1,3 @@
-export { KakaoLoginButton } from './ui/KakaoLoginButton';
-export { AppleLoginButton } from './ui/AppleLoginButton';
+export { LoginKakaoButton } from './ui/LoginKakaoButton';
+export { LoginAppleButton } from './ui/LoginAppleButton';
 export { useLoginEmail } from './model/useLoginEmail';

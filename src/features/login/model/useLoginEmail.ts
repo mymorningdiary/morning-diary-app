@@ -1,4 +1,4 @@
-import { postAuthSignIn, useAuth } from '@entities/auth';
+import { postSignIn, useAuth } from '@entities/auth';
 import { Logger } from '@shared/lib/log';
 
 import { useMutation } from '@tanstack/react-query';
@@ -10,7 +10,7 @@ interface Props {
 
 export function useLoginEmail({ onSuccess, onError }: Props) {
   const { setAuth } = useAuth();
-  const { mutateAsync, isPending } = useMutation({ mutationFn: postAuthSignIn });
+  const { mutateAsync, isPending } = useMutation({ mutationFn: postSignIn });
 
   const loginEmail = async ({ email, password }: { email: string; password: string }) => {
     if (isPending) return;

@@ -5,11 +5,11 @@ import { Logger } from '@shared/lib/log';
 import { useMutation } from '@tanstack/react-query';
 
 interface Props {
-  onSuccess: (isExistUser: boolean) => void;
-  onError: (message: string) => void;
+  onSuccess?: (isExistUser: boolean) => void;
+  onError?: (message: string) => void;
 }
 
-export function useKakaoLogin({ onSuccess, onError }: Props) {
+export function useLoginKakao({ onSuccess, onError }: Props) {
   const { setAuth } = useAuth();
   const { mutateAsync, isPending } = useMutation({ mutationFn: postKakaoLogin });
 
@@ -24,13 +24,13 @@ export function useKakaoLogin({ onSuccess, onError }: Props) {
         const { accessToken, refreshToken, isExistUser } = res.data;
 
         setAuth({ accessToken, refreshToken });
-        onSuccess(isExistUser ?? false);
+        onSuccess?.(isExistUser ?? false);
       } else {
-        onError('카카오 로그인에 실패했습니다');
+        onError?.('카카오 로그인에 실패했습니다');
       }
     } catch (e) {
       Logger('useKakaoLogin').error('Failed to kakao login', e);
-      onError('카카오 로그인에 실패했습니다');
+      onError?.('카카오 로그인에 실패했습니다');
     }
   };
 

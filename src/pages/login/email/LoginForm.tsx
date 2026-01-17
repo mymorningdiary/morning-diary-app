@@ -1,14 +1,12 @@
 import { Pressable, ScrollView, StyleSheet, TextInput, View } from 'react-native';
-
-import { MDColorsType, useThemeColor } from '@shared/lib/theme';
-
 import { useRef, useState } from 'react';
 
+import { useLoginEmail } from '@features/login';
 import { MDButton } from '@shared/ui/Button';
 import { MDText } from '@shared/ui/Text';
 import { MDFieldState, MDTextField } from '@shared/ui/TextField';
 import { validateEmail, validatePassword } from '@shared/lib/validation';
-import { useLoginEmail } from '@features/login';
+import { MDColorsType, useThemeColor } from '@shared/lib/theme';
 import { Logger } from '@shared/lib/log';
 
 interface Props {
@@ -19,7 +17,7 @@ interface Props {
   onLoginError?: (message: string) => void;
 }
 
-export function LoginEmailForm({
+export function LoginForm({
   bottomSpacing = 0,
   onGoSignUp,
   onGoResetPassword,

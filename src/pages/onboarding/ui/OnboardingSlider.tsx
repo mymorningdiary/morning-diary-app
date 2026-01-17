@@ -1,16 +1,19 @@
-import { RefObject } from 'react';
-import { StyleSheet } from 'react-native';
+import { ReactNode, RefObject } from 'react';
+import { StyleSheet, View } from 'react-native';
 import PagerView from 'react-native-pager-view';
 
-import { OnboardingSlide1 } from './OnboardingSlide1';
-import { OnboardingSlide2 } from './OnboardingSlide2';
+interface SlideItem {
+  key: string;
+  component: ReactNode;
+}
 
 interface Props {
   sliderRef?: RefObject<PagerView | null>;
+  slides: SlideItem[];
   onSwipe?: (position: number) => void;
 }
 
-export function OnboardingSlider({ sliderRef, onSwipe }: Props) {
+export function OnboardingSlider({ sliderRef, slides, onSwipe }: Props) {
   const styles = SliderStyles;
 
   return (
@@ -18,14 +21,20 @@ export function OnboardingSlider({ sliderRef, onSwipe }: Props) {
       ref={sliderRef}
       style={styles.container}
       onPageSelected={({ nativeEvent }) => onSwipe?.(nativeEvent.position)}>
-      <OnboardingSlide1 key="1" />
-      <OnboardingSlide2 key="2" />
+      {slides.map((slide) => (
+        <View key={slide.key} style={styles.slideBox}>
+          {slide.component}
+        </View>
+      ))}
     </PagerView>
   );
 }
 
 const SliderStyles = StyleSheet.create({
   container: {
+    flex: 1,
+  },
+  slideBox: {
     flex: 1,
   },
 });

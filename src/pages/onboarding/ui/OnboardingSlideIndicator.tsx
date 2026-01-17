@@ -1,18 +1,19 @@
-import { MDColorsType, useThemeColor } from '@shared/lib/theme';
 import { StyleSheet, View } from 'react-native';
-import { SLIDE_CNT } from '../model/constants';
+
+import { MDColorsType, useThemeColor } from '@shared/lib/theme';
 
 interface Props {
   position: number;
+  count: number;
 }
 
-export function OnboardingSlideIndicator({ position }: Props) {
+export function OnboardingSlideIndicator({ position, count }: Props) {
   const colors = useThemeColor();
   const styles = IndicatorStyles({ colors });
 
   return (
     <View style={styles.container}>
-      {Array.from({ length: SLIDE_CNT }).map((_, i) => (
+      {Array.from({ length: count }).map((_, i) => (
         <View
           key={i}
           style={[styles.dot, position === i && { backgroundColor: colors.primary.normal }]}

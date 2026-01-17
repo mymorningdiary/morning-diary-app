@@ -1,23 +1,32 @@
-import { useVisit } from '@features/onboarding';
-import { MDButton } from '@shared/ui/MDButton';
-import { MDPage } from '@shared/ui/MDPage';
 import { router } from 'expo-router';
 import { useRef, useState } from 'react';
 import { StyleSheet } from 'react-native';
 import PagerView from 'react-native-pager-view';
+
+import { useVisit } from '@features/onboarding';
+import { MDButton } from '@shared/ui/MDButton';
+import { MDPage } from '@shared/ui/MDPage';
+
 import { OnboardingSlideIndicator } from './OnboardingSlideIndicator';
 import { OnboardingSlider } from './OnboardingSlider';
-import { SLIDE_CNT } from '../model/constants';
+import { OnboardingSlide1 } from './OnboardingSlide1';
+import { OnboardingSlide2 } from './OnboardingSlide2';
 
 export function OnboardingPage() {
   const styles = PageStyles;
   const sliderRef = useRef<PagerView | null>(null);
 
+  const slides = [
+    { key: 'slide1', buttonLabel: '다음', component: <OnboardingSlide1 /> },
+    { key: 'slide2', buttonLabel: '시작하기', component: <OnboardingSlide2 /> },
+  ];
+
   const { markVisited } = useVisit();
   const [currentPosition, setCurrentPosition] = useState(0);
+  const currentButtonLabel = slides[Math.min(currentPosition, slides.length - 1)].buttonLabel;
 
   const handleNextButtonPress = () => {
-    if (currentPosition < SLIDE_CNT - 1) {
+    if (currentPosition < slides.length - 1) {
       const next = currentPosition + 1;
 
       setCurrentPosition(next);
@@ -30,13 +39,17 @@ export function OnboardingPage() {
 
   return (
     <MDPage style={styles.container}>
-      <OnboardingSlideIndicator position={currentPosition} />
-      <OnboardingSlider sliderRef={sliderRef} onSwipe={(p) => setCurrentPosition(p)} />
+      <OnboardingSlideIndicator position={currentPosition} count={slides.length} />
+      <OnboardingSlider
+        sliderRef={sliderRef}
+        slides={slides}
+        onSwipe={(p) => setCurrentPosition(p)}
+      />
 
       <MDButton
         style={{ marginHorizontal: 16 }}
         fullWidth={false}
-        label={currentPosition === SLIDE_CNT - 1 ? '완료' : '다음'}
+        label={currentButtonLabel}
         onPress={handleNextButtonPress}
       />
     </MDPage>

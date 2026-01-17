@@ -11,7 +11,7 @@ import { AppleLoginButton, KakaoLoginButton } from '@features/login';
 
 import { TermsTextBox } from './TermsTextBox';
 
-export function LoginPage() {
+export function LoginSocialPage() {
   const styles = PageStyles;
 
   const handleEmailPress = () => {

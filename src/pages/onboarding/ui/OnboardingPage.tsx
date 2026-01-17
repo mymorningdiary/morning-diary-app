@@ -33,7 +33,7 @@ export function OnboardingPage() {
       sliderRef.current?.setPage(next);
     } else {
       markVisited();
-      router.replace('/login');
+      router.replace('/login-social');
     }
   };
 

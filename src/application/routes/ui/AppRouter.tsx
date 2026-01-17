@@ -58,7 +58,7 @@ export function AppRouter() {
         </Stack.Protected>
 
         <Stack.Protected guard={!accessToken && isFirstVisit === false}>
-          <Stack.Screen name="login" />
+          <Stack.Screen name="login-social" />
           <Stack.Screen name="login-email" />
           <Stack.Screen name="sign-up" />
         </Stack.Protected>

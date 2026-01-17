@@ -65,7 +65,7 @@ export const MDTextField = forwardRef<TextInput, Props>(
 
     return (
       <View style={[styles.container, fieldStyle]}>
-        {label ? <MDText type="labelSemiBold">{label}</MDText> : null}
+        {label && <MDText type="labelSemiBold">{label}</MDText>}
         <View style={[styles.inputBox, { borderBottomColor: inputBorderColor }]}>
           <TextInput
             ref={ref}
@@ -75,6 +75,8 @@ export const MDTextField = forwardRef<TextInput, Props>(
             autoCorrect={false}
             spellCheck={false}
             autoCapitalize="none"
+            textContentType="oneTimeCode"
+            autoComplete="off"
             cursorColor={colors.text.brand}
             selectionColor={colors.text.brand}
             editable={editable}

@@ -15,7 +15,7 @@ export function LoginSocialPage() {
   const styles = PageStyles;
 
   const handleEmailPress = () => {
-    router.push('/login-email');
+    router.push('/(login)/email');
   };
 
   const handleLoginSuccess = (isExistUser: boolean) => {

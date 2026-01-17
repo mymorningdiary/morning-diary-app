@@ -1,3 +1,5 @@
+export const PASSWORD_MAX_LEN = 64;
+
 export const PASSWORD_REGEX = /^(?=.*[a-zA-Z])(?=.*[!@#$%^+=-])(?=.*[0-9]).{10,64}$/;
 
 export const isPassword = (value: string) => PASSWORD_REGEX.test(value);

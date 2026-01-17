@@ -1,13 +1,12 @@
-import { Pressable, ScrollView, StyleSheet, TextInput, View } from 'react-native';
 import { useRef, useState } from 'react';
+import { Pressable, ScrollView, StyleSheet, TextInput, View } from 'react-native';
 
 import { useLoginEmail } from '@features/login';
+import { useThemeColor } from '@shared/lib/theme';
+import { PASSWORD_MAX_LEN, validateEmail, validatePassword } from '@shared/lib/validation';
 import { MDButton } from '@shared/ui/Button';
 import { MDText } from '@shared/ui/Text';
 import { MDFieldState, MDTextField } from '@shared/ui/TextField';
-import { validateEmail, validatePassword } from '@shared/lib/validation';
-import { MDColorsType, useThemeColor } from '@shared/lib/theme';
-import { Logger } from '@shared/lib/log';
 
 interface Props {
   bottomSpacing?: number;
@@ -25,7 +24,7 @@ export function LoginForm({
   onLoginError,
 }: Props) {
   const colors = useThemeColor();
-  const styles = FormStyles({ colors });
+  const styles = FormStyles;
 
   const emailRef = useRef<TextInput | null>(null);
   const passwordRef = useRef<TextInput | null>(null);
@@ -38,10 +37,12 @@ export function LoginForm({
     onError: ({ type, message }) => {
       if (type === 'email') {
         setEmail((prev) => ({ ...prev, status: 'error', message }));
+        emailRef.current?.focus();
         return;
       }
       if (type === 'password') {
         setPassword((prev) => ({ ...prev, status: 'error', message }));
+        passwordRef.current?.focus();
         return;
       }
       onLoginError?.(message);
@@ -59,7 +60,6 @@ export function LoginForm({
   const handleSubmit = async () => {
     const emailValue = email.value ?? '';
     const passwordValue = password.value ?? '';
-    Logger('LoginEmailForm').debug('email: ', emailValue, 'password: ', passwordValue);
 
     const emailValidation = validateEmail(emailValue);
     const passwordValidation = validatePassword(passwordValue);
@@ -76,7 +76,15 @@ export function LoginForm({
       message: passwordValidation.message,
     }));
 
-    if (!emailValidation.isValid || !passwordValidation.isValid) return;
+    if (!emailValidation.isValid) {
+      emailRef.current?.focus();
+      return;
+    }
+
+    if (!passwordValidation.isValid) {
+      passwordRef.current?.focus();
+      return;
+    }
 
     loginEmail({ email: emailValue, password: passwordValue });
   };
@@ -102,6 +110,7 @@ export function LoginForm({
             placeholder="비밀번호"
             secureTextEntry
             returnKeyType="done"
+            maxLength={PASSWORD_MAX_LEN}
             {...password}
             onChangeText={handlePasswordChange}
             onSubmitEditing={handleSubmit}
@@ -123,17 +132,16 @@ export function LoginForm({
   );
 }
 
-const FormStyles = ({ colors }: { colors: MDColorsType }) =>
-  StyleSheet.create({
-    textFieldContent: {
-      paddingTop: 16,
-      paddingHorizontal: 16,
-      paddingBottom: 60,
-      gap: 24,
-    },
-    buttonContent: {
-      alignItems: 'center',
-      paddingHorizontal: 16,
-      gap: 10,
-    },
-  });
+const FormStyles = StyleSheet.create({
+  textFieldContent: {
+    paddingTop: 16,
+    paddingHorizontal: 16,
+    paddingBottom: 60,
+    gap: 24,
+  },
+  buttonContent: {
+    alignItems: 'center',
+    paddingHorizontal: 16,
+    gap: 10,
+  },
+});

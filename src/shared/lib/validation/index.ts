@@ -1,2 +1,2 @@
 export { validateEmail } from './email';
-export { validatePassword } from './password';
+export { validatePassword, PASSWORD_MAX_LEN } from './password';

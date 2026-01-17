@@ -1,9 +1,21 @@
-import { Text, View } from 'react-native';
+import { StyleSheet } from 'react-native';
+
+import { MDAppBar } from '@shared/ui/AppBar';
+import { MDPage } from '@shared/ui/MDPage';
+import { router } from 'expo-router';
 
 export function LoginEmailPage() {
+  const styles = PageStyles;
+
   return (
-    <View style={{ flex: 1, backgroundColor: 'white' }}>
-      <Text>Email Login Page</Text>
-    </View>
+    <MDPage style={styles.container}>
+      <MDAppBar title="이메일 로그인" onBack={() => router.back()} />
+    </MDPage>
   );
 }
+
+const PageStyles = StyleSheet.create({
+  container: {
+    paddingBottom: 60,
+  },
+});

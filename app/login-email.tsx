@@ -7,6 +7,7 @@ import { useThemeColor } from '@/hooks';
 import { MDColors } from '@/types';
 import { Logger } from '@/utils/logs';
 import { useAuth } from '@entities/auth';
+import { LoginEmailPage } from '@pages/login';
 import { useMutation } from '@tanstack/react-query';
 import { router } from 'expo-router';
 import { useRef, useState } from 'react';
@@ -33,7 +34,9 @@ interface FormFieldState {
   isValid: boolean;
 }
 
-export default function SignInEmailScreen() {
+export default LoginEmailPage;
+
+export function SignInEmailScreen() {
   const colors = useThemeColor();
   const insets = useSafeAreaInsets();
   const styles = ScreenStyles({ colors, bottomInset: insets.bottom });

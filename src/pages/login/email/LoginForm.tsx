@@ -98,7 +98,11 @@ export function LoginForm({ keyboardSpacing = 0, onLoginSuccess, onLoginError }:
 
   return (
     <>
-      <ScrollView overScrollMode="never" showsVerticalScrollIndicator={false} bounces={false}>
+      <ScrollView
+        overScrollMode="never"
+        showsVerticalScrollIndicator={false}
+        bounces={false}
+        keyboardShouldPersistTaps="handled">
         <View style={styles.textFieldContent}>
           <MDTextField
             ref={emailRef}

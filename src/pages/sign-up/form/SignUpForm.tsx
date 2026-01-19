@@ -5,6 +5,9 @@ import { PASSWORD_MAX_LEN, validateEmail } from '@shared/lib/validation';
 import { MDButton } from '@shared/ui/Button';
 import { MDFieldState, MDTextField } from '@shared/ui/TextField';
 import { RequestOtpButton } from './RequestOtpButton';
+import { useDupEmail } from '@entities/auth';
+import { Logger } from '@shared/lib/log';
+import { useToastStore } from '@shared/lib/toast';
 
 interface Props {
   keyboardSpacing?: number;
@@ -26,6 +29,25 @@ export function SignUpForm({ keyboardSpacing = 0, onSignUpSuccess, onSignUpError
   const [password2, setPassword2] = useState<MDFieldState>({});
 
   const [canRequestOtp, setCanRequestOtp] = useState(false);
+
+  const { checkEmail, isPending } = useDupEmail({
+    onSuccess: () => {
+      setEmail((prev) => ({ ...prev, status: 'success', message: '사용가능한 이메일이에요' }));
+    },
+    onError: ({ type, message }) => {
+      switch (type) {
+        case 'email': {
+          setCanRequestOtp(false);
+          setEmail((prev) => ({ ...prev, status: 'error', message }));
+          break;
+        }
+        default: {
+          useToastStore.getState().show({ type: 'error', message });
+          break;
+        }
+      }
+    },
+  });
 
   const handleEmailChange = (value: string) => {
     const { isValid } = validateEmail(value);
@@ -56,7 +78,11 @@ export function SignUpForm({ keyboardSpacing = 0, onSignUpSuccess, onSignUpError
 
   return (
     <>
-      <ScrollView overScrollMode="never" showsVerticalScrollIndicator={false} bounces={false}>
+      <ScrollView
+        overScrollMode="never"
+        showsVerticalScrollIndicator={false}
+        bounces={false}
+        keyboardShouldPersistTaps="handled">
         <View style={styles.textFieldContent}>
           <MDTextField
             ref={emailRef}
@@ -72,7 +98,9 @@ export function SignUpForm({ keyboardSpacing = 0, onSignUpSuccess, onSignUpError
                 style={{ minWidth: 76 }}
                 size="small"
                 label="인증 요청"
+                loading={isPending}
                 disabled={!canRequestOtp}
+                onPress={() => checkEmail({ email: email.value ?? '' })}
               />
             }
           />
@@ -120,6 +148,7 @@ export function SignUpForm({ keyboardSpacing = 0, onSignUpSuccess, onSignUpError
         style={{ marginHorizontal: 16, marginVertical: keyboardSpacing }}
         label="가입하기"
         loading={false}
+        disabled={email.status !== 'success'}
         onPress={() => {}}
       />
     </>

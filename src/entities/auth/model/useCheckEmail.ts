@@ -1,12 +1,12 @@
 import { useMutation } from '@tanstack/react-query';
 import { postDuplicateEmail } from '../api/post-duplicate-email';
 
-interface Props {
+interface Options {
   onSuccess?: () => void;
   onError?: ({ type, message }: { type?: 'email' | null; message: string }) => void;
 }
 
-export function useDupEmail({ onSuccess, onError }: Props) {
+export function useCheckEmail({ onSuccess, onError }: Options) {
   const { mutateAsync, isPending } = useMutation({
     mutationFn: postDuplicateEmail,
     onSuccess,

@@ -2,12 +2,12 @@ import { useMutation } from '@tanstack/react-query';
 import { postAuthenticationNumber } from '../api/post-authentication-number';
 import { Logger } from '@shared/lib/log';
 
-interface Props {
+interface Options {
   onSuccess?: () => void;
   onError?: ({ type, message }: { type?: 'email' | null; message: string }) => void;
 }
 
-export function useRequestOtp({ onSuccess, onError }: Props) {
+export function useRequestOtp({ onSuccess, onError }: Options) {
   const { mutateAsync, isPending } = useMutation({
     mutationFn: postAuthenticationNumber,
     onSuccess,

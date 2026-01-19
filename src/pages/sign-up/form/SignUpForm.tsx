@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { ScrollView, StyleSheet, TextInput, View } from 'react-native';
 
-import { useDupEmail } from '@entities/auth';
+import { useCheckEmail } from '@entities/auth';
 import { useToastStore } from '@shared/lib/toast';
 import { PASSWORD_MAX_LEN, validateEmail } from '@shared/lib/validation';
 import { MDButton } from '@shared/ui/Button';
@@ -11,7 +11,7 @@ import { MDText } from '@shared/ui/Text';
 import { useThemeColor } from '@shared/lib/theme';
 import { useRequestOtp } from '@entities/mail';
 
-const OTP_SEC = 10;
+const OTP_SEC = 30;
 
 interface Props {
   keyboardSpacing?: number;
@@ -56,6 +56,8 @@ export function SignUpForm({ keyboardSpacing = 0, onSignUpSuccess, onSignUpError
         case 'email': {
           setEmail((prev) => ({ ...prev, status: 'error', message }));
           setCanRequestOtp(false);
+          setOtp({ value: '', status: 'default', message: null });
+          reset();
           break;
         }
         default: {
@@ -66,7 +68,7 @@ export function SignUpForm({ keyboardSpacing = 0, onSignUpSuccess, onSignUpError
     },
   });
 
-  const { checkEmail, isPending: isCheckEmailPending } = useDupEmail({
+  const { checkEmail, isPending: isCheckEmailPending } = useCheckEmail({
     onSuccess: () => {
       setEmail((prev) => ({ ...prev, status: 'success', message: '사용가능한 이메일이에요' }));
       requestOtp({ type: 'SIGN_UP', email: email.value ?? '' });
@@ -105,12 +107,14 @@ export function SignUpForm({ keyboardSpacing = 0, onSignUpSuccess, onSignUpError
   };
 
   const handleCheckEmailDup = async () => {
+    const emailValue = email.value ?? '';
+
     if (email.status !== 'success') {
-      await checkEmail({ email: email.value ?? '' });
+      await checkEmail({ email: emailValue });
       return;
     }
 
-    await requestOtp({ type: 'SIGN_UP', email: email.value ?? '' });
+    await requestOtp({ type: 'SIGN_UP', email: emailValue });
   };
 
   // 화면 진입시 포커싱 자동

@@ -1,6 +1,5 @@
 import { useMutation } from '@tanstack/react-query';
 import { postVerifyEmail } from '../api/post-verify-email';
-import { Logger } from '@shared/lib/log';
 
 interface Options {
   onSuccess?: () => void;

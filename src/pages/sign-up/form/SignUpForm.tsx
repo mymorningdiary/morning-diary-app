@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { ScrollView, StyleSheet, TextInput, View } from 'react-native';
 
-import { useCheckEmail } from '@entities/auth';
+import { useCheckEmail, useVerifyOtp } from '@entities/auth';
 import { useToastStore } from '@shared/lib/toast';
 import {
   OTP_EXPIRATION_SEC,
@@ -28,8 +28,8 @@ export function SignUpForm({ keyboardSpacing = 0, onSignUpSuccess, onSignUpError
 
   const emailRef = useRef<TextInput | null>(null);
   const otpRef = useRef<TextInput | null>(null);
-  const passwordRef = useRef<TextInput | null>(null);
-  const confirmPasswordRef = useRef<TextInput | null>(null);
+  const password1Ref = useRef<TextInput | null>(null);
+  const password2Ref = useRef<TextInput | null>(null);
 
   const [email, setEmail] = useState<MDFieldState>({});
   const [otp, setOtp] = useState<MDFieldState>({});
@@ -38,7 +38,7 @@ export function SignUpForm({ keyboardSpacing = 0, onSignUpSuccess, onSignUpError
 
   const [canRequestOtp, setCanRequestOtp] = useState(false);
 
-  const { seconds, start, reset } = useCountdown({
+  const { seconds, isRunning, start, stop, reset } = useCountdown({
     initialSeconds: OTP_EXPIRATION_SEC,
     onEnd: () => {
       if (otp.status !== 'success') {
@@ -91,6 +91,26 @@ export function SignUpForm({ keyboardSpacing = 0, onSignUpSuccess, onSignUpError
     },
   });
 
+  const { verifyOtp, isPending: isVerifyOtpPending } = useVerifyOtp({
+    onSuccess: () => {
+      stop();
+      setOtp((prev) => ({ ...prev, status: 'success', message: '인증이 완료되었어요' }));
+      setTimeout(() => password1Ref.current?.focus(), 0);
+    },
+    onError: ({ type, message }) => {
+      switch (type) {
+        case 'otp': {
+          setOtp((prev) => ({ ...prev, status: 'error', message }));
+          break;
+        }
+        default: {
+          useToastStore.getState().show({ type: 'error', message });
+          break;
+        }
+      }
+    },
+  });
+
   const handleEmailChange = (value: string) => {
     const { isValid } = validateEmail(value);
     setCanRequestOtp(isValid);
@@ -99,6 +119,14 @@ export function SignUpForm({ keyboardSpacing = 0, onSignUpSuccess, onSignUpError
 
   const handleOtpChange = (value: string) => {
     setOtp({ value, status: 'default', message: null });
+
+    if (value.length === OTP_LEN && email.status === 'success' && !isVerifyOtpPending) {
+      if (isRunning) {
+        verifyOtp({ email: email.value ?? '', authenticationNumber: value });
+      } else {
+        setOtp((prev) => ({ ...prev, status: 'error', message: '인증시간이 만료되었어요' }));
+      }
+    }
   };
 
   const handlePassword1Change = (value: string) => {
@@ -109,7 +137,7 @@ export function SignUpForm({ keyboardSpacing = 0, onSignUpSuccess, onSignUpError
     setPassword2({ value, status: 'default', message: null });
   };
 
-  const handleCheckEmailDup = async () => {
+  const handleCheckEmail = async () => {
     const emailValue = email.value ?? '';
 
     if (email.status !== 'success') {
@@ -147,15 +175,15 @@ export function SignUpForm({ keyboardSpacing = 0, onSignUpSuccess, onSignUpError
             editable={email.status !== 'success'}
             {...email}
             onChangeText={handleEmailChange}
-            onSubmitEditing={() => otpRef.current?.focus()}
+            onSubmitEditing={handleCheckEmail}
             tail={
               <MDButton
                 style={{ minWidth: 76 }}
                 size="small"
                 label={email.status === 'success' ? '다시 요청' : '인증 요청'}
                 loading={isCheckEmailPending || isRequestOtpPending}
-                disabled={!canRequestOtp}
-                onPress={handleCheckEmailDup}
+                disabled={!canRequestOtp || otp.status === 'success'}
+                onPress={handleCheckEmail}
               />
             }
           />
@@ -169,9 +197,10 @@ export function SignUpForm({ keyboardSpacing = 0, onSignUpSuccess, onSignUpError
               keyboardType="decimal-pad"
               inputMode="numeric"
               maxLength={OTP_LEN}
+              editable={otp.status !== 'success'}
               {...otp}
               onChangeText={handleOtpChange}
-              onSubmitEditing={() => passwordRef?.current?.focus()}
+              onSubmitEditing={() => password1Ref?.current?.focus()}
               tail={
                 <MDText type="labelRegular" color={colors.text.alternative}>
                   {formatSecondsToMMSS(seconds)}
@@ -181,7 +210,7 @@ export function SignUpForm({ keyboardSpacing = 0, onSignUpSuccess, onSignUpError
           )}
 
           <MDTextField
-            ref={passwordRef}
+            ref={password1Ref}
             label="비밀번호"
             placeholder="영문,숫자,특수문자 포함 10자리 이상"
             secureTextEntry
@@ -189,11 +218,11 @@ export function SignUpForm({ keyboardSpacing = 0, onSignUpSuccess, onSignUpError
             maxLength={PASSWORD_MAX_LEN}
             {...password1}
             onChangeText={handlePassword1Change}
-            onSubmitEditing={() => confirmPasswordRef.current?.focus()}
+            onSubmitEditing={() => password2Ref.current?.focus()}
           />
 
           <MDTextField
-            ref={confirmPasswordRef}
+            ref={password2Ref}
             label="비밀번호 확인"
             placeholder="영문,숫자,특수문자 포함 10자리 이상"
             secureTextEntry

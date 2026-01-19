@@ -8,6 +8,8 @@ import {
   OTP_LEN,
   PASSWORD_MAX_LEN,
   validateEmail,
+  validatePassword,
+  confirmPassword,
 } from '@shared/lib/validation';
 import { MDButton } from '@shared/ui/Button';
 import { MDFieldState, MDTextField } from '@shared/ui/TextField';
@@ -37,6 +39,11 @@ export function SignUpForm({ keyboardSpacing = 0, onSignUpSuccess, onSignUpError
   const [password2, setPassword2] = useState<MDFieldState>({});
 
   const [canRequestOtp, setCanRequestOtp] = useState(false);
+  const canSignUp =
+    email.status === 'success' &&
+    otp.status === 'success' &&
+    password1.status === 'success' &&
+    password2.status === 'success';
 
   const { seconds, isRunning, start, stop, reset } = useCountdown({
     initialSeconds: OTP_EXPIRATION_SEC,
@@ -129,15 +136,57 @@ export function SignUpForm({ keyboardSpacing = 0, onSignUpSuccess, onSignUpError
     }
   };
 
+  const validatePassword2 = (nextPassword1: string, nextPassword2: string) => {
+    const { isSame, message } = confirmPassword(nextPassword1, nextPassword2);
+    if (!isSame) {
+      return { status: 'error', message } as const;
+    }
+
+    const { isValid } = validatePassword(nextPassword2);
+    return {
+      status: isValid ? 'success' : 'error',
+      message: isValid ? message : '사용 불가능한 비밀번호에요 (영문자+숫자+특수문자 10-64자)',
+    } as const;
+  };
+
   const handlePassword1Change = (value: string) => {
-    setPassword1({ value, status: 'default', message: null });
+    const password2Value = password2.value;
+    if (password2Value && password2Value.length > 0) {
+      setPassword2((prev) => ({
+        ...prev,
+        ...validatePassword2(value, password2Value),
+      }));
+    }
+
+    if (value.length === 0) {
+      setPassword1({ value, status: 'default', message: null });
+      return;
+    }
+
+    const { isValid } = validatePassword(value);
+    setPassword1({
+      value,
+      status: isValid ? 'success' : 'error',
+      message: isValid
+        ? '사용 가능한 비밀번호에요'
+        : '사용 불가능한 비밀번호에요 (영문자+숫자+특수문자 10-64자)',
+    });
   };
 
   const handlePassword2Change = (value: string) => {
-    setPassword2({ value, status: 'default', message: null });
+    if (value.length === 0) {
+      setPassword2({ value, status: 'default', message: null });
+      return;
+    }
+
+    setPassword2({
+      value,
+      ...validatePassword2(password1.value ?? '', value),
+    });
   };
 
   const handleCheckEmail = async () => {
+    if (!canRequestOtp) return;
     const emailValue = email.value ?? '';
 
     if (email.status !== 'success') {
@@ -213,7 +262,7 @@ export function SignUpForm({ keyboardSpacing = 0, onSignUpSuccess, onSignUpError
             ref={password1Ref}
             label="비밀번호"
             placeholder="영문,숫자,특수문자 포함 10자리 이상"
-            secureTextEntry
+            // secureTextEntry
             returnKeyType="next"
             maxLength={PASSWORD_MAX_LEN}
             {...password1}
@@ -225,7 +274,7 @@ export function SignUpForm({ keyboardSpacing = 0, onSignUpSuccess, onSignUpError
             ref={password2Ref}
             label="비밀번호 확인"
             placeholder="영문,숫자,특수문자 포함 10자리 이상"
-            secureTextEntry
+            // secureTextEntry
             returnKeyType="done"
             maxLength={PASSWORD_MAX_LEN}
             {...password2}
@@ -239,7 +288,7 @@ export function SignUpForm({ keyboardSpacing = 0, onSignUpSuccess, onSignUpError
         style={{ marginHorizontal: 16, marginVertical: keyboardSpacing }}
         label="가입하기"
         loading={false}
-        disabled={email.status !== 'success' || otp.status !== 'success'}
+        disabled={!canSignUp}
         onPress={() => {}}
       />
     </>

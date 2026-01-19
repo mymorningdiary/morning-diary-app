@@ -1,6 +1,6 @@
 export const PASSWORD_MAX_LEN = 64;
 
-export const PASSWORD_REGEX = /^(?=.*[a-zA-Z])(?=.*[!@#$%^+=-])(?=.*[0-9]).{10,64}$/;
+export const PASSWORD_REGEX = /^(?=.*[a-zA-Z])(?=.*[!@#$%^+=-])(?=.*[0-9])\S{10,64}$/;
 
 export const isPassword = (value: string) => PASSWORD_REGEX.test(value);
 
@@ -10,6 +10,16 @@ export const validatePassword = (value?: string) => {
 
   return {
     isValid,
+    message,
+  };
+};
+
+export const confirmPassword = (password1: string, password2: string) => {
+  const isSame = password1 === password2;
+  const message = isSame ? '비밀번호가 일치해요' : '비밀번호가 일치하지 않아요';
+
+  return {
+    isSame,
     message,
   };
 };

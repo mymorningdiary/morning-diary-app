@@ -3,15 +3,18 @@ import { ScrollView, StyleSheet, TextInput, View } from 'react-native';
 
 import { useCheckEmail } from '@entities/auth';
 import { useToastStore } from '@shared/lib/toast';
-import { PASSWORD_MAX_LEN, validateEmail } from '@shared/lib/validation';
+import {
+  OTP_EXPIRATION_SEC,
+  OTP_LEN,
+  PASSWORD_MAX_LEN,
+  validateEmail,
+} from '@shared/lib/validation';
 import { MDButton } from '@shared/ui/Button';
 import { MDFieldState, MDTextField } from '@shared/ui/TextField';
 import { formatSecondsToMMSS, useCountdown } from '@shared/lib/timer';
 import { MDText } from '@shared/ui/Text';
 import { useThemeColor } from '@shared/lib/theme';
 import { useRequestOtp } from '@entities/mail';
-
-const OTP_SEC = 30;
 
 interface Props {
   keyboardSpacing?: number;
@@ -36,7 +39,7 @@ export function SignUpForm({ keyboardSpacing = 0, onSignUpSuccess, onSignUpError
   const [canRequestOtp, setCanRequestOtp] = useState(false);
 
   const { seconds, start, reset } = useCountdown({
-    initialSeconds: OTP_SEC,
+    initialSeconds: OTP_EXPIRATION_SEC,
     onEnd: () => {
       if (otp.status !== 'success') {
         setOtp((prev) => ({ ...prev, status: 'error', message: '인증시간이 만료되었어요' }));
@@ -164,7 +167,7 @@ export function SignUpForm({ keyboardSpacing = 0, onSignUpSuccess, onSignUpError
               returnKeyType="next"
               keyboardType="decimal-pad"
               inputMode="numeric"
-              maxLength={6}
+              maxLength={OTP_LEN}
               {...otp}
               onChangeText={handleOtpChange}
               onSubmitEditing={() => passwordRef?.current?.focus()}

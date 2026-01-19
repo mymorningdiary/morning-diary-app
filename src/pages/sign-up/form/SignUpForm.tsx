@@ -229,7 +229,13 @@ export function SignUpForm({ keyboardSpacing = 0, onSignUpSuccess, onSignUpError
               <MDButton
                 style={{ minWidth: 76 }}
                 size="small"
-                label={email.status === 'success' ? '다시 요청' : '인증 요청'}
+                label={
+                  email.status === 'success'
+                    ? otp.status === 'success'
+                      ? '인증 완료'
+                      : '다시 요청'
+                    : '인증 요청'
+                }
                 loading={isCheckEmailPending || isRequestOtpPending}
                 disabled={!canRequestOtp || otp.status === 'success'}
                 onPress={handleCheckEmail}

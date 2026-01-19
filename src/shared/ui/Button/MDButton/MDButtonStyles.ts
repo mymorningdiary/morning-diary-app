@@ -51,12 +51,12 @@ const buttonSizeConfigMap: Record<ButtonSize, ButtonSizeConfig> = {
   },
   small: {
     container: {
-      minHeight: 44,
+      minHeight: 32,
       paddingHorizontal: 12,
-      borderRadius: 14,
+      borderRadius: 12,
     },
     content: {
-      textType: 'labelSemiBold',
+      textType: 'labelRegular',
       iconSize: 16,
       iconSpacing: 4,
     },

@@ -1,9 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
 import { ScrollView, StyleSheet, TextInput, View } from 'react-native';
 
-import { PASSWORD_MAX_LEN } from '@shared/lib/validation';
+import { PASSWORD_MAX_LEN, validateEmail } from '@shared/lib/validation';
 import { MDButton } from '@shared/ui/Button';
 import { MDFieldState, MDTextField } from '@shared/ui/TextField';
+import { RequestOtpButton } from './RequestOtpButton';
 
 interface Props {
   keyboardSpacing?: number;
@@ -21,10 +22,14 @@ export function SignUpForm({ keyboardSpacing = 0, onSignUpSuccess, onSignUpError
 
   const [email, setEmail] = useState<MDFieldState>({});
   const [otp, setOtp] = useState<MDFieldState>({});
-  const [password, setPassword] = useState<MDFieldState>({});
-  const [confirmPassword, setConfirmPassword] = useState<MDFieldState>({});
+  const [password1, setPassword1] = useState<MDFieldState>({});
+  const [password2, setPassword2] = useState<MDFieldState>({});
+
+  const [canRequestOtp, setCanRequestOtp] = useState(false);
 
   const handleEmailChange = (value: string) => {
+    const { isValid } = validateEmail(value);
+    setCanRequestOtp(isValid);
     setEmail({ value, status: 'default', message: null });
   };
 
@@ -32,12 +37,12 @@ export function SignUpForm({ keyboardSpacing = 0, onSignUpSuccess, onSignUpError
     setOtp({ value, status: 'default', message: null });
   };
 
-  const handlePasswordChange = (value: string) => {
-    setPassword({ value, status: 'default', message: null });
+  const handlePassword1Change = (value: string) => {
+    setPassword1({ value, status: 'default', message: null });
   };
 
-  const handleConfirmPasswordChange = (value: string) => {
-    setConfirmPassword({ value, status: 'default', message: null });
+  const handlePassword2Change = (value: string) => {
+    setPassword2({ value, status: 'default', message: null });
   };
 
   // 화면 진입시 포커싱 자동
@@ -62,6 +67,14 @@ export function SignUpForm({ keyboardSpacing = 0, onSignUpSuccess, onSignUpError
             {...email}
             onChangeText={handleEmailChange}
             onSubmitEditing={() => otpRef.current?.focus()}
+            tail={
+              <MDButton
+                style={{ minWidth: 76 }}
+                size="small"
+                label="인증 요청"
+                disabled={!canRequestOtp}
+              />
+            }
           />
 
           <MDTextField
@@ -84,8 +97,8 @@ export function SignUpForm({ keyboardSpacing = 0, onSignUpSuccess, onSignUpError
             secureTextEntry
             returnKeyType="next"
             maxLength={PASSWORD_MAX_LEN}
-            {...password}
-            onChangeText={handlePasswordChange}
+            {...password1}
+            onChangeText={handlePassword1Change}
             onSubmitEditing={() => confirmPasswordRef.current?.focus()}
           />
 
@@ -96,8 +109,8 @@ export function SignUpForm({ keyboardSpacing = 0, onSignUpSuccess, onSignUpError
             secureTextEntry
             returnKeyType="done"
             maxLength={PASSWORD_MAX_LEN}
-            {...confirmPassword}
-            onChangeText={handleConfirmPasswordChange}
+            {...password2}
+            onChangeText={handlePassword2Change}
             onSubmitEditing={() => {}}
           />
         </View>

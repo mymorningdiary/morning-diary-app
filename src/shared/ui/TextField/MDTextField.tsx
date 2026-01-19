@@ -19,6 +19,7 @@ interface Props extends TextInputProps {
   status?: FieldStatus;
   message?: string | null;
   suffix?: ReactNode;
+  tail?: ReactNode;
 }
 
 export const MDTextField = forwardRef<TextInput, Props>(
@@ -35,6 +36,7 @@ export const MDTextField = forwardRef<TextInput, Props>(
       onBlur,
       editable = true,
       accessibilityLabel,
+      tail,
       ...rest
     },
     ref,
@@ -62,26 +64,29 @@ export const MDTextField = forwardRef<TextInput, Props>(
     return (
       <View style={[styles.container, fieldStyle]}>
         {label && <MDText type="labelSemiBold">{label}</MDText>}
-        <View style={[styles.inputBox, { borderBottomColor: inputBorderColor }]}>
-          <TextInput
-            ref={ref}
-            style={[styles.textInput, inputStyle, !editable && styles.disabledInput]}
-            placeholderTextColor={colors.text.alternative}
-            allowFontScaling={false}
-            autoCorrect={false}
-            spellCheck={false}
-            autoCapitalize="none"
-            textContentType="oneTimeCode"
-            autoComplete="off"
-            cursorColor={colors.text.brand}
-            selectionColor={colors.text.brand}
-            editable={editable}
-            accessibilityLabel={accessibilityLabel ?? label}
-            {...rest}
-            onFocus={handleFocus}
-            onBlur={handleBlur}
-          />
-          {suffix}
+        <View style={styles.content}>
+          <View style={[styles.inputBox, { borderBottomColor: inputBorderColor }]}>
+            <TextInput
+              ref={ref}
+              style={[styles.input, inputStyle, !editable && styles.disabledInput]}
+              placeholderTextColor={colors.text.alternative}
+              allowFontScaling={false}
+              autoCorrect={false}
+              spellCheck={false}
+              autoCapitalize="none"
+              textContentType="oneTimeCode"
+              autoComplete="off"
+              cursorColor={colors.text.brand}
+              selectionColor={colors.text.brand}
+              editable={editable}
+              accessibilityLabel={accessibilityLabel ?? label}
+              {...rest}
+              onFocus={handleFocus}
+              onBlur={handleBlur}
+            />
+            {suffix}
+          </View>
+          {tail}
         </View>
 
         {message && (
@@ -99,14 +104,18 @@ const TextFieldStyles = ({ colors }: { colors: MDColorsType }) =>
     container: {
       gap: 4,
     },
+    content: {
+      flexDirection: 'row',
+      gap: 12,
+    },
     inputBox: {
-      width: '100%',
+      flex: 1,
       flexDirection: 'row',
       borderBottomWidth: 1,
       alignItems: 'center',
       gap: 12,
     },
-    textInput: {
+    input: {
       flex: 1,
       height: 36,
       fontFamily: 'Pretendard',

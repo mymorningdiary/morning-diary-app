@@ -73,6 +73,7 @@ export const MDTextField = forwardRef<TextInput, Props>(
               allowFontScaling={false}
               autoCorrect={false}
               spellCheck={false}
+              value={value}
               autoCapitalize="none"
               textContentType="oneTimeCode"
               autoComplete="off"
@@ -106,6 +107,7 @@ const TextFieldStyles = ({ colors }: { colors: MDColorsType }) =>
     },
     content: {
       flexDirection: 'row',
+      alignItems: 'center',
       gap: 12,
     },
     inputBox: {

@@ -117,6 +117,7 @@ export function SignUpForm({ keyboardSpacing = 0, onSignUpSuccess, onSignUpError
       return;
     }
 
+    // TODO 디바운싱
     await requestOtp({ type: 'SIGN_UP', email: emailValue });
   };
 

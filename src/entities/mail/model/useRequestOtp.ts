@@ -23,7 +23,7 @@ export function useRequestOtp({ onSuccess, onError }: Options) {
         }
         case 4400:
         case 4401: {
-          Logger('useOtpMail').debug('Failed to request otp:', error.message);
+          Logger('useRequestOtp').debug('Failed to request otp:', error.message);
           break;
         }
         default: {

@@ -1,5 +1,5 @@
 import { instance } from '@shared/api/client';
-import { ApiResponse, Auth } from '@shared/api/types';
+import { ApiResponse } from '@shared/api/types';
 
 interface DuplicateEmailRequest {
   email: string;
@@ -7,7 +7,7 @@ interface DuplicateEmailRequest {
 
 export const postDuplicateEmail = async (
   body: DuplicateEmailRequest,
-): Promise<ApiResponse<Auth>> => {
+): Promise<ApiResponse<null>> => {
   const response = await instance.post('/auth/duplicate-email', body);
   return response.data;
 };

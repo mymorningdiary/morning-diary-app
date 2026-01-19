@@ -9,6 +9,7 @@ import { MDFieldState, MDTextField } from '@shared/ui/TextField';
 import { formatSecondsToMMSS, useCountdown } from '@shared/lib/timer';
 import { MDText } from '@shared/ui/Text';
 import { useThemeColor } from '@shared/lib/theme';
+import { useRequestOtp } from '@entities/mail';
 
 const OTP_SEC = 10;
 
@@ -33,9 +34,8 @@ export function SignUpForm({ keyboardSpacing = 0, onSignUpSuccess, onSignUpError
   const [password2, setPassword2] = useState<MDFieldState>({});
 
   const [canRequestOtp, setCanRequestOtp] = useState(false);
-  const [showOtpField, setShowOtpField] = useState(false);
 
-  const { seconds, start, stop, reset } = useCountdown({
+  const { seconds, start, reset } = useCountdown({
     initialSeconds: OTP_SEC,
     onEnd: () => {
       if (otp.status !== 'success') {
@@ -44,18 +44,32 @@ export function SignUpForm({ keyboardSpacing = 0, onSignUpSuccess, onSignUpError
     },
   });
 
-  const requestOtp = () => {
-    setShowOtpField(true);
-    setOtp({ value: '', status: 'default', message: null });
-    reset();
-    start();
-    setTimeout(() => otpRef.current?.focus(), 0);
-  };
+  const { requestOtp, isPending: isRequestOtpPending } = useRequestOtp({
+    onSuccess: () => {
+      setTimeout(() => otpRef.current?.focus(), 0);
+      setOtp({ value: '', status: 'default', message: null });
+      reset();
+      start();
+    },
+    onError: ({ type, message }) => {
+      switch (type) {
+        case 'email': {
+          setEmail((prev) => ({ ...prev, status: 'error', message }));
+          setCanRequestOtp(false);
+          break;
+        }
+        default: {
+          useToastStore.getState().show({ type: 'error', message });
+          break;
+        }
+      }
+    },
+  });
 
-  const { checkEmail, isPending } = useDupEmail({
+  const { checkEmail, isPending: isCheckEmailPending } = useDupEmail({
     onSuccess: () => {
       setEmail((prev) => ({ ...prev, status: 'success', message: '사용가능한 이메일이에요' }));
-      requestOtp();
+      requestOtp({ type: 'SIGN_UP', email: email.value ?? '' });
     },
     onError: ({ type, message }) => {
       switch (type) {
@@ -90,13 +104,13 @@ export function SignUpForm({ keyboardSpacing = 0, onSignUpSuccess, onSignUpError
     setPassword2({ value, status: 'default', message: null });
   };
 
-  const handleRequestOtp = async () => {
+  const handleCheckEmailDup = async () => {
     if (email.status !== 'success') {
       await checkEmail({ email: email.value ?? '' });
       return;
     }
 
-    requestOtp();
+    await requestOtp({ type: 'SIGN_UP', email: email.value ?? '' });
   };
 
   // 화면 진입시 포커싱 자동
@@ -130,15 +144,15 @@ export function SignUpForm({ keyboardSpacing = 0, onSignUpSuccess, onSignUpError
               <MDButton
                 style={{ minWidth: 76 }}
                 size="small"
-                label={showOtpField ? '다시 요청' : '인증 요청'}
-                loading={isPending}
+                label={email.status === 'success' ? '다시 요청' : '인증 요청'}
+                loading={isCheckEmailPending || isRequestOtpPending}
                 disabled={!canRequestOtp}
-                onPress={handleRequestOtp}
+                onPress={handleCheckEmailDup}
               />
             }
           />
 
-          {showOtpField && (
+          {email.status === 'success' && (
             <MDTextField
               ref={otpRef}
               label="인증 번호"
@@ -188,7 +202,7 @@ export function SignUpForm({ keyboardSpacing = 0, onSignUpSuccess, onSignUpError
         style={{ marginHorizontal: 16, marginVertical: keyboardSpacing }}
         label="가입하기"
         loading={false}
-        disabled={email.status !== 'success'}
+        disabled={email.status !== 'success' || otp.status !== 'success'}
         onPress={() => {}}
       />
     </>

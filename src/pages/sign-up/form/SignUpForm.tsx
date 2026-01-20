@@ -1,22 +1,21 @@
 import { useEffect, useRef, useState } from 'react';
 import { ScrollView, StyleSheet, TextInput, View } from 'react-native';
 
-import { useCheckEmail, useVerifyOtp } from '@entities/auth';
-import { useToastStore } from '@shared/lib/toast';
+import { useCheckEmail, useSignUp, useVerifyOtp } from '@entities/auth';
+import { useRequestOtp } from '@entities/mail';
+import { useThemeColor } from '@shared/lib/theme';
+import { formatSecondsToMMSS, useCountdown } from '@shared/lib/timer';
 import {
+  confirmPassword,
   OTP_EXPIRATION_SEC,
   OTP_LEN,
   PASSWORD_MAX_LEN,
   validateEmail,
   validatePassword,
-  confirmPassword,
 } from '@shared/lib/validation';
 import { MDButton } from '@shared/ui/Button';
-import { MDFieldState, MDTextField } from '@shared/ui/TextField';
-import { formatSecondsToMMSS, useCountdown } from '@shared/lib/timer';
 import { MDText } from '@shared/ui/Text';
-import { useThemeColor } from '@shared/lib/theme';
-import { useRequestOtp } from '@entities/mail';
+import { MDFieldState, MDTextField } from '@shared/ui/TextField';
 
 interface Props {
   keyboardSpacing?: number;
@@ -54,11 +53,15 @@ export function SignUpForm({ keyboardSpacing = 0, onSignUpSuccess, onSignUpError
     },
   });
 
+  const resetOtp = () => {
+    setOtp({ value: '', status: 'default', message: null });
+    reset();
+  };
+
   const { requestOtp, isPending: isRequestOtpPending } = useRequestOtp({
     onSuccess: () => {
       setTimeout(() => otpRef.current?.focus(), 0);
-      setOtp({ value: '', status: 'default', message: null });
-      reset();
+      resetOtp();
       start();
     },
     onError: ({ type, message }) => {
@@ -66,12 +69,11 @@ export function SignUpForm({ keyboardSpacing = 0, onSignUpSuccess, onSignUpError
         case 'email': {
           setEmail((prev) => ({ ...prev, status: 'error', message }));
           setCanRequestOtp(false);
-          setOtp({ value: '', status: 'default', message: null });
-          reset();
+          resetOtp();
           break;
         }
         default: {
-          useToastStore.getState().show({ type: 'error', message });
+          onSignUpError?.(message);
           break;
         }
       }
@@ -91,7 +93,7 @@ export function SignUpForm({ keyboardSpacing = 0, onSignUpSuccess, onSignUpError
           break;
         }
         default: {
-          useToastStore.getState().show({ type: 'error', message });
+          onSignUpError?.(message);
           break;
         }
       }
@@ -111,7 +113,31 @@ export function SignUpForm({ keyboardSpacing = 0, onSignUpSuccess, onSignUpError
           break;
         }
         default: {
-          useToastStore.getState().show({ type: 'error', message });
+          onSignUpError?.(message);
+          break;
+        }
+      }
+    },
+  });
+
+  const { signUp, isPending: isSignUpPending } = useSignUp({
+    onSuccess: (isExistUser: boolean) => {
+      onSignUpSuccess?.(isExistUser);
+    },
+    onError: ({ type, message }) => {
+      switch (type) {
+        case 'email': {
+          setEmail((prev) => ({ ...prev, status: 'error', message }));
+          resetOtp();
+          break;
+        }
+        case 'password': {
+          setPassword1((prev) => ({ ...prev, status: 'error', message }));
+          setPassword2((prev) => ({ ...prev, status: 'error', message }));
+          break;
+        }
+        default: {
+          onSignUpError?.(message);
           break;
         }
       }
@@ -196,6 +222,10 @@ export function SignUpForm({ keyboardSpacing = 0, onSignUpSuccess, onSignUpError
 
     // TODO 디바운싱
     await requestOtp({ type: 'SIGN_UP', email: emailValue });
+  };
+
+  const handleSignUp = () => {
+    signUp({ email: email.value ?? '', password: password1.value ?? '' });
   };
 
   // 화면 진입시 포커싱 자동
@@ -293,9 +323,9 @@ export function SignUpForm({ keyboardSpacing = 0, onSignUpSuccess, onSignUpError
       <MDButton
         style={{ marginHorizontal: 16, marginVertical: keyboardSpacing }}
         label="가입하기"
-        loading={false}
+        loading={isSignUpPending}
         disabled={!canSignUp}
-        onPress={() => {}}
+        onPress={handleSignUp}
       />
     </>
   );

@@ -1,21 +1,24 @@
 import { useMutation } from '@tanstack/react-query';
 import { postSignUp } from '../api/post-sign-up';
+import { useAuth } from './useAuth';
 
 interface Options {
-  onSuccess?: () => void;
-  onError?: ({
-    type,
-    message,
-  }: {
-    type?: 'email' | 'otp' | 'password' | null;
-    message: string;
-  }) => void;
+  onSuccess?: (isExistUser: boolean) => void;
+  onError?: ({ type, message }: { type?: 'email' | 'password' | null; message: string }) => void;
 }
 
 export function useSignUp({ onSuccess, onError }: Options) {
+  const { setAuth } = useAuth();
+
   const { mutateAsync, isPending } = useMutation({
     mutationFn: postSignUp,
-    onSuccess,
+    onSuccess: (res) => {
+      if (res.code === 2000) {
+        const { accessToken, refreshToken, isExistUser } = res.data;
+        setAuth({ accessToken, refreshToken });
+        onSuccess?.(isExistUser ?? false);
+      }
+    },
     onError: (error: any) => {
       switch (error.code) {
         case 4007:

@@ -5,6 +5,7 @@ import { useThemeColor } from '@/hooks';
 import { MDColors } from '@/types';
 import { Logger } from '@/utils/logs';
 import { useAuth } from '@entities/auth';
+import { useUser } from '@entities/user';
 import { logout } from '@react-native-kakao/user';
 import { useMutation } from '@tanstack/react-query';
 import { router } from 'expo-router';
@@ -17,6 +18,7 @@ export default function WithdrawScreen() {
   const styles = ScreenStyles({ colors, bottomInset: insets.bottom });
 
   // const { clearAuthToken } = useAppState();
+  const { user } = useUser();
   const { clearAuth } = useAuth();
 
   const { mutate } = useMutation({
@@ -24,7 +26,10 @@ export default function WithdrawScreen() {
     onSuccess: async (res) => {
       if (res.code === 2000) {
         try {
-          await logout();
+          if (user?.loginType === 'KAKAO') {
+            await logout();
+          }
+
           clearAuth();
         } catch (e) {
           Logger('WithdrawScreen').error('Failed to sign out', e);

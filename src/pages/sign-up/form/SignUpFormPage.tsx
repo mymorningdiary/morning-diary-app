@@ -2,10 +2,10 @@ import { router } from 'expo-router';
 import { KeyboardAvoidingView, Platform, StyleSheet } from 'react-native';
 
 import { useKeyboardVisible } from '@shared/lib/keyboard';
+import { useToastStore } from '@shared/lib/toast';
 import { MDAppBar } from '@shared/ui/AppBar';
 import { MDPage } from '@shared/ui/Layout';
 import { SignUpForm } from './SignUpForm';
-import { useToastStore } from '@shared/lib/toast';
 
 const KEYBOARD_SPACING = 16;
 
@@ -14,7 +14,10 @@ export function SignUpFormPage() {
   const keyboardVisible = useKeyboardVisible();
 
   const handleSignUpSuccess = (isExistUser: boolean) => {
-    router.replace(isExistUser ? '/(app)' : '/(app)/alarm-permission');
+    router.replace({
+      pathname: '/(sign-up)/complete',
+      params: { isExistUser: isExistUser ? 'true' : 'false' },
+    });
   };
 
   const handleSignUpError = (message: string) => {

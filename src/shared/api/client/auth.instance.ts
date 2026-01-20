@@ -21,15 +21,18 @@ authInstance.interceptors.request.use(
   async (config) => {
     const accessToken = useAuthStore.getState().accessToken;
 
-    // 요청 기본 정보 로그
-    Logger('AXIOS(AUTH)').debug(`${config.method?.toUpperCase()} ${config.baseURL}${config.url}`, {
-      params: config.params,
-      data: config.data,
-    });
-
     if (accessToken) {
       config.headers = setAuthHeader(config.headers, accessToken);
     }
+
+    // 요청 기본 정보 로그
+    Logger('AXIOS(AUTH)').debug(
+      `request [${config.method?.toUpperCase()}] ${config.baseURL}${config.url}`,
+      {
+        headers: config.headers,
+        params: config.params,
+      },
+    );
 
     return config;
   },
@@ -43,11 +46,13 @@ let refreshPromise: Promise<string> | null = null;
 
 authInstance.interceptors.response.use(
   (response) => {
-    Logger('AXIOS(AUTH)').debug('response', {
-      status: response.status,
-      url: `${response.config.baseURL ?? ''}${response.config.url ?? ''}`,
-      data: response.data,
-    });
+    Logger('AXIOS(AUTH)').debug(
+      `response [${response.config.method?.toUpperCase()}] ${response.config.baseURL ?? ''}${response.config.url ?? ''}`,
+      {
+        headers: response.config.headers,
+        data: response.data,
+      },
+    );
 
     return response;
   },

@@ -148,7 +148,7 @@ export function SignUpForm({ keyboardSpacing = 0, onSignUpSuccess, onSignUpError
             ref={password1Ref}
             label="비밀번호"
             placeholder="영문,숫자,특수문자 포함 10자리 이상"
-            // secureTextEntry
+            secureTextEntry
             returnKeyType="next"
             maxLength={PASSWORD_MAX_LEN}
             {...password1}
@@ -160,7 +160,7 @@ export function SignUpForm({ keyboardSpacing = 0, onSignUpSuccess, onSignUpError
             ref={password2Ref}
             label="비밀번호 확인"
             placeholder="영문,숫자,특수문자 포함 10자리 이상"
-            // secureTextEntry
+            secureTextEntry
             returnKeyType="done"
             maxLength={PASSWORD_MAX_LEN}
             {...password2}

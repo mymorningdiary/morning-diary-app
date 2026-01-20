@@ -15,10 +15,13 @@ export const instance = axios.create({
 
 instance.interceptors.request.use(
   async (config) => {
-    Logger('AXIOS').debug(`${config.method?.toUpperCase()} ${config.baseURL}${config.url}`, {
-      params: config.params,
-      data: config.data,
-    });
+    Logger('AXIOS').debug(
+      `request [${config.method?.toUpperCase()}] ${config.baseURL}${config.url}`,
+      {
+        headers: config.headers,
+        params: config.params,
+      },
+    );
 
     return config;
   },
@@ -29,11 +32,13 @@ instance.interceptors.request.use(
 
 instance.interceptors.response.use(
   (response) => {
-    Logger('AXIOS').debug('response', {
-      url: `${response.config.baseURL ?? ''}${response.config.url ?? ''}`,
-      status: response.status,
-      data: response.data,
-    });
+    Logger('AXIOS').debug(
+      `response [${response.config.method?.toUpperCase()}] ${response.config.baseURL ?? ''}${response.config.url ?? ''}`,
+      {
+        headers: response.config.headers,
+        data: response.data,
+      },
+    );
 
     return response;
   },

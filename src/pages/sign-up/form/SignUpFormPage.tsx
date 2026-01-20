@@ -15,7 +15,7 @@ export function SignUpFormPage() {
 
   const handleSignUpSuccess = (isExistUser: boolean) => {
     router.replace({
-      pathname: '/(sign-up)/complete',
+      pathname: '/(app)/sign-up-complete',
       params: { isExistUser: isExistUser ? 'true' : 'false' },
     });
   };

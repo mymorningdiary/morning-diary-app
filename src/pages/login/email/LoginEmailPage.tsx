@@ -48,7 +48,7 @@ export function LoginEmailPage() {
 
       {showOtherButtons && (
         <View style={[styles.buttonContent]}>
-          <MDButton variant="outline" label="회원가입" onPress={() => router.push('/(sign-up)')} />
+          <MDButton variant="outline" label="회원가입" onPress={() => router.push('/sign-up')} />
 
           <Pressable hitSlop={10} onPress={() => {}}>
             <MDText type="labelRegular" color={colors.text.alternative}>

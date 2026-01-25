@@ -12,6 +12,7 @@ import { MDFieldState, MDTextField } from '@shared/ui/TextField';
 
 interface Props {
   style?: StyleProp<ViewStyle>;
+  otpType?: 'SIGN_UP' | 'FIND_PASSWORD';
   email: MDFieldState;
   otp: MDFieldState;
   emailRef?: RefObject<TextInput | null>;
@@ -26,6 +27,7 @@ interface Props {
 
 export function EmailOtpForm({
   style,
+  otpType = 'SIGN_UP',
   email,
   otp,
   emailRef,
@@ -59,6 +61,9 @@ export function EmailOtpForm({
   // 인증번호 요청
   const { requestOtp, isPending: isRequestOtpPending } = useRequestOtp({
     onSuccess: () => {
+      if (otpType === 'FIND_PASSWORD' && email.status !== 'success') {
+        setEmail((prev) => ({ ...prev, status: 'success' }));
+      }
       setTimeout(() => otpRef?.current?.focus(), 0);
       resetOtp();
       start();
@@ -77,7 +82,7 @@ export function EmailOtpForm({
     },
   });
 
-  // 이메일 중복 검사 (성공시 email.status === 'success'로 만들어 인증 번호 입력 가능하게)
+  // (회원가입시에만) 이메일 중복 검사 (성공시 email.status === 'success'로 만들어 인증 번호 입력 가능하게)
   const { checkEmail, isPending: isCheckEmailPending } = useCheckEmail({
     onSuccess: () => {
       setEmail((prev) => ({ ...prev, status: 'success', message: '사용가능한 이메일이에요' }));
@@ -136,7 +141,7 @@ export function EmailOtpForm({
     }
   };
 
-  const handleCheckEmail = async () => {
+  const handleRequestOtp = async () => {
     // 유효하지 않은 이메일 형식에서 submit
     if (!canRequestOtp) {
       const { isValid, message } = validateEmail(email.value);
@@ -147,14 +152,14 @@ export function EmailOtpForm({
     }
     const emailValue = email.value ?? '';
 
-    // 처음 인증 요청시 이메일 검증
-    if (email.status !== 'success') {
+    // (회원가입 시에만) 처음 인증 요청시 이메일 검증
+    if (otpType === 'SIGN_UP' && email.status !== 'success') {
       await checkEmail({ email: emailValue });
       return;
     }
 
     // 이메일 검증 후 인증 요청시 인증번호 재요청만
-    await requestOtp({ type: 'SIGN_UP', email: emailValue }); // TODO 디바운싱
+    await requestOtp({ type: otpType, email: emailValue }); // TODO 디바운싱
   };
 
   // 화면 진입시 포커싱 자동
@@ -185,7 +190,7 @@ export function EmailOtpForm({
         editable={email.status !== 'success'}
         {...email}
         onChangeText={handleEmailChange}
-        onSubmitEditing={handleCheckEmail}
+        onSubmitEditing={handleRequestOtp}
         tail={
           <MDButton
             style={{ minWidth: 76 }}
@@ -199,7 +204,7 @@ export function EmailOtpForm({
             }
             loading={isCheckEmailPending || isRequestOtpPending}
             disabled={!canRequestOtp || otp.status === 'success'}
-            onPress={handleCheckEmail}
+            onPress={handleRequestOtp}
           />
         }
       />

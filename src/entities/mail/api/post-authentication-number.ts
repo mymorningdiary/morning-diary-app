@@ -2,7 +2,7 @@ import { instance } from '@shared/api/client';
 import { ApiResponse } from '@shared/api/types';
 
 export interface AuthenticationNumberRequest {
-  type: 'SIGN_UP';
+  type: 'SIGN_UP' | 'FIND_PASSWORD';
   email: string;
 }
 

@@ -1,8 +1,9 @@
 import { useRef, useState } from 'react';
 import { ScrollView, StyleSheet, TextInput, View } from 'react-native';
 
-import { EmailOtpForm } from '@features/auth';
 import { useSignUp } from '@entities/auth';
+import { EmailOtpForm } from '@features/auth';
+import { KEYBOARD_SPACING, useKeyboardVisible } from '@shared/lib/keyboard';
 import {
   confirmPassword,
   OTP_LEN,
@@ -13,13 +14,13 @@ import { MDButton } from '@shared/ui/Button';
 import { MDFieldState, MDTextField } from '@shared/ui/TextField';
 
 interface Props {
-  keyboardSpacing?: number;
   onSignUpSuccess?: (isExistUser: boolean) => void;
   onSignUpError?: (message: string) => void;
 }
 
-export function SignUpForm({ keyboardSpacing = 0, onSignUpSuccess, onSignUpError }: Props) {
+export function SignUpForm({ onSignUpSuccess, onSignUpError }: Props) {
   const styles = FormStyles;
+  const keyboardVisible = useKeyboardVisible();
 
   const emailRef = useRef<TextInput | null>(null);
   const otpRef = useRef<TextInput | null>(null);
@@ -171,7 +172,7 @@ export function SignUpForm({ keyboardSpacing = 0, onSignUpSuccess, onSignUpError
       </ScrollView>
 
       <MDButton
-        style={{ marginHorizontal: 16, marginVertical: keyboardSpacing }}
+        style={{ marginHorizontal: 16, marginVertical: keyboardVisible ? KEYBOARD_SPACING : 0 }}
         label="가입하기"
         loading={isSignUpPending}
         disabled={!canSignUp}

@@ -1,7 +1,8 @@
-import { StyleProp, StyleSheet, ViewStyle } from 'react-native';
+import { Platform, StyleProp, StyleSheet, ViewStyle } from 'react-native';
 import { SafeAreaView, SafeAreaViewProps, useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { MDColorsType, useThemeColor } from '@shared/lib/theme';
+import { useKeyboardVisible } from '@shared/lib/keyboard';
 
 interface MDPageProps extends SafeAreaViewProps {
   includeBottomSafeArea?: boolean;
@@ -11,6 +12,7 @@ interface MDPageProps extends SafeAreaViewProps {
 export function MDPage({ style, includeBottomSafeArea = false, edges, ...rest }: MDPageProps) {
   const colors = useThemeColor();
   const styles = MDPageStyles({ colors });
+  const keyboardVisible = useKeyboardVisible();
 
   const insets = useSafeAreaInsets();
   const flattened = StyleSheet.flatten(style);
@@ -29,6 +31,7 @@ export function MDPage({ style, includeBottomSafeArea = false, edges, ...rest }:
         styles.container,
         style,
         typeof adjustedPadding === 'number' && { paddingBottom: adjustedPadding },
+        keyboardVisible && Platform.OS === 'android' && { paddingBottom: 0 },
       ]}
       {...rest}
     />

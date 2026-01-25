@@ -50,7 +50,7 @@ export function LoginEmailPage() {
         <View style={[styles.buttonContent]}>
           <MDButton variant="outline" label="회원가입" onPress={() => router.push('/sign-up')} />
 
-          <Pressable hitSlop={10} onPress={() => {}}>
+          <Pressable hitSlop={10} onPress={() => router.push('/(reset-password)')}>
             <MDText type="labelRegular" color={colors.text.alternative}>
               비밀번호 재설정
             </MDText>

@@ -1,6 +1,7 @@
 import { useRef, useState } from 'react';
 import { ScrollView, StyleSheet, TextInput, View } from 'react-native';
 
+import { EmailOtpForm } from '@features/auth';
 import { useSignUp } from '@entities/auth';
 import {
   confirmPassword,
@@ -10,7 +11,6 @@ import {
 } from '@shared/lib/validation';
 import { MDButton } from '@shared/ui/Button';
 import { MDFieldState, MDTextField } from '@shared/ui/TextField';
-import { EmailOtpForm } from './EmailOtpForm';
 
 interface Props {
   keyboardSpacing?: number;

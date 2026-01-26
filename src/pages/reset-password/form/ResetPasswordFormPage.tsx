@@ -1,34 +1,35 @@
 import { router } from 'expo-router';
-import { useRef, useState } from 'react';
-import {
-  KeyboardAvoidingView,
-  Platform,
-  ScrollView,
-  StyleSheet,
-  TextInput,
-  View,
-} from 'react-native';
+import { useEffect, useRef, useState } from 'react';
+import { KeyboardAvoidingView, Platform, StyleSheet, TextInput, View } from 'react-native';
 
-import { EmailOtpForm } from '@features/auth';
+import { EmailOtpForm, PasswordForm } from '@features/auth';
 import { KEYBOARD_SPACING, useKeyboardVisible } from '@shared/lib/keyboard';
 import { useToastStore } from '@shared/lib/toast';
 import { MDAppBar } from '@shared/ui/AppBar';
 import { MDButton } from '@shared/ui/Button';
 import { MDPage } from '@shared/ui/Layout';
 import { MDFieldState } from '@shared/ui/TextField';
+import PagerView from 'react-native-pager-view';
 
 export function ResetPasswordPage() {
   const styles = PageStyles;
   const keyboardVisible = useKeyboardVisible();
 
+  const sliderRef = useRef<PagerView | null>(null);
   const emailRef = useRef<TextInput | null>(null);
   const otpRef = useRef<TextInput | null>(null);
+  const password1Ref = useRef<TextInput | null>(null);
+  const password2Ref = useRef<TextInput | null>(null);
 
   const [email, setEmail] = useState<MDFieldState>({});
   const [otp, setOtp] = useState<MDFieldState>({});
+  const [password1, setPassword1] = useState<MDFieldState>({});
+  const [password2, setPassword2] = useState<MDFieldState>({});
 
+  const [currentPosition, setCurrentPosition] = useState(0);
   const [isVerifiedOtp, setIsVerifiedOtp] = useState(false);
   const [passwordResetToken, setPasswordResetToken] = useState<string | null>(null);
+  const [isVerifiedPassword, setVerifiedPassword] = useState(false);
 
   const canNext = isVerifiedOtp || passwordResetToken !== null;
 
@@ -36,7 +37,19 @@ export function ResetPasswordPage() {
     useToastStore.getState().show({ type: 'error', message });
   };
 
-  const handleNextButtonPress = () => {};
+  const handleNextButtonPress = () => {
+    if (canNext) {
+      sliderRef.current?.setPage(1);
+    }
+  };
+
+  const handleSubmit = () => {};
+
+  useEffect(() => {
+    if (currentPosition === 1) {
+      setTimeout(() => password1Ref.current?.focus(), 0);
+    }
+  }, [currentPosition]);
 
   return (
     <MDPage style={[styles.container]}>
@@ -45,12 +58,12 @@ export function ResetPasswordPage() {
       <KeyboardAvoidingView
         style={{ flex: 1 }}
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
-        <ScrollView
-          overScrollMode="never"
-          showsVerticalScrollIndicator={false}
-          bounces={false}
-          keyboardShouldPersistTaps="handled">
-          <View style={styles.textFieldContent}>
+        <PagerView
+          ref={sliderRef}
+          style={{ flex: 1 }}
+          scrollEnabled={false}
+          onPageSelected={({ nativeEvent }) => setCurrentPosition(nativeEvent.position)}>
+          <View key="email-otp-form" style={styles.textFieldContent}>
             <EmailOtpForm
               otpType="FIND_PASSWORD"
               email={email}
@@ -66,15 +79,37 @@ export function ResetPasswordPage() {
               onError={handleOtpError}
             />
           </View>
-        </ScrollView>
+          <View key="password-form" style={styles.textFieldContent}>
+            <PasswordForm
+              password1={password1}
+              password2={password2}
+              password1Ref={password1Ref}
+              password2Ref={password2Ref}
+              setPassword1={setPassword1}
+              setPassword2={setPassword2}
+              setVerifiedPassword={setVerifiedPassword}
+              onSubmit={handleSubmit}
+            />
+          </View>
+        </PagerView>
 
-        <MDButton
-          style={{ marginHorizontal: 16, marginVertical: keyboardVisible ? KEYBOARD_SPACING : 0 }}
-          label="다음"
-          loading={false}
-          disabled={!canNext}
-          onPress={handleNextButtonPress}
-        />
+        {currentPosition === 0 && (
+          <MDButton
+            style={{ marginHorizontal: 16, marginVertical: keyboardVisible ? KEYBOARD_SPACING : 0 }}
+            label="다음"
+            disabled={!canNext}
+            onPress={handleNextButtonPress}
+          />
+        )}
+        {currentPosition === 1 && (
+          <MDButton
+            style={{ marginHorizontal: 16, marginVertical: keyboardVisible ? KEYBOARD_SPACING : 0 }}
+            label="완료"
+            loading={false}
+            disabled={!isVerifiedPassword}
+            onPress={handleSubmit}
+          />
+        )}
       </KeyboardAvoidingView>
     </MDPage>
   );
@@ -85,9 +120,9 @@ const PageStyles = StyleSheet.create({
     paddingBottom: 60,
   },
   textFieldContent: {
+    flex: 1,
     paddingTop: 16,
     paddingHorizontal: 16,
     paddingBottom: 60,
-    gap: 24,
   },
 });

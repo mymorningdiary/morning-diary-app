@@ -26,10 +26,10 @@ export function SignUpForm({ onSignUpSuccess, onSignUpError }: Props) {
   const [password1, setPassword1] = useState<MDFieldState>({});
   const [password2, setPassword2] = useState<MDFieldState>({});
 
-  const [isVerifiedEmail, setIsVerifiedEmail] = useState(false);
+  const [isVerifiedOtp, setIsVerifiedOtp] = useState(false);
   const [isVerifiedPassword, setVerifiedPassword] = useState(false);
 
-  const canSignUp = isVerifiedEmail && isVerifiedPassword;
+  const canSignUp = isVerifiedOtp && isVerifiedPassword;
 
   // 회원가입 요청
   const { signUp, isPending: isSignUpPending } = useSignUp({
@@ -77,10 +77,10 @@ export function SignUpForm({ onSignUpSuccess, onSignUpError }: Props) {
             otpRef={otpRef}
             nextFieldRef={password1Ref}
             otpReturnKeyType="done"
-            isVerifiedOtp={isVerifiedEmail}
+            isVerifiedOtp={isVerifiedOtp}
             setEmail={setEmail}
             setOtp={setOtp}
-            setIsVerifiedOtp={setIsVerifiedEmail}
+            setIsVerifiedOtp={setIsVerifiedOtp}
             onError={onSignUpError}
           />
 
@@ -112,7 +112,7 @@ const FormStyles = StyleSheet.create({
   textFieldContent: {
     paddingTop: 16,
     paddingHorizontal: 16,
-    paddingBottom: 60,
     gap: 24,
+    paddingBottom: 60,
   },
 });

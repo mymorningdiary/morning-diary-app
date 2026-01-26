@@ -32,6 +32,7 @@ interface Props {
   setEmail: Dispatch<SetStateAction<MDFieldState>>;
   setOtp: Dispatch<SetStateAction<MDFieldState>>;
   setIsVerifiedOtp: Dispatch<SetStateAction<boolean>>;
+  setPasswordResetToken?: Dispatch<SetStateAction<string | null>>;
   onError?: (message: string) => void;
 }
 
@@ -48,6 +49,7 @@ export function EmailOtpForm({
   setEmail,
   setOtp,
   setIsVerifiedOtp,
+  setPasswordResetToken,
   onError,
 }: Props) {
   const colors = useThemeColor();
@@ -65,11 +67,6 @@ export function EmailOtpForm({
     },
   });
 
-  const resetOtp = useCallback(() => {
-    setOtp({ value: '', status: 'default', message: null });
-    resetTimer();
-  }, [setOtp, resetTimer]);
-
   // 인증번호 요청
   const { requestOtp, isPending: isRequestOtpPending } = useRequestOtp({
     onSuccess: () => {
@@ -77,7 +74,8 @@ export function EmailOtpForm({
         setIsVerifiedEmail(true);
       }
       setTimeout(() => otpRef?.current?.focus(), 0);
-      resetOtp();
+      setOtp({ value: '', status: 'default', message: null });
+      resetTimer();
       startTimer();
     },
     onError: ({ type, message }) => {
@@ -116,8 +114,12 @@ export function EmailOtpForm({
 
   // 인증 번호 검증
   const { verifyOtp, isPending: isVerifyOtpPending } = useVerifyOtp({
-    onSuccess: () => {
+    type: otpType,
+    onSuccess: (passwordResetToken?: string) => {
       setIsVerifiedOtp(true);
+      if (passwordResetToken) {
+        setPasswordResetToken?.(passwordResetToken);
+      }
       setOtp((prev) => ({ ...prev, status: 'success', message: '인증이 완료되었어요' }));
       stopTimer();
       setTimeout(() => nextFieldRef?.current?.focus(), 0);

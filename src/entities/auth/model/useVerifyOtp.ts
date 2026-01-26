@@ -1,20 +1,43 @@
 import { useMutation } from '@tanstack/react-query';
-import { postVerifyEmail } from '../api/post-verify-email';
+import { postVerifyEmail, VerifyEmailRequest } from '../api/post-verify-email';
+import {
+  postVerifyPassword,
+  VerifyPasswordRequest,
+  VerifyPasswordResponse,
+} from '../api/post-verify-password';
+import { ApiResponse } from '@shared/api/types';
 
 interface Options {
-  onSuccess?: () => void;
+  type?: 'SIGN_UP' | 'FIND_PASSWORD';
+  onSuccess?: (passwordResetToken?: string) => void;
   onError?: ({ type, message }: { type?: 'email' | 'otp' | null; message: string }) => void;
 }
 
-export function useVerifyOtp({ onSuccess, onError }: Options) {
-  const { mutateAsync, isPending } = useMutation({
-    mutationFn: postVerifyEmail,
-    onSuccess,
+export function useVerifyOtp({ type = 'SIGN_UP', onSuccess, onError }: Options) {
+  const { mutateAsync, isPending } = useMutation<
+    ApiResponse<null | VerifyPasswordResponse>,
+    any,
+    VerifyEmailRequest | VerifyPasswordRequest
+  >({
+    mutationFn: type === 'SIGN_UP' ? postVerifyEmail : postVerifyPassword,
+    onSuccess: (result) => {
+      if (result.code === 2000) {
+        onSuccess?.(result.data?.passwordResetToken);
+      }
+    },
     onError: (error: any) => {
       switch (error.code) {
-        case 4007:
+        case 4000:
+        case 4007: {
+          onError?.({ type: 'email', message: '존재하지 않은 사용자에요' });
+          break;
+        }
         case 4008: {
           onError?.({ type: 'email', message: '올바르지 않은 이메일 형식이에요' });
+          break;
+        }
+        case 4014: {
+          onError?.({ type: 'email', message: 'SNS 계정으로 가입한 사용자에요' });
           break;
         }
         case 4402:

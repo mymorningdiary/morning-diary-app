@@ -28,8 +28,9 @@ export function ResetPasswordPage() {
   const [otp, setOtp] = useState<MDFieldState>({});
 
   const [isVerifiedOtp, setIsVerifiedOtp] = useState(false);
+  const [passwordResetToken, setPasswordResetToken] = useState<string | null>(null);
 
-  const canNext = otp.status === 'success';
+  const canNext = isVerifiedOtp || passwordResetToken !== null;
 
   const handleOtpError = (message: string) => {
     useToastStore.getState().show({ type: 'error', message });
@@ -61,6 +62,7 @@ export function ResetPasswordPage() {
               setIsVerifiedOtp={setIsVerifiedOtp}
               setEmail={setEmail}
               setOtp={setOtp}
+              setPasswordResetToken={setPasswordResetToken}
               onError={handleOtpError}
             />
           </View>

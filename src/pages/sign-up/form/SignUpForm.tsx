@@ -4,12 +4,7 @@ import { ScrollView, StyleSheet, TextInput, View } from 'react-native';
 import { useSignUp } from '@entities/auth';
 import { EmailOtpForm } from '@features/auth';
 import { KEYBOARD_SPACING, useKeyboardVisible } from '@shared/lib/keyboard';
-import {
-  confirmPassword,
-  OTP_LEN,
-  PASSWORD_MAX_LEN,
-  validatePassword,
-} from '@shared/lib/validation';
+import { confirmPassword, PASSWORD_MAX_LEN, validatePassword } from '@shared/lib/validation';
 import { MDButton } from '@shared/ui/Button';
 import { MDFieldState, MDTextField } from '@shared/ui/TextField';
 
@@ -32,11 +27,10 @@ export function SignUpForm({ onSignUpSuccess, onSignUpError }: Props) {
   const [password1, setPassword1] = useState<MDFieldState>({});
   const [password2, setPassword2] = useState<MDFieldState>({});
 
+  const [isVerifiedEmail, setIsVerifiedEmail] = useState(false);
+
   const canSignUp =
-    email.status === 'success' &&
-    otp.status === 'success' &&
-    password1.status === 'success' &&
-    password2.status === 'success';
+    isVerifiedEmail && password1.status === 'success' && password2.status === 'success';
 
   // 회원가입 요청
   const { signUp, isPending: isSignUpPending } = useSignUp({
@@ -113,12 +107,6 @@ export function SignUpForm({ onSignUpSuccess, onSignUpError }: Props) {
     });
   };
 
-  const handleOtpSubmit = () => {
-    if (otp.value?.length !== OTP_LEN) {
-      setOtp((prev) => ({ ...prev, status: 'error', message: '6자리 인증 번호를 입력해주세요' }));
-    }
-  };
-
   const handleSignUpSubmit = () => {
     if (!canSignUp) return;
     signUp({ email: email.value ?? '', password: password1.value ?? '' });
@@ -139,9 +127,10 @@ export function SignUpForm({ onSignUpSuccess, onSignUpError }: Props) {
             otpRef={otpRef}
             nextFieldRef={password1Ref}
             otpReturnKeyType="done"
+            isVerifiedOtp={isVerifiedEmail}
             setEmail={setEmail}
             setOtp={setOtp}
-            onSubmit={handleOtpSubmit}
+            setIsVerifiedOtp={setIsVerifiedEmail}
             onError={onSignUpError}
           />
 

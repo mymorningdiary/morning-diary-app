@@ -51,7 +51,7 @@ export function LoginForm({ keyboardSpacing = 0, onLoginSuccess, onLoginError }:
     const emailValue = email.value ?? '';
     const passwordValue = password.value ?? '';
 
-    const emailValidation = validateEmail(emailValue);
+    const emailValidation = validateEmail({ value: emailValue });
     const passwordValidation = validatePassword(passwordValue);
 
     setEmail((prev) => ({

@@ -31,6 +31,7 @@ authInstance.interceptors.request.use(
       {
         headers: config.headers,
         params: config.params,
+        data: config.data,
       },
     );
 

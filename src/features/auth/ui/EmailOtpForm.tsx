@@ -1,5 +1,14 @@
 import { Dispatch, RefObject, SetStateAction, useCallback, useEffect, useState } from 'react';
-import { ReturnKeyType, StyleProp, StyleSheet, TextInput, View, ViewStyle } from 'react-native';
+import {
+  NativeSyntheticEvent,
+  ReturnKeyType,
+  StyleProp,
+  StyleSheet,
+  TextInput,
+  TextInputSubmitEditingEventData,
+  View,
+  ViewStyle,
+} from 'react-native';
 
 import { useCheckEmail, useVerifyOtp } from '@entities/auth';
 import { useRequestOtp } from '@entities/mail';
@@ -19,9 +28,10 @@ interface Props {
   otpRef?: RefObject<TextInput | null>;
   nextFieldRef?: RefObject<TextInput | null>;
   otpReturnKeyType?: ReturnKeyType;
+  isVerifiedOtp: boolean;
   setEmail: Dispatch<SetStateAction<MDFieldState>>;
   setOtp: Dispatch<SetStateAction<MDFieldState>>;
-  onSubmit?: () => void;
+  setIsVerifiedOtp: Dispatch<SetStateAction<boolean>>;
   onError?: (message: string) => void;
 }
 
@@ -34,20 +44,22 @@ export function EmailOtpForm({
   otpRef,
   nextFieldRef,
   otpReturnKeyType = 'done',
+  isVerifiedOtp,
   setEmail,
   setOtp,
-  onSubmit,
+  setIsVerifiedOtp,
   onError,
 }: Props) {
   const colors = useThemeColor();
   const styles = FormStyles;
 
-  const [canRequestOtp, setCanRequestOtp] = useState(false);
+  const [isVerifiedEmail, setIsVerifiedEmail] = useState(false);
 
-  const { seconds, isRunning, start, stop, reset } = useCountdown({
+  // OTP 카운트다운 타이머
+  const { seconds, isRunning, startTimer, stopTimer, resetTimer } = useCountdown({
     initialSeconds: OTP_EXPIRATION_SEC,
     onEnd: () => {
-      if (otp.status !== 'success') {
+      if (!isVerifiedOtp) {
         setOtp((prev) => ({ ...prev, status: 'error', message: '인증시간이 만료되었어요' }));
       }
     },
@@ -55,18 +67,18 @@ export function EmailOtpForm({
 
   const resetOtp = useCallback(() => {
     setOtp({ value: '', status: 'default', message: null });
-    reset();
-  }, [setOtp, reset]);
+    resetTimer();
+  }, [setOtp, resetTimer]);
 
   // 인증번호 요청
   const { requestOtp, isPending: isRequestOtpPending } = useRequestOtp({
     onSuccess: () => {
-      if (otpType === 'FIND_PASSWORD' && email.status !== 'success') {
-        setEmail((prev) => ({ ...prev, status: 'success' }));
+      if (!isVerifiedEmail) {
+        setIsVerifiedEmail(true);
       }
       setTimeout(() => otpRef?.current?.focus(), 0);
       resetOtp();
-      start();
+      startTimer();
     },
     onError: ({ type, message }) => {
       switch (type) {
@@ -82,10 +94,10 @@ export function EmailOtpForm({
     },
   });
 
-  // (회원가입시에만) 이메일 중복 검사 (성공시 email.status === 'success'로 만들어 인증 번호 입력 가능하게)
+  // (회원가입시에만) 이메일 중복 검증
   const { checkEmail, isPending: isCheckEmailPending } = useCheckEmail({
     onSuccess: () => {
-      setEmail((prev) => ({ ...prev, status: 'success', message: '사용가능한 이메일이에요' }));
+      setEmail((prev) => ({ ...prev, message: '사용 가능한 이메일이에요' }));
       requestOtp({ type: 'SIGN_UP', email: email.value ?? '' });
     },
     onError: ({ type, message }) => {
@@ -105,8 +117,9 @@ export function EmailOtpForm({
   // 인증 번호 검증
   const { verifyOtp, isPending: isVerifyOtpPending } = useVerifyOtp({
     onSuccess: () => {
-      stop();
+      setIsVerifiedOtp(true);
       setOtp((prev) => ({ ...prev, status: 'success', message: '인증이 완료되었어요' }));
+      stopTimer();
       setTimeout(() => nextFieldRef?.current?.focus(), 0);
     },
     onError: ({ type, message }) => {
@@ -124,15 +137,14 @@ export function EmailOtpForm({
   });
 
   const handleEmailChange = (value: string) => {
-    const { isValid } = validateEmail(value);
-    setCanRequestOtp(isValid);
-    setEmail({ value, status: 'default', message: null });
+    const { isValid, message } = validateEmail({ value });
+    setEmail({ value, status: isValid ? 'success' : 'error', message });
   };
 
   const handleOtpChange = (value: string) => {
     setOtp({ value, status: 'default', message: null });
 
-    if (value.length === OTP_LEN && email.status === 'success' && !isVerifyOtpPending) {
+    if (value.length === OTP_LEN && !isVerifyOtpPending) {
       if (isRunning) {
         verifyOtp({ email: email.value ?? '', authenticationNumber: value }); // TODO 디바운싱
       } else {
@@ -141,19 +153,22 @@ export function EmailOtpForm({
     }
   };
 
-  const handleRequestOtp = async () => {
-    // 유효하지 않은 이메일 형식에서 submit
-    if (!canRequestOtp) {
-      const { isValid, message } = validateEmail(email.value);
-      if (!isValid) {
-        setEmail((prev) => ({ ...prev, status: 'error', message }));
-      }
+  const handleOtpSubmit = (e: NativeSyntheticEvent<TextInputSubmitEditingEventData>) => {
+    const value = e.nativeEvent.text;
+
+    if (value.length !== OTP_LEN) {
+      setOtp((prev) => ({ ...prev, status: 'error', message: '6자리 인증 번호를 입력해주세요' }));
       return;
     }
+  };
+
+  const handleRequestOtp = async () => {
+    // 유효하지 않은 이메일 형식에서 submit
+    if (email.status !== 'success' || isCheckEmailPending || isRequestOtpPending) return;
     const emailValue = email.value ?? '';
 
     // (회원가입 시에만) 처음 인증 요청시 이메일 검증
-    if (otpType === 'SIGN_UP' && email.status !== 'success') {
+    if (otpType === 'SIGN_UP') {
       await checkEmail({ email: emailValue });
       return;
     }
@@ -171,14 +186,6 @@ export function EmailOtpForm({
     return () => clearTimeout(id);
   }, [emailRef]);
 
-  // 회원가입 실패에 따른 에러 핸들링
-  useEffect(() => {
-    if (email.status === 'error') {
-      resetOtp();
-      setCanRequestOtp(false);
-    }
-  }, [email.status, resetOtp]);
-
   return (
     <View style={[styles.container, style]}>
       <MDTextField
@@ -187,7 +194,7 @@ export function EmailOtpForm({
         placeholder="이메일 주소"
         returnKeyType="next"
         keyboardType="email-address"
-        editable={email.status !== 'success'}
+        editable={!isVerifiedEmail}
         {...email}
         onChangeText={handleEmailChange}
         onSubmitEditing={handleRequestOtp}
@@ -195,21 +202,15 @@ export function EmailOtpForm({
           <MDButton
             style={{ minWidth: 76 }}
             size="small"
-            label={
-              email.status === 'success'
-                ? otp.status === 'success'
-                  ? '인증 완료'
-                  : '다시 요청'
-                : '인증 요청'
-            }
+            label={isVerifiedEmail ? (isVerifiedOtp ? '인증 완료' : '다시 요청') : '인증 요청'}
             loading={isCheckEmailPending || isRequestOtpPending}
-            disabled={!canRequestOtp || otp.status === 'success'}
+            disabled={email.status !== 'success' || isVerifiedEmail}
             onPress={handleRequestOtp}
           />
         }
       />
 
-      {email.status === 'success' && (
+      {isVerifiedEmail && (
         <MDTextField
           ref={otpRef}
           label="인증 번호"
@@ -218,10 +219,10 @@ export function EmailOtpForm({
           keyboardType="decimal-pad"
           inputMode="numeric"
           maxLength={OTP_LEN}
-          editable={otp.status !== 'success'}
-          onSubmitEditing={onSubmit}
+          editable={!isVerifiedOtp}
           {...otp}
           onChangeText={handleOtpChange}
+          onSubmitEditing={handleOtpSubmit}
           tail={
             <MDText type="labelRegular" color={colors.text.alternative}>
               {formatSecondsToMMSS(seconds)}

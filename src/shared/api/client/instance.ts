@@ -20,6 +20,7 @@ instance.interceptors.request.use(
       {
         headers: config.headers,
         params: config.params,
+        data: config.data,
       },
     );
 
@@ -45,7 +46,7 @@ instance.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config;
 
-    Logger('AXIOS').debug('response error', {
+    Logger('AXIOS').error('response error', {
       url: `${originalRequest?.baseURL ?? ''}${originalRequest?.url ?? ''}`,
       status: error.response?.status,
       data: error.response?.data,

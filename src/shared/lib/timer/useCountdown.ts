@@ -17,7 +17,7 @@ export function useCountdown({ initialSeconds, autoStart = false, onEnd }: UseCo
     onEndRef.current = onEnd;
   }, [onEnd]);
 
-  const stop = useCallback(() => {
+  const stopTimer = useCallback(() => {
     if (intervalRef.current) {
       clearInterval(intervalRef.current);
       intervalRef.current = null;
@@ -28,15 +28,15 @@ export function useCountdown({ initialSeconds, autoStart = false, onEnd }: UseCo
   const tick = useCallback(() => {
     setSeconds((prev) => {
       if (prev <= 1) {
-        stop();
+        stopTimer();
         onEndRef.current?.();
         return 0;
       }
       return prev - 1;
     });
-  }, [stop]);
+  }, [stopTimer]);
 
-  const start = useCallback(() => {
+  const startTimer = useCallback(() => {
     if (intervalRef.current) return;
     if (seconds <= 0) {
       setSeconds(initialSeconds);
@@ -45,28 +45,29 @@ export function useCountdown({ initialSeconds, autoStart = false, onEnd }: UseCo
     setIsRunning(true);
   }, [initialSeconds, seconds, tick]);
 
-  const reset = useCallback(
+  const resetTimer = useCallback(
     (nextSeconds?: number) => {
-      stop();
+      stopTimer();
       setSeconds(typeof nextSeconds === 'number' ? nextSeconds : initialSeconds);
     },
-    [initialSeconds, stop],
+    [initialSeconds, stopTimer],
   );
 
   useEffect(() => {
     if (!autoStart) return;
-    reset(initialSeconds);
-    start();
-    return stop;
-  }, [autoStart, initialSeconds, reset, start, stop]);
+    resetTimer(initialSeconds);
+    startTimer();
 
-  useEffect(() => stop, [stop]);
+    return stopTimer;
+  }, [autoStart, initialSeconds, resetTimer, startTimer, stopTimer]);
+
+  useEffect(() => stopTimer, [stopTimer]);
 
   return {
     seconds,
     isRunning,
-    start,
-    stop,
-    reset,
+    startTimer,
+    stopTimer,
+    resetTimer,
   };
 }

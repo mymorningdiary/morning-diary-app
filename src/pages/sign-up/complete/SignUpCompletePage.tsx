@@ -2,7 +2,7 @@ import { StyleSheet, View } from 'react-native';
 import { Image } from 'expo-image';
 import { router, useLocalSearchParams } from 'expo-router';
 
-import { ImgSunBlushBasic } from '@assets/images';
+import { ImgSunBasic } from '@assets/images';
 import { useThemeColor } from '@shared/lib/theme';
 import { MDButton } from '@shared/ui/Button';
 import { MDPage } from '@shared/ui/Layout';
@@ -22,7 +22,7 @@ export function SignUpCompletePage() {
     <MDPage style={styles.container}>
       <View style={styles.sunContent}>
         <SpeechBubble text={`반가워요!\n저는 햇님이에요`} align="center" />
-        <Image style={{ width: 120, height: 120 }} contentFit="contain" source={ImgSunBlushBasic} />
+        <Image style={{ width: 120, height: 120 }} contentFit="contain" source={ImgSunBasic} />
         <MDText style={{ marginTop: 20 }} type="labelRegular" color={colors.text.alternative}>
           첫 아침일기를 쓰러 가볼까요?
         </MDText>

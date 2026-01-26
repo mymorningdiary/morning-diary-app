@@ -11,6 +11,9 @@ import { MDPage } from '@shared/ui/Layout';
 import { MDFieldState } from '@shared/ui/TextField';
 import PagerView from 'react-native-pager-view';
 
+const EMAIL_OTP_PAGE_INDEX = 0;
+const PASSWORD_PAGE_INDEX = 1;
+
 export function ResetPasswordPage() {
   const styles = PageStyles;
   const keyboardVisible = useKeyboardVisible();
@@ -38,15 +41,17 @@ export function ResetPasswordPage() {
   };
 
   const handleNextButtonPress = () => {
-    if (canNext) {
-      sliderRef.current?.setPage(1);
-    }
+    if (!canNext) return;
+    sliderRef.current?.setPage(1);
   };
 
   const handleSubmit = () => {};
 
   useEffect(() => {
-    if (currentPosition === 1) {
+    if (currentPosition === EMAIL_OTP_PAGE_INDEX) {
+      setTimeout(() => emailRef?.current?.focus(), 0);
+    }
+    if (currentPosition === PASSWORD_PAGE_INDEX) {
       setTimeout(() => password1Ref.current?.focus(), 0);
     }
   }, [currentPosition]);
@@ -93,7 +98,7 @@ export function ResetPasswordPage() {
           </View>
         </PagerView>
 
-        {currentPosition === 0 && (
+        {currentPosition === EMAIL_OTP_PAGE_INDEX && (
           <MDButton
             style={{ marginHorizontal: 16, marginVertical: keyboardVisible ? KEYBOARD_SPACING : 0 }}
             label="다음"
@@ -101,7 +106,7 @@ export function ResetPasswordPage() {
             onPress={handleNextButtonPress}
           />
         )}
-        {currentPosition === 1 && (
+        {currentPosition === PASSWORD_PAGE_INDEX && (
           <MDButton
             style={{ marginHorizontal: 16, marginVertical: keyboardVisible ? KEYBOARD_SPACING : 0 }}
             label="완료"

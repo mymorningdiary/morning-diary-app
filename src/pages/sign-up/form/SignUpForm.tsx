@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { ScrollView, StyleSheet, TextInput, View } from 'react-native';
 
 import { useSignUp } from '@entities/auth';
@@ -61,6 +61,14 @@ export function SignUpForm({ onSignUpSuccess, onSignUpError }: Props) {
     if (!canSignUp || isSignUpPending) return;
     signUp({ email: email.value ?? '', password: password1.value ?? '' });
   };
+
+  useEffect(() => {
+    const id = setTimeout(() => {
+      emailRef?.current?.focus();
+    }, 0);
+
+    return () => clearTimeout(id);
+  }, [emailRef]);
 
   return (
     <>

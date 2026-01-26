@@ -179,15 +179,6 @@ export function EmailOtpForm({
     await requestOtp({ type: otpType, email: emailValue }); // TODO 디바운싱
   };
 
-  // 화면 진입시 포커싱 자동
-  useEffect(() => {
-    const id = setTimeout(() => {
-      emailRef?.current?.focus();
-    }, 0);
-
-    return () => clearTimeout(id);
-  }, [emailRef]);
-
   return (
     <View style={[styles.container, style]}>
       <MDTextField

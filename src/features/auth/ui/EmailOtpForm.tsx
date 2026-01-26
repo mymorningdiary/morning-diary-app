@@ -1,4 +1,4 @@
-import { Dispatch, RefObject, SetStateAction, useCallback, useEffect, useState } from 'react';
+import { Dispatch, RefObject, SetStateAction, useState } from 'react';
 import {
   NativeSyntheticEvent,
   ReturnKeyType,
@@ -28,11 +28,10 @@ interface Props {
   otpRef?: RefObject<TextInput | null>;
   nextFieldRef?: RefObject<TextInput | null>;
   otpReturnKeyType?: ReturnKeyType;
-  isVerifiedOtp: boolean;
+  isVerifiedOtp?: boolean;
   setEmail: Dispatch<SetStateAction<MDFieldState>>;
   setOtp: Dispatch<SetStateAction<MDFieldState>>;
-  setIsVerifiedOtp: Dispatch<SetStateAction<boolean>>;
-  setPasswordResetToken?: Dispatch<SetStateAction<string | null>>;
+  onSuccess?: ({ passwordResetToken }: { passwordResetToken?: string }) => void;
   onError?: (message: string) => void;
 }
 
@@ -48,8 +47,8 @@ export function EmailOtpForm({
   isVerifiedOtp,
   setEmail,
   setOtp,
-  setIsVerifiedOtp,
-  setPasswordResetToken,
+
+  onSuccess,
   onError,
 }: Props) {
   const colors = useThemeColor();
@@ -116,10 +115,7 @@ export function EmailOtpForm({
   const { verifyOtp, isPending: isVerifyOtpPending } = useVerifyOtp({
     type: otpType,
     onSuccess: (passwordResetToken?: string) => {
-      setIsVerifiedOtp(true);
-      if (passwordResetToken) {
-        setPasswordResetToken?.(passwordResetToken);
-      }
+      onSuccess?.({ passwordResetToken });
       setOtp((prev) => ({ ...prev, status: 'success', message: '인증이 완료되었어요' }));
       stopTimer();
       setTimeout(() => nextFieldRef?.current?.focus(), 0);
@@ -197,7 +193,7 @@ export function EmailOtpForm({
             size="small"
             label={isVerifiedEmail ? (isVerifiedOtp ? '인증 완료' : '다시 요청') : '인증 요청'}
             loading={isCheckEmailPending || isRequestOtpPending}
-            disabled={email.status !== 'success' || isVerifiedEmail}
+            disabled={email.status !== 'success' || isVerifiedOtp}
             onPress={handleRequestOtp}
           />
         }

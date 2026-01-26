@@ -14,7 +14,8 @@ interface Props {
   password2ReturnKeyType?: ReturnKeyType;
   setPassword1: Dispatch<SetStateAction<MDFieldState>>;
   setPassword2: Dispatch<SetStateAction<MDFieldState>>;
-  setVerifiedPassword?: Dispatch<SetStateAction<boolean>>;
+  onSuccess?: () => void;
+  onError?: (message?: string) => void;
   onSubmit?: () => void;
 }
 
@@ -27,7 +28,8 @@ export function PasswordForm({
   password2ReturnKeyType = 'done',
   setPassword1,
   setPassword2,
-  setVerifiedPassword,
+  onSuccess,
+  onError,
   onSubmit,
 }: Props) {
   const styles = FormStyles;
@@ -83,8 +85,12 @@ export function PasswordForm({
 
   useEffect(() => {
     const isVerified = password1.status === 'success' && password2.status === 'success';
-    setVerifiedPassword?.(isVerified);
-  }, [password1.status, password2.status, setVerifiedPassword]);
+    if (isVerified) {
+      onSuccess?.();
+    } else {
+      onError?.();
+    }
+  }, [password1.status, password2.status, onSuccess, onError]);
 
   return (
     <View style={[styles.container, style]}>

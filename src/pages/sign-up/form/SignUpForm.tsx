@@ -27,7 +27,7 @@ export function SignUpForm({ onSignUpSuccess, onSignUpError }: Props) {
   const [password2, setPassword2] = useState<MDFieldState>({});
 
   const [isVerifiedOtp, setIsVerifiedOtp] = useState(false);
-  const [isVerifiedPassword, setVerifiedPassword] = useState(false);
+  const [isVerifiedPassword, setIsVerifiedPassword] = useState(false);
 
   const canSignUp = isVerifiedOtp && isVerifiedPassword;
 
@@ -83,11 +83,11 @@ export function SignUpForm({ onSignUpSuccess, onSignUpError }: Props) {
             emailRef={emailRef}
             otpRef={otpRef}
             nextFieldRef={password1Ref}
-            otpReturnKeyType="done"
+            otpReturnKeyType="next"
             isVerifiedOtp={isVerifiedOtp}
             setEmail={setEmail}
             setOtp={setOtp}
-            setIsVerifiedOtp={setIsVerifiedOtp}
+            onSuccess={() => setIsVerifiedOtp(true)}
             onError={onSignUpError}
           />
 
@@ -98,7 +98,8 @@ export function SignUpForm({ onSignUpSuccess, onSignUpError }: Props) {
             password2Ref={password2Ref}
             setPassword1={setPassword1}
             setPassword2={setPassword2}
-            setVerifiedPassword={setVerifiedPassword}
+            onSuccess={() => setIsVerifiedPassword(true)}
+            onError={() => setIsVerifiedPassword(false)}
             onSubmit={handleSignUpSubmit}
           />
         </View>

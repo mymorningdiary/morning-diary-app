@@ -1,15 +1,23 @@
 import { instance } from '@shared/api/client';
 import { ApiResponse } from '@shared/api/types';
 
-export interface PasswordResetParams {
+interface PasswordResetRequest {
+  newPassword: string;
+}
+
+interface PasswordResetParams {
   passwordResetToken: string;
 }
 
 export const putPasswordReset = async ({
-  passwordResetToken,
-}: PasswordResetParams): Promise<ApiResponse<null>> => {
-  const response = await instance.put('/auth/password/reset', null, {
-    headers: { Authorization: `Bearer ${passwordResetToken}` },
+  params,
+  body,
+}: {
+  params: PasswordResetParams;
+  body: PasswordResetRequest;
+}): Promise<ApiResponse<null>> => {
+  const response = await instance.put('/auth/password/reset', body, {
+    headers: { Authorization: `Bearer ${params.passwordResetToken}` },
   });
 
   return response.data;

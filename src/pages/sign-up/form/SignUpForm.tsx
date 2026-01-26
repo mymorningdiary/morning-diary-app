@@ -45,7 +45,6 @@ export function SignUpForm({ onSignUpSuccess, onSignUpError }: Props) {
         }
         case 'password': {
           setPassword1((prev) => ({ ...prev, status: 'error', message }));
-          setPassword2((prev) => ({ ...prev, status: 'error', message }));
           setTimeout(() => password1Ref.current?.focus(), 0);
           break;
         }

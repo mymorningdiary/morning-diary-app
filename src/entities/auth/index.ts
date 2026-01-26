@@ -4,3 +4,4 @@ export { useAuth } from './model/useAuth';
 export { useCheckEmail } from './model/useCheckEmail';
 export { useVerifyOtp } from './model/useVerifyOtp';
 export { useSignUp } from './model/useSignUp';
+export { useResetPassword } from './model/useResetPassword';

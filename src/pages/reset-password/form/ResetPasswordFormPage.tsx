@@ -1,6 +1,7 @@
 import { router } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
 import { KeyboardAvoidingView, Platform, StyleSheet, TextInput, View } from 'react-native';
+import PagerView from 'react-native-pager-view';
 
 import { EmailOtpForm, PasswordForm } from '@features/auth';
 import { KEYBOARD_SPACING, useKeyboardVisible } from '@shared/lib/keyboard';
@@ -9,7 +10,7 @@ import { MDAppBar } from '@shared/ui/AppBar';
 import { MDButton } from '@shared/ui/Button';
 import { MDPage } from '@shared/ui/Layout';
 import { MDFieldState } from '@shared/ui/TextField';
-import PagerView from 'react-native-pager-view';
+import { useResetPassword } from '@entities/auth';
 
 const EMAIL_OTP_PAGE_INDEX = 0;
 const PASSWORD_PAGE_INDEX = 1;
@@ -36,6 +37,25 @@ export function ResetPasswordPage() {
 
   const canNext = isVerifiedOtp || passwordResetToken !== null;
 
+  const { resetPassword, isPending } = useResetPassword({
+    onSuccess: () => {
+      router.replace('/(reset-password)/complete');
+    },
+    onError: ({ type, message }) => {
+      switch (type) {
+        case 'password': {
+          setPassword1((prev) => ({ ...prev, status: 'error', message }));
+          setTimeout(() => password1Ref.current?.focus(), 0);
+          break;
+        }
+        default: {
+          useToastStore.getState().show({ type: 'error', message });
+          break;
+        }
+      }
+    },
+  });
+
   const handleOtpError = (message: string) => {
     useToastStore.getState().show({ type: 'error', message });
   };
@@ -45,7 +65,14 @@ export function ResetPasswordPage() {
     sliderRef.current?.setPage(1);
   };
 
-  const handleSubmit = () => {};
+  const handleSubmit = () => {
+    if (!isVerifiedPassword || isPending) return;
+
+    resetPassword({
+      params: { passwordResetToken: passwordResetToken ?? '' },
+      body: { newPassword: password1.value ?? '' },
+    });
+  };
 
   useEffect(() => {
     if (currentPosition === EMAIL_OTP_PAGE_INDEX) {
@@ -110,7 +137,7 @@ export function ResetPasswordPage() {
           <MDButton
             style={{ marginHorizontal: 16, marginVertical: keyboardVisible ? KEYBOARD_SPACING : 0 }}
             label="완료"
-            loading={false}
+            loading={isPending}
             disabled={!isVerifiedPassword}
             onPress={handleSubmit}
           />

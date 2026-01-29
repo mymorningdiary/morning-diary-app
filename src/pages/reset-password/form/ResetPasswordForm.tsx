@@ -31,10 +31,13 @@ export function ResetPasswordForm({ onResetSuccess, onResetError }: Props) {
   const [password1, setPassword1] = useState<MDFieldState>({});
   const [password2, setPassword2] = useState<MDFieldState>({});
 
-  const [currentPosition, setCurrentPosition] = useState(0);
+  const [currentPosition, setCurrentPosition] = useState(EMAIL_OTP_SLIDE_INDEX);
   const [passwordResetToken, setPasswordResetToken] = useState<string | null>(null);
+
+  const canNext = passwordResetToken !== null;
   const [isVerifiedPassword, setIsVerifiedPassword] = useState(false);
 
+  // 비밀번호 재설정 요청
   const { resetPassword, isPending } = useResetPassword({
     onSuccess: () => {
       onResetSuccess?.();
@@ -61,7 +64,7 @@ export function ResetPasswordForm({ onResetSuccess, onResetError }: Props) {
   };
 
   const handleNextButtonPress = () => {
-    if (!passwordResetToken) return;
+    if (!canNext) return;
     sliderRef.current?.setPage(PASSWORD_SLIDE_INDEX);
   };
 
@@ -97,7 +100,7 @@ export function ResetPasswordForm({ onResetSuccess, onResetError }: Props) {
             otp={otp}
             emailRef={emailRef}
             otpRef={otpRef}
-            isVerifiedOtp={!!passwordResetToken}
+            isVerifiedOtp={canNext}
             setEmail={setEmail}
             setOtp={setOtp}
             onSuccess={handleOtpSuccess}
@@ -123,7 +126,7 @@ export function ResetPasswordForm({ onResetSuccess, onResetError }: Props) {
         <MDButton
           style={{ marginHorizontal: 16, marginVertical: keyboardVisible ? KEYBOARD_SPACING : 0 }}
           label="다음"
-          disabled={passwordResetToken === null}
+          disabled={!canNext}
           onPress={handleNextButtonPress}
         />
       )}

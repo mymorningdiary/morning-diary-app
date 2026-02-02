@@ -76,11 +76,15 @@ export default function AccountScreen() {
               <SettingSectionListItem
                 label={user?.email ?? ''}
                 tailComponent={
-                  user?.loginType === 'KAKAO' ? (
+                  user?.loginType && (
                     <MDText type="bodyRegular" color={colors.text.alternative}>
-                      카카오 연동
+                      {user.loginType === 'KAKAO'
+                        ? '카카오 연동'
+                        : user.loginType === 'APPLE'
+                          ? '애플 연동'
+                          : undefined}
                     </MDText>
-                  ) : undefined
+                  )
                 }
               />
             </SettingSection>

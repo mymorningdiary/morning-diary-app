@@ -30,6 +30,7 @@ export function useLoginApple({ onSuccess, onError }: Props) {
       }
     } catch (error: any) {
       Logger('useLoginApple').error('Failed to login with apple:', error);
+
       switch (error.code) {
         case 4007: {
           onError?.('이메일을 확인하지 못했어요');

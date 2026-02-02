@@ -12,16 +12,17 @@ export function useCheckEmail({ onSuccess, onError }: Options) {
     onSuccess,
     onError: (error: any) => {
       switch (error.code) {
-        case 4008: {
-          onError?.({ type: 'email', message: '이메일을 올바르게 입력해주세요' });
-          break;
-        }
         case 4011: {
           onError?.({ type: 'email', message: '사용 중인 이메일이에요' });
           break;
         }
-        default: {
+        case 5000:
+        case 5002: {
           onError?.({ message: '서버 오류가 발생했어요' });
+          break;
+        }
+        default: {
+          onError?.({ message: '이메일 인증에 실패했어요 잠시 후 다시 시도해주세요' });
           break;
         }
       }

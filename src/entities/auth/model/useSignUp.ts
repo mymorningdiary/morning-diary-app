@@ -35,8 +35,13 @@ export function useSignUp({ onSuccess, onError }: Options) {
           onError?.({ type: 'email', message: '사용 중인 이메일이에요' });
           break;
         }
-        default: {
+        case 5000:
+        case 5002: {
           onError?.({ message: '서버 오류가 발생했어요' });
+          break;
+        }
+        default: {
+          onError?.({ message: '회원가입에 실패했어요 잠시 후 다시 시도해주세요' });
           break;
         }
       }

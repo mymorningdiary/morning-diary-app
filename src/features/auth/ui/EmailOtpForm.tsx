@@ -47,7 +47,6 @@ export function EmailOtpForm({
   isVerifiedOtp,
   setEmail,
   setOtp,
-
   onSuccess,
   onError,
 }: Props) {

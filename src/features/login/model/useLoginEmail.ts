@@ -23,8 +23,6 @@ export function useLoginEmail({ onSuccess, onError }: Props) {
 
         setAuth({ accessToken, refreshToken });
         onSuccess?.(isExistUser ?? false);
-      } else {
-        onError?.({ message: '로그인에 실패했습니다' });
       }
     } catch (error: any) {
       Logger('useLoginEmail').error('Failed to login with email:', error.message);
@@ -59,7 +57,7 @@ export function useLoginEmail({ onSuccess, onError }: Props) {
           break;
         }
         default: {
-          onError?.({ message: '로그인에 실패했습니다' });
+          onError?.({ message: '로그인에 실패했어요 잠시 후 다시 시도해주세요' });
         }
       }
     }

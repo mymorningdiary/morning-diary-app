@@ -1,5 +1,6 @@
 import { useMutation } from '@tanstack/react-query';
 import { putPasswordReset } from '../api/put-password-reset';
+import { Logger } from '@shared/lib/log';
 
 interface Options {
   onSuccess?: () => void;
@@ -28,11 +29,17 @@ export function useResetPassword({ onSuccess, onError }: Options) {
         case 4500:
         case 4501:
         case 4502: {
-          onError?.({ message: '비밀번호 재설정에 실패했어요. 다시 시도해 주세요' });
+          Logger('useResetPassword').debug('Failed to reset password:', error);
+          onError?.({ message: '비밀번호 재설정에 실패했어요 다시 시도해 주세요' });
+          break;
+        }
+        case 5000:
+        case 5002: {
+          onError?.({ message: '서버 오류가 발생했어요' });
           break;
         }
         default: {
-          onError?.({ message: '서버 오류가 발생했어요' });
+          onError?.({ message: '비밀번호 재설정에 실패했어요 다시 시도해 주세요' });
           break;
         }
       }

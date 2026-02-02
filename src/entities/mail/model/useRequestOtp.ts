@@ -13,8 +13,16 @@ export function useRequestOtp({ onSuccess, onError }: Options) {
     onSuccess,
     onError: (error: any) => {
       switch (error.code) {
+        case 4000: {
+          onError?.({ type: 'email', message: '존재하지 않은 사용자에요' });
+          break;
+        }
         case 4007: {
           onError?.({ message: '인증 번호 보내기에 실패했어요' });
+          break;
+        }
+        case 4014: {
+          onError?.({ message: 'SNS 계정 사용자는 비밀번호를 변경할 수 없어요' });
           break;
         }
         case 4008: {
@@ -26,8 +34,13 @@ export function useRequestOtp({ onSuccess, onError }: Options) {
           Logger('useRequestOtp').debug('Failed to request otp:', error.message);
           break;
         }
-        default: {
+        case 5000:
+        case 5002: {
           onError?.({ message: '서버 오류가 발생했어요' });
+          break;
+        }
+        default: {
+          onError?.({ message: '인증 번호 요청에 실패했어요 잠시 후 다시 시도해주세요' });
           break;
         }
       }

@@ -27,7 +27,6 @@ export function useVerifyOtp({ type = 'SIGN_UP', onSuccess, onError }: Options) 
     },
     onError: (error: any) => {
       switch (error.code) {
-        case 4000:
         case 4007: {
           onError?.({ type: 'email', message: '존재하지 않은 사용자에요' });
           break;

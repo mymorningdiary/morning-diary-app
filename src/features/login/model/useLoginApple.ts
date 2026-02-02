@@ -1,7 +1,7 @@
-import { postKakaoLogin, useAuth } from '@entities/auth';
+import { postAppleLogin, useAuth } from '@entities/auth';
 import { Logger } from '@shared/lib/log';
 import { useMutation } from '@tanstack/react-query';
-import { signInAsync, AppleAuthenticationScope } from 'expo-apple-authentication';
+import { AppleAuthenticationScope, signInAsync } from 'expo-apple-authentication';
 
 interface Props {
   onSuccess?: (isExistUser: boolean) => void;
@@ -10,7 +10,7 @@ interface Props {
 
 export function useLoginApple({ onSuccess, onError }: Props) {
   const { setAuth } = useAuth();
-  const { mutateAsync, isPending } = useMutation({ mutationFn: postKakaoLogin });
+  const { mutateAsync, isPending } = useMutation({ mutationFn: postAppleLogin });
 
   const appleLogin = async () => {
     if (isPending) return;
@@ -20,27 +20,55 @@ export function useLoginApple({ onSuccess, onError }: Props) {
         requestedScopes: [AppleAuthenticationScope.FULL_NAME, AppleAuthenticationScope.EMAIL],
       });
 
-      Logger('useAppleLogin').debug('Success to apple login', credential);
-
       if (credential.identityToken) {
-        // const res = await mutateAsync({ accessToken: credential.identityToken });
-        // if (res.code === 2000) {
-        //   const { accessToken, refreshToken, isExistUser } = res.data;
-        //   setAuth({ accessToken, refreshToken });
-        //   onSuccess(isExistUser ?? false);
-        // } else {
-        //   onError('애플 로그인에 실패했습니다');
-        // } v
+        const res = await mutateAsync({ identityToken: credential.identityToken });
+        if (res.code === 2000) {
+          const { accessToken, refreshToken, isExistUser } = res.data;
+          setAuth({ accessToken, refreshToken });
+          onSuccess?.(isExistUser ?? false);
+        }
       }
-    } catch (e) {
-      Logger('useAppleLogin').error('Failed to apple login', e);
-      if (e.code === 'ERR_REQUEST_CANCELED') {
-        // handle that the user canceled the sign-in flow
-      } else {
-        // handle other errors
+    } catch (error: any) {
+      Logger('useLoginApple').error('Failed to login with apple:', error);
+      switch (error.code) {
+        case 4007: {
+          onError?.('이메일을 확인하지 못했어요');
+          break;
+        }
+        case 4011: {
+          onError?.('이미 사용 중인 이메일이에요');
+          break;
+        }
+        // invalid apple identity token
+        case 4015: {
+          onError?.('애플 로그인 정보를 확인할 수 없어요 다시 로그인해주세요');
+          break;
+        }
+        case 5000:
+        case 5002: {
+          onError?.('서버 오류가 발생했어요');
+          break;
+        }
+        case 'ERR_REQUEST_NOT_INTERACTIVE': {
+          onError?.('로그인 화면에서 다시 시도해주세요');
+          break;
+        }
+        case 'ERR_REQUEST_FAILED':
+        case 'ERR_REQUEST_NOT_HANDLED':
+        case 'ERR_REQUEST_UNKNOWN': {
+          onError?.('애플 로그인에 실패했어요 잠시 후 다시 시도해주세요');
+          break;
+        }
+        case 'ERR_REQUEST_CANCELED':
+        case 'ERR_INVALID_OPERATION':
+        case 'ERR_INVALID_SCOPE':
+        case 'ERR_INVALID_RESPONSE':
+          break;
+        default: {
+          onError?.('애플 로그인에 실패했어요 잠시 후 다시 시도해주세요');
+          break;
+        }
       }
-
-      onError?.('애플 로그인에 실패했습니다');
     }
   };
 

@@ -36,13 +36,13 @@ export function useLoginApple({ onSuccess, onError }: Props) {
           onError?.('이메일을 확인하지 못했어요');
           break;
         }
-        case 4011: {
-          onError?.('이미 사용 중인 이메일이에요');
-          break;
-        }
         // invalid apple identity token
         case 4015: {
           onError?.('애플 로그인 정보를 확인할 수 없어요 다시 로그인해주세요');
+          break;
+        }
+        case 4016: {
+          onError?.('이미 이메일 계정이 존재해요');
           break;
         }
         case 5000:

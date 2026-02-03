@@ -34,8 +34,8 @@ export function useLoginKakao({ onSuccess, onError }: Props) {
           onError?.('이메일을 확인하지 못했어요');
           break;
         }
-        case 4011: {
-          onError?.('이미 사용 중인 이메일이에요');
+        case 4016: {
+          onError?.('이미 이메일 계정이 존재해요');
           break;
         }
         case 5000:

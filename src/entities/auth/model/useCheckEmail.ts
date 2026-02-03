@@ -12,7 +12,11 @@ export function useCheckEmail({ onSuccess, onError }: Options) {
     onSuccess,
     onError: (error: any) => {
       switch (error.code) {
-        case 4011: {
+        case 4013: {
+          onError?.({ type: 'email', message: '이미 SNS 계정이 존재해요' });
+          break;
+        }
+        case 4016: {
           onError?.({ type: 'email', message: '사용 중인 이메일이에요' });
           break;
         }

@@ -35,10 +35,6 @@ export function useVerifyOtp({ type = 'SIGN_UP', onSuccess, onError }: Options) 
           onError?.({ type: 'email', message: '올바르지 않은 이메일 형식이에요' });
           break;
         }
-        case 4014: {
-          onError?.({ type: 'email', message: 'SNS 계정으로 가입한 사용자에요' });
-          break;
-        }
         case 4402:
         case 4403:
         case 4405: {

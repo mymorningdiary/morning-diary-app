@@ -35,6 +35,10 @@ export function useSignUp({ onSuccess, onError }: Options) {
           onError?.({ type: 'email', message: '사용 중인 이메일이에요' });
           break;
         }
+        case 4013: {
+          onError?.({ type: 'email', message: '이미 SNS 계정이 존재해요' });
+          break;
+        }
         case 5000:
         case 5002: {
           onError?.({ message: '서버 오류가 발생했어요' });

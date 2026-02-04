@@ -35,15 +35,19 @@ export function PasswordForm({
   const styles = FormStyles;
 
   const validatePassword2 = (nextPassword1: string, nextPassword2: string) => {
-    const { isSame, message } = confirmPassword(nextPassword1, nextPassword2);
+    const { isSame, message: confirmMessage } = confirmPassword(nextPassword1, nextPassword2);
     if (!isSame) {
-      return { status: 'error', message } as const;
+      return { status: 'error', message: confirmMessage } as const;
     }
 
-    const { isValid } = validatePassword(nextPassword2);
+    const { isValid, message } = validatePassword({
+      value: nextPassword2,
+      errorMessage: '사용 불가능한 비밀번호에요 (영문자+숫자+특수문자 10-64자)',
+    });
+
     return {
       status: isValid ? 'success' : 'error',
-      message: isValid ? message : '사용 불가능한 비밀번호에요 (영문자+숫자+특수문자 10-64자)',
+      message,
     } as const;
   };
 
@@ -61,13 +65,16 @@ export function PasswordForm({
       return;
     }
 
-    const { isValid } = validatePassword(value);
+    const { isValid, message } = validatePassword({
+      value,
+      successMessage: '사용 가능한 비밀번호에요',
+      errorMessage: '사용 불가능한 비밀번호에요 (영문자+숫자+특수문자 10-64자)',
+    });
+
     setPassword1({
       value,
       status: isValid ? 'success' : 'error',
-      message: isValid
-        ? '사용 가능한 비밀번호에요'
-        : '사용 불가능한 비밀번호에요 (영문자+숫자+특수문자 10-64자)',
+      message,
     });
   };
 

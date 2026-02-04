@@ -52,7 +52,10 @@ export function LoginForm({ keyboardSpacing = 0, onLoginSuccess, onLoginError }:
     const passwordValue = password.value ?? '';
 
     const emailValidation = validateEmail({ value: emailValue });
-    const passwordValidation = validatePassword(passwordValue);
+    const passwordValidation = validatePassword({
+      value: passwordValue,
+      errorMessage: '비밀번호를 입력해주세요 (영문자+숫자+특수문자 10-64자)',
+    });
 
     setEmail((prev) => ({
       ...prev,

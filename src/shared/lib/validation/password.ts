@@ -4,13 +4,22 @@ export const PASSWORD_REGEX = /^(?=.*[a-zA-Z])(?=.*[!@#$%^+=-])(?=.*[0-9])\S{10,
 
 export const isPassword = (value: string) => PASSWORD_REGEX.test(value);
 
-export const validatePassword = (value?: string) => {
-  const isValid = isPassword(value ?? '');
-  const message = isValid ? null : '비밀번호를 입력해주세요 (영문자+숫자+특수문자 10-64자)';
+export const validatePassword = ({
+  value,
+  successMessage,
+  errorMessage,
+}: {
+  value?: string;
+  successMessage?: string | null;
+  errorMessage?: string;
+}) => {
+  const isValid = PASSWORD_REGEX.test(value ?? '');
+  const message = isValid ? successMessage : errorMessage;
+  // const message = isValid ? successMessage : '비밀번호를 입력해주세요 (영문자+숫자+특수문자 10-64자)';
 
   return {
     isValid,
-    message,
+    message: message ?? null,
   };
 };
 

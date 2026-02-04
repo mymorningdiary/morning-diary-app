@@ -10,21 +10,17 @@ interface Props {
 
 export function useLoginEmail({ onSuccess, onError }: Props) {
   const { setAuth } = useAuth();
-  const { mutateAsync, isPending } = useMutation({ mutationFn: postSignIn });
-
-  const loginEmail = async ({ email, password }: { email: string; password: string }) => {
-    if (isPending) return;
-
-    try {
-      const res = await mutateAsync({ email, password });
-
+  const { mutateAsync, isPending } = useMutation({
+    mutationFn: postSignIn,
+    onSuccess: (res) => {
       if (res.code === 2000) {
         const { accessToken, refreshToken, isExistUser } = res.data;
 
         setAuth({ accessToken, refreshToken });
         onSuccess?.(isExistUser ?? false);
       }
-    } catch (error: any) {
+    },
+    onError: (error: any) => {
       Logger('useLoginEmail').error('Failed to login with email:', error.message);
 
       switch (error.code) {
@@ -60,8 +56,8 @@ export function useLoginEmail({ onSuccess, onError }: Props) {
           onError?.({ message: '로그인에 실패했어요 잠시 후 다시 시도해주세요' });
         }
       }
-    }
-  };
+    },
+  });
 
-  return { loginEmail, isPending };
+  return { loginEmail: mutateAsync, isPending };
 }

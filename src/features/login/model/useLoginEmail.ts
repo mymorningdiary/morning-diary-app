@@ -49,7 +49,7 @@ export function useLoginEmail({ onSuccess, onError }: Props) {
           break;
         }
         case 4013: {
-          onError?.({ type: 'email', message: 'SNS 연동 사용자에요' });
+          onError?.({ message: 'SNS 계정 연동 사용자에요' });
           break;
         }
         default: {

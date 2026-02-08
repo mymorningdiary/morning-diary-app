@@ -21,7 +21,10 @@ export function useLoginApple({ onSuccess, onError }: Props) {
       });
 
       if (credential.identityToken) {
-        const res = await mutateAsync({ identityToken: credential.identityToken });
+        const res = await mutateAsync({
+          identityToken: credential.identityToken,
+          isPreview: process.env.APP_VARIANT === 'preview',
+        });
         if (res.code === 2000) {
           const { accessToken, refreshToken, isExistUser } = res.data;
           setAuth({ accessToken, refreshToken });

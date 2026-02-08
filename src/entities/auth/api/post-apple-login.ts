@@ -3,6 +3,7 @@ import { ApiResponse, Auth } from '@shared/api/types';
 
 interface AppleLoginRequest {
   identityToken: string;
+  isPreview: boolean;
 }
 
 export const postAppleLogin = async (body: AppleLoginRequest): Promise<ApiResponse<Auth>> => {

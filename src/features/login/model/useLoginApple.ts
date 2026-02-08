@@ -2,6 +2,7 @@ import { postAppleLogin, useAuth } from '@entities/auth';
 import { Logger } from '@shared/lib/log';
 import { useMutation } from '@tanstack/react-query';
 import { AppleAuthenticationScope, signInAsync } from 'expo-apple-authentication';
+import Constants from 'expo-constants';
 
 interface Props {
   onSuccess?: (isExistUser: boolean) => void;
@@ -11,6 +12,7 @@ interface Props {
 export function useLoginApple({ onSuccess, onError }: Props) {
   const { setAuth } = useAuth();
   const { mutateAsync, isPending } = useMutation({ mutationFn: postAppleLogin });
+  const appVariant = Constants?.expoConfig?.extra?.appVariant ?? 'production';
 
   const appleLogin = async () => {
     if (isPending) return;
@@ -23,7 +25,7 @@ export function useLoginApple({ onSuccess, onError }: Props) {
       if (credential.identityToken) {
         const res = await mutateAsync({
           identityToken: credential.identityToken,
-          isPreview: process.env.APP_VARIANT === 'preview',
+          isPreview: appVariant === 'preview',
         });
         if (res.code === 2000) {
           const { accessToken, refreshToken, isExistUser } = res.data;

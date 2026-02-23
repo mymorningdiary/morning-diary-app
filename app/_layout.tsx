@@ -1,6 +1,8 @@
 import * as Notifications from 'expo-notifications';
 import { useEffect } from 'react';
 import { useColorScheme } from 'react-native';
+import dayjs from 'dayjs';
+import 'dayjs/locale/ko';
 
 import { initializeKakaoSDK } from '@react-native-kakao/core';
 import { ThemeProvider } from '@react-navigation/native';
@@ -26,6 +28,8 @@ Notifications.setNotificationHandler({
     shouldShowList: true,
   }),
 });
+
+dayjs.locale('ko');
 
 const queryClient = new QueryClient();
 

@@ -1,0 +1,1 @@
+export { getSingleParam } from './getSingleParam';

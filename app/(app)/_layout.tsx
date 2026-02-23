@@ -15,6 +15,7 @@ export default function AppLayout() {
       <Stack.Screen name="withdraw" />
       <Stack.Screen name="alarm-time" />
       <Stack.Screen name="alarm-permission" />
+      <Stack.Screen name="diary-write" />
     </Stack>
   );
 }

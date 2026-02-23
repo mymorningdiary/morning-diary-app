@@ -91,6 +91,15 @@ export default function HomeScreen() {
     });
   };
 
+  const navigateToDiaryWrite = () => {
+    router.push({
+      pathname: '/diary-write',
+      params: {
+        date: '2026-02-23',
+      },
+    });
+  };
+
   const onNavigateToSetting = useCallback(() => {
     router.push('/settings');
   }, []);
@@ -136,7 +145,7 @@ export default function HomeScreen() {
 
         <MainDiaryContent diaryInfo={selectedDiaryInfo} onDiaryItemPress={navigateToReadDiary} />
 
-        <MainWriteFloatingButton disabled={isTodayWritten} onPress={handleWriteButtonPress} />
+        <MainWriteFloatingButton disabled={isTodayWritten} onPress={navigateToDiaryWrite} />
       </MDCol>
     </SafeAreaView>
   );

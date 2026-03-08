@@ -27,6 +27,7 @@ export function MDText({
         align !== undefined && { textAlign: align },
         style,
       ]}
+      allowFontScaling={false}
       {...rest}>
       {children}
     </Text>

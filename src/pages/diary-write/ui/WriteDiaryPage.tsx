@@ -14,7 +14,8 @@ import { getSingleParam } from '@shared/lib/router';
 import { MDFonts, useThemeColor } from '@shared/lib/theme';
 import { MDAppBar } from '@shared/ui/AppBar';
 import { MDPage } from '@shared/ui/Layout';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { Logger } from '@shared/lib/log';
 
 const INACTIVE_LEN = 20;
 
@@ -31,13 +32,28 @@ export function WriteDiaryPage() {
   const inputRef = useRef<TextInput>(null);
 
   const handleChangeText = (value: string) => {
-    setText(value);
-    const newLockIndex = value.length - (value.length % INACTIVE_LEN);
+    const lockedPrefix = text.slice(0, lockIndex);
+    let newText = text;
+
+    if (value.length < lockIndex) {
+      // 비활성화 텍스트 삭제 제한
+      newText = text;
+    } else if (!value.startsWith(lockedPrefix)) {
+      // 선택 삭제, 붙여넣기 제한
+      newText = lockedPrefix + value.slice(lockIndex);
+    } else {
+      newText = value;
+    }
+
+    setText(newText);
+
+    const newLockIndex = newText.length - (newText.length % INACTIVE_LEN);
     if (newLockIndex > lockIndex) {
       setLockIndex(newLockIndex);
     }
   };
 
+  // 비활성화 텍스트 커서 이동 제한
   const handleSelectionChange = (e: TextInputSelectionChangeEvent) => {
     const { start, end } = e.nativeEvent.selection;
     const newSelection = {
@@ -47,6 +63,10 @@ export function WriteDiaryPage() {
     // props에 selection 을 주는 방식은 리렌더링을 발생시켜 텍스트 겹침이 깨짐 -> ref 활용 (리렌더링 X)
     inputRef.current?.setSelection(newSelection.start, newSelection.end);
   };
+
+  useEffect(() => {
+    Logger('WriteDiaryPage').debug('text:', text);
+  }, [text]);
 
   if (!dayjs(dateParam).isValid()) {
     return <Redirect href="/(app)" />;

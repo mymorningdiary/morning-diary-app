@@ -14,7 +14,7 @@ import { getSingleParam } from '@shared/lib/router';
 import { MDFonts, useThemeColor } from '@shared/lib/theme';
 import { MDAppBar } from '@shared/ui/AppBar';
 import { MDPage } from '@shared/ui/Layout';
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { Logger } from '@shared/lib/log';
 
 const INACTIVE_LEN = 20;
@@ -31,6 +31,7 @@ export function WriteDiaryPage() {
   const inactiveText = text.slice(0, lockIndex);
 
   const inputRef = useRef<TextInput>(null);
+  const selectionRef = useRef({ start: 0, end: 0 });
 
   const handleChangeText = (value: string) => {
     let newText = text;
@@ -50,6 +51,15 @@ export function WriteDiaryPage() {
     const newLockIndex = newText.length - (newText.length % INACTIVE_LEN);
     if (newLockIndex > lockIndex) {
       setLockIndex(newLockIndex);
+      const nextSelection = {
+        start: Math.max(selectionRef.current.start, newLockIndex),
+        end: Math.max(selectionRef.current.end, newLockIndex),
+      };
+      selectionRef.current = nextSelection;
+      requestAnimationFrame(() => {
+        // lockIndex가 증가하는 순간 커서를 강제로 newLockIndex 이상으로 이동 (활성화 텍스트 중간에서 텍스트 입력 대응)
+        inputRef.current?.setSelection(nextSelection.start, nextSelection.end);
+      });
     }
   };
 
@@ -60,14 +70,18 @@ export function WriteDiaryPage() {
 
     if (start === end) {
       if (start < lockIndex) {
+        selectionRef.current = { start: textLen, end: textLen };
         inputRef.current?.setSelection(textLen, textLen);
       } else {
+        selectionRef.current = { start, end };
         inputRef.current?.setSelection(start, end);
       }
     } else {
       if (start < lockIndex) {
+        selectionRef.current = { start: lockIndex, end };
         inputRef.current?.setSelection(lockIndex, end);
       } else {
+        selectionRef.current = { start, end };
         inputRef.current?.setSelection(start, end);
       }
     }

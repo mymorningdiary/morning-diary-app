@@ -28,19 +28,19 @@ export function WriteDiaryPage() {
 
   const [text, setText] = useState('');
   const [lockIndex, setLockIndex] = useState(0);
+  const inactiveText = text.slice(0, lockIndex);
 
   const inputRef = useRef<TextInput>(null);
 
   const handleChangeText = (value: string) => {
-    const lockedPrefix = text.slice(0, lockIndex);
     let newText = text;
 
     if (value.length < lockIndex) {
       // 비활성화 텍스트 삭제 제한
       newText = text;
-    } else if (!value.startsWith(lockedPrefix)) {
+    } else if (!value.startsWith(inactiveText)) {
       // 선택 삭제, 붙여넣기 제한
-      newText = lockedPrefix + value.slice(lockIndex);
+      newText = inactiveText + value.slice(lockIndex);
     } else {
       newText = value;
     }
@@ -53,7 +53,6 @@ export function WriteDiaryPage() {
     }
   };
 
-  // 비활성화 텍스트 커서 이동 제한
   const handleSelectionChange = (e: TextInputSelectionChangeEvent) => {
     const { start, end } = e.nativeEvent.selection;
     const newSelection = {
@@ -91,13 +90,14 @@ export function WriteDiaryPage() {
               ref={inputRef}
               style={[styles.textInput, { color: colors.text.normal }]}
               value={text}
-              onChangeText={handleChangeText}
-              onSelectionChange={handleSelectionChange}
+              textBreakStrategy="simple"
               scrollEnabled={false}
               multiline
               autoFocus
               autoCorrect={false}
               allowFontScaling={false}
+              onChangeText={handleChangeText}
+              onSelectionChange={handleSelectionChange}
             />
             {/* 비활성화 텍스트 */}
             <View pointerEvents="none" style={styles.inactiveOverlay}>
@@ -107,7 +107,8 @@ export function WriteDiaryPage() {
                   // { color: colors.text.alternative },
                   { color: 'red' },
                 ]}
-                value={text.slice(0, lockIndex)}
+                value={inactiveText}
+                textBreakStrategy="simple"
                 editable={false}
                 scrollEnabled={false}
                 multiline

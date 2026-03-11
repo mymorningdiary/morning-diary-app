@@ -53,19 +53,25 @@ export function WriteDiaryPage() {
     }
   };
 
+  // 비활성화 텍스트 커서 이동 제한 (props에 selection 을 주는 방식은 리렌더링을 발생시켜 텍스트 겹침이 깨짐 -> ref 활용 -> 리렌더링 X)
   const handleSelectionChange = (e: TextInputSelectionChangeEvent) => {
     const { start, end } = e.nativeEvent.selection;
-    const newSelection = {
-      start: Math.max(start, lockIndex),
-      end: Math.max(end, lockIndex),
-    };
-    // props에 selection 을 주는 방식은 리렌더링을 발생시켜 텍스트 겹침이 깨짐 -> ref 활용 (리렌더링 X)
-    inputRef.current?.setSelection(newSelection.start, newSelection.end);
-  };
+    const textLen = text.length;
 
-  useEffect(() => {
-    Logger('WriteDiaryPage').debug('text:', text);
-  }, [text]);
+    if (start === end) {
+      if (start < lockIndex) {
+        inputRef.current?.setSelection(textLen, textLen);
+      } else {
+        inputRef.current?.setSelection(start, end);
+      }
+    } else {
+      if (start < lockIndex) {
+        inputRef.current?.setSelection(lockIndex, end);
+      } else {
+        inputRef.current?.setSelection(start, end);
+      }
+    }
+  };
 
   if (!dayjs(dateParam).isValid()) {
     return <Redirect href="/(app)" />;

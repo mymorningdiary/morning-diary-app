@@ -1,20 +1,21 @@
-import dayjs from 'dayjs';
-import { router, useLocalSearchParams } from 'expo-router';
+import { useRef, useState } from 'react';
 import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
   StyleSheet,
+  Text,
   TextInput,
-  TextInputSelectionChangeEvent,
   View,
 } from 'react-native';
+import { router, useLocalSearchParams } from 'expo-router';
 
 import { getSingleParam } from '@shared/lib/router';
 import { MDColorsType, MDFonts, useThemeColor } from '@shared/lib/theme';
 import { MDAppBar } from '@shared/ui/AppBar';
 import { MDPage } from '@shared/ui/Layout';
-import { useRef, useState } from 'react';
+
+import dayjs from 'dayjs';
 
 const INACTIVE_LEN = 20;
 
@@ -26,70 +27,30 @@ export function WriteDiaryPage() {
   const dateParam = getSingleParam(date);
   const formattedDate = dayjs(dateParam).locale('ko').format('M월 D일 ddd');
 
-  const [text, setText] = useState('');
-  const [lockIndex, setLockIndex] = useState(0);
-  const inactiveText = text.slice(0, lockIndex);
+  const [inactiveText, setInactiveText] = useState('');
+  const [activeText, setActiveText] = useState('');
 
   const scrollRef = useRef<ScrollView>(null);
-  const inputRef = useRef<TextInput>(null);
-  const selectionRef = useRef({ start: 0, end: 0 });
 
   const handleContentSizeChange = () => {
     scrollRef.current?.scrollToEnd({ animated: true });
   };
 
   const handleChangeText = (value: string) => {
-    let newText = text;
-
-    if (value.length < lockIndex) {
-      // 비활성화 텍스트 삭제 제한
-      newText = text;
-    } else if (!value.startsWith(inactiveText)) {
-      // 선택 삭제, 붙여넣기 제한
-      newText = inactiveText + value.slice(lockIndex);
-    } else {
-      newText = value;
+    if (value.length < INACTIVE_LEN) {
+      setActiveText(value);
+      return;
     }
 
-    setText(newText);
-
-    const newLockIndex = newText.length - (newText.length % INACTIVE_LEN);
-    if (newLockIndex > lockIndex) {
-      setLockIndex(newLockIndex);
-      const nextSelection = {
-        start: Math.max(selectionRef.current.start, newLockIndex),
-        end: Math.max(selectionRef.current.end, newLockIndex),
-      };
-      selectionRef.current = nextSelection;
-      requestAnimationFrame(() => {
-        // lockIndex가 증가하는 순간 커서를 강제로 newLockIndex 이상으로 이동 (활성화 텍스트 중간에서 텍스트 입력 대응)
-        inputRef.current?.setSelection(nextSelection.start, nextSelection.end);
-      });
+    // activeText에서 완성된 블록만 inactiveText로 승격
+    const completedLen = value.length - (value.length % INACTIVE_LEN);
+    if (completedLen === 0) {
+      setActiveText(value);
+      return;
     }
-  };
 
-  // 비활성화 텍스트 커서 이동 제한 (props에 selection 을 주는 방식은 리렌더링을 발생시켜 텍스트 겹침이 깨짐 -> ref 활용 -> 리렌더링 X)
-  const handleSelectionChange = (e: TextInputSelectionChangeEvent) => {
-    const { start, end } = e.nativeEvent.selection;
-    const textLen = text.length;
-
-    if (start === end) {
-      if (start < lockIndex) {
-        selectionRef.current = { start: textLen, end: textLen };
-        inputRef.current?.setSelection(textLen, textLen);
-      } else {
-        selectionRef.current = { start, end };
-        inputRef.current?.setSelection(start, end);
-      }
-    } else {
-      if (start < lockIndex) {
-        selectionRef.current = { start: lockIndex, end };
-        inputRef.current?.setSelection(lockIndex, end);
-      } else {
-        selectionRef.current = { start, end };
-        inputRef.current?.setSelection(start, end);
-      }
-    }
+    setInactiveText((prev) => prev + value.slice(0, completedLen));
+    setActiveText(value.slice(completedLen));
   };
 
   return (
@@ -106,35 +67,25 @@ export function WriteDiaryPage() {
           keyboardShouldPersistTaps="handled"
           onContentSizeChange={handleContentSizeChange}>
           <View>
-            {/* 입력 텍스트 */}
+            {inactiveText.length > 0 && (
+              <Text style={[styles.textBase, styles.inactiveText]} allowFontScaling={false}>
+                {inactiveText}
+              </Text>
+            )}
             <TextInput
-              ref={inputRef}
-              style={[styles.textInput, styles.activeText]}
-              value={text}
+              style={[styles.textBase, styles.activeText, styles.activeInput]}
+              value={activeText}
               textBreakStrategy="simple"
               scrollEnabled={false}
               cursorColor={colors.primary.light}
               selectionColor={colors.primary.light}
+              maxLength={INACTIVE_LEN}
               multiline
               autoFocus
               autoCorrect={false}
               allowFontScaling={false}
               onChangeText={handleChangeText}
-              onSelectionChange={handleSelectionChange}
             />
-            {/* 비활성화 텍스트 */}
-            <View pointerEvents="none" style={styles.inactiveOverlay}>
-              <TextInput
-                style={[styles.textInput, styles.inactiveText]}
-                value={inactiveText}
-                textBreakStrategy="simple"
-                editable={false}
-                scrollEnabled={false}
-                multiline
-                allowFontScaling={false}
-                autoCorrect={false}
-              />
-            </View>
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
@@ -145,15 +96,15 @@ export function WriteDiaryPage() {
 const PageStyles = ({ colors }: { colors: MDColorsType }) =>
   StyleSheet.create({
     container: {},
-    textInput: {
+    textBase: {
       paddingVertical: 0,
       ...MDFonts['bodyRegular'],
     },
-    inactiveOverlay: {
-      ...StyleSheet.absoluteFillObject,
-    },
     activeText: {
       color: colors.text.normal,
+    },
+    activeInput: {
+      minHeight: MDFonts.bodyRegular.lineHeight,
     },
     inactiveText: {
       color: colors.text.alternative,

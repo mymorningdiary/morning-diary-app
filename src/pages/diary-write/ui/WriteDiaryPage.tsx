@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import { Redirect, router, useLocalSearchParams } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import {
   KeyboardAvoidingView,
   Platform,
@@ -11,27 +11,32 @@ import {
 } from 'react-native';
 
 import { getSingleParam } from '@shared/lib/router';
-import { MDFonts, useThemeColor } from '@shared/lib/theme';
+import { MDColorsType, MDFonts, useThemeColor } from '@shared/lib/theme';
 import { MDAppBar } from '@shared/ui/AppBar';
 import { MDPage } from '@shared/ui/Layout';
 import { useRef, useState } from 'react';
-import { Logger } from '@shared/lib/log';
 
 const INACTIVE_LEN = 20;
 
 export function WriteDiaryPage() {
   const colors = useThemeColor();
-  const styles = PageStyles;
+  const styles = PageStyles({ colors });
 
   const { date } = useLocalSearchParams();
   const dateParam = getSingleParam(date);
+  const formattedDate = dayjs(dateParam).locale('ko').format('M월 D일 ddd');
 
   const [text, setText] = useState('');
   const [lockIndex, setLockIndex] = useState(0);
   const inactiveText = text.slice(0, lockIndex);
 
+  const scrollRef = useRef<ScrollView>(null);
   const inputRef = useRef<TextInput>(null);
   const selectionRef = useRef({ start: 0, end: 0 });
+
+  const handleContentSizeChange = () => {
+    scrollRef.current?.scrollToEnd({ animated: true });
+  };
 
   const handleChangeText = (value: string) => {
     let newText = text;
@@ -87,31 +92,29 @@ export function WriteDiaryPage() {
     }
   };
 
-  if (!dayjs(dateParam).isValid()) {
-    return <Redirect href="/(app)" />;
-  }
-
-  const formattedDate = dayjs(dateParam).locale('ko').format('M월 D일 ddd');
-
   return (
     <MDPage style={styles.container}>
       <MDAppBar title={formattedDate} onBack={() => router.back()} />
       <KeyboardAvoidingView
         style={{ flex: 1 }}
-        behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
         <ScrollView
-          contentContainerStyle={{ flexGrow: 1 }}
+          ref={scrollRef}
+          contentContainerStyle={styles.scrollContent}
           overScrollMode="never"
           showsVerticalScrollIndicator={false}
-          keyboardShouldPersistTaps="handled">
-          <View style={{ flex: 1 }}>
+          keyboardShouldPersistTaps="handled"
+          onContentSizeChange={handleContentSizeChange}>
+          <View>
             {/* 입력 텍스트 */}
             <TextInput
               ref={inputRef}
-              style={[styles.textInput, { color: colors.text.normal }]}
+              style={[styles.textInput, styles.activeText]}
               value={text}
               textBreakStrategy="simple"
               scrollEnabled={false}
+              cursorColor={colors.primary.light}
+              selectionColor={colors.primary.light}
               multiline
               autoFocus
               autoCorrect={false}
@@ -122,11 +125,7 @@ export function WriteDiaryPage() {
             {/* 비활성화 텍스트 */}
             <View pointerEvents="none" style={styles.inactiveOverlay}>
               <TextInput
-                style={[
-                  styles.textInput,
-                  // { color: colors.text.alternative },
-                  { color: 'red' },
-                ]}
+                style={[styles.textInput, styles.inactiveText]}
                 value={inactiveText}
                 textBreakStrategy="simple"
                 editable={false}
@@ -143,15 +142,25 @@ export function WriteDiaryPage() {
   );
 }
 
-const PageStyles = StyleSheet.create({
-  container: {
-    paddingBottom: 60,
-  },
-  textInput: {
-    paddingVertical: 0,
-    ...MDFonts['bodyRegular'],
-  },
-  inactiveOverlay: {
-    ...StyleSheet.absoluteFillObject,
-  },
-});
+const PageStyles = ({ colors }: { colors: MDColorsType }) =>
+  StyleSheet.create({
+    container: {},
+    textInput: {
+      paddingVertical: 0,
+      ...MDFonts['bodyRegular'],
+    },
+    inactiveOverlay: {
+      ...StyleSheet.absoluteFillObject,
+    },
+    activeText: {
+      color: colors.text.normal,
+    },
+    inactiveText: {
+      color: colors.text.alternative,
+    },
+    scrollContent: {
+      flexGrow: 1,
+      paddingHorizontal: 12,
+      paddingBottom: 60,
+    },
+  });

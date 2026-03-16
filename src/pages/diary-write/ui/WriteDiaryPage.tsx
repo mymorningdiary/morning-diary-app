@@ -65,7 +65,7 @@ export function WriteDiaryPage() {
     <MDPage style={styles.container}>
       <MDAppBar title={formattedDate} onBack={() => router.back()} />
 
-      <WritingGoalProgressBar style={{ paddingHorizontal: 14 }} progress={100} />
+      <WritingGoalProgressBar style={styles.progressBar} label="아침일기 목표" progress={100} />
 
       <KeyboardAvoidingView
         style={{ flex: 1 }}
@@ -109,6 +109,10 @@ export function WriteDiaryPage() {
 const PageStyles = ({ colors }: { colors: MDColorsType }) =>
   StyleSheet.create({
     container: {},
+    progressBar: {
+      paddingHorizontal: 14,
+      paddingBottom: 24,
+    },
     scrollContent: {
       flexGrow: 1,
       paddingHorizontal: 12,

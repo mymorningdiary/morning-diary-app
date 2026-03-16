@@ -1,5 +1,5 @@
 import { router, useLocalSearchParams } from 'expo-router';
-import { useRef, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import {
   KeyboardAvoidingView,
   Platform,
@@ -43,6 +43,11 @@ export function WriteDiaryPage() {
 
   const [diaryText, setDiaryText] = useState<DiaryText>({ inactive: '', active: '', version: 0 });
 
+  const progress = useMemo(() => {
+    const currentTextLen = diaryText.inactive.length + diaryText.active.length;
+    return Math.floor(Math.min(100, (currentTextLen / targetTextLen) * 100));
+  }, [diaryText, targetTextLen]);
+
   const scrollRef = useRef<ScrollView>(null);
   const inputRef = useRef<TextInput>(null);
 
@@ -72,7 +77,11 @@ export function WriteDiaryPage() {
     <MDPage style={styles.container}>
       <MDAppBar title={formattedDate} onBack={() => router.back()} />
 
-      <WritingGoalProgressBar style={styles.progressBar} label="아침일기 목표" progress={100} />
+      <WritingGoalProgressBar
+        style={styles.progressBar}
+        label="아침일기 목표"
+        progress={progress}
+      />
 
       <KeyboardAvoidingView
         style={{ flex: 1 }}
@@ -86,7 +95,10 @@ export function WriteDiaryPage() {
           onContentSizeChange={handleContentSizeChange}>
           <View>
             {diaryText.inactive.length > 0 && (
-              <MDText type="bodyRegular" color={colors.text.alternative}>
+              <MDText
+                type="bodyRegular"
+                color={colors.text.alternative}
+                textBreakStrategy="highQuality">
                 {diaryText.inactive}
               </MDText>
             )}
@@ -95,7 +107,7 @@ export function WriteDiaryPage() {
               ref={inputRef}
               style={styles.textInput}
               value={diaryText.active}
-              textBreakStrategy="simple"
+              textBreakStrategy="highQuality"
               scrollEnabled={false}
               cursorColor={colors.primary.light}
               selectionColor={colors.primary.light}
@@ -108,6 +120,13 @@ export function WriteDiaryPage() {
             />
           </View>
         </ScrollView>
+        {process.env.APP_VARIANT !== 'production' && (
+          <View pointerEvents="none" style={styles.debugTextGoal}>
+            <MDText type="caption1SemiBold" color={colors.text.alternative}>
+              {diaryText.inactive.length + diaryText.active.length} / {targetTextLen}
+            </MDText>
+          </View>
+        )}
       </KeyboardAvoidingView>
     </MDPage>
   );
@@ -115,7 +134,9 @@ export function WriteDiaryPage() {
 
 const PageStyles = ({ colors }: { colors: MDColorsType }) =>
   StyleSheet.create({
-    container: {},
+    container: {
+      position: 'relative',
+    },
     progressBar: {
       paddingHorizontal: 14,
       paddingBottom: 24,
@@ -129,6 +150,11 @@ const PageStyles = ({ colors }: { colors: MDColorsType }) =>
       paddingVertical: 0,
       color: colors.text.normal,
       ...MDFonts['bodyRegular'],
+    },
+    debugTextGoal: {
+      position: 'absolute',
+      right: 16,
+      bottom: 20,
     },
   });
 

@@ -65,7 +65,7 @@ export function WriteDiaryPage() {
     <MDPage style={styles.container}>
       <MDAppBar title={formattedDate} onBack={() => router.back()} />
 
-      <WritingGoalProgressBar progress={0} />
+      <WritingGoalProgressBar style={{ paddingHorizontal: 14 }} progress={100} />
 
       <KeyboardAvoidingView
         style={{ flex: 1 }}

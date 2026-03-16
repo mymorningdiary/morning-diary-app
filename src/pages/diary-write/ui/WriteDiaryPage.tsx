@@ -15,6 +15,7 @@ import { MDAppBar } from '@shared/ui/AppBar';
 import { MDPage } from '@shared/ui/Layout';
 import { MDText } from '@shared/ui/Text';
 
+import { WritingGoalProgressBar } from '@shared/ui/ProgressBar';
 import dayjs from 'dayjs';
 
 type DiaryText = {
@@ -42,23 +43,30 @@ export function WriteDiaryPage() {
     scrollRef.current?.scrollToEnd({ animated: true });
   };
 
+  const inactivateText = () => {
+    setDiaryText((prev) => {
+      const newInactiveText = prev.inactive + prev.active.slice(0, INACTIVE_LEN);
+      const newActiveText = prev.active.slice(INACTIVE_LEN);
+
+      return { inactive: newInactiveText, active: newActiveText, version: prev.version + 1 };
+    });
+  };
+
   const handleChangeText = (value: string) => {
     if (value.length < INACTIVE_LEN) {
       setDiaryText((prev) => ({ ...prev, active: value }));
       return;
     }
 
-    setDiaryText((prev) => {
-      const newInactiveText = prev.inactive + value.slice(0, INACTIVE_LEN);
-      const newActiveText = value.slice(INACTIVE_LEN);
-
-      return { inactive: newInactiveText, active: newActiveText, version: prev.version + 1 };
-    });
+    inactivateText();
   };
 
   return (
     <MDPage style={styles.container}>
       <MDAppBar title={formattedDate} onBack={() => router.back()} />
+
+      <WritingGoalProgressBar progress={0} />
+
       <KeyboardAvoidingView
         style={{ flex: 1 }}
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>

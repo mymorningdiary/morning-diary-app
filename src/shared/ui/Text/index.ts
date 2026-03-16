@@ -1,2 +1,2 @@
 export { MDText } from './MDText';
-export { SpeechBubble } from './SpeechBubble';
+export { SpeechBubble } from './SpeechBubble/SpeechBubble';

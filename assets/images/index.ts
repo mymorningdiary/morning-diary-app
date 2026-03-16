@@ -4,5 +4,6 @@ import ImgOnboarding2 from './img-onboarding-2.png';
 
 import ImgSunBasic from './img-sun-basic.png';
 import ImgSunTwitch from './img-sun-twitch.png';
+import ImgSunSmall from './img-sun-small.png';
 
-export { ImgTextLogo, ImgSunBasic, ImgOnboarding1, ImgOnboarding2, ImgSunTwitch };
+export { ImgTextLogo, ImgOnboarding1, ImgOnboarding2, ImgSunBasic, ImgSunTwitch, ImgSunSmall };

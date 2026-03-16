@@ -22,8 +22,12 @@ export function WritingGoalProgressBar({ style, progress, label }: Props) {
         <View style={[styles.fill, { width: `${progress}%` }]} />
 
         <View style={[styles.thumb, { left: `${(progress / 100) * THUMB_MAX_PERCENT}%` }]}>
-          <SpeechBubble text={label ?? `${progress}%`} variant="small" />
-          <Image style={{ width: 36, height: 36 }} source={ImgSunSmall} />
+          <SpeechBubble
+            style={[styles.thumbSpeechBubble, { minWidth: 40 + progress * 0.02 }]} // 0 -> 40, 100 -> 42
+            text={label ?? `${progress}%`}
+            variant="small"
+          />
+          <Image style={styles.thumbImage} source={ImgSunSmall} />
         </View>
       </View>
     </View>
@@ -51,5 +55,13 @@ const ProgressBarStyles = ({ colors }: { colors: MDColorsType }) =>
       alignItems: 'center',
       top: 0,
       transform: [{ translateX: -6 }, { translateY: -12 }],
+    },
+    thumbImage: {
+      width: 36,
+      height: 36,
+    },
+    thumbSpeechBubble: {
+      position: 'absolute',
+      top: -24, // image 와 간격 3px
     },
   });

@@ -17,6 +17,8 @@ import { MDText } from '@shared/ui/Text';
 
 import { WritingGoalProgressBar } from '@shared/ui/ProgressBar';
 import dayjs from 'dayjs';
+import { useUser } from '@entities/user';
+import { useCurrentTextGoal } from '@entities/text-goal';
 
 type DiaryText = {
   inactive: string;
@@ -25,6 +27,7 @@ type DiaryText = {
 };
 
 const INACTIVE_LEN = 20;
+const DEFAULT_TARGET_TEXT_LEN = 200;
 
 export function WriteDiaryPage() {
   const colors = useThemeColor();
@@ -33,6 +36,10 @@ export function WriteDiaryPage() {
   const { date } = useLocalSearchParams();
   const dateParam = getSingleParam(date);
   const formattedDate = dayjs(dateParam).locale('ko').format('M월 D일 ddd');
+
+  const { user } = useUser();
+  const { currentTextGoal } = useCurrentTextGoal(user?.textGoalId);
+  const targetTextLen = currentTextGoal?.textLength ?? DEFAULT_TARGET_TEXT_LEN;
 
   const [diaryText, setDiaryText] = useState<DiaryText>({ inactive: '', active: '', version: 0 });
 

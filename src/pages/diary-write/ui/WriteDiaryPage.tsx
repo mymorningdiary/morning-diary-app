@@ -1,8 +1,10 @@
 import { router, useLocalSearchParams } from 'expo-router';
 import { useMemo, useRef, useState } from 'react';
 import {
+  Keyboard,
   KeyboardAvoidingView,
   Platform,
+  Pressable,
   ScrollView,
   StyleSheet,
   TextInput,
@@ -54,6 +56,15 @@ export function WriteDiaryPage() {
     [currentTextLen, targetTextLen],
   );
 
+  const handleFocus = () => {
+    inputRef.current?.focus();
+  };
+
+  const handleBlur = () => {
+    inputRef.current?.blur();
+    Keyboard.dismiss();
+  };
+
   const handleContentSizeChange = () => {
     scrollRef.current?.scrollToEnd({ animated: true });
   };
@@ -77,13 +88,15 @@ export function WriteDiaryPage() {
 
   return (
     <MDPage style={styles.container}>
-      <MDAppBar title={formattedDate} onBack={() => router.back()} />
+      <Pressable onPress={handleBlur}>
+        <MDAppBar title={formattedDate} onBack={() => router.back()} />
 
-      <WritingGoalProgressBar
-        style={styles.progressBar}
-        label="아침일기 목표"
-        progress={progress}
-      />
+        <WritingGoalProgressBar
+          style={styles.progressBar}
+          label="아침일기 목표"
+          progress={progress}
+        />
+      </Pressable>
 
       <KeyboardAvoidingView
         style={{ flex: 1 }}
@@ -95,7 +108,7 @@ export function WriteDiaryPage() {
           showsVerticalScrollIndicator={false}
           keyboardShouldPersistTaps="handled"
           onContentSizeChange={handleContentSizeChange}>
-          <View>
+          <Pressable style={{ flex: 1 }} onPress={handleFocus}>
             {diaryText.inactive.length > 0 && (
               <MDText
                 type="bodyRegular"
@@ -122,7 +135,7 @@ export function WriteDiaryPage() {
               allowFontScaling={false}
               onChangeText={handleChangeText}
             />
-          </View>
+          </Pressable>
         </ScrollView>
         {process.env.APP_VARIANT !== 'production' && (
           <View pointerEvents="none" style={styles.debugTextGoal}>
@@ -155,6 +168,7 @@ const PageStyles = ({ colors }: { colors: MDColorsType }) =>
       color: colors.text.normal,
       ...MDFonts['bodyRegular'],
     },
+
     debugTextGoal: {
       position: 'absolute',
       right: 16,

@@ -19,6 +19,8 @@ import { WritingGoalProgressBar } from '@shared/ui/ProgressBar';
 import dayjs from 'dayjs';
 import { useUser } from '@entities/user';
 import { useCurrentTextGoal } from '@entities/text-goal';
+import { getRandomMessage } from '@shared/lib/random';
+import { WRITING_PLACEHOLDERS } from '@features/diary';
 
 type DiaryText = {
   inactive: string;
@@ -33,6 +35,9 @@ export function WriteDiaryPage() {
   const colors = useThemeColor();
   const styles = PageStyles({ colors });
 
+  const scrollRef = useRef<ScrollView>(null);
+  const inputRef = useRef<TextInput>(null);
+
   const { date } = useLocalSearchParams();
   const dateParam = getSingleParam(date);
   const formattedDate = dayjs(dateParam).locale('ko').format('M월 D일 ddd');
@@ -42,26 +47,23 @@ export function WriteDiaryPage() {
   const targetTextLen = currentTextGoal?.textLength ?? DEFAULT_TARGET_TEXT_LEN;
 
   const [diaryText, setDiaryText] = useState<DiaryText>({ inactive: '', active: '', version: 0 });
+  const currentTextLen = diaryText.inactive.length + diaryText.active.length;
 
-  const progress = useMemo(() => {
-    const currentTextLen = diaryText.inactive.length + diaryText.active.length;
-    return Math.floor(Math.min(100, (currentTextLen / targetTextLen) * 100));
-  }, [diaryText, targetTextLen]);
-
-  const scrollRef = useRef<ScrollView>(null);
-  const inputRef = useRef<TextInput>(null);
+  const progress = useMemo(
+    () => Math.floor(Math.min(100, (currentTextLen / targetTextLen) * 100)),
+    [currentTextLen, targetTextLen],
+  );
 
   const handleContentSizeChange = () => {
     scrollRef.current?.scrollToEnd({ animated: true });
   };
 
-  const inactivateText = () => {
-    setDiaryText((prev) => {
-      const newInactiveText = prev.inactive + prev.active.slice(0, INACTIVE_LEN);
-      const newActiveText = prev.active.slice(INACTIVE_LEN);
-
-      return { inactive: newInactiveText, active: newActiveText, version: prev.version + 1 };
-    });
+  const inactivateText = (value: string) => {
+    setDiaryText((prev) => ({
+      inactive: prev.inactive + value.slice(0, INACTIVE_LEN),
+      active: value.slice(INACTIVE_LEN),
+      version: prev.version + 1,
+    }));
   };
 
   const handleChangeText = (value: string) => {
@@ -70,7 +72,7 @@ export function WriteDiaryPage() {
       return;
     }
 
-    inactivateText();
+    inactivateText(value);
   };
 
   return (
@@ -107,8 +109,10 @@ export function WriteDiaryPage() {
               ref={inputRef}
               style={styles.textInput}
               value={diaryText.active}
+              placeholder={currentTextLen == 0 ? getRandomMessage(WRITING_PLACEHOLDERS) : '...'}
               textBreakStrategy="highQuality"
               scrollEnabled={false}
+              placeholderTextColor={colors.text.alternative}
               cursorColor={colors.primary.light}
               selectionColor={colors.primary.light}
               maxLength={INACTIVE_LEN}
@@ -123,7 +127,7 @@ export function WriteDiaryPage() {
         {process.env.APP_VARIANT !== 'production' && (
           <View pointerEvents="none" style={styles.debugTextGoal}>
             <MDText type="caption1SemiBold" color={colors.text.alternative}>
-              {diaryText.inactive.length + diaryText.active.length} / {targetTextLen}
+              {currentTextLen} / {targetTextLen}
             </MDText>
           </View>
         )}

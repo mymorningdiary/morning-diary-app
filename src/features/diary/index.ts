@@ -1,4 +1,4 @@
-export { DiaryAssistant } from './ui/DiaryAssistant';
+export { DiaryAssistant } from './ui/DiaryAssistant/DiaryAssistant';
 export { DiaryEditor } from './ui/DiaryEditor';
 export { useDiaryEditor } from './model/useDiaryEditor';
 export { WRITING_PLACEHOLDERS } from './lib/writing-messages';

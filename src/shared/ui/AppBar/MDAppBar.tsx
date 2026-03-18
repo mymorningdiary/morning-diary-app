@@ -1,3 +1,4 @@
+import { ReactNode } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 
 import { IconChevronLeft, IconClose } from '@assets/icons';
@@ -7,13 +8,14 @@ import { MDText } from '../Text';
 
 interface Props {
   title?: string;
+  rightContent?: ReactNode;
   onBack?: () => void;
   onClose?: () => void;
 }
 
-export function MDAppBar({ title, onBack, onClose }: Props) {
+export function MDAppBar({ title, rightContent, onBack, onClose }: Props) {
   const colors = useThemeColor();
-  const styles = AooBarStyles({ colors });
+  const styles = AppBarStyles({ colors });
 
   return (
     <View style={styles.container}>
@@ -22,21 +24,25 @@ export function MDAppBar({ title, onBack, onClose }: Props) {
           {title}
         </MDText>
       )}
-      {onBack && (
-        <Pressable hitSlop={12} onPress={onBack}>
-          <IconChevronLeft width={24} height={24} color={colors.icon.normal} />
-        </Pressable>
-      )}
-      {onClose && (
-        <Pressable hitSlop={12} onPress={onClose}>
-          <IconClose width={24} height={24} color={colors.icon.normal} />
-        </Pressable>
-      )}
+      <View>
+        {onBack && (
+          <Pressable hitSlop={12} onPress={onBack}>
+            <IconChevronLeft width={24} height={24} color={colors.icon.normal} />
+          </Pressable>
+        )}
+        {onClose && (
+          <Pressable hitSlop={12} onPress={onClose}>
+            <IconClose width={24} height={24} color={colors.icon.normal} />
+          </Pressable>
+        )}
+      </View>
+
+      <View>{rightContent}</View>
     </View>
   );
 }
 
-const AooBarStyles = ({ colors }: { colors: MDColorsType }) =>
+const AppBarStyles = ({ colors }: { colors: MDColorsType }) =>
   StyleSheet.create({
     container: {
       flexDirection: 'row',
@@ -44,6 +50,7 @@ const AooBarStyles = ({ colors }: { colors: MDColorsType }) =>
       alignItems: 'center',
       backgroundColor: colors.background.normal,
       paddingHorizontal: 12,
+      justifyContent: 'space-between',
     },
     icon: {
       width: 24,

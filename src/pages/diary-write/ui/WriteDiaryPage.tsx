@@ -1,17 +1,17 @@
+import dayjs from 'dayjs';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useRef } from 'react';
 import { Pressable, StyleSheet, TextInput } from 'react-native';
-import dayjs from 'dayjs';
 
+import { useCurrentTextGoal } from '@entities/text-goal';
+import { useUser } from '@entities/user';
+import { DiaryEditor, useDiaryEditor } from '@features/diary';
 import { getSingleParam } from '@shared/lib/router';
 import { MDColorsType, useThemeColor } from '@shared/lib/theme';
 import { MDAppBar } from '@shared/ui/AppBar';
-import { MDPage } from '@shared/ui/Layout';
 import { MDButton } from '@shared/ui/Button';
+import { MDPage } from '@shared/ui/Layout';
 import { WritingGoalProgressBar } from '@shared/ui/ProgressBar';
-import { DEFAULT_TEXT_GOAL_LEN, useCurrentTextGoal } from '@entities/text-goal';
-import { useUser } from '@entities/user';
-import { DiaryEditor, useDiaryEditor } from '@features/diary';
 
 export function WriteDiaryPage() {
   const colors = useThemeColor();
@@ -25,11 +25,11 @@ export function WriteDiaryPage() {
 
   const { user } = useUser();
   const { currentTextGoal } = useCurrentTextGoal(user?.textGoalId);
-  const { diaryState, handleDiaryTextChange } = useDiaryEditor();
+  const targetTextLen = currentTextGoal?.textLength;
 
-  const targetTextLen = currentTextGoal?.textLength ?? DEFAULT_TEXT_GOAL_LEN;
-  const currentTextLen = diaryState.inactiveText.length + diaryState.activeText.length;
-  const progress = Math.floor((currentTextLen / targetTextLen) * 100);
+  const { diaryState, currentTextLen, progress, handleDiaryTextChange } = useDiaryEditor({
+    textGoalLen: currentTextGoal?.textLength,
+  });
 
   const handleBlur = () => {
     editorRef.current?.blur();

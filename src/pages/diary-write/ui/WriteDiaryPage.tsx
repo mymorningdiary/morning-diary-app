@@ -5,7 +5,7 @@ import { Pressable, StyleSheet, TextInput } from 'react-native';
 
 import { useCurrentTextGoal } from '@entities/text-goal';
 import { useUser } from '@entities/user';
-import { DiaryEditor, useDiaryEditor } from '@features/diary';
+import { DiaryAssistant, DiaryEditor, useDiaryEditor } from '@features/diary';
 import { getSingleParam } from '@shared/lib/router';
 import { MDColorsType, useThemeColor } from '@shared/lib/theme';
 import { MDAppBar } from '@shared/ui/AppBar';

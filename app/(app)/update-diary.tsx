@@ -1,7 +1,5 @@
 import { MDCol, MDProgressBar, MDText, MDView } from '@/components';
-import MDAssistant from '@/components/MDAssistant';
 import MDDefaultModal from '@/components/Modal/MDDefaultModal';
-import MDTopNotificationModal from '@/components/Modal/MDTopNotificationModal';
 import WriteAppBar, { formatDateToAppBarTitle } from '@/components/write/WriteAppBar';
 import { ASSISTANT_PAUSE_MESSAGES } from '@/constants/messages';
 import {
@@ -12,6 +10,7 @@ import {
   PROGRESS_MESSAGES,
   ProgressKey,
 } from '@/domain/write-diary/constants';
+import { DiaryAssistant } from '@features/diary';
 import { useGetDiary, useThemeColor, useUpdateDiary } from '@/hooks';
 import useGetTextGoals from '@/hooks/useTextGoalQuery';
 import { MDColors } from '@/types';
@@ -30,9 +29,9 @@ export default function UpdateDiaryScreen() {
   const scrollViewRef = useRef<ScrollView>(null);
   const textInputRef = useRef<TextInput>(null);
 
-  const timerRef = useRef<number | null>(null);
+  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const lastInputTimeRef = useRef<number>(Date.now());
-  const debounceTimerRef = useRef<number | null>(null);
+  const debounceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const { year, month, day, diaryId } = useLocalSearchParams();
   const appBarTitle = useMemo(
@@ -298,14 +297,11 @@ export default function UpdateDiaryScreen() {
           </KeyboardAvoidingView>
         </MDView>
 
-        <MDTopNotificationModal
-          isVisible={isShowAssistant}
-          onClose={() => setIsShowAssistant(false)}>
-          <MDAssistant
-            imageSource={require('@/assets/images/img-sun-basic.png')}
-            text={assistantText}
-          />
-        </MDTopNotificationModal>
+        <DiaryAssistant
+          visible={isShowAssistant}
+          message={assistantText}
+          onClose={() => setIsShowAssistant(false)}
+        />
 
         <MDDefaultModal
           visible={showEndModal}

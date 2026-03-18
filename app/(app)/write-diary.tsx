@@ -1,7 +1,5 @@
 import { MDCol, MDProgressBar, MDText, MDView } from '@/components';
-import MDAssistant from '@/components/MDAssistant';
 import MDDefaultModal from '@/components/Modal/MDDefaultModal';
-import MDTopNotificationModal from '@/components/Modal/MDTopNotificationModal';
 import { WriteAppBar } from '@/components/write';
 import { formatDateToAppBarTitle } from '@/components/write/WriteAppBar';
 import { ASSISTANT_PAUSE_MESSAGES, WRITING_HINT_MESSAGES } from '@/constants/messages';
@@ -13,6 +11,7 @@ import {
   PROGRESS_MESSAGES,
   ProgressKey,
 } from '@/domain/write-diary/constants';
+import { DiaryAssistant } from '@features/diary';
 import { useThemeColor } from '@/hooks';
 import { useWriteDiary } from '@/hooks/useDiaryMutation';
 import { MDColors } from '@/types';
@@ -31,9 +30,9 @@ export default function WriteDiaryScreen() {
   const { mutate: writeDiary, isPending: isWritingLoading, writeDiaryResponse } = useWriteDiary();
 
   const scrollViewRef = useRef<ScrollView>(null);
-  const timerRef = useRef<number | null>(null);
+  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const lastInputTimeRef = useRef<number>(Date.now());
-  const debounceTimerRef = useRef<number | null>(null);
+  const debounceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const { year, month, day, textGoalLength } = useLocalSearchParams();
   const appBarTitle = useMemo(() => {
@@ -281,14 +280,11 @@ export default function WriteDiaryScreen() {
           </KeyboardAvoidingView>
         </MDView>
 
-        <MDTopNotificationModal
-          isVisible={isShowAssistant}
-          onClose={() => setIsShowAssistant(false)}>
-          <MDAssistant
-            imageSource={require('@/assets/images/img-sun-basic.png')}
-            text={assistantText}
-          />
-        </MDTopNotificationModal>
+        <DiaryAssistant
+          visible={isShowAssistant}
+          message={assistantText}
+          onClose={() => setIsShowAssistant(false)}
+        />
 
         <MDDefaultModal
           visible={showEndModal}

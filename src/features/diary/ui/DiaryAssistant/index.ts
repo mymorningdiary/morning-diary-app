@@ -1,0 +1,1 @@
+export { DiaryAssistant } from './DiaryAssistant';

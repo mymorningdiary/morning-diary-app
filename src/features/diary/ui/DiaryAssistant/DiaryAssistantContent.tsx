@@ -10,9 +10,9 @@ interface Props {
   message: string;
 }
 
-export function DiaryAssistant({ image = ImgSunBasic, message }: Props) {
+export function DiaryAssistantContent({ image = ImgSunBasic, message }: Props) {
   const colors = useThemeColor();
-  const styles = AssistantStyles({ colors });
+  const styles = ContentStyles({ colors });
 
   return (
     <View style={styles.container}>
@@ -29,7 +29,7 @@ export function DiaryAssistant({ image = ImgSunBasic, message }: Props) {
   );
 }
 
-const AssistantStyles = ({ colors }: { colors: MDColorsType }) =>
+const ContentStyles = ({ colors }: { colors: MDColorsType }) =>
   StyleSheet.create({
     container: {
       flexDirection: 'row',

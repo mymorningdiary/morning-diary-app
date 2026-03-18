@@ -15,6 +15,7 @@ import { getRandomMessage } from '@shared/lib/random';
 import { MDColorsType, MDFonts, useThemeColor } from '@shared/lib/theme';
 import { DiaryState, WRITING_PLACEHOLDERS } from '@features/diary';
 import { INACTIVE_TEXT_LEN } from '../config/constants';
+import { DEFAULT_TEXT_GOAL_LEN } from '@entities/text-goal';
 
 interface Props extends DiaryState {
   inputRef?: React.RefObject<TextInput | null>;
@@ -28,7 +29,7 @@ export function DiaryEditor({
   inactiveText,
   activeText,
   version,
-  targetTextLen = 0,
+  targetTextLen = DEFAULT_TEXT_GOAL_LEN,
   currentTextLen = 0,
   onChangeText,
 }: Props) {

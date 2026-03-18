@@ -25,7 +25,6 @@ export function WriteDiaryPage() {
 
   const { user } = useUser();
   const { currentTextGoal } = useCurrentTextGoal(user?.textGoalId);
-  const targetTextLen = currentTextGoal?.textLength;
 
   const { diaryState, currentTextLen, progress, handleDiaryTextChange } = useDiaryEditor({
     textGoalLen: currentTextGoal?.textLength,
@@ -56,7 +55,7 @@ export function WriteDiaryPage() {
       <DiaryEditor
         inputRef={editorRef}
         {...diaryState}
-        targetTextLen={targetTextLen}
+        targetTextLen={currentTextGoal?.textLength}
         currentTextLen={currentTextLen}
         onChangeText={handleDiaryTextChange}
       />

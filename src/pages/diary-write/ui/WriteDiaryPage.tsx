@@ -1,7 +1,8 @@
 import dayjs from 'dayjs';
 import { router, useLocalSearchParams } from 'expo-router';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { Pressable, StyleSheet, TextInput } from 'react-native';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 import { useCurrentTextGoal } from '@entities/text-goal';
 import { useUser } from '@entities/user';
@@ -30,36 +31,55 @@ export function WriteDiaryPage() {
     textGoalLen: currentTextGoal?.textLength,
   });
 
+  const [showDiaryAssistant, setShowDiaryAssistant] = useState(false);
+
   const handleBlur = () => {
     editorRef.current?.blur();
   };
 
+  const handleShowDiaryAssistant = () => {
+    setShowDiaryAssistant(true);
+  };
+
+  const handleHideDiaryAssistant = () => {
+    setShowDiaryAssistant(false);
+  };
+
   return (
-    <MDPage style={styles.container}>
-      <Pressable onPress={handleBlur}>
-        <MDAppBar
-          title={formattedDate}
-          onBack={() => router.back()}
-          rightContent={
-            <MDButton variant="ghost" size="small" label="완료" disabled={progress == 0} />
-          }
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <MDPage style={styles.container}>
+        <Pressable onPress={handleBlur}>
+          <MDAppBar
+            title={formattedDate}
+            onBack={() => router.back()}
+            rightContent={
+              <MDButton variant="ghost" size="small" label="완료" disabled={progress == 0} />
+            }
+          />
+
+          <WritingGoalProgressBar
+            style={styles.progressBar}
+            label="아침일기 목표"
+            progress={progress}
+          />
+        </Pressable>
+
+        <DiaryEditor
+          inputRef={editorRef}
+          {...diaryState}
+          targetTextLen={currentTextGoal?.textLength}
+          currentTextLen={currentTextLen}
+          onChangeText={handleDiaryTextChange}
+          onShowDiaryAssistant={handleShowDiaryAssistant}
         />
 
-        <WritingGoalProgressBar
-          style={styles.progressBar}
-          label="아침일기 목표"
-          progress={progress}
+        <DiaryAssistant
+          show={showDiaryAssistant}
+          message={'HI'}
+          onHide={handleHideDiaryAssistant}
         />
-      </Pressable>
-
-      <DiaryEditor
-        inputRef={editorRef}
-        {...diaryState}
-        targetTextLen={currentTextGoal?.textLength}
-        currentTextLen={currentTextLen}
-        onChangeText={handleDiaryTextChange}
-      />
-    </MDPage>
+      </MDPage>
+    </GestureHandlerRootView>
   );
 }
 

@@ -58,7 +58,7 @@ export function WriteDiaryPage() {
           targetTextLen={currentTextGoal?.textLength}
           currentTextLen={currentTextLen}
           onChangeText={handleDiaryTextChange}
-          onShowDiaryAssistant={() => {}}
+          onShowAssistant={() => {}}
         />
 
         <DiaryAssistant {...assistantState} onHide={handleHideAssistant} />

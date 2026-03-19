@@ -12,12 +12,9 @@ import Animated, {
 import { scheduleOnRN } from 'react-native-worklets';
 import { DiaryAssistantContent } from './DiaryAssistantContent';
 import { ImgSunBasic } from '@assets/images';
+import { AssistantState } from '@features/diary/model/types';
 
-interface Props {
-  show?: boolean;
-  image?: string;
-  message: string;
-  version?: number;
+interface Props extends AssistantState {
   onHide: () => void;
 }
 

@@ -1,1 +1,10 @@
+import { ASSISTANT_GOAL_50_MESSAGES, ASSISTANT_GOAL_90_MESSAGES } from '@/constants/messages';
+import { ASSISTANT_PROGRESS_10_MESSAGES } from '../lib/diary-messages';
+
 export const INACTIVE_TEXT_LEN = 20;
+
+export const ASSISTANT_PROGRESS_MESSAGES = {
+  10: ASSISTANT_PROGRESS_10_MESSAGES,
+  50: ASSISTANT_GOAL_50_MESSAGES,
+  90: ASSISTANT_GOAL_90_MESSAGES,
+} satisfies Record<number, string[]>;

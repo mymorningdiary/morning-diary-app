@@ -1,12 +1,18 @@
 import dayjs from 'dayjs';
 import { router, useLocalSearchParams } from 'expo-router';
-import { useRef, useState } from 'react';
+import { useRef } from 'react';
 import { Pressable, StyleSheet, TextInput } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 import { useCurrentTextGoal } from '@entities/text-goal';
 import { useUser } from '@entities/user';
-import { DiaryAssistant, DiaryEditor, useDiaryAssistant, useDiaryEditor } from '@features/diary';
+import {
+  DiaryAssistant,
+  DiaryEditor,
+  useDiaryAssistant,
+  useDiaryAssistantByProgress,
+  useDiaryEditor,
+} from '@features/diary';
 import { getSingleParam } from '@shared/lib/router';
 import { MDColorsType, useThemeColor } from '@shared/lib/theme';
 import { MDAppBar } from '@shared/ui/AppBar';
@@ -31,7 +37,8 @@ export function WriteDiaryPage() {
     textGoalLen: currentTextGoal?.textLength,
   });
 
-  const { assistantState, handleShowAssistant, handleHideAssistant } = useDiaryAssistant();
+  const { assistantState, showAssistant, hideAssistant } = useDiaryAssistant();
+  useDiaryAssistantByProgress({ progress, showAssistant });
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
@@ -58,10 +65,10 @@ export function WriteDiaryPage() {
           targetTextLen={currentTextGoal?.textLength}
           currentTextLen={currentTextLen}
           onChangeText={handleDiaryTextChange}
-          onShowAssistant={handleShowAssistant}
+          onShowAssistant={showAssistant}
         />
 
-        <DiaryAssistant {...assistantState} onHide={handleHideAssistant} />
+        <DiaryAssistant {...assistantState} onHide={hideAssistant} />
       </MDPage>
     </GestureHandlerRootView>
   );

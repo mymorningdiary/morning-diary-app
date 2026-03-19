@@ -3,14 +3,13 @@ import { Image } from 'expo-image';
 
 import { MDColorsType, useThemeColor } from '@shared/lib/theme';
 import { MDText } from '@shared/ui/Text';
-import { ImgSunBasic } from '@assets/images';
 
 interface Props {
-  image?: string;
+  image: string;
   message: string;
 }
 
-export function DiaryAssistantContent({ image = ImgSunBasic, message }: Props) {
+export function DiaryAssistantContent({ image, message }: Props) {
   const colors = useThemeColor();
   const styles = ContentStyles({ colors });
 

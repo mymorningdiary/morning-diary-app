@@ -14,6 +14,11 @@ import { DiaryAssistantContent } from './DiaryAssistantContent';
 import { ImgSunBasic } from '@assets/images';
 import { AssistantState } from '@features/diary/model/types';
 
+const ASSISTANT_SHOW_DURATION_MS = 700;
+const ASSISTANT_HIDE_DURATION_MS = 1_000;
+const ASSISTANT_SHOW_EASING = Easing.bezier(0.22, 1, 0.36, 1);
+const ASSISTANT_HIDE_EASING = Easing.bezier(0.25, 0.1, 0.25, 1);
+
 interface Props extends AssistantState {
   onHide: () => void;
 }
@@ -55,13 +60,16 @@ export function DiaryAssistant({
 
   useEffect(() => {
     if (show) {
-      translateY.value = withSpring(0, { damping: 100 });
+      translateY.value = withTiming(0, {
+        duration: ASSISTANT_SHOW_DURATION_MS,
+        easing: ASSISTANT_SHOW_EASING,
+      });
       return;
     }
 
     translateY.value = withTiming(hiddenTranslateY, {
-      duration: 1500,
-      easing: Easing.bezier(0.25, 0.1, 0.25, 1),
+      duration: ASSISTANT_HIDE_DURATION_MS,
+      easing: ASSISTANT_HIDE_EASING,
     });
   }, [hiddenTranslateY, translateY, show]);
 

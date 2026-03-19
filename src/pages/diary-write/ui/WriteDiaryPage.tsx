@@ -10,6 +10,7 @@ import {
   DiaryAssistant,
   DiaryEditor,
   useDiaryAssistant,
+  useDiaryAssistantByPause,
   useDiaryAssistantByProgress,
   useDiaryEditor,
 } from '@features/diary';
@@ -38,6 +39,7 @@ export function WriteDiaryPage() {
   });
 
   const { assistantState, showAssistant, hideAssistant } = useDiaryAssistant();
+  useDiaryAssistantByPause({ currentTextLen, showAssistant });
   useDiaryAssistantByProgress({ progress, showAssistant });
 
   return (
@@ -48,7 +50,7 @@ export function WriteDiaryPage() {
             title={formattedDate}
             onBack={() => router.back()}
             rightContent={
-              <MDButton variant="ghost" size="small" label="완료" disabled={currentTextLen == 0} />
+              <MDButton variant="ghost" size="small" label="완료" disabled={currentTextLen === 0} />
             }
           />
 

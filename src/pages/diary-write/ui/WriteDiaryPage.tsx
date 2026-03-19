@@ -31,29 +31,36 @@ export function WriteDiaryPage() {
     textGoalLen: currentTextGoal?.textLength,
   });
 
-  const [showDiaryAssistant, setShowDiaryAssistant] = useState(false);
-
-  const handleBlur = () => {
-    editorRef.current?.blur();
-  };
+  const [assistantState, setAssistantState] = useState({
+    show: false,
+    message: '',
+    version: 0,
+  });
 
   const handleShowDiaryAssistant = () => {
-    setShowDiaryAssistant(true);
+    setAssistantState((prev) => ({
+      show: true,
+      message: 'HI',
+      version: prev.version + 1,
+    }));
   };
 
   const handleHideDiaryAssistant = () => {
-    setShowDiaryAssistant(false);
+    setAssistantState((prev) => ({
+      ...prev,
+      show: false,
+    }));
   };
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <MDPage style={styles.container}>
-        <Pressable onPress={handleBlur}>
+        <Pressable onPress={() => editorRef.current?.blur()}>
           <MDAppBar
             title={formattedDate}
             onBack={() => router.back()}
             rightContent={
-              <MDButton variant="ghost" size="small" label="완료" disabled={progress == 0} />
+              <MDButton variant="ghost" size="small" label="완료" disabled={currentTextLen == 0} />
             }
           />
 
@@ -73,11 +80,7 @@ export function WriteDiaryPage() {
           onShowDiaryAssistant={handleShowDiaryAssistant}
         />
 
-        <DiaryAssistant
-          show={showDiaryAssistant}
-          message={'HI'}
-          onHide={handleHideDiaryAssistant}
-        />
+        <DiaryAssistant {...assistantState} onHide={handleHideDiaryAssistant} />
       </MDPage>
     </GestureHandlerRootView>
   );

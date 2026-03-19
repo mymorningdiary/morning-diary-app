@@ -13,7 +13,11 @@ import { TextGoalCounter } from './TextGoalCounter';
 import { MDText } from '@shared/ui/Text';
 import { getRandomMessage } from '@shared/lib/random';
 import { MDColorsType, MDFonts, useThemeColor } from '@shared/lib/theme';
-import { DiaryState, WRITING_PLACEHOLDERS } from '@features/diary';
+import {
+  ASSISTANT_INACTIVE_TEXT_MESSAGES,
+  DiaryState,
+  WRITING_PLACEHOLDERS,
+} from '@features/diary';
 import { INACTIVE_TEXT_LEN } from '../config/constants';
 import { DEFAULT_TEXT_GOAL_LEN } from '@entities/text-goal';
 
@@ -65,7 +69,7 @@ export function DiaryEditor({
               type="bodyRegular"
               color={colors.text.alternative}
               textBreakStrategy="highQuality"
-              onPress={() => onShowAssistant?.('')}>
+              onPress={() => onShowAssistant?.(getRandomMessage(ASSISTANT_INACTIVE_TEXT_MESSAGES))}>
               {inactiveText}
             </MDText>
           )}

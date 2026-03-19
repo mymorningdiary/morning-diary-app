@@ -8,7 +8,7 @@ export function useDiaryAssistant() {
     version: 0,
   });
 
-  const handleShowAssistant = (message: string) => {
+  const showAssistant = (message: string) => {
     setAssistantState((prev) => ({
       show: true,
       message,
@@ -16,7 +16,7 @@ export function useDiaryAssistant() {
     }));
   };
 
-  const handleHideAssistant = () => {
+  const hideAssistant = () => {
     setAssistantState((prev) => ({
       ...prev,
       show: false,
@@ -25,7 +25,7 @@ export function useDiaryAssistant() {
 
   return {
     assistantState,
-    handleShowAssistant,
-    handleHideAssistant,
+    showAssistant,
+    hideAssistant,
   };
 }

@@ -12,7 +12,7 @@ interface Props {
   label?: string;
 }
 
-export function WritingGoalProgressBar({ style, progress, label }: Props) {
+export function TextGoalProgressBar({ style, progress, label }: Props) {
   const colors = useThemeColor();
   const styles = ProgressBarStyles({ colors });
 

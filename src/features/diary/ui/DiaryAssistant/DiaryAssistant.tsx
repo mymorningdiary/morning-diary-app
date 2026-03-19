@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { Pressable, StyleSheet, useWindowDimensions } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Animated, {
@@ -11,16 +11,26 @@ import Animated, {
 
 import { scheduleOnRN } from 'react-native-worklets';
 import { DiaryAssistantContent } from './DiaryAssistantContent';
+import { ImgSunBasic } from '@assets/images';
 
 interface Props {
   show?: boolean;
   image?: string;
   message: string;
+  version?: number;
   onHide: () => void;
 }
 
-export function DiaryAssistant({ show = false, image, message, onHide }: Props) {
+export function DiaryAssistant({
+  show = false,
+  image = ImgSunBasic,
+  message,
+  version = 0,
+  onHide,
+}: Props) {
   const styles = AssistantStyles;
+
+  const hideTimer = useRef<ReturnType<typeof setTimeout>>(null);
 
   const { height } = useWindowDimensions();
   const hiddenTranslateY = -height;
@@ -63,6 +73,28 @@ export function DiaryAssistant({ show = false, image, message, onHide }: Props) 
       transform: [{ translateY: translateY.value }],
     };
   });
+
+  const clearHideTimer = () => {
+    if (hideTimer.current) {
+      clearTimeout(hideTimer.current);
+      hideTimer.current = null;
+    }
+  };
+
+  useEffect(() => {
+    if (!show) {
+      clearHideTimer();
+      return;
+    }
+
+    clearHideTimer();
+    hideTimer.current = setTimeout(() => {
+      onHide();
+      hideTimer.current = null;
+    }, 2000);
+
+    return clearHideTimer;
+  }, [show, version, onHide]);
 
   return (
     <GestureDetector gesture={gesture}>

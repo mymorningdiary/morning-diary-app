@@ -2,6 +2,7 @@ export { DiaryAssistant } from './ui/DiaryAssistant/DiaryAssistant';
 export { DiaryEditor } from './ui/DiaryEditor';
 export { useDiaryEditor } from './model/useDiaryEditor';
 export { useDiaryAssistant } from './model/useDiaryAssistant';
+export { useDiaryAssistantByPause } from './model/useDiaryAssistantByPause';
 export { useDiaryAssistantByProgress } from './model/useDiaryAssistantByProgress';
 export {
   WRITING_PLACEHOLDERS,

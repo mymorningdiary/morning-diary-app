@@ -18,7 +18,7 @@ import { MDColorsType, useThemeColor } from '@shared/lib/theme';
 import { MDAppBar } from '@shared/ui/AppBar';
 import { MDButton } from '@shared/ui/Button';
 import { MDPage } from '@shared/ui/Layout';
-import { WritingGoalProgressBar } from '@shared/ui/ProgressBar';
+import { TextGoalProgressBar } from '@shared/ui/ProgressBar';
 
 export function WriteDiaryPage() {
   const colors = useThemeColor();
@@ -52,7 +52,7 @@ export function WriteDiaryPage() {
             }
           />
 
-          <WritingGoalProgressBar
+          <TextGoalProgressBar
             style={styles.progressBar}
             label="아침일기 목표"
             progress={progress}

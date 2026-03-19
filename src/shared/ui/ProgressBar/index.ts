@@ -1,1 +1,1 @@
-export { WritingGoalProgressBar } from './WritingGoalProgressBar';
+export { TextGoalProgressBar } from './TextGoalProgressBar';

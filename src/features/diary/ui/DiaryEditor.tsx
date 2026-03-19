@@ -78,7 +78,7 @@ export function DiaryEditor({
             ref={inputRef}
             style={styles.textInput}
             value={activeText}
-            placeholder={currentTextLen == 0 ? getRandomMessage(WRITING_PLACEHOLDERS) : '...'}
+            placeholder={currentTextLen === 0 ? getRandomMessage(WRITING_PLACEHOLDERS) : '...'}
             textBreakStrategy="highQuality"
             scrollEnabled={false}
             placeholderTextColor={colors.text.alternative}

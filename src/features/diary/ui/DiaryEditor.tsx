@@ -22,7 +22,7 @@ interface Props extends DiaryState {
   targetTextLen?: number;
   currentTextLen?: number;
   onChangeText?: (value: string) => void;
-  onShowDiaryAssistant?: () => void;
+  onShowAssistant?: (message: string) => void;
 }
 
 export function DiaryEditor({
@@ -33,7 +33,7 @@ export function DiaryEditor({
   targetTextLen = DEFAULT_TEXT_GOAL_LEN,
   currentTextLen = 0,
   onChangeText,
-  onShowDiaryAssistant,
+  onShowAssistant,
 }: Props) {
   const colors = useThemeColor();
   const styles = EditorStyles({ colors });
@@ -65,7 +65,7 @@ export function DiaryEditor({
               type="bodyRegular"
               color={colors.text.alternative}
               textBreakStrategy="highQuality"
-              onPress={onShowDiaryAssistant}>
+              onPress={() => onShowAssistant?.('')}>
               {inactiveText}
             </MDText>
           )}

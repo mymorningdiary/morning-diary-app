@@ -16,7 +16,7 @@ export function useDiaryEditor({ initialText = '', textGoalLen = DEFAULT_TEXT_GO
   });
 
   const currentTextLen = state.inactiveText.length + state.activeText.length;
-  const progress = Math.floor((currentTextLen / textGoalLen) * 100);
+  const progress = Math.min(100, Math.floor((currentTextLen / textGoalLen) * 100));
 
   const inactivateText = (value: string) => {
     setState((prev) => ({

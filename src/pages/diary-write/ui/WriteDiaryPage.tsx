@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import { router, useLocalSearchParams } from 'expo-router';
+import { Redirect, router, useLocalSearchParams } from 'expo-router';
 import { useRef } from 'react';
 import { Pressable, StyleSheet, TextInput } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
@@ -20,6 +20,8 @@ import { MDAppBar } from '@shared/ui/AppBar';
 import { MDButton } from '@shared/ui/Button';
 import { MDPage } from '@shared/ui/Layout';
 import { TextGoalProgressBar } from '@shared/ui/ProgressBar';
+import { useWriteDiary } from '@entities/diary';
+import { useToastStore } from '@shared/lib/toast';
 
 export function WriteDiaryPage() {
   const colors = useThemeColor();
@@ -29,7 +31,7 @@ export function WriteDiaryPage() {
 
   const { date } = useLocalSearchParams();
   const dateParam = getSingleParam(date);
-  const formattedDate = dayjs(dateParam).locale('ko').format('M월 D일 (ddd)');
+  const formattedDate = dateParam ? dayjs(dateParam).locale('ko').format('M월 D일 (ddd)') : '';
 
   const { user } = useUser();
   const { currentTextGoal } = useCurrentTextGoal(user?.textGoalId);
@@ -42,6 +44,41 @@ export function WriteDiaryPage() {
   useDiaryAssistantByPause({ currentTextLen, showAssistant });
   useDiaryAssistantByProgress({ progress, showAssistant });
 
+  const { writeDiary, isPending } = useWriteDiary({
+    onSuccess: ({ isFirstWritten, writtenTextLen }) => {
+      if (isFirstWritten) {
+        router.replace({
+          pathname: '/first-write',
+          params: {
+            writtenTextLen,
+            writtenDate: dateParam,
+          },
+        });
+      } else {
+        router.replace({
+          pathname: '/(app)',
+          params: {
+            writtenDate: dateParam,
+          },
+        });
+      }
+    },
+    onError: (message) => useToastStore.getState().show({ type: 'error', message }),
+  });
+
+  if (!dateParam) {
+    return <Redirect href="/(app)" />;
+  }
+
+  const handleSubmit = () => {
+    if (isPending) return;
+
+    writeDiary({
+      writtenDate: dateParam,
+      content: diaryState.inactiveText + diaryState.activeText,
+    });
+  };
+
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <MDPage style={styles.container}>
@@ -50,7 +87,13 @@ export function WriteDiaryPage() {
             title={formattedDate}
             onBack={() => router.back()}
             rightContent={
-              <MDButton variant="ghost" size="small" label="완료" disabled={currentTextLen == 0} />
+              <MDButton
+                variant="ghost"
+                size="small"
+                label="완료"
+                disabled={currentTextLen == 0}
+                onPress={handleSubmit}
+              />
             }
           />
 

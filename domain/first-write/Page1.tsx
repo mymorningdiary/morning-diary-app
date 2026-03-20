@@ -11,7 +11,7 @@ export default function Page1() {
 
   return (
     <View style={styles.container}>
-      <Image source={require('@/assets/images/img-sun-congratulation.png')} style={styles.image} />
+      <Image source={require('@/assets/images/img-sun-congrats.png')} style={styles.image} />
 
       <View style={styles.containerText}>
         <MDText type="titleSemiBold" color={colors.text.brand}>

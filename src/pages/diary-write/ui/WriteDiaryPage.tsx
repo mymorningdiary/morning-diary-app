@@ -1,11 +1,12 @@
-import dayjs from 'dayjs';
-import { Redirect, router, useLocalSearchParams } from 'expo-router';
 import { useRef, useState } from 'react';
 import { Pressable, StyleSheet, TextInput } from 'react-native';
+import { Redirect, router, useLocalSearchParams } from 'expo-router';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import dayjs from 'dayjs';
 
 import { useCurrentTextGoal } from '@entities/text-goal';
 import { useUser } from '@entities/user';
+import { useWriteDiary } from '@entities/diary';
 import {
   DiaryAssistant,
   DiaryEditor,
@@ -20,7 +21,6 @@ import { MDAppBar } from '@shared/ui/AppBar';
 import { MDButton } from '@shared/ui/Button';
 import { MDPage } from '@shared/ui/Layout';
 import { TextGoalProgressBar } from '@shared/ui/ProgressBar';
-import { useWriteDiary } from '@entities/diary';
 import { useToastStore } from '@shared/lib/toast';
 import { MDModal } from '@shared/ui/Modal';
 
@@ -123,6 +123,7 @@ export function WriteDiaryPage() {
           subtitle={`일기쓰기를 종료할까요?\n종료 선택 시, 일기는 저장되지 않아요.`}
           negative={{ text: '취소', onPress: () => setShowBackModal(false) }}
           positive={{ text: '종료', onPress: () => router.back() }}
+          onClose={() => setShowBackModal(false)}
         />
       </MDPage>
     </GestureHandlerRootView>

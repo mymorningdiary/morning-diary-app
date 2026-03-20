@@ -50,7 +50,7 @@ export function WriteDiaryPage() {
             title={formattedDate}
             onBack={() => router.back()}
             rightContent={
-              <MDButton variant="ghost" size="small" label="완료" disabled={currentTextLen === 0} />
+              <MDButton variant="ghost" size="small" label="완료" disabled={currentTextLen == 0} />
             }
           />
 

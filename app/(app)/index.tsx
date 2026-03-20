@@ -95,7 +95,7 @@ export default function HomeScreen() {
     router.push({
       pathname: '/diary-write',
       params: {
-        date: '2026-02-23',
+        date: dayjs().format('YYYY-MM-DD'),
       },
     });
   };

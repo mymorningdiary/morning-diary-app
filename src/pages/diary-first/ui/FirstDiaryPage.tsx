@@ -1,14 +1,21 @@
 import { StyleSheet } from 'react-native';
 
+import { MDAppBar } from '@shared/ui/AppBar';
 import { MDPage } from '@shared/ui/Layout';
-import { MDText } from '@shared/ui/Text';
+import { router } from 'expo-router';
+import { DotIndicator } from '@shared/ui/Pagination/DotIndicator';
+import { useState } from 'react';
 
 export function FirstDiaryPage() {
   const styles = PageStyles;
 
+  const slides = [{}, {}];
+  const [currentPosition, setCurrentPosition] = useState(0);
+
   return (
     <MDPage style={styles.container}>
-      <MDText>FirstDiary Page</MDText>
+      <MDAppBar onBack={() => router.back()} />
+      <DotIndicator style={styles.dotIndicator} position={currentPosition} count={slides.length} />
     </MDPage>
   );
 }
@@ -16,5 +23,8 @@ export function FirstDiaryPage() {
 const PageStyles = StyleSheet.create({
   container: {
     paddingBottom: 60,
+  },
+  dotIndicator: {
+    marginTop: 40,
   },
 });

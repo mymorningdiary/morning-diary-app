@@ -1,18 +1,19 @@
-import { StyleSheet, View } from 'react-native';
+import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
 
 import { MDColorsType, useThemeColor } from '@shared/lib/theme';
 
 interface Props {
+  style?: StyleProp<ViewStyle>;
   position: number;
   count: number;
 }
 
-export function OnboardingSlideIndicator({ position, count }: Props) {
+export function DotIndicator({ style, position, count }: Props) {
   const colors = useThemeColor();
   const styles = IndicatorStyles({ colors });
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, style]}>
       {Array.from({ length: count }).map((_, i) => (
         <View
           key={i}
@@ -29,7 +30,7 @@ const IndicatorStyles = ({ colors }: { colors: MDColorsType }) =>
       flexDirection: 'row',
       justifyContent: 'center',
       gap: 8,
-      paddingHorizontal: 16,
+      paddingHorizontal: 12,
     },
     dot: {
       width: 8,

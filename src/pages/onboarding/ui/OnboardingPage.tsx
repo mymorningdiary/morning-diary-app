@@ -7,10 +7,10 @@ import { useVisit } from '@features/onboarding';
 import { MDButton } from '@shared/ui/Button';
 import { MDPage } from '@shared/ui/Layout';
 
-import { OnboardingSlideIndicator } from './OnboardingSlideIndicator';
-import { OnboardingSlider } from './OnboardingSlider';
+import { DotIndicator } from '@shared/ui/Pagination/DotIndicator';
 import { OnboardingSlide1 } from './OnboardingSlide1';
 import { OnboardingSlide2 } from './OnboardingSlide2';
+import { OnboardingSlider } from './OnboardingSlider';
 
 export function OnboardingPage() {
   const styles = PageStyles;
@@ -39,7 +39,7 @@ export function OnboardingPage() {
 
   return (
     <MDPage style={styles.container}>
-      <OnboardingSlideIndicator position={currentPosition} count={slides.length} />
+      <DotIndicator position={currentPosition} count={slides.length} />
       <OnboardingSlider
         sliderRef={sliderRef}
         slides={slides}

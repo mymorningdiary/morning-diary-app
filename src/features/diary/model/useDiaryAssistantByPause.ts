@@ -3,7 +3,7 @@ import { useEffect, useRef } from 'react';
 import { getRandomMessage } from '@shared/lib/random';
 import { ASSISTANT_PAUSE_MESSAGES } from '../lib/diary-messages';
 
-const PAUSE_MS = 5_000;
+const PAUSE_MS = 8_000;
 
 interface Options {
   currentTextLen: number;

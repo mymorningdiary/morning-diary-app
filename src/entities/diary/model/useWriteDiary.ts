@@ -5,10 +5,10 @@ import { Logger } from '@shared/lib/log';
 interface Options {
   onSuccess?: ({
     isFirstWritten,
-    writtenDiaryTextLen,
+    writtenTextLen,
   }: {
     isFirstWritten: boolean;
-    writtenDiaryTextLen: number;
+    writtenTextLen: number;
   }) => void;
   onError?: (message: string) => void;
 }
@@ -19,7 +19,7 @@ export function useWriteDiary({ onSuccess, onError }: Options) {
     onSuccess: (res) => {
       if (res.code === 2000) {
         const { isFirstWrittenDiary, textLength } = res.data;
-        onSuccess?.({ isFirstWritten: isFirstWrittenDiary, writtenDiaryTextLen: textLength });
+        onSuccess?.({ isFirstWritten: isFirstWrittenDiary, writtenTextLen: textLength });
       }
     },
     onError: (error: any) => {

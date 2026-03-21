@@ -1,13 +1,14 @@
-import { StyleSheet, View } from 'react-native';
+import { useRef, useState } from 'react';
+import PagerView from 'react-native-pager-view';
+import { router } from 'expo-router';
 
+import { StyleSheet, View } from 'react-native';
 import { MDAppBar } from '@shared/ui/AppBar';
 import { MDPage } from '@shared/ui/Layout';
-import { router } from 'expo-router';
-import { DotIndicator } from '@shared/ui/Pagination/DotIndicator';
-import { useRef, useState } from 'react';
-import { FirstDiarySlide1 } from './FirstDiarySlide1';
-import PagerView from 'react-native-pager-view';
 import { MDButton } from '@shared/ui/Button';
+import { DotIndicator } from '@shared/ui/Pagination/DotIndicator';
+import { FirstDiarySlide1 } from './FirstDiarySlide1';
+import { FirstDiarySlide2 } from './FirstDiarySlide2';
 
 export function FirstDiaryPage() {
   const styles = PageStyles;
@@ -15,6 +16,7 @@ export function FirstDiaryPage() {
 
   const slides = [
     { key: 'slide1', buttonLabel: '나만의 일기 스타일 고르기', component: <FirstDiarySlide1 /> },
+    { key: 'slide2', buttonLabel: '완료', component: <FirstDiarySlide2 /> },
   ];
   const [currentPosition, setCurrentPosition] = useState(0);
 

@@ -1,16 +1,20 @@
-import { useState } from 'react';
-import { StyleSheet, View } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
+import { StyleSheet, View } from 'react-native';
 
-import { TextGoalListItem } from '@features/text-goal';
+import { DEFAULT_TEXT_GOAL_LEN, selectTextGoal, useTextGoals } from '@entities/text-goal';
 import { useUser } from '@entities/user';
-import { DEFAULT_TEXT_GOAL_LEN, useUserTextGoal, useTextGoals } from '@entities/text-goal';
-import { MDColorsType, useThemeColor } from '@shared/lib/theme';
+import { TextGoalListItem } from '@features/text-goal';
 import { getSingleParam } from '@shared/lib/router';
-import { MDText } from '@shared/ui/Text';
+import { MDColorsType, useThemeColor } from '@shared/lib/theme';
 import { TextGoalProgressBar } from '@shared/ui/ProgressBar';
+import { MDText } from '@shared/ui/Text';
 
-export function FirstDiarySlide2() {
+interface FirstDiarySlide2Props {
+  currentTextGoalId: number | null;
+  onSelectTextGoal: (textGoalId: number) => void;
+}
+
+export function FirstDiarySlide2({ currentTextGoalId, onSelectTextGoal }: FirstDiarySlide2Props) {
   const colors = useThemeColor();
   const styles = SlideStyles({ colors });
 
@@ -18,7 +22,8 @@ export function FirstDiarySlide2() {
   const writtenTextLenParam = getSingleParam(writtenTextLen) ?? 0;
 
   const { user } = useUser();
-  const { userTextGoal } = useUserTextGoal(user?.textGoalId);
+  const { textGoals, defaultTextGoal } = useTextGoals();
+  const userTextGoal = selectTextGoal(textGoals ?? [], user?.textGoalId);
 
   const progress = Math.min(
     100,
@@ -26,9 +31,6 @@ export function FirstDiarySlide2() {
       (Number(writtenTextLenParam) / (userTextGoal?.textLength ?? DEFAULT_TEXT_GOAL_LEN)) * 100,
     ),
   );
-
-  const { textGoals, defaultTextGoal } = useTextGoals();
-  const [currentTextGoalId, setCurrentTextGoalId] = useState(userTextGoal?.textGoalId ?? null);
 
   return (
     <View style={styles.container}>
@@ -67,7 +69,7 @@ export function FirstDiarySlide2() {
             title={it.title}
             option={it.option}
             isSelected={it.textGoalId === currentTextGoalId}
-            onPress={() => setCurrentTextGoalId(it.textGoalId)}
+            onPress={() => onSelectTextGoal(it.textGoalId)}
           />
         ))}
       </View>

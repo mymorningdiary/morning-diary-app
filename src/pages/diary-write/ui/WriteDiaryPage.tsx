@@ -16,7 +16,6 @@ import {
   useDiaryEditor,
 } from '@features/diary';
 import { getSingleParam } from '@shared/lib/router';
-import { MDColorsType, useThemeColor } from '@shared/lib/theme';
 import { useToastStore } from '@shared/lib/toast';
 import { MDAppBar } from '@shared/ui/AppBar';
 import { MDButton } from '@shared/ui/Button';
@@ -25,8 +24,7 @@ import { MDModal } from '@shared/ui/Modal';
 import { TextGoalProgressBar } from '@shared/ui/ProgressBar';
 
 export function WriteDiaryPage() {
-  const colors = useThemeColor();
-  const styles = PageStyles({ colors });
+  const styles = PageStyles;
 
   const editorRef = useRef<TextInput>(null);
 
@@ -131,13 +129,12 @@ export function WriteDiaryPage() {
   );
 }
 
-const PageStyles = ({ colors }: { colors: MDColorsType }) =>
-  StyleSheet.create({
-    container: {
-      position: 'relative',
-    },
-    progressBar: {
-      paddingHorizontal: 14,
-      paddingBottom: 24,
-    },
-  });
+const PageStyles = StyleSheet.create({
+  container: {
+    position: 'relative',
+  },
+  progressBar: {
+    paddingHorizontal: 14,
+    paddingBottom: 24,
+  },
+});

@@ -25,7 +25,7 @@ export function FirstDiaryPage() {
 
   useEffect(() => {
     if (user?.textGoalId == null) return;
-    setCurrentTextGoalId((prev) => prev ?? user.textGoalId);
+    setCurrentTextGoalId(user.textGoalId);
   }, [user?.textGoalId]);
 
   const { updateTextGoal, isPending } = useUpdateTextGoal({

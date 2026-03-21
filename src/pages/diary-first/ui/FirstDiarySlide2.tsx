@@ -36,7 +36,11 @@ export function FirstDiarySlide2({ currentTextGoalId, onSelectTextGoal }: FirstD
     <View style={styles.container}>
       <View style={styles.textLenContent}>
         <MDText type="titleSemiBold" color={colors.text.brand} align="center">
-          {`마음 속 깊은 생각을 꺼내기 위해\n아침일기 목표를 정해볼까요?`}
+          {`마음 속 깊은 생각을 꺼내기 위해\n`}
+          <MDText type="titleSemiBold" color={colors.primary.normal}>
+            {`아침일기 목표`}
+          </MDText>
+          {`를 정해볼까요?`}
         </MDText>
 
         <TextGoalProgressBar style={{ marginTop: 60 }} progress={progress} />
@@ -52,7 +56,7 @@ export function FirstDiarySlide2({ currentTextGoalId, onSelectTextGoal }: FirstD
             {`${writtenTextLenParam.toLocaleString()}`}
           </MDText>
 
-          {`자를 썼어요\n1페이지 기준은 `}
+          {`자를 썼어요\n한 페이지 기준은 `}
 
           <MDText type="labelSemiBold" color={colors.text.alternative}>
             {`${defaultTextGoal?.textLength ?? DEFAULT_TEXT_GOAL_LEN}`}

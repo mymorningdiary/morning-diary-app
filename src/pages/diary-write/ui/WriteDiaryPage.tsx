@@ -1,12 +1,12 @@
+import dayjs from 'dayjs';
+import { Redirect, router, useLocalSearchParams } from 'expo-router';
 import { useRef, useState } from 'react';
 import { Pressable, StyleSheet, TextInput } from 'react-native';
-import { Redirect, router, useLocalSearchParams } from 'expo-router';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import dayjs from 'dayjs';
 
-import { useUserTextGoal } from '@entities/text-goal';
-import { useUser } from '@entities/user';
 import { useWriteDiary } from '@entities/diary';
+import { selectTextGoal, useTextGoals } from '@entities/text-goal';
+import { useUser } from '@entities/user';
 import {
   DiaryAssistant,
   DiaryEditor,
@@ -17,12 +17,12 @@ import {
 } from '@features/diary';
 import { getSingleParam } from '@shared/lib/router';
 import { MDColorsType, useThemeColor } from '@shared/lib/theme';
+import { useToastStore } from '@shared/lib/toast';
 import { MDAppBar } from '@shared/ui/AppBar';
 import { MDButton } from '@shared/ui/Button';
 import { MDPage } from '@shared/ui/Layout';
-import { TextGoalProgressBar } from '@shared/ui/ProgressBar';
-import { useToastStore } from '@shared/lib/toast';
 import { MDModal } from '@shared/ui/Modal';
+import { TextGoalProgressBar } from '@shared/ui/ProgressBar';
 
 export function WriteDiaryPage() {
   const colors = useThemeColor();
@@ -35,7 +35,8 @@ export function WriteDiaryPage() {
   const formattedDate = dateParam ? dayjs(dateParam).locale('ko').format('M월 D일 (ddd)') : '';
 
   const { user } = useUser();
-  const { userTextGoal } = useUserTextGoal(user?.textGoalId);
+  const { textGoals } = useTextGoals();
+  const userTextGoal = selectTextGoal(textGoals ?? [], user?.textGoalId);
 
   const { diaryState, currentTextLen, progress, handleDiaryTextChange } = useDiaryEditor({
     textGoalLen: userTextGoal?.textLength,

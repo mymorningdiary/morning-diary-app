@@ -3,11 +3,8 @@ import { StyleSheet, View } from 'react-native';
 
 import { DEFAULT_TEXT_GOAL_LEN, selectTextGoal, useTextGoals } from '@entities/text-goal';
 import { useUser } from '@entities/user';
-import { TextGoalListItem } from '@features/text-goal';
+import { TextGoalGuideContent, TextGoalListItem } from '@features/text-goal';
 import { getSingleParam } from '@shared/lib/router';
-import { MDColorsType, useThemeColor } from '@shared/lib/theme';
-import { TextGoalProgressBar } from '@shared/ui/ProgressBar';
-import { MDText } from '@shared/ui/Text';
 
 interface FirstDiarySlide2Props {
   currentTextGoalId: number | null;
@@ -15,11 +12,10 @@ interface FirstDiarySlide2Props {
 }
 
 export function FirstDiarySlide2({ currentTextGoalId, onSelectTextGoal }: FirstDiarySlide2Props) {
-  const colors = useThemeColor();
-  const styles = SlideStyles({ colors });
+  const styles = SlideStyles;
 
   const { writtenTextLen } = useLocalSearchParams();
-  const writtenTextLenParam = getSingleParam(writtenTextLen) ?? 0;
+  const writtenTextLenParam = Number(getSingleParam(writtenTextLen) ?? 0);
 
   const { user } = useUser();
   const { textGoals, defaultTextGoal } = useTextGoals();
@@ -27,45 +23,19 @@ export function FirstDiarySlide2({ currentTextGoalId, onSelectTextGoal }: FirstD
 
   const progress = Math.min(
     100,
-    Math.floor(
-      (Number(writtenTextLenParam) / (userTextGoal?.textLength ?? DEFAULT_TEXT_GOAL_LEN)) * 100,
-    ),
+    Math.floor((writtenTextLenParam / (userTextGoal?.textLength ?? DEFAULT_TEXT_GOAL_LEN)) * 100),
   );
 
   return (
     <View style={styles.container}>
-      <View style={styles.textLenContent}>
-        <MDText type="titleSemiBold" color={colors.text.brand} align="center">
-          {`마음 속 깊은 생각을 꺼내기 위해\n`}
-          <MDText type="titleSemiBold" color={colors.primary.normal}>
-            {`아침일기 목표`}
-          </MDText>
-          {`를 정해볼까요?`}
-        </MDText>
+      <TextGoalGuideContent
+        style={styles.textGoalGuideContent}
+        progress={progress}
+        writtenTextLen={writtenTextLenParam}
+        defaultTextGoalLen={defaultTextGoal?.textLength}
+      />
 
-        <TextGoalProgressBar style={{ marginTop: 60 }} progress={progress} />
-
-        <MDText
-          style={{ marginTop: 28 }}
-          type="labelRegular"
-          color={colors.text.alternative}
-          align="center">
-          {`첫 일기는 `}
-
-          <MDText type="labelSemiBold" color={colors.text.alternative}>
-            {`${writtenTextLenParam.toLocaleString()}`}
-          </MDText>
-
-          {`자를 썼어요\n한 페이지 기준은 `}
-
-          <MDText type="labelSemiBold" color={colors.text.alternative}>
-            {`${defaultTextGoal?.textLength ?? DEFAULT_TEXT_GOAL_LEN}`}
-          </MDText>
-          {`자예요`}
-        </MDText>
-      </View>
-
-      <View style={styles.textGoalContent}>
+      <View style={styles.textGoalListContent}>
         {textGoals?.map((it) => (
           <TextGoalListItem
             key={it.textGoalId}
@@ -81,19 +51,17 @@ export function FirstDiarySlide2({ currentTextGoalId, onSelectTextGoal }: FirstD
   );
 }
 
-const SlideStyles = ({ colors }: { colors: MDColorsType }) =>
-  StyleSheet.create({
-    container: {
-      flex: 1,
-      justifyContent: 'space-between',
-    },
-    textLenContent: {
-      marginTop: 40,
-      paddingHorizontal: 14,
-    },
-    textGoalContent: {
-      paddingHorizontal: 16,
-      gap: 16,
-      marginBottom: 40,
-    },
-  });
+const SlideStyles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'space-between',
+  },
+  textGoalGuideContent: {
+    marginTop: 40,
+  },
+  textGoalListContent: {
+    paddingHorizontal: 16,
+    gap: 16,
+    marginBottom: 40,
+  },
+});

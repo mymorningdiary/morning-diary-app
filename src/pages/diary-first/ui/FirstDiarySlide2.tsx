@@ -1,12 +1,14 @@
+import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
-
-import { MDColorsType, useThemeColor } from '@shared/lib/theme';
 import { useLocalSearchParams } from 'expo-router';
+
+import { TextGoalListItem } from '@features/text-goal';
+import { useUser } from '@entities/user';
+import { DEFAULT_TEXT_GOAL_LEN, useUserTextGoal, useTextGoals } from '@entities/text-goal';
+import { MDColorsType, useThemeColor } from '@shared/lib/theme';
 import { getSingleParam } from '@shared/lib/router';
 import { MDText } from '@shared/ui/Text';
 import { TextGoalProgressBar } from '@shared/ui/ProgressBar';
-import { useUser } from '@entities/user';
-import { DEFAULT_TEXT_GOAL_LEN, useCurrentTextGoal } from '@entities/text-goal';
 
 export function FirstDiarySlide2() {
   const colors = useThemeColor();
@@ -16,14 +18,17 @@ export function FirstDiarySlide2() {
   const writtenTextLenParam = getSingleParam(writtenTextLen) ?? 0;
 
   const { user } = useUser();
-  const { currentTextGoal } = useCurrentTextGoal(user?.textGoalId);
+  const { userTextGoal } = useUserTextGoal(user?.textGoalId);
 
   const progress = Math.min(
     100,
     Math.floor(
-      (Number(writtenTextLenParam) / (currentTextGoal?.textLength ?? DEFAULT_TEXT_GOAL_LEN)) * 100,
+      (Number(writtenTextLenParam) / (userTextGoal?.textLength ?? DEFAULT_TEXT_GOAL_LEN)) * 100,
     ),
   );
+
+  const { textGoals, defaultTextGoal } = useTextGoals();
+  const [currentTextGoalId, setCurrentTextGoalId] = useState(userTextGoal?.textGoalId ?? null);
 
   return (
     <View style={styles.container}>
@@ -41,19 +46,31 @@ export function FirstDiarySlide2() {
           align="center">
           {`첫 일기는 `}
 
-          <MDText
-            type="labelSemiBold"
-            color={colors.text.alternative}>{`${writtenTextLenParam?.toLocaleString()}`}</MDText>
+          <MDText type="labelSemiBold" color={colors.text.alternative}>
+            {`${writtenTextLenParam.toLocaleString()}`}
+          </MDText>
+
           {`자를 썼어요\n1페이지 기준은 `}
 
-          <MDText
-            type="labelSemiBold"
-            color={colors.text.alternative}>{`${currentTextGoal?.textLength}`}</MDText>
+          <MDText type="labelSemiBold" color={colors.text.alternative}>
+            {`${defaultTextGoal?.textLength ?? DEFAULT_TEXT_GOAL_LEN}`}
+          </MDText>
           {`자예요`}
         </MDText>
       </View>
 
-      <View style={styles.textGoalContent}></View>
+      <View style={styles.textGoalContent}>
+        {textGoals?.map((it) => (
+          <TextGoalListItem
+            key={it.textGoalId}
+            id={it.textGoalId}
+            title={it.title}
+            option={it.option}
+            isSelected={it.textGoalId === currentTextGoalId}
+            onPress={() => setCurrentTextGoalId(it.textGoalId)}
+          />
+        ))}
+      </View>
     </View>
   );
 }
@@ -62,14 +79,15 @@ const SlideStyles = ({ colors }: { colors: MDColorsType }) =>
   StyleSheet.create({
     container: {
       flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
+      justifyContent: 'space-between',
     },
     textLenContent: {
-      width: '100%',
+      marginTop: 40,
       paddingHorizontal: 14,
     },
     textGoalContent: {
-      backgroundColor: 'blue',
+      paddingHorizontal: 16,
+      gap: 16,
+      marginBottom: 40,
     },
   });

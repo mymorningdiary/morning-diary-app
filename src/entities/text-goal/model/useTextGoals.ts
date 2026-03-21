@@ -7,5 +7,13 @@ export function useTextGoals() {
     queryFn: getTextGoals,
   });
 
-  return { textGoals: data?.data.textGoals ?? null, error, isError, isLoading };
+  const defaultTextGoal = data?.data.textGoals.find((textGoal) => textGoal.isDefault);
+
+  return {
+    textGoals: data?.data.textGoals ?? null,
+    defaultTextGoal: defaultTextGoal ?? null,
+    error,
+    isError,
+    isLoading,
+  };
 }

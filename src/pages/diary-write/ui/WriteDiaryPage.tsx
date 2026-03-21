@@ -4,7 +4,7 @@ import { Redirect, router, useLocalSearchParams } from 'expo-router';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import dayjs from 'dayjs';
 
-import { useCurrentTextGoal } from '@entities/text-goal';
+import { useUserTextGoal } from '@entities/text-goal';
 import { useUser } from '@entities/user';
 import { useWriteDiary } from '@entities/diary';
 import {
@@ -35,10 +35,10 @@ export function WriteDiaryPage() {
   const formattedDate = dateParam ? dayjs(dateParam).locale('ko').format('M월 D일 (ddd)') : '';
 
   const { user } = useUser();
-  const { currentTextGoal } = useCurrentTextGoal(user?.textGoalId);
+  const { userTextGoal } = useUserTextGoal(user?.textGoalId);
 
   const { diaryState, currentTextLen, progress, handleDiaryTextChange } = useDiaryEditor({
-    textGoalLen: currentTextGoal?.textLength,
+    textGoalLen: userTextGoal?.textLength,
   });
 
   const { assistantState, showAssistant, hideAssistant } = useDiaryAssistant();
@@ -110,7 +110,7 @@ export function WriteDiaryPage() {
         <DiaryEditor
           inputRef={editorRef}
           {...diaryState}
-          targetTextLen={currentTextGoal?.textLength}
+          targetTextLen={userTextGoal?.textLength}
           currentTextLen={currentTextLen}
           onChangeText={handleDiaryTextChange}
           onShowAssistant={showAssistant}

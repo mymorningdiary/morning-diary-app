@@ -19,6 +19,7 @@ export function FirstDiaryPage() {
 
   const { writtenDate } = useLocalSearchParams();
   const writtenDateParam = getSingleParam(writtenDate);
+
   const { user } = useUser();
   const [currentTextGoalId, setCurrentTextGoalId] = useState<number | null>(null);
 
@@ -28,7 +29,6 @@ export function FirstDiaryPage() {
   }, [user?.textGoalId]);
 
   const { updateTextGoal, isPending } = useUpdateTextGoal({
-    onSuccess: () => {},
     onError: (message) => useToastStore.getState().show({ type: 'error', message }),
   });
 
@@ -60,7 +60,7 @@ export function FirstDiaryPage() {
     router.replace('/(app)');
   };
 
-  const handlePagination = async () => {
+  const handlePagination = () => {
     if (!isLastSlide) {
       sliderRef.current?.setPage(currentPosition + 1);
       return;
@@ -68,17 +68,13 @@ export function FirstDiaryPage() {
 
     if (currentTextGoalId == null || isPending) return;
 
-    try {
-      await updateTextGoal({ textGoalId: currentTextGoalId });
-      navigateToHome();
-    } catch {
-      // Error toast is handled in useUpdateTextGoal option.
-    }
+    updateTextGoal({ textGoalId: currentTextGoalId });
+    navigateToHome();
   };
 
   return (
     <MDPage style={styles.container}>
-      <MDAppBar onBack={() => router.back()} />
+      <MDAppBar onClose={() => router.back()} />
       <DotIndicator style={styles.dotIndicator} position={currentPosition} count={slides.length} />
 
       <PagerView

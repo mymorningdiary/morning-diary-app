@@ -11,13 +11,14 @@ import { MDModal } from '@shared/ui/Modal';
 export function ReadDiaryPage() {
   const styles = PageStyles;
 
-  const { date } = useLocalSearchParams();
+  const { date, diaryId } = useLocalSearchParams();
   const dateParam = getSingleParam(date);
+  const diaryIdParam = Number(getSingleParam(diaryId));
   const formattedDate = dateParam ? dayjs(dateParam).locale('ko').format('M월 D일 (ddd)') : '';
 
   const [showBackModal, setShowBackModal] = useState(false);
 
-  if (!dateParam) {
+  if (!dateParam || !diaryIdParam) {
     return <Redirect href="/(app)" />;
   }
 

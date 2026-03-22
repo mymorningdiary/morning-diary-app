@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { DiaryState } from './types';
 import { INACTIVE_TEXT_LEN } from '../config/constants';
 import { DEFAULT_TEXT_GOAL_LEN } from '@entities/text-goal';
@@ -10,7 +10,7 @@ interface Options {
 
 export function useDiaryEditor({ initialText = '', textGoalLen = DEFAULT_TEXT_GOAL_LEN }: Options) {
   const [state, setState] = useState<DiaryState>({
-    inactiveText: initialText,
+    inactiveText: '',
     activeText: '',
     version: 0,
   });
@@ -34,6 +34,16 @@ export function useDiaryEditor({ initialText = '', textGoalLen = DEFAULT_TEXT_GO
 
     inactivateText(value);
   };
+
+  useEffect(() => {
+    if (initialText == null) return;
+
+    setState({
+      inactiveText: initialText,
+      activeText: '',
+      version: 0,
+    });
+  }, [initialText]);
 
   return {
     diaryState: state,

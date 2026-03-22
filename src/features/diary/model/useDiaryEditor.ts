@@ -35,10 +35,19 @@ export function useDiaryEditor({ initialText = '', textGoalLen = DEFAULT_TEXT_GO
     inactivateText(value);
   };
 
+  const setDiaryText = (text: string) => {
+    setState((prev) => ({
+      ...prev,
+      inactiveText: text,
+      version: prev.version + 1,
+    }));
+  };
+
   return {
     diaryState: state,
     currentTextLen,
     progress,
+    setDiaryText,
     handleDiaryTextChange,
   };
 }

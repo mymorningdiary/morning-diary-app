@@ -18,6 +18,7 @@ export default function AppLayout() {
       <Stack.Screen name="diary-write" />
       <Stack.Screen name="diary-first" />
       <Stack.Screen name="diary-read" />
+      <Stack.Screen name="diary-update" />
     </Stack>
   );
 }

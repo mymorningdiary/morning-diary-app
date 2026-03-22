@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 
 import { IconPen, IconTrash } from '@assets/icons';
-import { useReadDiary } from '@entities/diary';
+import { useDeleteDiary, useReadDiary } from '@entities/diary';
 import { useForeground } from '@shared/lib/app-state';
 import { parseNumberParam } from '@shared/lib/router';
 import { MDAppBar } from '@shared/ui/AppBar';
@@ -12,25 +12,37 @@ import { MDButton } from '@shared/ui/Button';
 import { MDPage } from '@shared/ui/Layout';
 import { MDModal } from '@shared/ui/Modal';
 import { MDText } from '@shared/ui/Text';
+import { useToastStore } from '@shared/lib/toast';
 
 export function ReadDiaryPage() {
   const styles = PageStyles;
 
-  const { date, diaryId } = useLocalSearchParams<{ date?: string; diaryId?: string }>();
-  const diaryDate = date != null ? dayjs(date) : null;
-  const formattedDate = diaryDate?.locale('ko').format('M월 D일 (ddd)') ?? '';
-  const { diary } = useReadDiary(parseNumberParam(diaryId));
+  const params = useLocalSearchParams<{ date?: string; diaryId?: string }>();
+  const diaryDate = params.date != null ? dayjs(params.date) : null;
+  const diaryId = parseNumberParam(params.diaryId);
 
+  const formattedDate = diaryDate?.locale('ko').format('M월 D일 (ddd)') ?? '';
   const [now, setNow] = useState(() => dayjs());
   const isToday = diaryDate != null && diaryDate.isValid() && diaryDate.isSame(now, 'day');
 
-  const [showBackModal, setShowBackModal] = useState(false);
+  const { diary } = useReadDiary(diaryId);
+  const { deleteDiary, isPending } = useDeleteDiary({
+    onSuccess: () => router.back(),
+    onError: (message) => useToastStore.getState().show({ type: 'error', message }),
+  });
+
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   useForeground(() => {
     setNow(dayjs());
   });
 
-  if (!date || diaryId === undefined) {
+  const handleDeleteDiary = () => {
+    if (!diaryId || isPending) return;
+    deleteDiary(diaryId);
+  };
+
+  if (!diaryDate || diaryId === undefined) {
     return <Redirect href="/(app)" />;
   }
 
@@ -54,7 +66,7 @@ export function ReadDiaryPage() {
               style={{ width: 24 }}
               variant="ghost"
               prefix={IconTrash}
-              onPress={() => {}}
+              onPress={() => setShowDeleteModal(true)}
               hitSlop={8}
             />
           </View>
@@ -76,11 +88,11 @@ export function ReadDiaryPage() {
       </ScrollView>
 
       <MDModal
-        visible={showBackModal}
-        subtitle={`일기쓰기를 종료할까요?\n종료 선택 시, 일기는 저장되지 않아요.`}
-        negative={{ text: '취소', onPress: () => setShowBackModal(false) }}
-        positive={{ text: '종료', onPress: () => router.back() }}
-        onClose={() => setShowBackModal(false)}
+        visible={showDeleteModal}
+        subtitle={`일기를 삭제할까요?`}
+        negative={{ text: '취소', onPress: () => setShowDeleteModal(false) }}
+        positive={{ text: '삭제', onPress: handleDeleteDiary }}
+        onClose={() => setShowDeleteModal(false)}
       />
     </MDPage>
   );

@@ -33,7 +33,7 @@ export default function DiaryListScreen() {
     const writtenDate = dayjs(diary.writtenDate, 'YYYY-MM-DD');
     const dateParam = `year=${writtenDate.year()}&month=${writtenDate.month() + 1}&day=${writtenDate.date()}`;
 
-    router.push(`/read-diary?${dateParam}&diaryId=${diary.diaryId}`);
+    // router.push(`/read-diary?${dateParam}&diaryId=${diary.diaryId}`);
   };
 
   useEffect(() => {

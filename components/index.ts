@@ -5,7 +5,6 @@ import { MDDivider } from './MDDivider';
 import { MDRow } from './MDRow';
 import { MDSmallSpeechBubble } from './SpeechBubbles/MDSmallSpeechBubble';
 import { MDLargeSpeechBubble } from './SpeechBubbles/MDLargeSpeechBubble';
-import MDProgressBar from './ProgressBars/MDProgressBar';
 import { MDText } from './MDText';
 import { MDView } from './MDView';
 import MDPressable from './MDPressable';
@@ -20,7 +19,6 @@ export {
   MDRow,
   MDSmallSpeechBubble,
   MDLargeSpeechBubble,
-  MDProgressBar,
   MDText,
   MDView,
   MDDotIndicator,

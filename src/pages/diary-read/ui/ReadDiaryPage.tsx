@@ -1,30 +1,45 @@
 import dayjs from 'dayjs';
 import { Redirect, router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
-import { StyleSheet } from 'react-native';
+import { ScrollView, StyleSheet, View } from 'react-native';
 
-import { getSingleParam } from '@shared/lib/router';
 import { MDAppBar } from '@shared/ui/AppBar';
 import { MDPage } from '@shared/ui/Layout';
 import { MDModal } from '@shared/ui/Modal';
+import { useReadDiary } from '@entities/diary';
+import { parseNumberParam } from '@shared/lib/router';
+import { MDText } from '@shared/ui/Text';
 
 export function ReadDiaryPage() {
   const styles = PageStyles;
 
-  const { date, diaryId } = useLocalSearchParams();
-  const dateParam = getSingleParam(date);
-  const diaryIdParam = Number(getSingleParam(diaryId));
-  const formattedDate = dateParam ? dayjs(dateParam).locale('ko').format('M월 D일 (ddd)') : '';
+  const { date, diaryId } = useLocalSearchParams<{ date?: string; diaryId?: string }>();
+  const formattedDate = date ? dayjs(date).locale('ko').format('M월 D일 (ddd)') : '';
+  const { diary } = useReadDiary(parseNumberParam(diaryId));
 
   const [showBackModal, setShowBackModal] = useState(false);
 
-  if (!dateParam || !diaryIdParam) {
+  if (!date || diaryId === undefined) {
     return <Redirect href="/(app)" />;
   }
 
   return (
     <MDPage style={styles.container}>
-      <MDAppBar title={formattedDate} onBack={() => setShowBackModal(true)} />
+      <MDAppBar title={formattedDate} onBack={() => router.back()} />
+
+      <ScrollView
+        contentContainerStyle={styles.scrollContent}
+        overScrollMode="never"
+        showsVerticalScrollIndicator={false}
+        keyboardShouldPersistTaps="handled">
+        <View>
+          {diary?.content && (
+            <MDText type="bodyRegular" textBreakStrategy="highQuality">
+              {diary.content}
+            </MDText>
+          )}
+        </View>
+      </ScrollView>
 
       <MDModal
         visible={showBackModal}
@@ -39,8 +54,9 @@ export function ReadDiaryPage() {
 
 const PageStyles = StyleSheet.create({
   container: {},
-  progressBar: {
-    paddingHorizontal: 14,
-    paddingBottom: 24,
+  scrollContent: {
+    flexGrow: 1,
+    paddingHorizontal: 16,
+    paddingBottom: 60,
   },
 });

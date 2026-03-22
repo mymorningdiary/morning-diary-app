@@ -113,8 +113,16 @@ export default function HomeScreen() {
 
   const navigateToReadDiary = useCallback(
     (diary: Diary) => {
-      const dateParam = `year=${selectedDate.year}&month=${selectedDate.month}&day=${selectedDate.day}`;
-      router.push(`/read-diary?${dateParam}&diaryId=${diary.diaryId}`);
+      // const dateParam = `year=${selectedDate.year}&month=${selectedDate.month}&day=${selectedDate.day}`;
+      // router.push(`/read-diary?${dateParam}&diaryId=${diary.diaryId}`);
+
+      router.push({
+        pathname: '/diary-read',
+        params: {
+          diaryId: diary.diaryId,
+          date: selectedDate.dateString,
+        },
+      });
     },
     [selectedDate],
   );

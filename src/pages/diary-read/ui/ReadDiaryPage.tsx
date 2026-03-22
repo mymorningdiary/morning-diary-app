@@ -42,7 +42,7 @@ export function ReadDiaryPage() {
     deleteDiary(diaryId);
   };
 
-  if (!diaryDate || diaryId === undefined) {
+  if (!diaryDate || !diaryId) {
     return <Redirect href="/(app)" />;
   }
 
@@ -58,7 +58,12 @@ export function ReadDiaryPage() {
                 style={{ width: 24 }}
                 variant="ghost"
                 prefix={IconPen}
-                onPress={() => {}}
+                onPress={() =>
+                  router.replace({
+                    pathname: '/diary-update',
+                    params: { date: diaryDate.format('YYYY-MM-DD'), diaryId },
+                  })
+                }
                 hitSlop={8}
               />
             )}

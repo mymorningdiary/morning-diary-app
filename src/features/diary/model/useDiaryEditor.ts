@@ -10,8 +10,8 @@ interface Options {
 
 export function useDiaryEditor({ initialText = '', textGoalLen = DEFAULT_TEXT_GOAL_LEN }: Options) {
   const [state, setState] = useState<DiaryState>({
-    inactiveText: initialText.slice(0, Math.max(0, initialText.length - INACTIVE_TEXT_LEN)),
-    activeText: initialText.slice(Math.max(0, initialText.length - INACTIVE_TEXT_LEN)),
+    inactiveText: initialText,
+    activeText: '',
     version: 0,
   });
 
@@ -35,19 +35,10 @@ export function useDiaryEditor({ initialText = '', textGoalLen = DEFAULT_TEXT_GO
     inactivateText(value);
   };
 
-  const setDiaryText = (text: string) => {
-    setState((prev) => ({
-      ...prev,
-      inactiveText: text,
-      version: prev.version + 1,
-    }));
-  };
-
   return {
     diaryState: state,
     currentTextLen,
     progress,
-    setDiaryText,
     handleDiaryTextChange,
   };
 }

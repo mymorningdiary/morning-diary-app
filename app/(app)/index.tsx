@@ -75,22 +75,6 @@ export default function HomeScreen() {
     setSelectedDate(date);
   };
 
-  const handleWriteButtonPress = () => {
-    const userTextGoalLength = textGoals?.find((item) => item.isUserTextGoal)?.textLength;
-    if (userTextGoalLength === undefined) return;
-
-    const todayDate = getTodayDateData();
-    router.push({
-      pathname: '/write-diary',
-      params: {
-        year: todayDate.year,
-        month: todayDate.month,
-        day: todayDate.day,
-        textGoalLength: userTextGoalLength,
-      },
-    });
-  };
-
   const navigateToDiaryWrite = () => {
     router.push({
       pathname: '/diary-write',

@@ -5,10 +5,6 @@ export default function AppLayout() {
     <Stack screenOptions={{ headerShown: false }}>
       <Stack.Screen name="index" />
       <Stack.Screen name="diary-list" />
-      <Stack.Screen name="write-diary" />
-      <Stack.Screen name="update-diary" />
-      <Stack.Screen name="read-diary" />
-      <Stack.Screen name="first-write" />
       <Stack.Screen name="settings" />
       <Stack.Screen name="account" />
       <Stack.Screen name="text-goal" />

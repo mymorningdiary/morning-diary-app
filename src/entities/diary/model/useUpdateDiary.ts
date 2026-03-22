@@ -16,7 +16,7 @@ export function useUpdateDiary({ onSuccess, onError }: Options) {
       }
     },
     onError: (error: any) => {
-      Logger('useWriteDiary').error('Failed to update diary', error);
+      Logger('useUpdateDiary').error('Failed to update diary', error);
       switch (error.code) {
         case 4200: {
           onError?.('일기 내용을 적어주세요');

@@ -48,7 +48,7 @@ export function WriteDiaryPage() {
     onSuccess: ({ isFirstWritten, writtenTextLen }) => {
       if (isFirstWritten) {
         router.replace({
-          pathname: '/first-write',
+          pathname: '/diary-first',
           params: {
             writtenTextLen,
             writtenDate: dateParam,

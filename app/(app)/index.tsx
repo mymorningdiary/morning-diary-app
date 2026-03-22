@@ -92,14 +92,11 @@ export default function HomeScreen() {
   };
 
   const navigateToDiaryWrite = () => {
-    // router.push({
-    //   pathname: '/diary-write',
-    //   params: {
-    //     date: dayjs().format('YYYY-MM-DD'),
-    //   },
-    // });
     router.push({
-      pathname: '/diary-first',
+      pathname: '/diary-write',
+      params: {
+        date: dayjs().format('YYYY-MM-DD'),
+      },
     });
   };
 

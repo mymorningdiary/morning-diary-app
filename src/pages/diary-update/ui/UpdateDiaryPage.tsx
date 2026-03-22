@@ -1,9 +1,10 @@
 import dayjs from 'dayjs';
 import { Redirect, router, useLocalSearchParams } from 'expo-router';
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { Pressable, StyleSheet, TextInput } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
+import { useReadDiary, useUpdateDiary } from '@entities/diary';
 import { selectTextGoal, useTextGoals } from '@entities/text-goal';
 import { useUser } from '@entities/user';
 import {
@@ -21,7 +22,6 @@ import { MDButton } from '@shared/ui/Button';
 import { MDPage } from '@shared/ui/Layout';
 import { MDModal } from '@shared/ui/Modal';
 import { TextGoalProgressBar } from '@shared/ui/ProgressBar';
-import { useReadDiary } from '@entities/diary';
 
 export function UpdateDiaryPage() {
   const styles = PageStyles;
@@ -40,19 +40,38 @@ export function UpdateDiaryPage() {
   const { textGoals } = useTextGoals();
   const userTextGoal = selectTextGoal(textGoals ?? [], user?.textGoalId);
 
-  const { diaryState, currentTextLen, progress, setDiaryText, handleDiaryTextChange } =
-    useDiaryEditor({
-      initialText: diary?.content,
-      textGoalLen: userTextGoal?.textLength,
-    });
+  const { diaryState, currentTextLen, progress, handleDiaryTextChange } = useDiaryEditor({
+    initialText: diary?.content,
+    textGoalLen: userTextGoal?.textLength,
+  });
 
   const { assistantState, showAssistant, hideAssistant } = useDiaryAssistant();
   useDiaryAssistantByPause({ currentTextLen, showAssistant });
   useDiaryAssistantByProgress({ progress, showAssistant });
 
+  const { updateDiary, isPending } = useUpdateDiary({
+    onSuccess: () => {
+      router.replace({
+        pathname: '/(app)',
+        params: {
+          writtenDate: diaryDate?.format('YYYY-MM-DD'),
+        },
+      });
+    },
+    onError: (message) => useToastStore.getState().show({ type: 'error', message }),
+  });
+
   const [showBackModal, setShowBackModal] = useState(false);
 
-  const handleSubmit = () => {};
+  const handleSubmit = () => {
+    if (!diaryId || !diaryDate || isPending) return;
+
+    updateDiary({
+      diaryId,
+      writtenDate: diaryDate?.format('YYYY-MM-DD'),
+      content: diaryState.inactiveText + diaryState.activeText,
+    });
+  };
 
   if (!diaryDate || !diaryId) {
     return <Redirect href="/(app)" />;

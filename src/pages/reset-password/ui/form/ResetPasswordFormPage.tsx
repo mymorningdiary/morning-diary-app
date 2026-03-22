@@ -6,7 +6,7 @@ import { MDAppBar } from '@shared/ui/AppBar';
 import { MDPage } from '@shared/ui/Layout';
 import { ResetPasswordForm } from './ResetPasswordForm';
 
-export function ResetPasswordPage() {
+export function ResetPasswordFormPage() {
   const styles = PageStyles;
 
   const handleResetSuccess = () => {

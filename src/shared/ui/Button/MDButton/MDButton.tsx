@@ -20,7 +20,7 @@ import {
 import { MDText } from '@shared/ui/Text';
 
 export interface MDButtonProps extends Omit<PressableProps, 'style'> {
-  label: string;
+  label?: string;
   variant?: ButtonVariant;
   size?: ButtonSize;
   fullWidth?: boolean;
@@ -74,15 +74,17 @@ export function MDButton({
       ) : (
         <>
           {PrefixIcon ? (
-            <View style={{ marginRight: iconSpacing }}>
+            <View style={label && { marginRight: iconSpacing }}>
               <PrefixIcon width={iconSize} height={iconSize} color={variantTokens.iconColor} />
             </View>
           ) : null}
-          <MDText type={textType} color={variantTokens.textColor}>
-            {label}
-          </MDText>
+          {label && (
+            <MDText type={textType} color={variantTokens.textColor}>
+              {label}
+            </MDText>
+          )}
           {SuffixIcon ? (
-            <View style={{ marginLeft: iconSpacing }}>
+            <View style={label && { marginLeft: iconSpacing }}>
               <SuffixIcon width={iconSize} height={iconSize} color={variantTokens.iconColor} />
             </View>
           ) : null}

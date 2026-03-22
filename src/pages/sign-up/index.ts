@@ -1,2 +1,2 @@
-export { SignUpFormPage } from './form/SignUpFormPage';
-export { SignUpCompletePage } from './complete/SignUpCompletePage';
+export { SignUpFormPage } from './ui/form/SignUpFormPage';
+export { SignUpCompletePage } from './ui/complete/SignUpCompletePage';

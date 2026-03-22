@@ -22,7 +22,7 @@ export function TextGoalGuideContent({
   const styles = ContentStyles;
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, style]}>
       <MDText type="titleSemiBold" color={colors.text.brand} align="center">
         {`마음 속 깊은 생각을 꺼내기 위해\n`}
         <MDText type="titleSemiBold" color={colors.primary.normal}>
@@ -31,7 +31,7 @@ export function TextGoalGuideContent({
         {`를 정해볼까요?`}
       </MDText>
 
-      {progress && <TextGoalProgressBar style={{ marginTop: 60 }} progress={progress} />}
+      {progress != null && <TextGoalProgressBar style={{ marginTop: 60 }} progress={progress} />}
 
       <MDText
         style={{ marginTop: 28 }}

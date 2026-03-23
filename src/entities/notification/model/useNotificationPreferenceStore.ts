@@ -7,7 +7,7 @@ import { createJSONStorage, persist } from 'zustand/middleware';
 interface NotificationPreferenceState {
   isPushOn: boolean;
   isLoaded: boolean;
-  setPushOn: (alarmOn: boolean) => void;
+  setIsPushOn: (alarmOn: boolean) => void;
   setIsLoaded: (isLoaded: boolean) => void;
 }
 
@@ -32,7 +32,7 @@ const notificationPreferencePersist = persist(
   (set) => ({
     isPushOn: false,
     isLoaded: false,
-    setPushOn: (isPushOn: boolean) => set({ isPushOn }),
+    setIsPushOn: (isPushOn: boolean) => set({ isPushOn }),
     setIsLoaded: (isLoaded: boolean) => set({ isLoaded }),
   }),
   {

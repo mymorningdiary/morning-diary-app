@@ -1,41 +1,46 @@
-import { MDSwitch } from '@shared/ui/Switch';
+import { useEffect } from 'react';
+import { Linking } from 'react-native';
+import { router } from 'expo-router';
 
-import { IconChevronRight } from '@assets/icons';
+import { useNotification } from '@features/notification';
+import { useForeground } from '@shared/lib/app-state';
 import { MDButton } from '@shared/ui/Button';
+import { MDModal } from '@shared/ui/Modal';
+import { MDSwitch } from '@shared/ui/Switch';
+import { IconChevronRight } from '@assets/icons';
+
 import { SettingsSection } from './SettingsSection';
 import { SettingsSectionListItem } from './SettingsSectionListItem';
-import { router } from 'expo-router';
-import { useSettingsNotifications } from '../model/useSettingsNotifications';
-import { MDModal } from '@shared/ui/Modal';
 
 interface Props {
   isLast?: boolean;
 }
 
 export function SettingsSystemSection({ isLast }: Props) {
-  const {
-    isAlarmOn,
-    onAlarmToggle,
-    onClosePermissionModal,
-    onOpenDeviceSettings,
-    showPermissionModal,
-  } = useSettingsNotifications();
+  const { isPushOn, disabledAsk, togglePushOn, setDisabledAsk, checkPermission } =
+    useNotification();
+
+  useForeground(checkPermission);
+
+  useEffect(() => {
+    checkPermission();
+  }, []);
 
   return (
     <SettingsSection title="시스템 설정" isLast={isLast}>
       <SettingsSectionListItem
         label="알림"
-        rightContent={<MDSwitch checked={isAlarmOn ?? false} onChange={onAlarmToggle} />}
+        rightContent={<MDSwitch checked={isPushOn} onChange={togglePushOn} />}
       />
       <SettingsSectionListItem
         label="알림 시간"
-        disabled={!isAlarmOn}
+        disabled={!isPushOn}
         rightContent={
           <MDButton
             variant="ghost"
             style={{ width: 24, height: 24 }}
             prefix={IconChevronRight}
-            disabled={!isAlarmOn}
+            disabled={!isPushOn}
           />
         }
         onPress={() =>
@@ -53,11 +58,17 @@ export function SettingsSystemSection({ isLast }: Props) {
       />
 
       <MDModal
-        visible={showPermissionModal}
+        visible={disabledAsk}
         subtitle={'알림을 받으려면, 기기 설정에서 알림을 허용해주세요'}
-        negative={{ text: '취소', onPress: onClosePermissionModal }}
-        positive={{ text: '알림 허용', onPress: onOpenDeviceSettings }}
-        onClose={onClosePermissionModal}
+        negative={{ text: '취소', onPress: () => setDisabledAsk(false) }}
+        positive={{
+          text: '알림 허용',
+          onPress: () => {
+            Linking.openSettings();
+            setDisabledAsk(false);
+          },
+        }}
+        onClose={() => setDisabledAsk(false)}
       />
     </SettingsSection>
   );

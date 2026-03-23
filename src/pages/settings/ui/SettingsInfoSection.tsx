@@ -1,11 +1,11 @@
 import * as Application from 'expo-application';
 
-import { TERMS_URL_PRIVACY, TERMS_URL_USE } from '@shared/config/legal';
 import { MDButton } from '@shared/ui/Button';
 import { router } from 'expo-router';
 import { SettingsSection } from './SettingsSection';
 import { SettingsSectionListItem } from './SettingsSectionListItem';
 import { useAppVersion } from '@entities/version';
+import { TERMS_PRIVACY_URL, TERMS_USE_URL } from '@shared/config';
 
 interface Props {
   isLast?: boolean;
@@ -22,7 +22,7 @@ export function SettingsInfoSection({ isLast = false }: Props) {
         onPress={() =>
           router.push({
             pathname: '/web-view',
-            params: { webviewURL: TERMS_URL_USE },
+            params: { webviewURL: TERMS_USE_URL },
           })
         }
       />
@@ -31,7 +31,7 @@ export function SettingsInfoSection({ isLast = false }: Props) {
         onPress={() =>
           router.push({
             pathname: '/web-view',
-            params: { webviewURL: TERMS_URL_PRIVACY },
+            params: { webviewURL: TERMS_PRIVACY_URL },
           })
         }
       />

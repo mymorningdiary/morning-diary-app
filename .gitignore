@@ -39,6 +39,7 @@ app-example
 
 CLAUDE.md
 AGENTS.md
+docs/*
 
 google-services.json
 service-account-file.json

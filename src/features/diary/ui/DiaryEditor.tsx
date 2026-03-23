@@ -10,16 +10,17 @@ import {
 
 import { TextGoalCounter } from './TextGoalCounter';
 
-import { MDText } from '@shared/ui/Text';
-import { getRandomMessage } from '@shared/lib/random';
-import { MDColorsType, MDFonts, useThemeColor } from '@shared/lib/theme';
+import { DEFAULT_TEXT_GOAL_LEN } from '@entities/text-goal';
 import {
   ASSISTANT_INACTIVE_TEXT_MESSAGES,
   DiaryState,
   WRITING_PLACEHOLDERS,
 } from '@features/diary';
+import { isProduction } from '@shared/config';
+import { getRandomMessage } from '@shared/lib/random';
+import { MDColorsType, MDFonts, useThemeColor } from '@shared/lib/theme';
+import { MDText } from '@shared/ui/Text';
 import { INACTIVE_TEXT_LEN } from '../config/constants';
-import { DEFAULT_TEXT_GOAL_LEN } from '@entities/text-goal';
 
 interface Props extends DiaryState {
   inputRef?: React.RefObject<TextInput | null>;
@@ -93,7 +94,7 @@ export function DiaryEditor({
           />
         </Pressable>
       </ScrollView>
-      {process.env.APP_VARIANT !== 'production' && (
+      {!isProduction && (
         <TextGoalCounter currentTextLen={currentTextLen} targetTextLen={targetTextLen} />
       )}
     </KeyboardAvoidingView>

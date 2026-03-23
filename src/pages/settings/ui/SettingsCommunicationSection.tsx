@@ -1,11 +1,11 @@
 import { router } from 'expo-router';
 
 import { IconChevronRight } from '@assets/icons';
-import { SETTINGS_FEEDBACK_URL } from '@pages/settings/config/constants';
 import { openMarketApp } from '@shared/lib/links';
 import { MDButton } from '@shared/ui/Button';
 import { SettingsSection } from './SettingsSection';
 import { SettingsSectionListItem } from './SettingsSectionListItem';
+import { FEEDBACK_URL } from '@shared/config';
 
 interface Props {
   isLast?: boolean;
@@ -22,7 +22,7 @@ export function SettingsCommunicationSection({ isLast }: Props) {
         onPress={() =>
           router.push({
             pathname: '/web-view',
-            params: { webviewURL: SETTINGS_FEEDBACK_URL },
+            params: { webviewURL: FEEDBACK_URL },
           })
         }
       />

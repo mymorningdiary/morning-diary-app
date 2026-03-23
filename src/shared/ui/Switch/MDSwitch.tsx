@@ -6,9 +6,10 @@ import { MDColorsType, useThemeColor } from '@shared/lib/theme';
 interface Props {
   checked: boolean;
   onChange: (value: boolean) => void;
+  disabled?: boolean;
 }
 
-export function MDSwitch({ checked, onChange }: Props) {
+export function MDSwitch({ checked, onChange, disabled = false }: Props) {
   const colors = useThemeColor();
   const styles = useMemo(() => SwitchStyles({ colors, checked }), [colors, checked]);
 
@@ -25,11 +26,12 @@ export function MDSwitch({ checked, onChange }: Props) {
   }
 
   const handleChange = useCallback(() => {
+    if (disabled) return;
     onChange(!checked);
-  }, [checked, onChange]);
+  }, [checked, disabled, onChange]);
 
   return (
-    <Pressable style={styles.container} onPress={handleChange}>
+    <Pressable style={styles.container} onPress={handleChange} disabled={disabled}>
       <Animated.View style={{ ...styles.thumb, transform: [{ translateX }] }} />
     </Pressable>
   );

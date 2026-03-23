@@ -4,6 +4,8 @@ import { getPermissionsAsync, requestPermissionsAsync } from 'expo-notifications
 import { useNotificationPreferenceStore } from '@entities/notification';
 import { Logger } from '@shared/lib/log';
 import { useNotificationStore } from '@shared/lib/notifications';
+import { useUpdatePushToken } from '@entities/user';
+import { useToastStore } from '@shared/lib/toast';
 
 export function useNotification() {
   const [hasPermission, setHasPermission] = useState(false);
@@ -14,24 +16,29 @@ export function useNotification() {
 
   const canPush = isPushOn && hasPermission && pushToken != null;
 
+  const { updatePushToken } = useUpdatePushToken({
+    onError: (message) => useToastStore.getState().show({ type: 'error', message }),
+  });
+
   const togglePushOn = async () => {
-    if (canPush) {
-      setIsPushOn(false);
-    } else {
-      try {
+    const cur = isPushOn;
+    const next = !cur;
+
+    try {
+      if (next) {
         const { granted, canAskAgain } = await requestPermissionsAsync();
         setHasPermission(granted);
 
-        if (granted == true) {
-          setIsPushOn(true);
-        }
-
-        if (canAskAgain == false) {
+        if (!granted && !canAskAgain) {
           setDisabledAsk(true);
         }
-      } catch (error) {
-        Logger('SetNotificationListItem').error('Failed to check notification permission', error);
       }
+
+      setIsPushOn(next);
+      await updatePushToken({ pushToken: next ? pushToken : null });
+    } catch (error) {
+      setIsPushOn(cur);
+      Logger('SetNotificationListItem').error('Failed to sync push token', error);
     }
   };
 

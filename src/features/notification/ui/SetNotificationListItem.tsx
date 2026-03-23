@@ -1,24 +1,60 @@
+import * as Notifications from 'expo-notifications';
 import { Linking, StyleSheet, View } from 'react-native';
 
+import { useNotificationPreferenceStore } from '@entities/notification/model';
+import { Logger } from '@shared/lib/log';
+import { useNotificationStore } from '@shared/lib/notifications';
 import { MDColorsType, useThemeColor } from '@shared/lib/theme';
-import { MDText } from '@shared/ui/Text';
-import { MDSwitch } from '@shared/ui/Switch';
-import { useSettingsNotifications } from '@pages/settings/model/useSettingsNotifications';
 import { MDModal } from '@shared/ui/Modal';
-import { useState } from 'react';
+import { MDSwitch } from '@shared/ui/Switch';
+import { MDText } from '@shared/ui/Text';
+import { useEffect, useState } from 'react';
+import { useForeground } from '@shared/lib/app-state';
+import { useNotificationPermission } from '../model/useNotificationPermission';
 
 export function SetNotificationListItem() {
   const colors = useThemeColor();
   const styles = ItemStyles({ colors });
 
+  const pushToken = useNotificationStore((s) => s.pushToken);
+  const { isPushOn, setIsPushOn } = useNotificationPreferenceStore();
+  const { hasPermission, setHasPermission, checkPermission } = useNotificationPermission();
+
+  const isPushSwitchOn = isPushOn && hasPermission && pushToken != null;
+
   const [showPermissionModal, setShowPermissionModal] = useState(false);
 
-  const { isAlarmOn, onAlarmToggle } = useSettingsNotifications();
+  const handlePushToggle = async () => {
+    if (isPushSwitchOn) {
+      setIsPushOn(false);
+    } else {
+      try {
+        const { granted, canAskAgain } = await Notifications.requestPermissionsAsync();
+        setHasPermission(granted);
+
+        if (granted == true) {
+          setIsPushOn(true);
+        }
+
+        if (canAskAgain == false) {
+          setShowPermissionModal(true);
+        }
+      } catch (error) {
+        Logger('SetNotificationListItem').error('Failed to check notification permission', error);
+      }
+    }
+  };
+
+  useForeground(checkPermission);
+
+  useEffect(() => {
+    checkPermission();
+  }, []);
 
   return (
     <View style={styles.container}>
       <MDText type="bodyRegular">알림</MDText>
-      <MDSwitch checked={isAlarmOn ?? false} onChange={onAlarmToggle} />
+      <MDSwitch checked={isPushSwitchOn} onChange={handlePushToggle} />
 
       <MDModal
         visible={showPermissionModal}

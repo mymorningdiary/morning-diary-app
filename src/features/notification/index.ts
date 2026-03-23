@@ -1,2 +1,1 @@
-export { SetNotificationListItem } from './ui/SetNotificationListItem';
-export { useNotificationPermission } from './model/useNotificationPermission';
+export { useNotification } from './model/useNotification';

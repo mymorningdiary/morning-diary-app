@@ -9,7 +9,7 @@ interface Props extends PropsWithChildren {
   isLast?: boolean;
 }
 
-export function SettingsSection({ title, children, isLast = false }: Props) {
+export function MDSection({ title, children, isLast = false }: Props) {
   const colors = useThemeColor();
   const styles = SectionStyles;
 

@@ -1,6 +1,7 @@
 import { useMutation } from '@tanstack/react-query';
 import { postSignUp } from '../api/post-sign-up';
 import { useAuth } from './useAuth';
+import { Logger } from '@shared/lib/log';
 
 interface Options {
   onSuccess?: (isExistUser: boolean) => void;
@@ -20,6 +21,7 @@ export function useSignUp({ onSuccess, onError }: Options) {
       }
     },
     onError: (error: any) => {
+      Logger('useSignUp').debug('Failed to sign up:', error);
       switch (error.code) {
         case 4007:
         case 4008: {
@@ -41,7 +43,7 @@ export function useSignUp({ onSuccess, onError }: Options) {
         }
         case 5000:
         case 5002: {
-          onError?.({ message: '서버 오류가 발생했어요' });
+          onError?.({ message: '서버 오류가 발생했어요 잠시 후 다시 시도해주세요' });
           break;
         }
         default: {

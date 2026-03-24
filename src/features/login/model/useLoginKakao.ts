@@ -28,7 +28,6 @@ export function useLoginKakao({ onSuccess, onError }: Props) {
       }
     } catch (error: any) {
       Logger('useKakaoLogin').error('Failed to login with kakao:', error);
-
       switch (error.code) {
         case 4007: {
           onError?.('이메일을 확인하지 못했어요');
@@ -40,7 +39,7 @@ export function useLoginKakao({ onSuccess, onError }: Props) {
         }
         case 5000:
         case 5002: {
-          onError?.('서버 오류가 발생했어요');
+          onError?.('서버 오류가 발생했어요 잠시 후 다시 시도해주세요');
           break;
         }
         default: {

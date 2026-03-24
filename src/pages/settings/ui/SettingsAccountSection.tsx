@@ -1,6 +1,7 @@
+import { router } from 'expo-router';
+
 import { IconChevronRight } from '@assets/icons';
 import { MDButton } from '@shared/ui/Button';
-import { router } from 'expo-router';
 import { SettingsSection } from './SettingsSection';
 import { SettingsSectionListItem } from './SettingsSectionListItem';
 

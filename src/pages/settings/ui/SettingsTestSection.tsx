@@ -1,7 +1,6 @@
 import crashlytics from '@react-native-firebase/crashlytics';
 
-import { SettingsSection } from './SettingsSection';
-import { SettingsSectionListItem } from './SettingsSectionListItem';
+import { MDListItem, MDSection } from '@shared/ui/Layout';
 
 interface Props {
   isLast?: boolean;
@@ -9,8 +8,8 @@ interface Props {
 
 export function SettingsTestSection({ isLast }: Props) {
   return (
-    <SettingsSection title="테스트" isLast={isLast}>
-      <SettingsSectionListItem label="[Dev] crash test" onPress={() => crashlytics().crash()} />
-    </SettingsSection>
+    <MDSection title="테스트" isLast={isLast}>
+      <MDListItem label="[Dev] crash test" onPress={() => crashlytics().crash()} />
+    </MDSection>
   );
 }

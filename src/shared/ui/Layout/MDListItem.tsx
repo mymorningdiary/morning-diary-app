@@ -3,21 +3,16 @@ import { Pressable, StyleSheet } from 'react-native';
 import { useThemeColor } from '@shared/lib/theme';
 import { MDText } from '@shared/ui/Text';
 
-interface SettingsSectionListItemProps {
+interface Props {
   label: string;
   disabled?: boolean;
   rightContent?: React.ReactNode;
   onPress?: () => void;
 }
 
-export function SettingsSectionListItem({
-  label,
-  disabled = false,
-  rightContent,
-  onPress,
-}: SettingsSectionListItemProps) {
+export function MDListItem({ label, disabled = false, rightContent, onPress }: Props) {
   const colors = useThemeColor();
-  const styles = ItemStyles;
+  const styles = ListItemStyles;
 
   return (
     <Pressable style={styles.container} onPress={onPress} disabled={disabled}>
@@ -29,7 +24,7 @@ export function SettingsSectionListItem({
   );
 }
 
-const ItemStyles = StyleSheet.create({
+const ListItemStyles = StyleSheet.create({
   container: {
     height: 48,
     flexDirection: 'row',

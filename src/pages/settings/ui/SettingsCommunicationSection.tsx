@@ -3,9 +3,9 @@ import { router } from 'expo-router';
 import { IconChevronRight } from '@assets/icons';
 import { openMarketApp } from '@shared/lib/links';
 import { MDButton } from '@shared/ui/Button';
+import { FEEDBACK_URL } from '@shared/config';
 import { SettingsSection } from './SettingsSection';
 import { SettingsSectionListItem } from './SettingsSectionListItem';
-import { FEEDBACK_URL } from '@shared/config';
 
 interface Props {
   isLast?: boolean;

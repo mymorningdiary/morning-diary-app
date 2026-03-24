@@ -1,6 +1,7 @@
 import { useMutation } from '@tanstack/react-query';
 import { postLogout } from '../api/post-logout';
 import { useAuth } from './useAuth';
+import { Logger } from '@shared/lib/log';
 
 interface Options {
   onSuccess?: () => void;
@@ -19,6 +20,7 @@ export function useSignOut({ onSuccess, onError }: Options) {
       }
     },
     onError: (error: any) => {
+      Logger('useSignOut').debug('Failed to sign out:', error);
       switch (error.code) {
         case 4001:
         case 4002:
@@ -28,7 +30,7 @@ export function useSignOut({ onSuccess, onError }: Options) {
         }
         case 5000:
         case 5002: {
-          onError?.('서버 오류가 발생했어요');
+          onError?.('서버 오류가 발생했어요 잠시 후 다시 시도해주세요');
           break;
         }
         default: {

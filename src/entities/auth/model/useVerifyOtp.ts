@@ -6,6 +6,7 @@ import {
   VerifyPasswordResponse,
 } from '../api/post-verify-password';
 import { ApiResponse } from '@shared/api/types';
+import { Logger } from '@shared/lib/log';
 
 interface Options {
   type?: 'SIGN_UP' | 'FIND_PASSWORD';
@@ -26,6 +27,7 @@ export function useVerifyOtp({ type = 'SIGN_UP', onSuccess, onError }: Options) 
       }
     },
     onError: (error: any) => {
+      Logger('useVerifyOtp').debug('Failed to verify otp:', error);
       switch (error.code) {
         case 4007: {
           onError?.({ type: 'email', message: '존재하지 않은 사용자에요' });
@@ -50,7 +52,7 @@ export function useVerifyOtp({ type = 'SIGN_UP', onSuccess, onError }: Options) 
           break;
         }
         default: {
-          onError?.({ message: '서버 오류가 발생했어요' });
+          onError?.({ message: '서버 오류가 발생했어요 잠시 후 다시 시도해주세요' });
           break;
         }
       }

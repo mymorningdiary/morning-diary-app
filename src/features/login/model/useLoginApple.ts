@@ -52,7 +52,7 @@ export function useLoginApple({ onSuccess, onError }: Props) {
         }
         case 5000:
         case 5002: {
-          onError?.('서버 오류가 발생했어요');
+          onError?.('서버 오류가 발생했어요 잠시 후 다시 시도해주세요');
           break;
         }
         case 'ERR_REQUEST_NOT_INTERACTIVE': {

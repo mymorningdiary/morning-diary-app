@@ -1,16 +1,15 @@
+import { router } from 'expo-router';
 import { useEffect } from 'react';
 import { Linking } from 'react-native';
-import { router } from 'expo-router';
 
+import { IconChevronRight } from '@assets/icons';
 import { useNotification } from '@features/notification';
 import { useForeground } from '@shared/lib/app-state';
 import { MDButton } from '@shared/ui/Button';
 import { MDModal } from '@shared/ui/Modal';
 import { MDSwitch } from '@shared/ui/Switch';
-import { IconChevronRight } from '@assets/icons';
 
-import { SettingsSection } from './SettingsSection';
-import { SettingsSectionListItem } from './SettingsSectionListItem';
+import { MDListItem, MDSection } from '@shared/ui/Layout';
 
 interface Props {
   isLast?: boolean;
@@ -27,12 +26,12 @@ export function SettingsSystemSection({ isLast }: Props) {
   }, []);
 
   return (
-    <SettingsSection title="시스템 설정" isLast={isLast}>
-      <SettingsSectionListItem
+    <MDSection title="시스템 설정" isLast={isLast}>
+      <MDListItem
         label="알림"
         rightContent={<MDSwitch checked={isPushOn} onChange={togglePushOn} />}
       />
-      <SettingsSectionListItem
+      <MDListItem
         label="알림 시간"
         disabled={!isPushOn}
         rightContent={
@@ -49,7 +48,7 @@ export function SettingsSystemSection({ isLast }: Props) {
           })
         }
       />
-      <SettingsSectionListItem
+      <MDListItem
         label="아침일기 목표"
         rightContent={
           <MDButton variant="ghost" style={{ width: 24, height: 24 }} prefix={IconChevronRight} />
@@ -70,6 +69,6 @@ export function SettingsSystemSection({ isLast }: Props) {
         }}
         onClose={() => setDisabledAsk(false)}
       />
-    </SettingsSection>
+    </MDSection>
   );
 }

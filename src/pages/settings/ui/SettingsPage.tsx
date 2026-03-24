@@ -20,7 +20,8 @@ export function SettingsPage() {
       <ScrollView
         contentContainerStyle={styles.scrollContent}
         overScrollMode="never"
-        showsVerticalScrollIndicator={false}>
+        showsVerticalScrollIndicator={false}
+        bounces={false}>
         <View>
           <SettingsAccountSection />
 

@@ -1,9 +1,12 @@
 import { useState } from 'react';
 
+import { IconChevronRight } from '@assets/icons';
 import { useSignOut } from '@entities/auth';
 import { useToastStore } from '@shared/lib/toast';
 import { MDListItem, MDSection } from '@shared/ui/Layout';
 import { MDModal } from '@shared/ui/Modal';
+import { MDButton } from '@shared/ui/Button';
+import { router } from 'expo-router';
 
 interface Props {
   isLast?: boolean;
@@ -28,6 +31,14 @@ export function AccountManagementSection({ isLast }: Props) {
   return (
     <MDSection isLast={isLast}>
       <MDListItem label="로그아웃" onPress={() => setShowLogoutModal(true)} />
+
+      <MDListItem
+        label="개인정보처리방침"
+        rightContent={
+          <MDButton variant="ghost" style={{ width: 24, height: 24 }} prefix={IconChevronRight} />
+        }
+        onPress={() => router.push({ pathname: '/withdraw' })}
+      />
 
       <MDModal
         visible={showLogoutModal}

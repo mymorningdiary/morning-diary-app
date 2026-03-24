@@ -12,6 +12,7 @@ import { useToastStore } from '@shared/lib/toast';
 export function WithdrawPage() {
   const colors = useThemeColor();
   const styles = PageStyles;
+
   const { withdraw, isPending } = useWithdraw({
     onError: (message) => {
       if (!message) return;

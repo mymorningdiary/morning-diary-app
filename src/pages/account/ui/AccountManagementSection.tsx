@@ -33,7 +33,7 @@ export function AccountManagementSection({ isLast }: Props) {
       <MDListItem label="로그아웃" onPress={() => setShowLogoutModal(true)} />
 
       <MDListItem
-        label="개인정보처리방침"
+        label="회원 탈퇴"
         rightContent={
           <MDButton variant="ghost" style={{ width: 24, height: 24 }} prefix={IconChevronRight} />
         }

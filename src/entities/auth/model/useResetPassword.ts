@@ -12,6 +12,7 @@ export function useResetPassword({ onSuccess, onError }: Options) {
     mutationFn: putPasswordReset,
     onSuccess,
     onError: (error: any) => {
+      Logger('useResetPassword').debug('Failed to reset password:', error);
       switch (error.code) {
         case 4000: {
           onError?.({ type: 'email', message: '존재하지 않은 사용자에요' });
@@ -29,13 +30,12 @@ export function useResetPassword({ onSuccess, onError }: Options) {
         case 4500:
         case 4501:
         case 4502: {
-          Logger('useResetPassword').debug('Failed to reset password:', error);
           onError?.({ message: '비밀번호 재설정에 실패했어요 다시 시도해 주세요' });
           break;
         }
         case 5000:
         case 5002: {
-          onError?.({ message: '서버 오류가 발생했어요' });
+          onError?.({ message: '서버 오류가 발생했어요 잠시 후 다시 시도해주세요' });
           break;
         }
         default: {

@@ -44,7 +44,7 @@ export function SettingsSystemSection({ isLast }: Props) {
         }
         onPress={() =>
           router.push({
-            pathname: '/(app)/alarm-time',
+            pathname: '/notification',
           })
         }
       />

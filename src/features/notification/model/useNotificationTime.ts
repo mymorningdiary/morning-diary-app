@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import dayjs from 'dayjs';
-import { NotificationTime } from './types';
+
 import { useUser } from '@entities/user';
+import { NotificationTime } from '@entities/notification';
 
 export function useNotificationTime() {
   const { user } = useUser();

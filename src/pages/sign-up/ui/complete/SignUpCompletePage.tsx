@@ -12,10 +12,19 @@ export function SignUpCompletePage() {
   const colors = useThemeColor();
   const styles = PageStyles;
 
-  const { isExistUser } = useLocalSearchParams<{ isExistUser: 'true' | 'false' }>();
+  const { isExistUser } = useLocalSearchParams<{ isExistUser?: 'true' | 'false' }>();
 
   const handleSignUpComplete = () => {
-    router.replace(isExistUser === 'true' ? '/(app)' : '/(app)/alarm-permission');
+    if (isExistUser === 'true') {
+      router.replace('/(app)');
+    } else {
+      router.replace({
+        pathname: '/(app)/notification',
+        params: {
+          isExistUser,
+        },
+      });
+    }
   };
 
   return (

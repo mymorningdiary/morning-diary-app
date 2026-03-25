@@ -1,9 +1,8 @@
+import { ComponentProps } from 'react';
 import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
+import { Image } from 'expo-image';
 
 import { ImgSunBasic } from '@assets/images';
-import { MDColorsType, useThemeColor } from '@shared/lib/theme';
-import { Image } from 'expo-image';
-import { ComponentProps } from 'react';
 import { SpeechBubble } from './SpeechBubble/SpeechBubble';
 
 interface Props {
@@ -14,8 +13,7 @@ interface Props {
 }
 
 export function SpeechSun({ style, text, image = ImgSunBasic, imageSize = 120 }: Props) {
-  const colors = useThemeColor();
-  const styles = Styles({ colors });
+  const styles = SunStyles;
 
   return (
     <View style={[styles.container, style]}>
@@ -25,11 +23,9 @@ export function SpeechSun({ style, text, image = ImgSunBasic, imageSize = 120 }:
   );
 }
 
-const Styles = ({ colors }: { colors: MDColorsType }) =>
-  StyleSheet.create({
-    container: {
-      flex: 1,
-      alignItems: 'center',
-      justifyContent: 'center',
-    },
-  });
+const SunStyles = StyleSheet.create({
+  container: {
+    alignSelf: 'center',
+    alignItems: 'center',
+  },
+});

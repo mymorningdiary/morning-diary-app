@@ -1,14 +1,20 @@
+import { useState } from 'react';
 import { StyleSheet, useWindowDimensions, View } from 'react-native';
+import { router, useLocalSearchParams } from 'expo-router';
+import dayjs from 'dayjs';
+
+import { TimerPickerModal } from 'react-native-timer-picker';
 
 import { useNotificationTime } from '@features/notification';
+import { useUpdateNotificationTime } from '@entities/user';
+import { NotificationTime } from '@entities/notification';
 import { useThemeColor } from '@shared/lib/theme';
 import { MDAppBar } from '@shared/ui/AppBar';
 import { MDButton } from '@shared/ui/Button';
 import { MDPage } from '@shared/ui/Layout';
 import { MDText, SpeechSun } from '@shared/ui/Text';
-import { router, useLocalSearchParams } from 'expo-router';
-import { useState } from 'react';
-import { TimerPickerModal } from 'react-native-timer-picker';
+import { useToastStore } from '@shared/lib/toast';
+
 import { NotificationTimeButton } from './NotificationTimeButton';
 
 const TIME_PICKER_MINUTES_INTERVAL = 5;
@@ -20,8 +26,35 @@ export function NotificationPage() {
 
   const { isExistUser } = useLocalSearchParams<{ isExistUser?: 'true' | 'false' }>();
 
-  const { currentTime, formattedTime, setCurrentTime } = useNotificationTime();
   const [showTimePicker, setShowTimePicker] = useState(false);
+  const { currentTime, formattedTime, setCurrentTime } = useNotificationTime();
+  const { updateNotificationTime, isPending } = useUpdateNotificationTime({
+    onSuccess: () => {
+      if (isExistUser == 'false') {
+        router.replace('/(app)');
+        return;
+      }
+
+      router.back();
+    },
+    onError: (message) => {
+      if (!message) return;
+      useToastStore.getState().show({ type: 'error', message });
+    },
+  });
+
+  const handleTimeConfirm = (time: NotificationTime) => {
+    setShowTimePicker(false);
+    setCurrentTime(time);
+  };
+
+  const handleCompletePress = () => {
+    if (isPending) return;
+
+    const { hours, minutes } = currentTime;
+    const alarmTime = dayjs().hour(hours).minute(minutes).second(0).format('HH:mm:ss');
+    updateNotificationTime({ alarmTime });
+  };
 
   return (
     <MDPage style={styles.container}>
@@ -49,7 +82,12 @@ export function NotificationPage() {
         />
       </View>
 
-      <MDButton style={styles.button} label="완료" />
+      <MDButton
+        style={styles.button}
+        label="완료"
+        loading={isPending}
+        onPress={handleCompletePress}
+      />
 
       <TimerPickerModal
         styles={{
@@ -70,7 +108,7 @@ export function NotificationPage() {
         closeOnOverlayPress
         minuteInterval={TIME_PICKER_MINUTES_INTERVAL}
         setIsVisible={setShowTimePicker}
-        onConfirm={setCurrentTime}
+        onConfirm={handleTimeConfirm}
         onCancel={() => setShowTimePicker(false)}
       />
     </MDPage>

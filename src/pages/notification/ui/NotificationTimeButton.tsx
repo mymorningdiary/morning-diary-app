@@ -1,3 +1,4 @@
+import 'dayjs/locale/en';
 import { Pressable, StyleProp, StyleSheet, ViewStyle } from 'react-native';
 
 import { MDColorsType, useThemeColor } from '@shared/lib/theme';
@@ -10,7 +11,7 @@ interface Props {
   onPress?: () => void;
 }
 
-export function SelectTimeButton({ style, time, disabled, onPress }: Props) {
+export function NotificationTimeButton({ style, time, disabled, onPress }: Props) {
   const colors = useThemeColor();
   const styles = ButtonStyles({ colors });
 

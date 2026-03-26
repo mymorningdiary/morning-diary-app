@@ -29,7 +29,7 @@ export function SettingsSystemSection({ isLast }: Props) {
     <MDSection title="시스템 설정" isLast={isLast}>
       <MDListItem
         label="알림"
-        rightContent={<MDSwitch checked={isPushOn} onChange={togglePushOn} />}
+        rightContent={<MDSwitch checked={isPushOn ?? false} onChange={togglePushOn} />}
       />
       <MDListItem
         label="알림 시간"

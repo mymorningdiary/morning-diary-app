@@ -8,7 +8,7 @@ import { useUpdatePushToken } from '@entities/user';
 import { useToastStore } from '@shared/lib/toast';
 
 export function useNotification() {
-  const [hasPermission, setHasPermission] = useState(false);
+  const [hasPermission, setHasPermission] = useState<boolean | null>(null);
   const [disabledAsk, setDisabledAsk] = useState(false);
 
   const pushToken = useNotificationStore((s) => s.pushToken);
@@ -20,26 +20,43 @@ export function useNotification() {
     onError: (message) => useToastStore.getState().show({ type: 'error', message }),
   });
 
-  const togglePushOn = async () => {
-    const cur = isPushOn;
-    const next = !cur;
-
+  const turnPushOff = async () => {
     try {
-      if (next) {
-        const { granted, canAskAgain } = await requestPermissionsAsync();
-        setHasPermission(granted);
-
-        if (!granted && !canAskAgain) {
-          setDisabledAsk(true);
-        }
-      }
-
-      setIsPushOn(next);
-      await updatePushToken({ pushToken: next ? pushToken : null });
+      setIsPushOn(false);
+      await updatePushToken({ pushToken: null });
     } catch (error) {
-      setIsPushOn(cur);
+      setIsPushOn(true);
       Logger('SetNotificationListItem').error('Failed to sync push token', error);
     }
+  };
+
+  const turnPushOn = async () => {
+    try {
+      const { granted, canAskAgain } = await requestPermissionsAsync();
+      setHasPermission(granted);
+
+      if (!granted) {
+        if (!canAskAgain) {
+          setDisabledAsk(true);
+        }
+        return;
+      }
+
+      setIsPushOn(true);
+      await updatePushToken({ pushToken });
+    } catch (error) {
+      setIsPushOn(false);
+      Logger('SetNotificationListItem').error('Failed to sync push token', error);
+    }
+  };
+
+  const togglePushOn = async () => {
+    if (canPush) {
+      await turnPushOff();
+      return;
+    }
+
+    await turnPushOn();
   };
 
   const checkPermission = async () => {
@@ -58,6 +75,8 @@ export function useNotification() {
     setHasPermission,
     setDisabledAsk,
     checkPermission,
+    turnPushOff,
+    turnPushOn,
     togglePushOn,
   };
 }

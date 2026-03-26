@@ -8,19 +8,16 @@ import {
   TextInput,
 } from 'react-native';
 
-import { TextGoalCounter } from './TextGoalCounter';
-
 import { DEFAULT_TEXT_GOAL_LEN } from '@entities/text-goal';
-import {
-  ASSISTANT_INACTIVE_TEXT_MESSAGES,
-  DiaryState,
-  WRITING_PLACEHOLDERS,
-} from '@features/diary';
 import { isProduction } from '@shared/config';
 import { getRandomMessage } from '@shared/lib/random';
 import { MDColorsType, MDFonts, useThemeColor } from '@shared/lib/theme';
 import { MDText } from '@shared/ui/Text';
+
 import { INACTIVE_TEXT_LEN } from '../config/constants';
+import { DiaryState } from '../model/types';
+import { ASSISTANT_INACTIVE_TEXT_MESSAGES, WRITING_PLACEHOLDERS } from '../lib/diary-messages';
+import { TextGoalCounter } from './TextGoalCounter';
 
 interface Props extends DiaryState {
   inputRef?: React.RefObject<TextInput | null>;

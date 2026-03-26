@@ -19,7 +19,7 @@ export function LoginSocialPage() {
   };
 
   const handleLoginSuccess = (isExistUser: boolean) => {
-    router.replace(isExistUser ? '/(app)' : '/(app)/alarm-permission');
+    router.replace(isExistUser ? '/(app)' : '/(app)/notification');
   };
 
   const handleLoginError = (message: string) => {

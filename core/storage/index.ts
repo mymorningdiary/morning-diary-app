@@ -1,1 +1,0 @@
-export { appManager } from './app';

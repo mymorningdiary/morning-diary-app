@@ -1,19 +1,19 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { StyleSheet, useWindowDimensions, View } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
 import dayjs from 'dayjs';
-
 import { TimerPickerModal } from 'react-native-timer-picker';
 
-import { useNotificationTime } from '@features/notification';
-import { useUpdateNotificationTime } from '@entities/user';
+import { useNotification, useNotificationTime } from '@features/notification';
 import { NotificationTime } from '@entities/notification';
+import { useUpdateNotificationTime } from '@entities/user';
 import { useThemeColor } from '@shared/lib/theme';
+import { useToastStore } from '@shared/lib/toast';
 import { MDAppBar } from '@shared/ui/AppBar';
 import { MDButton } from '@shared/ui/Button';
 import { MDPage } from '@shared/ui/Layout';
 import { MDText, SpeechSun } from '@shared/ui/Text';
-import { useToastStore } from '@shared/lib/toast';
+import { useForeground } from '@shared/lib/app-state';
 
 import { NotificationTimeButton } from './NotificationTimeButton';
 
@@ -42,6 +42,7 @@ export function NotificationPage() {
       useToastStore.getState().show({ type: 'error', message });
     },
   });
+  const { hasPermission, turnPushOn, checkPermission } = useNotification();
 
   const handleTimeConfirm = (time: NotificationTime) => {
     setShowTimePicker(false);
@@ -55,6 +56,23 @@ export function NotificationPage() {
     const alarmTime = dayjs().hour(hours).minute(minutes).second(0).format('HH:mm:ss');
     updateNotificationTime({ alarmTime });
   };
+
+  useForeground(checkPermission);
+
+  useEffect(() => {
+    turnPushOn();
+  }, []);
+
+  useEffect(() => {
+    if (hasPermission === false) {
+      if (isExistUser == 'false') {
+        router.replace('/(app)');
+        return;
+      }
+
+      router.back();
+    }
+  }, [hasPermission]);
 
   return (
     <MDPage style={styles.container}>

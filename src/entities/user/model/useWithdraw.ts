@@ -1,10 +1,10 @@
 import { logout } from '@react-native-kakao/user';
 import { useMutation } from '@tanstack/react-query';
 
-import { useAuth } from '@entities/auth';
-import { useUser } from '@entities/user';
 import { Logger } from '@shared/lib/log';
 import { patchUsersStatus } from '../api/patch-users-status';
+import { useUser } from './useUser';
+import { useAuth } from '@entities/auth';
 
 interface Options {
   onSuccess?: () => void;

@@ -1,8 +1,6 @@
-import { router } from 'expo-router';
 import { ScrollView, StyleSheet, View } from 'react-native';
 
 import { isProduction } from '@shared/config';
-import { MDAppBar } from '@shared/ui/AppBar';
 import { MDPage } from '@shared/ui/Layout';
 import { SettingsAccountSection } from './SettingsAccountSection';
 import { SettingsCommunicationSection } from './SettingsCommunicationSection';
@@ -15,8 +13,6 @@ export function SettingsPage() {
 
   return (
     <MDPage>
-      <MDAppBar title="설정" onBack={() => router.back()} />
-
       <ScrollView
         contentContainerStyle={styles.scrollContent}
         overScrollMode="never"

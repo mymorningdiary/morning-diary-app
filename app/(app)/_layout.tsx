@@ -3,9 +3,7 @@ import { Stack } from 'expo-router';
 export default function AppLayout() {
   return (
     <Stack screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="index" />
-      <Stack.Screen name="diary-list" />
-      <Stack.Screen name="settings" />
+      <Stack.Screen name="(main)" />
       <Stack.Screen name="account" />
       <Stack.Screen name="text-goal" />
       <Stack.Screen name="withdraw" />

@@ -52,7 +52,7 @@ export function UpdateDiaryPage() {
   const { updateDiary, isPending } = useUpdateDiary({
     onSuccess: () => {
       router.replace({
-        pathname: '/(app)',
+        pathname: '/(app)/(main)',
         params: {
           writtenDate: diaryDate?.format('YYYY-MM-DD'),
         },
@@ -74,7 +74,7 @@ export function UpdateDiaryPage() {
   };
 
   if (!diaryDate || !diaryId) {
-    return <Redirect href="/(app)" />;
+    return <Redirect href="/(app)/(main)" />;
   }
 
   return (

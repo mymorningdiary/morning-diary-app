@@ -16,7 +16,7 @@ export function SignUpCompletePage() {
 
   const handleSignUpComplete = () => {
     if (isExistUser === 'true') {
-      router.replace('/(app)');
+      router.replace('/(app)/(main)');
     } else {
       router.replace({
         pathname: '/(app)/notification',

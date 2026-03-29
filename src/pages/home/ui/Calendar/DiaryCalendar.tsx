@@ -6,12 +6,14 @@ import { MDColorsType, MDFonts, useThemeColor } from '@shared/lib/theme';
 
 import { DiaryCalendarDay } from './DiaryCalendarDay';
 import { DiaryCalendarHeader } from './DiaryCalendarHeader';
+import { MarkedDates } from './types';
 
 LocaleConfig.defaultLocale = 'kr';
 
 interface Props {
   date?: string;
   month?: string;
+  markedDates?: MarkedDates;
   onDateChange?: (date: string) => void;
   onMonthChange?: (date: string) => void;
   onDayPress?: (day?: DateData) => void;
@@ -20,9 +22,8 @@ interface Props {
 export function DiaryCalendar({
   date = dayjs().format('YYYY-MM-DD'),
   month = dayjs().format('YYYY-MM-DD'),
-  onDateChange,
+  markedDates,
   onMonthChange,
-  onDayPress,
 }: Props) {
   const colors = useThemeColor();
   const styles = CalendarStyles({ colors });
@@ -69,10 +70,19 @@ export function DiaryCalendar({
       }}
       initialDate={month}
       firstDay={1}
+      markedDates={markedDates}
       renderHeader={() => <DiaryCalendarHeader month={month} onMonthChange={onMonthChange} />}
-      dayComponent={({ date, state, marking }) => (
-        <DiaryCalendarDay date={date?.dateString} state={state} />
-      )}
+      dayComponent={(props) => {
+        // console.log(props);
+        return (
+          <DiaryCalendarDay
+            date={props.date?.dateString}
+            state={props.state}
+            // @ts-ignore
+            emotion={props.marking?.emotion}
+          />
+        );
+      }}
       hideArrows
       disableAllTouchEventsForDisabledDays
       enableSwipeMonths

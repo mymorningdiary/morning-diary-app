@@ -56,7 +56,7 @@ export function WriteDiaryPage() {
         });
       } else {
         router.replace({
-          pathname: '/(app)',
+          pathname: '/(app)/(main)',
           params: {
             writtenDate: dateParam,
           },
@@ -69,7 +69,7 @@ export function WriteDiaryPage() {
   const [showBackModal, setShowBackModal] = useState(false);
 
   if (!dateParam) {
-    return <Redirect href="/(app)" />;
+    return <Redirect href="/(app)/(main)" />;
   }
 
   const handleSubmit = () => {

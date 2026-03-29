@@ -22,7 +22,7 @@ export function LoginEmailPage() {
   const showOtherButtons = Platform.OS === 'ios' || !keyboardVisible;
 
   const handleLoginSuccess = (isExistUser: boolean) => {
-    router.replace(isExistUser ? '/(app)' : '/(app)/notification');
+    router.replace(isExistUser ? '/(app)/(main)' : '/(app)/notification');
   };
 
   const handleLoginError = (message: string) => {

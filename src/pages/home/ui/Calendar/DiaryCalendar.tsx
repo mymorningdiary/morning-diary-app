@@ -1,12 +1,13 @@
+import dayjs from 'dayjs';
+import { useFocusEffect } from 'expo-router';
 import { useCallback, useState } from 'react';
 import { StyleSheet } from 'react-native';
-import { useFocusEffect } from 'expo-router';
 import { Calendar, DateData } from 'react-native-calendars';
-import dayjs from 'dayjs';
 
-import { MDColorsType, useThemeColor } from '@shared/lib/theme';
 import { useForeground } from '@shared/lib/app-state';
+import { MDColorsType, useThemeColor } from '@shared/lib/theme';
 
+import { DiaryCalendarDay } from './DiaryCalendarDay';
 import { DiaryCalendarHeader } from './DiaryCalendarHeader';
 
 interface Props {
@@ -45,11 +46,15 @@ export function DiaryCalendar({
 
   return (
     <Calendar
-      style={styles.container}
+      theme={{
+        calendarBackground: colors.background.normal,
+      }}
       initialDate={month}
       maxDate={today}
-      monthFormat={'yyyy년 MM월'}
       renderHeader={() => <DiaryCalendarHeader month={month} onMonthChange={onMonthChange} />}
+      dayComponent={({ date, state, marking }) => (
+        <DiaryCalendarDay date={date?.dateString} state={state} />
+      )}
       hideArrows
       disableAllTouchEventsForDisabledDays
       enableSwipeMonths

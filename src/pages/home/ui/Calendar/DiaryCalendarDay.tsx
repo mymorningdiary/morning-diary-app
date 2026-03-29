@@ -46,7 +46,13 @@ export function DiaryCalendarDay({ date, state, emotion = null, onDateSelect }: 
       {emotion == null && (
         <MDText
           type="numberRegular"
-          color={state === 'disabled' ? colors.text.alternative : colors.text.brand}>
+          color={
+            state === 'disabled'
+              ? colors.text.disabled
+              : state === 'today'
+                ? colors.primary.normal
+                : colors.text.brand
+          }>
           {formattedDate}
         </MDText>
       )}

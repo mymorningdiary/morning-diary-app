@@ -1,24 +1,24 @@
 import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { MDColorsType, useThemeColor } from '@shared/lib/theme';
 import { MDButton } from '@shared/ui/Button';
-
 import { IconPen } from '@/assets/icons';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 interface Props {
   style?: StyleProp<ViewStyle>;
+  disabled?: boolean;
   onPress?: () => void;
 }
 
-export function WriteDiaryButton({ style, onPress }: Props) {
+export function WriteDiaryButton({ style, disabled, onPress }: Props) {
   const colors = useThemeColor();
   const styles = Styles({ colors });
   const { bottom } = useSafeAreaInsets();
 
   return (
     <View style={[styles.container, { bottom: bottom + 24 }, style]}>
-      <MDButton style={styles.button} prefix={IconPen} onPress={onPress} />
+      <MDButton style={styles.button} prefix={IconPen} disabled={disabled} onPress={onPress} />
     </View>
   );
 }

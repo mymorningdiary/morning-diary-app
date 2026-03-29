@@ -2,6 +2,7 @@ import { StyleSheet } from 'react-native';
 
 import { MDPage } from '@shared/ui/Layout';
 import { MDText } from '@shared/ui/Text';
+import { WriteDiaryButton } from '@features/diary';
 
 export function HomePage() {
   const styles = PageStyles;
@@ -9,6 +10,7 @@ export function HomePage() {
   return (
     <MDPage style={styles.container}>
       <MDText>Home Page</MDText>
+      <WriteDiaryButton />
     </MDPage>
   );
 }

@@ -52,6 +52,7 @@ export const Colors = {
       brand: ColorPalette.brown[50],
       alternative: ColorPalette.brown[70],
       inversion: ColorPalette.white,
+      disabled: ColorPalette.brown[90],
     },
     line: {
       normal: ColorPalette.brown[98],
@@ -86,6 +87,7 @@ export const Colors = {
       brand: ColorPalette.brown[50],
       alternative: ColorPalette.brown[70],
       inversion: ColorPalette.white,
+      disabled: ColorPalette.brown[90],
     },
     line: {
       normal: ColorPalette.brown[98],

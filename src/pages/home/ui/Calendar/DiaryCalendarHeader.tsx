@@ -50,8 +50,7 @@ const Styles = ({ colors }: { colors: MDColorsType }) =>
   StyleSheet.create({
     container: {
       flexDirection: 'row',
-      paddingTop: 16,
-      paddingBottom: 24,
+      paddingBottom: 8,
       alignItems: 'center',
       gap: 12,
     },

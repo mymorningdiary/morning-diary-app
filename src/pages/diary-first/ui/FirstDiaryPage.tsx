@@ -53,11 +53,11 @@ export function FirstDiaryPage() {
 
   const navigateToHome = () => {
     if (writtenDateParam) {
-      router.replace({ pathname: '/(app)', params: { writtenDate: writtenDateParam } });
+      router.replace({ pathname: '/(app)/(main)', params: { writtenDate: writtenDateParam } });
       return;
     }
 
-    router.replace('/(app)');
+    router.replace('/(app)/(main)');
   };
 
   const handlePagination = () => {

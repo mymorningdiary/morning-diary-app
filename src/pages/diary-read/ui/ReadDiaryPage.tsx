@@ -43,7 +43,7 @@ export function ReadDiaryPage() {
   };
 
   if (!diaryDate || !diaryId) {
-    return <Redirect href="/(app)" />;
+    return <Redirect href="/(app)/(main)" />;
   }
 
   return (

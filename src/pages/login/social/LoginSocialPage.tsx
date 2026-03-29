@@ -19,7 +19,7 @@ export function LoginSocialPage() {
   };
 
   const handleLoginSuccess = (isExistUser: boolean) => {
-    router.replace(isExistUser ? '/(app)' : '/(app)/notification');
+    router.replace(isExistUser ? '/(app)/(main)' : '/(app)/notification');
   };
 
   const handleLoginError = (message: string) => {

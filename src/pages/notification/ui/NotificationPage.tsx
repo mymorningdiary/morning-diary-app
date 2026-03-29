@@ -31,7 +31,7 @@ export function NotificationPage() {
   const { updateNotificationTime, isPending } = useUpdateNotificationTime({
     onSuccess: () => {
       if (isExistUser == 'false') {
-        router.replace('/(app)');
+        router.replace('/(app)/(main)');
         return;
       }
 
@@ -66,7 +66,7 @@ export function NotificationPage() {
   useEffect(() => {
     if (hasPermission === false) {
       if (isExistUser == 'false') {
-        router.replace('/(app)');
+        router.replace('/(app)/(main)');
         return;
       }
 
@@ -79,7 +79,7 @@ export function NotificationPage() {
       <MDAppBar
         title="알림"
         onBack={isExistUser != 'false' ? () => router.back() : undefined}
-        onClose={isExistUser == 'false' ? () => router.replace('/(app)') : undefined}
+        onClose={isExistUser == 'false' ? () => router.replace('/(app)/(main)') : undefined}
       />
       <View style={styles.sunContent}>
         <SpeechSun text="햇님이가 알림을 보내드릴게요!" />

@@ -41,7 +41,24 @@ export function DiaryCalendarDay({ date, state, emotion = null, onDateSelect }: 
   return (
     <View style={styles.container}>
       {emotion != null && (
-        <Image style={styles.emotionImage} source={selectEmotionImage(emotion)} />
+        <View>
+          <MDText
+            type="caption1Regular"
+            style={styles.smallDayText}
+            color={
+              state === 'disabled'
+                ? colors.text.disabled
+                : state === 'today'
+                  ? colors.primary.normal
+                  : colors.text.brand
+            }>
+            {formattedDate}
+          </MDText>
+          <Image
+            style={[styles.emotionImage, state === 'disabled' && { opacity: 0.4 }]}
+            source={selectEmotionImage(emotion)}
+          />
+        </View>
       )}
       {emotion == null && (
         <MDText
@@ -67,10 +84,16 @@ const DayStyles = ({ colors }: { colors: MDColorsType }) =>
       height: 48,
       justifyContent: 'center',
       alignItems: 'center',
-      backgroundColor: colors.background.normal,
     },
     emotionImage: {
       width: 40,
       height: 40,
+    },
+    smallDayText: {
+      position: 'absolute',
+      top: 0,
+      right: 0,
+      fontSize: 8,
+      lineHeight: 10,
     },
   });

@@ -15,7 +15,7 @@ export function DiaryCalendarHeader({
   onMonthChange,
 }: Props) {
   const colors = useThemeColor();
-  const styles = Styles({ colors });
+  const styles = HeaderStyles;
 
   const formattedDate = dayjs(month).format('YYYY년 MM월');
 
@@ -46,12 +46,11 @@ export function DiaryCalendarHeader({
   );
 }
 
-const Styles = ({ colors }: { colors: MDColorsType }) =>
-  StyleSheet.create({
-    container: {
-      flexDirection: 'row',
-      paddingBottom: 4,
-      alignItems: 'center',
-      gap: 12,
-    },
-  });
+const HeaderStyles = StyleSheet.create({
+  container: {
+    flexDirection: 'row',
+    paddingBottom: 4,
+    alignItems: 'center',
+    gap: 12,
+  },
+});

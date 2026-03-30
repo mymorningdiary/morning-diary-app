@@ -14,3 +14,11 @@ export interface AssistantState {
 }
 
 export type DiaryProgressKey = keyof typeof ASSISTANT_PROGRESS_MESSAGES;
+
+export interface MarkedDates {
+  [key: string]: {
+    selected?: boolean;
+    marked?: boolean;
+    emotion?: number;
+  };
+}

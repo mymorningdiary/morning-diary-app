@@ -1,0 +1,24 @@
+import { useGetHome } from '@entities/home';
+import { MarkedDates } from '@features/diary';
+
+interface Options {
+  date: string;
+}
+
+export function useHome({ date }: Options) {
+  const { home } = useGetHome({ date });
+  const diaries = home?.diaries ?? null;
+
+  const markedDates =
+    diaries?.reduce((acc, it) => {
+      acc[it.writtenDate] = {
+        emotion: it.emotionScore,
+      };
+      return acc;
+    }, {} as MarkedDates) ?? null;
+
+  const getDiaryId = (date?: string) =>
+    diaries?.find((it) => it.writtenDate === date)?.diaryId ?? null;
+
+  return { diaries, markedDates, getDiaryId };
+}

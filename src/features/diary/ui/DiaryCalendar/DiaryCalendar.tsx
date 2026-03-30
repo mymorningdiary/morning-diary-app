@@ -1,6 +1,6 @@
-import dayjs from 'dayjs';
 import { StyleSheet } from 'react-native';
 import { Calendar, DateData, LocaleConfig } from 'react-native-calendars';
+import dayjs from 'dayjs';
 
 import { MDColorsType, MDFonts, useThemeColor } from '@shared/lib/theme';
 
@@ -32,24 +32,22 @@ LocaleConfig.locales['kr'] = {
 
 interface Props {
   date?: string;
-  month?: string;
-  markedDates?: MarkedDates;
+  markedDates?: MarkedDates | null;
   onDateChange?: (date: string) => void;
-  onMonthChange?: (date: string) => void;
-  onDayPress?: (day?: DateData) => void;
+  onDayPress?: (date?: string) => void;
 }
 
 export function DiaryCalendar({
   date = dayjs().format('YYYY-MM-DD'),
-  month = dayjs().format('YYYY-MM-DD'),
   markedDates,
-  onMonthChange,
+  onDateChange,
+  onDayPress,
 }: Props) {
   const colors = useThemeColor();
   const styles = CalendarStyles({ colors });
 
   const handleMonthChange = (date: DateData) => {
-    onMonthChange?.(date.dateString);
+    onDateChange?.(date.dateString);
   };
 
   return (
@@ -89,10 +87,10 @@ export function DiaryCalendar({
           },
         },
       }}
-      initialDate={month}
+      initialDate={date}
       firstDay={1}
-      markedDates={markedDates}
-      renderHeader={() => <DiaryCalendarHeader month={month} onMonthChange={onMonthChange} />}
+      markedDates={markedDates ?? {}}
+      renderHeader={() => <DiaryCalendarHeader date={date} onDateChange={onDateChange} />}
       dayComponent={(props) => {
         // console.log(props);
         return (
@@ -101,6 +99,7 @@ export function DiaryCalendar({
             state={props.state}
             // @ts-ignore
             emotion={props.marking?.emotion}
+            onDayPress={onDayPress}
           />
         );
       }}

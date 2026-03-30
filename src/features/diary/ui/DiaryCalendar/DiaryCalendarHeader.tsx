@@ -1,32 +1,29 @@
 import { Pressable, StyleSheet, View } from 'react-native';
 import dayjs from 'dayjs';
 
-import { MDColorsType, useThemeColor } from '@shared/lib/theme';
-import { MDText } from '@shared/ui/Text';
 import { IconChevronLeft, IconChevronRight } from '@assets/icons';
+import { useThemeColor } from '@shared/lib/theme';
+import { MDText } from '@shared/ui/Text';
 
 interface Props {
-  month?: string;
-  onMonthChange?: (date: string) => void;
+  date?: string;
+  onDateChange?: (date: string) => void;
 }
 
-export function DiaryCalendarHeader({
-  month = dayjs().format('YYYY-MM-DD'),
-  onMonthChange,
-}: Props) {
+export function DiaryCalendarHeader({ date = dayjs().format('YYYY-MM-DD'), onDateChange }: Props) {
   const colors = useThemeColor();
   const styles = HeaderStyles;
 
-  const formattedDate = dayjs(month).format('YYYY년 MM월');
+  const formattedDate = dayjs(date).format('YYYY년 MM월');
 
   const handlePrevMonthChange = () => {
-    const prev = dayjs(month).add(-1, 'month').startOf('month').format('YYYY-MM-DD');
-    onMonthChange?.(prev);
+    const prev = dayjs(date).add(-1, 'month').startOf('month').format('YYYY-MM-DD');
+    onDateChange?.(prev);
   };
 
   const handleNextMonthChange = () => {
-    const next = dayjs(month).add(1, 'month').startOf('month').format('YYYY-MM-DD');
-    onMonthChange?.(next);
+    const next = dayjs(date).add(1, 'month').startOf('month').format('YYYY-MM-DD');
+    onDateChange?.(next);
   };
 
   return (

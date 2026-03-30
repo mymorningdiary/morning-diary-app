@@ -1,11 +1,11 @@
 import { StyleSheet, View } from 'react-native';
 import { Image } from 'expo-image';
 import dayjs from 'dayjs';
+import { DayState } from 'react-native-calendars/src/types';
 
 import { MDColorsType, useThemeColor } from '@shared/lib/theme';
 import { MDText } from '@shared/ui/Text';
 import { ImgEmotion1, ImgEmotion2, ImgEmotion3, ImgEmotion4, ImgEmotion5 } from '@assets/images';
-import { DayState } from 'react-native-calendars/src/types';
 
 const selectEmotionImage = (emotion: number) => {
   if (emotion <= 20) {

@@ -6,7 +6,7 @@ import { MDColorsType, MDFonts, useThemeColor } from '@shared/lib/theme';
 
 import { DiaryCalendarDay } from './DiaryCalendarDay';
 import { DiaryCalendarHeader } from './DiaryCalendarHeader';
-import { MarkedDates } from './types';
+import { MarkedDates } from '../../model/types';
 
 LocaleConfig.defaultLocale = 'kr';
 

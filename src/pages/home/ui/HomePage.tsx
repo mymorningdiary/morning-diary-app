@@ -1,14 +1,11 @@
+import { useEffect, useMemo, useState } from 'react';
 import { StyleSheet } from 'react-native';
-
-import { MDPage } from '@shared/ui/Layout';
-import { MDText } from '@shared/ui/Text';
-import { WriteDiaryButton } from '@features/diary';
 import { router } from 'expo-router';
 import dayjs from 'dayjs';
-import { useEffect, useMemo, useState } from 'react';
-import { DiaryCalendar } from './Calendar/DiaryCalendar';
+
+import { DiaryCalendar, MarkedDates, WriteDiaryButton } from '@features/diary';
 import { Logger } from '@shared/lib/log';
-import { MarkedDates } from './Calendar/types';
+import { MDPage } from '@shared/ui/Layout';
 
 const dummyDiaries = [
   {

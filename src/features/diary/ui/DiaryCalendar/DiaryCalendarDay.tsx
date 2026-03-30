@@ -1,6 +1,6 @@
-import { StyleSheet, View } from 'react-native';
-import dayjs from 'dayjs';
+import { Pressable, StyleSheet, View } from 'react-native';
 import { DayState } from 'react-native-calendars/src/types';
+import dayjs from 'dayjs';
 
 import { MDColorsType, useThemeColor } from '@shared/lib/theme';
 import { MDText } from '@shared/ui/Text';
@@ -10,17 +10,17 @@ interface Props {
   date?: string;
   state?: DayState;
   emotion?: number | null;
-  onDateSelect?: (date: string) => void;
+  onDayPress?: (date?: string) => void;
 }
 
-export function DiaryCalendarDay({ date, state, emotion = null, onDateSelect }: Props) {
+export function DiaryCalendarDay({ date, state, emotion = null, onDayPress }: Props) {
   const colors = useThemeColor();
   const styles = DayStyles({ colors });
 
   const formattedDate = dayjs(date).format('D');
 
   return (
-    <View style={styles.container}>
+    <Pressable style={styles.container} onPress={() => onDayPress?.(date)}>
       {emotion != null && (
         <View>
           <MDText
@@ -55,7 +55,7 @@ export function DiaryCalendarDay({ date, state, emotion = null, onDateSelect }: 
           {formattedDate}
         </MDText>
       )}
-    </View>
+    </Pressable>
   );
 }
 

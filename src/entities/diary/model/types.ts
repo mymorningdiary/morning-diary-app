@@ -4,4 +4,5 @@ export interface Diary {
   dayOfWeek: string;
   previewContent: string;
   content: string;
+  emotionScore: number;
 }

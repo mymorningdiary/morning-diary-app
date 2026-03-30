@@ -1,29 +1,10 @@
 import { StyleSheet, View } from 'react-native';
-import { Image } from 'expo-image';
 import dayjs from 'dayjs';
 import { DayState } from 'react-native-calendars/src/types';
 
 import { MDColorsType, useThemeColor } from '@shared/lib/theme';
 import { MDText } from '@shared/ui/Text';
-import { ImgEmotion1, ImgEmotion2, ImgEmotion3, ImgEmotion4, ImgEmotion5 } from '@assets/images';
-
-const selectEmotionImage = (emotion: number) => {
-  if (emotion <= 20) {
-    return ImgEmotion1;
-  }
-  if (emotion <= 40) {
-    return ImgEmotion2;
-  }
-  if (emotion <= 60) {
-    return ImgEmotion3;
-  }
-  if (emotion <= 80) {
-    return ImgEmotion4;
-  }
-  if (emotion <= 100) {
-    return ImgEmotion5;
-  }
-};
+import { DiaryEmotionImage } from '../DiaryEmotionImage';
 
 interface Props {
   date?: string;
@@ -54,9 +35,9 @@ export function DiaryCalendarDay({ date, state, emotion = null, onDateSelect }: 
             }>
             {formattedDate}
           </MDText>
-          <Image
+          <DiaryEmotionImage
             style={[styles.emotionImage, state === 'disabled' && { opacity: 0.4 }]}
-            source={selectEmotionImage(emotion)}
+            emotion={emotion}
           />
         </View>
       )}

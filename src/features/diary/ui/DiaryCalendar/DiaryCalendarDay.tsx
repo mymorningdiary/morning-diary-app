@@ -36,7 +36,8 @@ export function DiaryCalendarDay({ date, state, emotion = null, onDateSelect }: 
             {formattedDate}
           </MDText>
           <DiaryEmotionImage
-            style={[styles.emotionImage, state === 'disabled' && { opacity: 0.4 }]}
+            style={state === 'disabled' && { opacity: 0.4 }}
+            size={40}
             emotion={emotion}
           />
         </View>
@@ -65,10 +66,6 @@ const DayStyles = ({ colors }: { colors: MDColorsType }) =>
       height: 48,
       justifyContent: 'center',
       alignItems: 'center',
-    },
-    emotionImage: {
-      width: 40,
-      height: 40,
     },
     smallDayText: {
       position: 'absolute',

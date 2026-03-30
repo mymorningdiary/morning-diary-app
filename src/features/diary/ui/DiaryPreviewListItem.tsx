@@ -21,7 +21,7 @@ export function DiaryPreviewListItem({ style, title, content, date, emotion, tit
   return (
     <View style={[styles.container, style]}>
       <View style={styles.leftContent}>
-        {emotion != null && <DiaryEmotionImage emotion={emotion} size={32} />}{' '}
+        {emotion != null && <DiaryEmotionImage emotion={emotion} size={32} />}
         {formattedDate && (
           <MDText
             style={{ fontSize: 11, marginTop: emotion != null ? -4 : 0 }}

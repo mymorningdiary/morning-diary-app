@@ -12,6 +12,10 @@ import { MarkedDates } from './Calendar/types';
 
 const dummyDiaries = [
   {
+    date: '2026-02-28',
+    emotion: 19,
+  },
+  {
     date: '2026-03-01',
     emotion: 19,
   },

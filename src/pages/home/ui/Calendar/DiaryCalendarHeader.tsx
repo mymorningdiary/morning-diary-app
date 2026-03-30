@@ -35,7 +35,7 @@ export function DiaryCalendarHeader({
         <IconChevronLeft width={16} height={16} color={colors.icon.normal} />
       </Pressable>
 
-      <MDText type="heading2SemiBold" color={colors.text.brand}>
+      <MDText type="titleSemiBold" color={colors.text.brand}>
         {formattedDate}
       </MDText>
 
@@ -50,7 +50,7 @@ const Styles = ({ colors }: { colors: MDColorsType }) =>
   StyleSheet.create({
     container: {
       flexDirection: 'row',
-      paddingBottom: 8,
+      paddingBottom: 4,
       alignItems: 'center',
       gap: 12,
     },

@@ -1,7 +1,6 @@
 import { Text, TextProps, TextStyle } from 'react-native';
 
-import { useThemeColor } from '@/hooks';
-import { MDFonts, MDFontsType } from '@shared/lib/theme';
+import { MDFonts, MDFontsType, useThemeColor } from '@shared/lib/theme';
 
 interface MDTextProps extends TextProps {
   type?: MDFontsType;

@@ -1,31 +1,31 @@
-import { FontFamily } from '@/types/types';
+import { MDFontFamily } from '../types/fonts';
 
-const PretendardBold: FontFamily = {
+const PretendardBold: MDFontFamily = {
   fontFamily: 'Pretendard',
   fontWeight: 700,
 };
 
-const PretendardSemiBold: FontFamily = {
+const PretendardSemiBold: MDFontFamily = {
   fontFamily: 'Pretendard',
   fontWeight: 600,
 };
 
-const PretendardMedium: FontFamily = {
+const PretendardMedium: MDFontFamily = {
   fontFamily: 'Pretendard',
   fontWeight: 500,
 };
 
-const PretendardRegular: FontFamily = {
+const PretendardRegular: MDFontFamily = {
   fontFamily: 'Pretendard',
   fontWeight: 400,
 };
 
-const RobotoRegular: FontFamily = {
+const RobotoRegular: MDFontFamily = {
   fontFamily: 'Roboto',
   fontWeight: 400,
 };
 
-const InterRegular: FontFamily = {
+const InterRegular: MDFontFamily = {
   fontFamily: 'Inter',
   fontWeight: 400,
 };

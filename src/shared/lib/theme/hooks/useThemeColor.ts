@@ -1,11 +1,11 @@
 import { useColorScheme } from 'react-native';
 
-import { MDColors } from '@/types/types';
-import { Colors } from '@/constants/colors';
+import { MDColors } from '../const/colors';
+import { MDColorsType } from '../types/colors';
 
 // FIXME 고도화
-export function useThemeColor(): MDColors {
+export function useThemeColor(): MDColorsType {
   const theme = useColorScheme() ?? 'light';
 
-  return Colors[theme];
+  return MDColors[theme];
 }

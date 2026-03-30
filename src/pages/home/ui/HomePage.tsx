@@ -1,11 +1,12 @@
 import { useState } from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { router } from 'expo-router';
 import dayjs from 'dayjs';
 
 import { DiaryCalendar, WriteDiaryButton } from '@features/diary';
 import { useHome } from '@features/home';
 import { MDPage } from '@shared/ui/Layout';
+import { WeeklyEmotionCard } from './WeeklyEmotionCard';
 
 export function HomePage() {
   const styles = PageStyles;
@@ -13,7 +14,7 @@ export function HomePage() {
   const [currentDate, setCurrentDate] = useState(dayjs().format('YYYY-MM-DD'));
   const currentMonth = dayjs(currentDate).format('YYYY-MM');
 
-  const { markedDates, getDiaryId } = useHome({ date: currentMonth });
+  const { markedDates, weeklyEmotion, getDiaryId } = useHome({ date: currentMonth });
 
   const handleDayPress = (date?: string) => {
     const diaryId = getDiaryId(date);
@@ -37,6 +38,10 @@ export function HomePage() {
         onDayPress={handleDayPress}
       />
 
+      <View style={{ paddingHorizontal: 12, alignItems: 'flex-start' }}>
+        <WeeklyEmotionCard emotion={weeklyEmotion} />
+      </View>
+
       <WriteDiaryButton
         onPress={() => {
           router.push({
@@ -53,6 +58,7 @@ export function HomePage() {
 
 const PageStyles = StyleSheet.create({
   container: {
+    gap: 16,
     paddingBottom: 60,
   },
 });

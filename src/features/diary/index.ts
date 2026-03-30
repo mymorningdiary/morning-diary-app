@@ -2,7 +2,6 @@ export { DiaryAssistant } from './ui/DiaryAssistant/DiaryAssistant';
 export { DiaryEditor } from './ui/DiaryEditor';
 export { WriteDiaryButton } from './ui/WriteDiaryButton';
 export { DiaryCalendar } from './ui/DiaryCalendar/DiaryCalendar';
-export { DiaryEmotionImage } from './ui/DiaryEmotionImage';
 export { DiaryPreviewListItem } from './ui/DiaryPreviewListItem';
 export { useDiaryEditor } from './model/useDiaryEditor';
 export { useDiaryAssistant } from './model/useDiaryAssistant';

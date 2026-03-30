@@ -2,7 +2,7 @@ import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
 import dayjs from 'dayjs';
 import { MDColorsType, useThemeColor } from '@shared/lib/theme';
 import { MDText } from '@shared/ui/Text';
-import { DiaryEmotionImage } from './DiaryEmotionImage';
+import { EmotionImage } from '@shared/ui/Image';
 
 interface Props {
   style?: StyleProp<ViewStyle>;
@@ -21,7 +21,7 @@ export function DiaryPreviewListItem({ style, title, content, date, emotion, tit
   return (
     <View style={[styles.container, style]}>
       <View style={styles.leftContent}>
-        {emotion != null && <DiaryEmotionImage emotion={emotion} size={32} />}
+        {emotion != null && <EmotionImage emotion={emotion} size={32} />}
         {formattedDate && (
           <MDText
             style={{ fontSize: 11, marginTop: emotion != null ? -4 : 0 }}

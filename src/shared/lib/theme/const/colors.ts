@@ -16,6 +16,7 @@ export const MDColors = {
       brand: MDPalette.brown[50],
       alternative: MDPalette.brown[70],
       inversion: MDPalette.white,
+      disabled: MDPalette.brown[90],
     },
     line: {
       normal: MDPalette.brown[98],
@@ -50,6 +51,7 @@ export const MDColors = {
       brand: MDPalette.brown[50],
       alternative: MDPalette.brown[70],
       inversion: MDPalette.white,
+      disabled: MDPalette.brown[90],
     },
     line: {
       normal: MDPalette.brown[98],

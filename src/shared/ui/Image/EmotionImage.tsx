@@ -31,7 +31,7 @@ interface Props {
   emotion?: number | null;
 }
 
-export function DiaryEmotionImage({ style, emotion = null, size = 24 }: Props) {
+export function EmotionImage({ style, emotion = null, size = 24 }: Props) {
   const source = selectEmotionImage(emotion);
 
   if (!source) {

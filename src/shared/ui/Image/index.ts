@@ -1,0 +1,1 @@
+export { EmotionImage } from './EmotionImage';

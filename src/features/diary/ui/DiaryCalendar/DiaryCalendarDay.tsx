@@ -4,7 +4,7 @@ import dayjs from 'dayjs';
 
 import { MDColorsType, useThemeColor } from '@shared/lib/theme';
 import { MDText } from '@shared/ui/Text';
-import { DiaryEmotionImage } from '../DiaryEmotionImage';
+import { EmotionImage } from '@shared/ui/Image';
 
 interface Props {
   date?: string;
@@ -35,7 +35,7 @@ export function DiaryCalendarDay({ date, state, emotion = null, onDayPress }: Pr
             }>
             {formattedDate}
           </MDText>
-          <DiaryEmotionImage
+          <EmotionImage
             style={state === 'disabled' && { opacity: 0.4 }}
             size={40}
             emotion={emotion}

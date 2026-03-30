@@ -8,6 +8,9 @@ interface Options {
 export function useHome({ date }: Options) {
   const { home } = useGetHome({ date });
   const diaries = home?.diaries ?? null;
+  const weeklyEmotion = home?.hasWrittenDiaryThisWeek
+    ? (home?.weeklyAverageEmotionScore ?? null)
+    : null;
 
   const markedDates =
     diaries?.reduce((acc, it) => {
@@ -20,5 +23,5 @@ export function useHome({ date }: Options) {
   const getDiaryId = (date?: string) =>
     diaries?.find((it) => it.writtenDate === date)?.diaryId ?? null;
 
-  return { diaries, markedDates, getDiaryId };
+  return { diaries, markedDates, weeklyEmotion, getDiaryId };
 }

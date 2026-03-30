@@ -3,7 +3,9 @@ import { Image } from 'expo-image';
 
 import { ImgEmotion1, ImgEmotion2, ImgEmotion3, ImgEmotion4, ImgEmotion5 } from '@assets/images';
 
-const selectEmotionImage = (emotion: number) => {
+const selectEmotionImage = (emotion: number | null) => {
+  if (emotion == null) return null;
+
   if (emotion <= 20) {
     return ImgEmotion1;
   }
@@ -19,19 +21,22 @@ const selectEmotionImage = (emotion: number) => {
   if (emotion <= 100) {
     return ImgEmotion5;
   }
+
+  return null;
 };
 
 interface Props {
   style?: StyleProp<ImageStyle>;
-  emotion: number;
+  size?: number;
+  emotion?: number | null;
 }
 
-export function DiaryEmotionImage({ emotion, style }: Props) {
+export function DiaryEmotionImage({ style, emotion = null, size = 24 }: Props) {
   const source = selectEmotionImage(emotion);
 
   if (!source) {
     return null;
   }
 
-  return <Image style={style} source={source} />;
+  return <Image style={[{ width: size, height: size }, style]} source={source} />;
 }

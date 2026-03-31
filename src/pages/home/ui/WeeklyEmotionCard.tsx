@@ -43,23 +43,29 @@ const selectWeeklyEmotionText = (emotion?: number | null) => {
   return null;
 };
 
-const selectWeeklyEmotionColor = (emotion?: number | null) => {
+const selectWeeklyEmotionColor = ({
+  emotion,
+  colors,
+}: {
+  emotion?: number | null;
+  colors: MDColorsType;
+}) => {
   if (emotion == null) return null;
 
   if (emotion <= 20) {
-    return '#A1B4BB33';
+    return colors.accent.emotion.lowest;
   }
   if (emotion <= 40) {
-    return '#9AE4FF33';
+    return colors.accent.emotion.low;
   }
   if (emotion <= 60) {
-    return '#FFF8CD33';
+    return colors.accent.emotion.neutral;
   }
   if (emotion <= 80) {
-    return '#FFE13433';
+    return colors.accent.emotion.high;
   }
   if (emotion <= 100) {
-    return '#FF3B3033';
+    return colors.accent.emotion.highest;
   }
 
   return null;
@@ -75,10 +81,11 @@ export function WeeklyEmotionCard({ style, emotion }: Props) {
   const styles = CardStyles({ colors });
 
   const emotionText = selectWeeklyEmotionText(emotion);
-  const emotionColor = selectWeeklyEmotionColor(emotion);
+  const emotionColor = selectWeeklyEmotionColor({ emotion, colors });
 
   return (
-    <View style={[styles.container, style, emotionColor && { backgroundColor: emotionColor }]}>
+    <View
+      style={[styles.container, style, emotionColor && { backgroundColor: `${emotionColor}33` }]}>
       {emotion == null && (
         <>
           <MDText type="labelRegular" color={colors.text.brand}>

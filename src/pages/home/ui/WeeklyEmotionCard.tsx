@@ -1,4 +1,4 @@
-import { StyleSheet, View } from 'react-native';
+import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
 import { Image } from 'expo-image';
 
 import { MDColorsType, useThemeColor } from '@shared/lib/theme';
@@ -66,10 +66,11 @@ const selectWeeklyEmotionColor = (emotion?: number | null) => {
 };
 
 interface Props {
+  style?: StyleProp<ViewStyle>;
   emotion?: number | null;
 }
 
-export function WeeklyEmotionCard({ emotion }: Props) {
+export function WeeklyEmotionCard({ style, emotion }: Props) {
   const colors = useThemeColor();
   const styles = CardStyles({ colors });
 
@@ -77,7 +78,7 @@ export function WeeklyEmotionCard({ emotion }: Props) {
   const emotionColor = selectWeeklyEmotionColor(emotion);
 
   return (
-    <View style={[styles.container, emotionColor && { backgroundColor: emotionColor }]}>
+    <View style={[styles.container, style, emotionColor && { backgroundColor: emotionColor }]}>
       {emotion == null && (
         <>
           <MDText type="labelRegular" color={colors.text.brand}>

@@ -8,6 +8,7 @@ import IconPen from './ic-pen.svg';
 import IconCalendar from './ic-calendar.svg';
 import IconList from './ic-list.svg';
 import IconMore from './ic-more.svg';
+import IconLight from './ic-light.svg';
 
 export {
   IconMail,
@@ -20,4 +21,5 @@ export {
   IconCalendar,
   IconList,
   IconMore,
+  IconLight,
 };

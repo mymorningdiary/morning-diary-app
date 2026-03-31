@@ -2,7 +2,7 @@ import { StyleSheet } from 'react-native';
 
 import { MDPage } from '@shared/ui/Layout';
 import { MDText } from '@shared/ui/Text';
-import { DiaryPreviewListItem } from '@features/diary';
+import { DiaryPreviewCard } from '@features/diary';
 
 export function DiaryListPage() {
   const styles = PageStyles;
@@ -10,7 +10,7 @@ export function DiaryListPage() {
   return (
     <MDPage style={styles.container}>
       <MDText>DiaryList Page</MDText>
-      <DiaryPreviewListItem
+      <DiaryPreviewCard
         emotion={5}
         title="대충 긴 텍스트를 적어보자 대충 긴 텍스트를 적어보자 대충 긴 텍스트를 적어보자"
         date="2026-03-26"

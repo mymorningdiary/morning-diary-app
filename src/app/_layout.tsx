@@ -5,12 +5,21 @@ import { ForceUpdatePage } from '@pages/force-update';
 import { useVisit } from '@features/onboarding';
 import { useAuth } from '@entities/auth';
 import { useAppVersion } from '@entities/version';
-import { MDToast } from '@shared/ui/Toast';
-import { MDModal } from '@shared/ui/Modal';
-import { Logger } from '@shared/lib/log';
 import { openMarketApp } from '@shared/lib/links';
+import { Logger } from '@shared/lib/log';
+import { MDModal } from '@shared/ui/Modal';
+import { MDToast } from '@shared/ui/Toast';
+import { AppProvider } from '@shared/providers';
 
-export function AppRouter() {
+export default function RootLayout() {
+  return (
+    <AppProvider>
+      <AppRouter />
+    </AppProvider>
+  );
+}
+
+function AppRouter() {
   const { accessToken, isLoaded: isAuthLoaded } = useAuth();
   const { isFirstVisit, isLoaded: isVisitLoaded } = useVisit();
   const isReady = isAuthLoaded && isVisitLoaded;
@@ -19,11 +28,11 @@ export function AppRouter() {
   const [showUpdateModal, setShowUpdateModal] = useState(false);
 
   useEffect(() => {
-    Logger('AppRouter').debug('isAuthLoaded:', isAuthLoaded, ', accessToken:', accessToken);
+    Logger('RootLayout').debug('isAuthLoaded:', isAuthLoaded, ', accessToken:', accessToken);
   }, [isAuthLoaded, accessToken]);
 
   useEffect(() => {
-    Logger('AppRouter').debug('isVisitLoaded:', isVisitLoaded, ', isFirstVisit:', isFirstVisit);
+    Logger('RootLayout').debug('isVisitLoaded:', isVisitLoaded, ', isFirstVisit:', isFirstVisit);
   }, [isVisitLoaded, isFirstVisit]);
 
   useEffect(() => {
@@ -41,10 +50,6 @@ export function AppRouter() {
       setShowUpdateModal(true);
     }
   }, [versionStatus]);
-
-  if (!isReady) {
-    return null;
-  }
 
   if (versionStatus === 'force') {
     return <ForceUpdatePage />;

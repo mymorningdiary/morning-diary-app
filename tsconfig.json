@@ -4,14 +4,13 @@
     "baseUrl": ".",
     "strict": true,
     "paths": {
-      "@application/*": ["./src/application/*"],
+      "@app/*": ["./src/app/*"],
       "@pages/*": ["./src/pages/*"],
       "@features/*": ["./src/features/*"],
       "@entities/*": ["./src/entities/*"],
       "@shared/*": ["./src/shared/*"],
-
       "@assets/*": ["./assets/*"],
-      "@/*": ["./*"], // 이게 앞에 있으면 다른 별칭이 꼬임
+      "@/*": ["./src/*"], // 이게 앞에 있으면 다른 별칭이 꼬임
     }
   },
   "include": [

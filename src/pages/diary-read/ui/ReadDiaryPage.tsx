@@ -13,6 +13,7 @@ import { MDPage } from '@shared/ui/Layout';
 import { MDModal } from '@shared/ui/Modal';
 import { MDText } from '@shared/ui/Text';
 import { useToastStore } from '@shared/lib/toast';
+import { DiaryPreviewCard } from '@features/diary';
 
 export function ReadDiaryPage() {
   const styles = PageStyles;
@@ -84,6 +85,13 @@ export function ReadDiaryPage() {
         showsVerticalScrollIndicator={false}
         keyboardShouldPersistTaps="handled">
         <View>
+          {diary?.emotionScore && (
+            <DiaryPreviewCard
+              style={{ marginVertical: 16 }}
+              emotion={diary.emotionScore}
+              title={diary?.title}
+            />
+          )}
           {diary?.content && (
             <MDText type="bodyRegular" textBreakStrategy="highQuality">
               {diary.content}

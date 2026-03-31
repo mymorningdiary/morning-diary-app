@@ -6,16 +6,17 @@ import { EmotionImage } from '@shared/ui/Image';
 
 interface Props {
   style?: StyleProp<ViewStyle>;
-  title?: string;
+  title?: string | null;
   content?: string;
   date?: string;
-  emotion?: number;
+  emotion?: number | null;
   titleLines?: number;
 }
 
-export function DiaryPreviewListItem({ style, title, content, date, emotion, titleLines }: Props) {
+export function DiaryPreviewCard({ style, title, content, date, emotion, titleLines }: Props) {
   const colors = useThemeColor();
-  const styles = Styles({ colors });
+  const styles = CardStyles({ colors });
+
   const formattedDate = date ? dayjs(date).locale('ko').format('D (dd)') : '';
 
   return (
@@ -52,7 +53,7 @@ export function DiaryPreviewListItem({ style, title, content, date, emotion, tit
   );
 }
 
-const Styles = ({ colors }: { colors: MDColorsType }) =>
+const CardStyles = ({ colors }: { colors: MDColorsType }) =>
   StyleSheet.create({
     container: {
       flexDirection: 'row',
@@ -61,7 +62,6 @@ const Styles = ({ colors }: { colors: MDColorsType }) =>
       borderColor: colors.line.normal,
       borderWidth: 1,
       borderRadius: 16,
-      justifyContent: 'center',
       paddingVertical: 12,
       paddingHorizontal: 16,
       gap: 8,

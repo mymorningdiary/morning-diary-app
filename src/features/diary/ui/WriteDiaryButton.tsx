@@ -3,7 +3,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { MDColorsType, useThemeColor } from '@shared/lib/theme';
 import { MDButton } from '@shared/ui/Button';
-import { IconPen } from '@/assets/icons';
+import { IconPen } from '@assets/icons';
 
 interface Props {
   style?: StyleProp<ViewStyle>;

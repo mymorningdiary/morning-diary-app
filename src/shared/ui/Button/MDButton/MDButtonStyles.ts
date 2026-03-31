@@ -104,7 +104,7 @@ const getVariantTokensMap = (colors: MDColorsType): Record<ButtonVariant, Button
     borderWidth: 1,
   },
   kakao: {
-    backgroundColor: colors.kakao,
+    backgroundColor: colors.brand.kakao,
     textColor: colors.text.normal,
     iconColor: colors.icon.normal,
     borderColor: 'transparent',

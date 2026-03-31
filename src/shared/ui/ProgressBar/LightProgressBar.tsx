@@ -66,6 +66,6 @@ const ProgressBarStyles = ({ colors }: { colors: MDColorsType }) =>
     fill: {
       height: '100%',
       borderRadius: 999,
-      backgroundColor: colors.kakao,
+      backgroundColor: colors.accent.light.collect,
     },
   });

@@ -26,7 +26,7 @@ export function LightProgressBar({ style, label = '빛 모으기', current = 0, 
         </MDText>
 
         <View style={styles.goalContent}>
-          <IconLight width={12} height={12} />
+          <IconLight width={12} height={12} color={colors.accent.light.collect} />
 
           <MDText type="caption2Regular" color={colors.text.alternative}>
             {`${current}/${goal}`}

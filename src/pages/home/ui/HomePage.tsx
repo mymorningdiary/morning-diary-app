@@ -7,6 +7,7 @@ import { DiaryCalendar, WriteDiaryButton } from '@features/diary';
 import { useHome } from '@features/home';
 import { MDPage } from '@shared/ui/Layout';
 import { WeeklyEmotionCard } from './WeeklyEmotionCard';
+import { WeeklyReportCard } from './WeeklyReportCard';
 
 export function HomePage() {
   const styles = PageStyles;
@@ -38,8 +39,9 @@ export function HomePage() {
         onDayPress={handleDayPress}
       />
 
-      <View style={{ paddingHorizontal: 12, alignItems: 'flex-start' }}>
-        <WeeklyEmotionCard emotion={weeklyEmotion} />
+      <View style={{ flexDirection: 'row', paddingHorizontal: 12, gap: 12 }}>
+        <WeeklyEmotionCard style={{ flex: 1 }} emotion={weeklyEmotion} />
+        <WeeklyReportCard style={{ flex: 1 }} />
       </View>
 
       <WriteDiaryButton

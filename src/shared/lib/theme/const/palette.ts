@@ -1,7 +1,6 @@
 export const MDPalette = {
   black: '#000000',
   white: '#FFFFFF',
-  kakao: '#FEE500',
   orange: {
     10: '#6B2C00',
     20: '#8C3A00',
@@ -34,4 +33,10 @@ export const MDPalette = {
     black: '#000000CC',
     white: '#FFFFFFCC',
   },
+  coralRed: '#FF3B30',
+  sunflowerYellow: '#FFE134',
+  creamYellow: '#FFF8CD',
+  skyBlue: '#9AE4FF',
+  blueGray: '#A1B4BB',
+  goldenYellow: '#FEE500',
 } as const;

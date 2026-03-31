@@ -34,7 +34,21 @@ export const MDColors = {
       alternative: MDPalette.brown[95],
       inversion: MDPalette.white,
     },
-    kakao: MDPalette.kakao,
+    accent: {
+      emotion: {
+        lowest: MDPalette.blueGray,
+        low: MDPalette.skyBlue,
+        neutral: MDPalette.creamYellow,
+        high: MDPalette.sunflowerYellow,
+        highest: MDPalette.coralRed,
+      },
+      light: {
+        collect: MDPalette.goldenYellow,
+      },
+    },
+    brand: {
+      kakao: MDPalette.goldenYellow,
+    },
   },
   dark: {
     primary: {
@@ -69,6 +83,20 @@ export const MDColors = {
       alternative: MDPalette.brown[95],
       inversion: MDPalette.white,
     },
-    kakao: MDPalette.kakao,
+    accent: {
+      emotion: {
+        lowest: MDPalette.blueGray,
+        low: MDPalette.skyBlue,
+        neutral: MDPalette.creamYellow,
+        high: MDPalette.sunflowerYellow,
+        highest: MDPalette.coralRed,
+      },
+      light: {
+        collect: MDPalette.goldenYellow,
+      },
+    },
+    brand: {
+      kakao: MDPalette.goldenYellow,
+    },
   },
 };

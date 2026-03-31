@@ -19,6 +19,6 @@ export interface MarkedDates {
   [key: string]: {
     selected?: boolean;
     marked?: boolean;
-    emotion?: number;
+    emotion?: number | null;
   };
 }

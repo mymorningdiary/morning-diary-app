@@ -8,9 +8,14 @@ import { MDText } from '@shared/ui/Text';
 interface Props {
   date?: string;
   onDateChange?: (date: string) => void;
+  onPress?: () => void;
 }
 
-export function DiaryCalendarHeader({ date = dayjs().format('YYYY-MM-DD'), onDateChange }: Props) {
+export function DiaryCalendarHeader({
+  date = dayjs().format('YYYY-MM-DD'),
+  onDateChange,
+  onPress,
+}: Props) {
   const colors = useThemeColor();
   const styles = HeaderStyles;
 
@@ -27,7 +32,7 @@ export function DiaryCalendarHeader({ date = dayjs().format('YYYY-MM-DD'), onDat
   };
 
   return (
-    <View style={styles.container}>
+    <Pressable style={styles.container} onPress={onPress}>
       <Pressable hitSlop={24} onPress={handlePrevMonthChange}>
         <IconChevronLeft width={16} height={16} color={colors.icon.normal} />
       </Pressable>
@@ -39,7 +44,7 @@ export function DiaryCalendarHeader({ date = dayjs().format('YYYY-MM-DD'), onDat
       <Pressable hitSlop={24} onPress={handleNextMonthChange}>
         <IconChevronRight width={16} height={16} color={colors.icon.normal} />
       </Pressable>
-    </View>
+    </Pressable>
   );
 }
 

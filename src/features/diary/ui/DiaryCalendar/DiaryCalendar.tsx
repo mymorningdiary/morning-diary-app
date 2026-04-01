@@ -35,6 +35,7 @@ interface Props {
   markedDates?: MarkedDates | null;
   onDateChange?: (date: string) => void;
   onDayPress?: (date?: string) => void;
+  onHeaderPress?: () => void;
 }
 
 export function DiaryCalendar({
@@ -42,9 +43,9 @@ export function DiaryCalendar({
   markedDates,
   onDateChange,
   onDayPress,
+  onHeaderPress,
 }: Props) {
   const colors = useThemeColor();
-  const styles = CalendarStyles({ colors });
 
   const handleMonthChange = (date: DateData) => {
     onDateChange?.(date.dateString);
@@ -90,7 +91,9 @@ export function DiaryCalendar({
       initialDate={date}
       firstDay={1}
       markedDates={markedDates ?? {}}
-      renderHeader={() => <DiaryCalendarHeader date={date} onDateChange={onDateChange} />}
+      renderHeader={() => (
+        <DiaryCalendarHeader date={date} onDateChange={onDateChange} onPress={onHeaderPress} />
+      )}
       dayComponent={(props) => {
         // console.log(props);
         return (
@@ -110,10 +113,3 @@ export function DiaryCalendar({
     />
   );
 }
-
-const CalendarStyles = ({ colors }: { colors: MDColorsType }) =>
-  StyleSheet.create({
-    container: {
-      backgroundColor: colors.background.normal,
-    },
-  });

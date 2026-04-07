@@ -5,8 +5,8 @@ import { useThemeColor } from '@shared/lib/theme';
 import { MDText } from '@shared/ui/Text';
 
 interface Props {
-  items: number[];
-  value: number;
+  items: any[];
+  value: any;
   suffix?: string;
   itemHeight: number;
   pickerHeight: number;
@@ -15,35 +15,16 @@ interface Props {
 
 export function WheelPicker({ items, value, suffix, itemHeight, pickerHeight, onChange }: Props) {
   const colors = useThemeColor();
+  const styles = PickerStyles;
   const listRef = useRef<FlatList<number>>(null);
-  const dragEndTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const dragEndTimeoutRef = useRef<ReturnType<typeof setTimeout>>(null);
 
-  const selectedIndex = Math.max(
-    items.findIndex((it) => it === value),
-    0,
-  );
   const verticalPadding = (pickerHeight - itemHeight) / 2;
-  const valueWidth = Math.max(...items.map((item) => String(item).length)) * 20;
-  const suffixWidth = suffix ? 20 : 0;
-  const contentWidth = valueWidth + suffixWidth + (suffix ? 4 : 0);
-
-  useEffect(() => {
-    const offset = selectedIndex * itemHeight;
-
-    requestAnimationFrame(() => {
-      listRef.current?.scrollToOffset({ offset, animated: false });
-    });
-  }, [itemHeight, selectedIndex]);
-
-  useEffect(() => {
-    return () => {
-      if (dragEndTimeoutRef.current) {
-        clearTimeout(dragEndTimeoutRef.current);
-      }
-    };
-  }, []);
+  const valueWidth = Math.max(...items.map((item) => String(item).length)) * 12;
+  const itemWidth = valueWidth + (suffix ? 4 : 0);
 
   const handleScrollEnd = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+    // contentOffset.y를 itemHeight로 나눠서 가장 가까운 인덱스를 계산
     const nextIndex = Math.min(
       Math.max(Math.round(event.nativeEvent.contentOffset.y / itemHeight), 0),
       items.length - 1,
@@ -55,61 +36,85 @@ export function WheelPicker({ items, value, suffix, itemHeight, pickerHeight, on
     }
   };
 
+  // 손가락을 땠을 때 호출
   const handleScrollEndDrag = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
     if (dragEndTimeoutRef.current) {
       clearTimeout(dragEndTimeoutRef.current);
     }
 
-    // If momentum starts, this pending commit is canceled and only the final resting item is applied.
+    // 80ms 뒤에 실행, 관성 스크롤이 시작되면 취소됨
     dragEndTimeoutRef.current = setTimeout(() => {
       handleScrollEnd(event);
       dragEndTimeoutRef.current = null;
     }, 80);
   };
 
+  // 관성 스크롤 시작될 때 호출
   const handleMomentumScrollBegin = () => {
+    // 예약해둔 타이머 취소
     if (dragEndTimeoutRef.current) {
       clearTimeout(dragEndTimeoutRef.current);
       dragEndTimeoutRef.current = null;
     }
   };
 
+  // 관성 스크롤 끝났을 때 호출
   const handleMomentumScrollEnd = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+    // 예약해둔 타이머 취소
     if (dragEndTimeoutRef.current) {
       clearTimeout(dragEndTimeoutRef.current);
       dragEndTimeoutRef.current = null;
     }
 
+    // 확정 호출
     handleScrollEnd(event);
   };
 
+  // 초기 위치 활성화
+  useEffect(() => {
+    const selectedIndex = Math.max(
+      items.findIndex((it) => it === value),
+      0,
+    );
+    const offset = selectedIndex * itemHeight;
+
+    requestAnimationFrame(() => {
+      listRef.current?.scrollToOffset({ offset, animated: false });
+    });
+  }, [itemHeight, items, value]);
+
+  useEffect(() => {
+    return () => {
+      if (dragEndTimeoutRef.current) {
+        clearTimeout(dragEndTimeoutRef.current);
+      }
+    };
+  }, []);
+
   return (
-    <View style={[styles.container, { height: pickerHeight }]}>
+    <View style={[styles.container, { height: pickerHeight, paddingRight: suffix ? 24 : 0 }]}>
       {suffix ? (
         <View
-          pointerEvents="none"
           style={[
-            styles.suffixOverlay,
+            styles.suffixContent,
             {
               top: verticalPadding,
               height: itemHeight,
-              width: contentWidth,
+              left: itemWidth,
             },
-          ]}>
-          <View style={styles.overlayContent}>
-            <View style={{ width: valueWidth }} />
-            <MDText style={styles.suffix} type="bodyRegular" color={colors.text.normal}>
-              {suffix}
-            </MDText>
-          </View>
+          ]}
+          pointerEvents="none">
+          <MDText style={styles.suffix} type="bodySemiBold">
+            {suffix}
+          </MDText>
         </View>
       ) : null}
 
       <FlatList
         ref={listRef}
+        style={styles.list}
         data={items}
         keyExtractor={(item) => String(item)}
-        style={styles.list}
         showsVerticalScrollIndicator={false}
         snapToInterval={itemHeight}
         snapToAlignment="start"
@@ -128,21 +133,13 @@ export function WheelPicker({ items, value, suffix, itemHeight, pickerHeight, on
           const isSelected = item === value;
 
           return (
-            <View style={[styles.item, { height: itemHeight, width: contentWidth }]}>
+            <View style={[styles.item, { height: itemHeight, width: itemWidth }]}>
               <MDText
                 style={[styles.value, { width: valueWidth }]}
                 type={isSelected ? 'bodySemiBold' : 'bodyRegular'}
                 color={isSelected ? colors.text.normal : colors.text.alternative}>
                 {item}
               </MDText>
-              {suffix ? (
-                <MDText
-                  style={[styles.suffix, styles.placeholderSuffix]}
-                  type="bodyRegular"
-                  color={colors.text.normal}>
-                  {suffix}
-                </MDText>
-              ) : null}
             </View>
           );
         }}
@@ -151,39 +148,30 @@ export function WheelPicker({ items, value, suffix, itemHeight, pickerHeight, on
   );
 }
 
-const styles = StyleSheet.create({
+const PickerStyles = StyleSheet.create({
   container: {
-    flex: 1,
     alignItems: 'center',
   },
   list: {
     flex: 1,
     width: '100%',
   },
-  item: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  overlayContent: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  suffixOverlay: {
+  suffixContent: {
     position: 'absolute',
     alignSelf: 'center',
     justifyContent: 'center',
     zIndex: 1,
   },
+  suffix: {
+    marginLeft: 4,
+  },
   value: {
     textAlign: 'right',
     fontVariant: ['tabular-nums'],
   },
-  suffix: {
-    marginLeft: 4,
-  },
-  placeholderSuffix: {
-    opacity: 0,
+  item: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });

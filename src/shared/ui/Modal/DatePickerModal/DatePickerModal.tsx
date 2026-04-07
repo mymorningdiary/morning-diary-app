@@ -4,17 +4,17 @@ import { Modal, Pressable, StyleSheet, useWindowDimensions, View } from 'react-n
 
 import { MDColorsType, useThemeColor } from '@shared/lib/theme';
 import { MDButton } from '@shared/ui/Button';
-import { MDText } from '@shared/ui/Text';
-import { WheelPicker } from './WheelPicker';
+import { WheelPicker } from '../../Picker/WheelPicker';
 
 const PICKER_ITEM_HEIGHT = 48;
-const PICKER_VISIBLE_COUNT = 5;
+const PICKER_VISIBLE_COUNT = 3;
 const PICKER_HEIGHT = PICKER_ITEM_HEIGHT * PICKER_VISIBLE_COUNT;
+
+const MIN_YEAR = 2025;
 
 interface Props {
   visible: boolean;
   date: string;
-
   onClose: () => void;
   onConfirm: (date: string) => void;
 }
@@ -29,19 +29,16 @@ export function DatePickerModal({ visible, date, onClose, onConfirm }: Props) {
   const { width } = useWindowDimensions();
   const styles = ModalStyles({ colors, width });
 
-  const parsedDate = dayjs(date);
-  const parsedYear = parsedDate.year();
-  const parsedMonth = parsedDate.month() + 1;
-  const minYear = parsedYear - 100;
-  const maxYear = parsedYear + 10;
-  const initialYear = Math.min(Math.max(parsedYear, minYear), maxYear);
+  const currentYear = dayjs(date).year();
+  const maxYear = currentYear + 10;
+  const currentMonth = dayjs(date).month() + 1;
 
   const [currentDate, setCurrentDate] = useState<YearMonth>({
-    year: initialYear,
-    month: parsedMonth,
+    year: currentYear,
+    month: currentMonth,
   });
 
-  const years = Array.from({ length: maxYear - minYear + 1 }, (_, index) => minYear + index);
+  const years = Array.from({ length: maxYear - MIN_YEAR + 1 }, (_, index) => MIN_YEAR + index);
   const months = Array.from({ length: 12 }, (_, index) => index + 1);
 
   const handleYearChange = (year: number) => {
@@ -60,16 +57,16 @@ export function DatePickerModal({ visible, date, onClose, onConfirm }: Props) {
     if (!visible) return;
 
     setCurrentDate((prev) => {
-      if (prev.year === initialYear && prev.month === parsedMonth) {
+      if (prev.year === currentYear && prev.month === currentMonth) {
         return prev;
       }
 
       return {
-        year: initialYear,
-        month: parsedMonth,
+        year: currentYear,
+        month: currentMonth,
       };
     });
-  }, [visible, initialYear, parsedMonth]);
+  }, [visible, currentYear, currentMonth]);
 
   return (
     <Modal animationType="fade" transparent visible={visible} onRequestClose={onClose}>
@@ -77,21 +74,7 @@ export function DatePickerModal({ visible, date, onClose, onConfirm }: Props) {
         <Pressable style={StyleSheet.absoluteFill} onPress={onClose} />
 
         <View style={styles.container}>
-          <MDText type="titleSemiBold" align="center">
-            {`${currentDate.year}년 ${currentDate.month}월`}
-          </MDText>
-
           <View style={styles.wheelContent}>
-            <View
-              pointerEvents="none"
-              style={[
-                styles.selectionOverlay,
-                {
-                  top: (PICKER_HEIGHT - PICKER_ITEM_HEIGHT) / 2,
-                  height: PICKER_ITEM_HEIGHT,
-                },
-              ]}
-            />
             <WheelPicker
               items={years}
               value={currentDate.year}
@@ -141,7 +124,7 @@ const ModalStyles = ({ colors, width }: { colors: MDColorsType; width: number })
       paddingHorizontal: 16,
     },
     container: {
-      width: Math.min(width - 32, 360),
+      width: Math.min(width - 80, 360),
       backgroundColor: colors.background.normal,
       borderRadius: 24,
       paddingHorizontal: 20,
@@ -153,18 +136,9 @@ const ModalStyles = ({ colors, width }: { colors: MDColorsType; width: number })
       gap: 8,
     },
     wheelContent: {
-      position: 'relative',
       flexDirection: 'row',
-      gap: 6,
-    },
-    selectionOverlay: {
-      position: 'absolute',
-      left: 0,
-      right: 0,
-      borderRadius: 14,
-      borderWidth: 1,
-      backgroundColor: colors.fill.alternative,
-      borderColor: colors.line.normal,
+      justifyContent: 'center',
+      gap: 24,
     },
     buttonContent: {
       flexDirection: 'row',

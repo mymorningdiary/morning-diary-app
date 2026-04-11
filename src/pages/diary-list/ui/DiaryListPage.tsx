@@ -1,14 +1,21 @@
 import dayjs from 'dayjs';
-import { useState } from 'react';
-import { ActivityIndicator, FlatList, StyleSheet, View } from 'react-native';
+import React, { useState } from 'react';
+import {
+  ActivityIndicator,
+  SectionList,
+  SectionListRenderItem,
+  StyleSheet,
+  View,
+} from 'react-native';
 
 import type { Diary } from '@entities/diary';
-import { useGetDiaries } from '@entities/diary';
 import { DiaryPreviewCard } from '@features/diary';
 import { useThemeColor } from '@shared/lib/theme';
 import { MDPage } from '@shared/ui/Layout';
+import { DiaryListSection, useDiaryList } from '../model/useDiaryList';
 import { DiaryListEmpty } from './DiaryListEmpty';
 import { DiaryListHeader } from './DiaryListHeader';
+import { DiaryListSectionHeader } from './DiaryListSectionHeader';
 
 export function DiaryListPage() {
   const colors = useThemeColor();
@@ -16,10 +23,9 @@ export function DiaryListPage() {
 
   const [currentDate, setCurrentDate] = useState(dayjs().format('YYYY-MM-DD'));
   const currentMonth = dayjs(currentDate).format('YYYY-MM');
-  const { diary, isError, isLoading } = useGetDiaries(currentMonth);
-  const diaries = diary?.diaryInfos ?? [];
+  const { sections, isLoading, isError } = useDiaryList(currentMonth);
 
-  const renderDiary = ({ item }: { item: Diary }) => (
+  const renderDiary: SectionListRenderItem<Diary, DiaryListSection> = ({ item }) => (
     <DiaryPreviewCard
       emotion={item.emotionScore}
       title={item.title}
@@ -28,7 +34,6 @@ export function DiaryListPage() {
       titleLines={1}
     />
   );
-
   const renderEmpty = () => (
     <View style={styles.emptyContent}>
       {isLoading ? (
@@ -44,14 +49,17 @@ export function DiaryListPage() {
   return (
     <MDPage style={styles.container}>
       <DiaryListHeader date={currentDate} onDateChange={setCurrentDate} />
-      <FlatList
+      <SectionList
         contentContainerStyle={[
           styles.listContent,
-          diaries.length === 0 && styles.emptyListContent,
+          sections.length === 0 && styles.emptyListContent,
         ]}
-        data={diaries}
+        sections={sections}
         renderItem={renderDiary}
-        keyExtractor={(item) => String(item.diaryId)}
+        renderSectionHeader={({ section }) => (
+          <DiaryListSectionHeader isFirst={section.index == 0} title={section.title} />
+        )}
+        keyExtractor={(item) => `${item.diaryId}`}
         ItemSeparatorComponent={() => <View style={styles.itemSeparator} />}
         ListEmptyComponent={renderEmpty}
         showsVerticalScrollIndicator={false}

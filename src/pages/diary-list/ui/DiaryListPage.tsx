@@ -7,9 +7,8 @@ import { useGetDiaries } from '@entities/diary';
 import { DiaryPreviewCard } from '@features/diary';
 import { useThemeColor } from '@shared/lib/theme';
 import { MDPage } from '@shared/ui/Layout';
-import { MDText } from '@shared/ui/Text';
-import { DiaryListHeader } from './DiaryListHeader';
 import { DiaryListEmpty } from './DiaryListEmpty';
+import { DiaryListHeader } from './DiaryListHeader';
 
 export function DiaryListPage() {
   const colors = useThemeColor();
@@ -35,7 +34,9 @@ export function DiaryListPage() {
       {isLoading ? (
         <ActivityIndicator color={colors.primary.normal} />
       ) : (
-        <DiaryListEmpty text={isError ? '일기 목록을 불러오지 못했어요' : '작성된 일기가 없어요'} />
+        <DiaryListEmpty
+          text={isError ? '일기 목록을 불러오지 못했어요' : '작성된 아침일기가 없어요'}
+        />
       )}
     </View>
   );

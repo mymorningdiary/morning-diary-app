@@ -1,9 +1,9 @@
 import { StyleSheet, View } from 'react-native';
 import { Image } from 'expo-image';
 
-import { MDText } from '@shared/ui/Text';
+import { MDText, SpeechBubble } from '@shared/ui/Text';
 import { useThemeColor } from '@shared/lib/theme';
-import { ImgOnboarding1 } from '@assets/images';
+import { ImgBook } from '@assets/images';
 
 export function OnboardingSlide1() {
   const colors = useThemeColor();
@@ -11,7 +11,10 @@ export function OnboardingSlide1() {
 
   return (
     <View style={styles.container}>
-      <Image style={styles.image} source={ImgOnboarding1} contentFit="contain" />
+      <View style={styles.imageContent}>
+        <SpeechBubble text="의식의 흐름" />
+        <Image style={styles.image} source={ImgBook} contentFit="contain" />
+      </View>
 
       <View style={styles.textContent}>
         <MDText type="titleSemiBold" color={colors.text.brand} align="center">
@@ -36,6 +39,11 @@ const SlideStyles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     gap: 40,
+  },
+  imageContent: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
   },
   image: {
     width: 160,

@@ -9,6 +9,7 @@ import { useThemeColor } from '@shared/lib/theme';
 import { MDPage } from '@shared/ui/Layout';
 import { MDText } from '@shared/ui/Text';
 import { DiaryListHeader } from './DiaryListHeader';
+import { DiaryListEmpty } from './DiaryListEmpty';
 
 export function DiaryListPage() {
   const colors = useThemeColor();
@@ -34,15 +35,14 @@ export function DiaryListPage() {
       {isLoading ? (
         <ActivityIndicator color={colors.primary.normal} />
       ) : (
-        <MDText type="labelRegular" color={colors.text.alternative} align="center">
-          {isError ? '일기 목록을 불러오지 못했어요' : '작성된 일기가 없어요'}
-        </MDText>
+        <DiaryListEmpty text={isError ? '일기 목록을 불러오지 못했어요' : '작성된 일기가 없어요'} />
       )}
     </View>
   );
 
   return (
     <MDPage style={styles.container}>
+      <DiaryListHeader date={currentDate} onDateChange={setCurrentDate} />
       <FlatList
         contentContainerStyle={[
           styles.listContent,
@@ -52,9 +52,6 @@ export function DiaryListPage() {
         renderItem={renderDiary}
         keyExtractor={(item) => String(item.diaryId)}
         ItemSeparatorComponent={() => <View style={styles.itemSeparator} />}
-        ListHeaderComponent={() => (
-          <DiaryListHeader date={currentDate} onDateChange={setCurrentDate} />
-        )}
         ListEmptyComponent={renderEmpty}
         showsVerticalScrollIndicator={false}
         overScrollMode="never"
@@ -71,7 +68,6 @@ const PageStyles = StyleSheet.create({
   listContent: {
     flexGrow: 1,
     paddingHorizontal: 16,
-    paddingTop: 16,
   },
   emptyListContent: {
     justifyContent: 'center',

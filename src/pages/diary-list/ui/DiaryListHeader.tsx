@@ -8,7 +8,7 @@ interface Props {
 
 export function DiaryListHeader({ date, onDateChange }: Props) {
   return (
-    <View style={{ paddingBottom: 16 }}>
+    <View style={{ padding: 16 }}>
       <DatePicker date={date} onDateChange={onDateChange} />
     </View>
   );

@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 
 import { IconPen, IconTrash } from '@assets/icons';
-import { useDeleteDiary, useReadDiary } from '@entities/diary';
+import { useDeleteDiary, useGetDiary } from '@entities/diary';
 import { useForeground } from '@shared/lib/app-state';
 import { parseNumberParam } from '@shared/lib/router';
 import { MDAppBar } from '@shared/ui/AppBar';
@@ -26,7 +26,7 @@ export function ReadDiaryPage() {
   const [now, setNow] = useState(() => dayjs());
   const isToday = diaryDate != null && diaryDate.isValid() && diaryDate.isSame(now, 'day');
 
-  const { diary } = useReadDiary(diaryId);
+  const { diary } = useGetDiary(diaryId);
   const { deleteDiary, isPending } = useDeleteDiary({
     onSuccess: () => router.back(),
     onError: (message) => useToastStore.getState().show({ type: 'error', message }),

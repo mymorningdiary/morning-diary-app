@@ -41,7 +41,7 @@ export function HomePage() {
       />
 
       <View style={{ flexDirection: 'row', paddingHorizontal: 12, gap: 12 }}>
-        <WeeklyEmotionCard style={{ flex: 1 }} emotion={21} />
+        <WeeklyEmotionCard style={{ flex: 1 }} emotion={weeklyEmotion} />
         <WeeklyReportCard style={{ flex: 1 }} goal={3} count={2} />
       </View>
 

@@ -1,10 +1,10 @@
 import { useQuery } from '@tanstack/react-query';
-import { getDiaryById } from '../api/get-diaries';
+import { getDiary } from '../api/get-diary';
 
-export function useReadDiary(diaryId?: number) {
+export function useGetDiary(diaryId?: number) {
   const { data, error, isError, isLoading } = useQuery({
     queryKey: ['diary', diaryId],
-    queryFn: () => getDiaryById(diaryId as number),
+    queryFn: () => getDiary(diaryId as number),
     enabled: diaryId != null,
   });
 

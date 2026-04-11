@@ -1,4 +1,3 @@
-import dayjs from 'dayjs';
 import { useEffect, useState } from 'react';
 import { Modal, Pressable, StyleSheet, useWindowDimensions, View } from 'react-native';
 
@@ -10,63 +9,78 @@ const PICKER_ITEM_HEIGHT = 48;
 const PICKER_VISIBLE_COUNT = 3;
 const PICKER_HEIGHT = PICKER_ITEM_HEIGHT * PICKER_VISIBLE_COUNT;
 
-const MIN_YEAR = 2025;
+const DEFAULT_MINUTE_INTERVAL = 5;
+
+const hours = Array.from({ length: 24 }, (_, index) => index);
+
+const createMinutes = (minuteInterval: number) => {
+  const interval = Math.min(Math.max(Math.floor(minuteInterval), 1), 60);
+  const minutes: number[] = [];
+
+  for (let minute = 0; minute < 60; minute += interval) {
+    minutes.push(minute);
+  }
+
+  return minutes;
+};
+
+interface Time {
+  hour: number;
+  minute: number;
+}
 
 interface Props {
   visible: boolean;
-  date: string;
+  time: Time;
+  minuteInterval?: number;
   onClose: () => void;
-  onConfirm: (date: string) => void;
+  onConfirm: (time: Time) => void;
 }
 
-interface YearMonth {
-  year: number;
-  month: number;
-}
-
-export function DatePickerModal({ visible, date, onClose, onConfirm }: Props) {
+export function TimePickerModal({
+  visible,
+  time,
+  minuteInterval = DEFAULT_MINUTE_INTERVAL,
+  onClose,
+  onConfirm,
+}: Props) {
   const colors = useThemeColor();
   const { width } = useWindowDimensions();
   const styles = ModalStyles({ colors, width });
 
-  const currentYear = dayjs(date).year();
-  const maxYear = currentYear + 10;
-  const currentMonth = dayjs(date).month() + 1;
+  const minutes = createMinutes(minuteInterval);
 
-  const [currentDate, setCurrentDate] = useState<YearMonth>({
-    year: currentYear,
-    month: currentMonth,
+  const [currentTime, setCurrentTime] = useState<Time>({
+    hour: time.hour,
+    minute: time.minute,
   });
 
-  const years = Array.from({ length: maxYear - MIN_YEAR + 1 }, (_, index) => MIN_YEAR + index);
-  const months = Array.from({ length: 12 }, (_, index) => index + 1);
-
-  const handleYearChange = (year: number) => {
-    setCurrentDate((prev) => ({ ...prev, year }));
+  const handleHourChange = (hour: number) => {
+    setCurrentTime((prev) => ({ ...prev, hour }));
   };
 
-  const handleMonthChange = (month: number) => {
-    setCurrentDate((prev) => ({ ...prev, month }));
+  const handleMinuteChange = (minute: number) => {
+    setCurrentTime((prev) => ({ ...prev, minute }));
   };
 
   const handleConfirm = () => {
-    onConfirm(dayjs(`${currentDate.year}-${currentDate.month}-01`).format('YYYY-MM-DD'));
+    onConfirm(currentTime);
   };
 
   useEffect(() => {
     if (!visible) return;
 
-    setCurrentDate((prev) => {
-      if (prev.year === currentYear && prev.month === currentMonth) {
+    setCurrentTime((prev) => {
+      if (prev.hour === time.hour && prev.minute === time.minute) {
         return prev;
       }
 
       return {
-        year: currentYear,
-        month: currentMonth,
+        hour: time.hour,
+        minute: time.minute,
       };
     });
-  }, [visible, currentYear, currentMonth]);
+  }, [visible, time]);
 
   return (
     <Modal animationType="fade" transparent visible={visible} onRequestClose={onClose}>
@@ -76,18 +90,18 @@ export function DatePickerModal({ visible, date, onClose, onConfirm }: Props) {
         <View style={styles.container}>
           <View style={styles.wheelContent}>
             <WheelPicker
-              items={years}
-              value={currentDate.year}
-              suffix="년"
-              onChange={handleYearChange}
+              items={hours}
+              value={currentTime.hour}
+              suffix="시"
+              onChange={handleHourChange}
               itemHeight={PICKER_ITEM_HEIGHT}
               pickerHeight={PICKER_HEIGHT}
             />
             <WheelPicker
-              items={months}
-              value={currentDate.month}
-              suffix="월"
-              onChange={handleMonthChange}
+              items={minutes}
+              value={currentTime.minute}
+              suffix="분"
+              onChange={handleMinuteChange}
               itemHeight={PICKER_ITEM_HEIGHT}
               pickerHeight={PICKER_HEIGHT}
             />

@@ -27,6 +27,7 @@ export function DiaryListPage() {
 
   const renderDiary: SectionListRenderItem<Diary, DiaryListSection> = ({ item }) => (
     <DiaryPreviewCard
+      diaryId={item.diaryId}
       emotion={item.emotionScore}
       title={item.title}
       date={item.writtenDate}
@@ -34,6 +35,7 @@ export function DiaryListPage() {
       titleLines={1}
     />
   );
+
   const renderEmpty = () => (
     <View style={styles.emptyContent}>
       {isLoading ? (

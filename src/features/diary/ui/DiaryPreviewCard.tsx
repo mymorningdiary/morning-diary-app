@@ -1,11 +1,13 @@
-import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
+import { Pressable, StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
 import dayjs from 'dayjs';
 import { MDColorsType, useThemeColor } from '@shared/lib/theme';
 import { MDText } from '@shared/ui/Text';
 import { EmotionImage } from '@shared/ui/Image';
+import { router } from 'expo-router';
 
 interface Props {
   style?: StyleProp<ViewStyle>;
+  diaryId?: number;
   title?: string | null;
   content?: string;
   date?: string;
@@ -13,14 +15,34 @@ interface Props {
   titleLines?: number;
 }
 
-export function DiaryPreviewCard({ style, title, content, date, emotion, titleLines }: Props) {
+export function DiaryPreviewCard({
+  style,
+  diaryId,
+  title,
+  content,
+  date,
+  emotion,
+  titleLines,
+}: Props) {
   const colors = useThemeColor();
   const styles = CardStyles({ colors });
 
   const formattedDate = date ? dayjs(date).locale('ko').format('D (dd)') : '';
 
+  const handlePress = () => {
+    if (!diaryId) return; // 쓴 일기가 없다면 pass
+
+    router.push({
+      pathname: '/diary-read',
+      params: {
+        date,
+        diaryId,
+      },
+    });
+  };
+
   return (
-    <View style={[styles.container, style]}>
+    <Pressable style={[styles.container, style]} onPress={handlePress}>
       <View style={styles.leftContent}>
         {emotion != null && <EmotionImage emotion={emotion} size={32} />}
         {formattedDate && (
@@ -49,7 +71,7 @@ export function DiaryPreviewCard({ style, title, content, date, emotion, titleLi
           </MDText>
         )}
       </View>
-    </View>
+    </Pressable>
   );
 }
 

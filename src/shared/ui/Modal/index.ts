@@ -1,2 +1,2 @@
 export { MDModal } from './MDModal';
-export { DatePickerModal } from './DatePickerModal/DatePickerModal';
+export { DatePickerModal } from './DatePickerModal';

@@ -4,7 +4,7 @@ import { Modal, Pressable, StyleSheet, useWindowDimensions, View } from 'react-n
 
 import { MDColorsType, useThemeColor } from '@shared/lib/theme';
 import { MDButton } from '@shared/ui/Button';
-import { WheelPicker } from '../../Picker/WheelPicker';
+import { WheelPicker } from '../Picker/WheelPicker';
 
 const PICKER_ITEM_HEIGHT = 48;
 const PICKER_VISIBLE_COUNT = 3;

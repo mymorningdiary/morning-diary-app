@@ -1,28 +1,25 @@
-import { useEffect, useState } from 'react';
-import { StyleSheet, useWindowDimensions, View } from 'react-native';
-import { router, useLocalSearchParams } from 'expo-router';
 import dayjs from 'dayjs';
-import { TimerPickerModal } from 'react-native-timer-picker';
+import { router, useLocalSearchParams } from 'expo-router';
+import { useEffect, useState } from 'react';
+import { StyleSheet, View } from 'react-native';
 
-import { useNotification, useNotificationTime } from '@features/notification';
 import { NotificationTime } from '@entities/notification';
 import { useUpdateNotificationTime } from '@entities/user';
+import { useNotification, useNotificationTime } from '@features/notification';
+import { useForeground } from '@shared/lib/app-state';
 import { useThemeColor } from '@shared/lib/theme';
 import { useToastStore } from '@shared/lib/toast';
 import { MDAppBar } from '@shared/ui/AppBar';
 import { MDButton } from '@shared/ui/Button';
 import { MDPage } from '@shared/ui/Layout';
 import { MDText, SpeechSun } from '@shared/ui/Text';
-import { useForeground } from '@shared/lib/app-state';
 
+import { TimePickerModal } from '@shared/ui/Modal';
 import { NotificationTimeButton } from './NotificationTimeButton';
-
-const TIME_PICKER_MINUTES_INTERVAL = 5;
 
 export function NotificationPage() {
   const colors = useThemeColor();
   const styles = PageStyles;
-  const { width } = useWindowDimensions();
 
   const { isExistUser } = useLocalSearchParams<{ isExistUser?: 'true' | 'false' }>();
 
@@ -52,8 +49,8 @@ export function NotificationPage() {
   const handleCompletePress = () => {
     if (isPending) return;
 
-    const { hours, minutes } = currentTime;
-    const alarmTime = dayjs().hour(hours).minute(minutes).second(0).format('HH:mm:ss');
+    const { hour, minute } = currentTime;
+    const alarmTime = dayjs().hour(hour).minute(minute).second(0).format('HH:mm:ss');
     updateNotificationTime({ alarmTime });
   };
 
@@ -107,27 +104,11 @@ export function NotificationPage() {
         onPress={handleCompletePress}
       />
 
-      <TimerPickerModal
-        styles={{
-          container: { width: width * 0.8 },
-          confirmButton: {
-            borderColor: colors.primary.normal,
-            color: colors.primary.normal,
-          },
-        }}
-        initialValue={currentTime}
+      <TimePickerModal
         visible={showTimePicker}
-        hideSeconds
-        confirmButtonText="완료"
-        cancelButtonText="취소"
-        padHoursWithZero
-        hourLabel="시"
-        minuteLabel="분"
-        closeOnOverlayPress
-        minuteInterval={TIME_PICKER_MINUTES_INTERVAL}
-        setIsVisible={setShowTimePicker}
+        time={currentTime}
+        onClose={() => setShowTimePicker(false)}
         onConfirm={handleTimeConfirm}
-        onCancel={() => setShowTimePicker(false)}
       />
     </MDPage>
   );

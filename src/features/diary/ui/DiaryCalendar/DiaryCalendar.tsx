@@ -1,12 +1,11 @@
-import { StyleSheet } from 'react-native';
-import { Calendar, DateData, LocaleConfig } from 'react-native-calendars';
 import dayjs from 'dayjs';
+import { Calendar, DateData, LocaleConfig } from 'react-native-calendars';
 
-import { MDColorsType, MDFonts, useThemeColor } from '@shared/lib/theme';
+import { MDFonts, useThemeColor } from '@shared/lib/theme';
 
-import { DiaryCalendarDay } from './DiaryCalendarDay';
-import { DiaryCalendarHeader } from './DiaryCalendarHeader';
+import { DatePicker } from '@shared/ui/Picker';
 import { MarkedDates } from '../../model/types';
+import { DiaryCalendarDay } from './DiaryCalendarDay';
 
 LocaleConfig.defaultLocale = 'kr';
 
@@ -91,9 +90,7 @@ export function DiaryCalendar({
       initialDate={date}
       firstDay={1}
       markedDates={markedDates ?? {}}
-      renderHeader={() => (
-        <DiaryCalendarHeader date={date} onDateChange={onDateChange} onPress={onHeaderPress} />
-      )}
+      renderHeader={() => <DatePicker date={date} onDateChange={onDateChange} />}
       dayComponent={(props) => {
         // console.log(props);
         return (

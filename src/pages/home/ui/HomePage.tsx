@@ -17,7 +17,6 @@ export function HomePage() {
   const currentMonth = dayjs(currentDate).format('YYYY-MM');
 
   const { markedDates, weeklyEmotion, getDiaryId } = useHome({ date: currentMonth });
-  const [showDatePicker, setShowDatePicker] = useState(false);
 
   const handleDayPress = (date?: string) => {
     const diaryId = getDiaryId(date);
@@ -32,11 +31,6 @@ export function HomePage() {
     });
   };
 
-  const handleDateConfirm = (date: string) => {
-    setShowDatePicker(false);
-    setCurrentDate(date);
-  };
-
   return (
     <MDPage style={styles.container}>
       <DiaryCalendar
@@ -44,7 +38,6 @@ export function HomePage() {
         markedDates={markedDates}
         onDateChange={setCurrentDate}
         onDayPress={handleDayPress}
-        onHeaderPress={() => setShowDatePicker(true)}
       />
 
       <View style={{ flexDirection: 'row', paddingHorizontal: 12, gap: 12 }}>
@@ -61,13 +54,6 @@ export function HomePage() {
             },
           });
         }}
-      />
-
-      <DatePickerModal
-        date={currentDate}
-        visible={showDatePicker}
-        onClose={() => setShowDatePicker(false)}
-        onConfirm={handleDateConfirm}
       />
     </MDPage>
   );

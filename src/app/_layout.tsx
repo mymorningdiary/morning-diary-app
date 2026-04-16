@@ -1,5 +1,6 @@
-import { SplashScreen, Stack } from 'expo-router';
 import { useEffect, useState } from 'react';
+import { SplashScreen, Stack } from 'expo-router';
+import { StatusBar } from 'expo-status-bar';
 
 import { ForceUpdatePage } from '@pages/force-update';
 import { useVisit } from '@features/onboarding';
@@ -57,6 +58,7 @@ function AppRouter() {
 
   return (
     <>
+      <StatusBar style="dark" />
       <Stack screenOptions={{ headerShown: false }}>
         <Stack.Protected guard={isFirstVisit !== false}>
           <Stack.Screen name="onboarding" />

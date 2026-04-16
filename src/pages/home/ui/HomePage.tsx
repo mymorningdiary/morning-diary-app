@@ -1,14 +1,13 @@
+import dayjs from 'dayjs';
+import { router } from 'expo-router';
 import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { router } from 'expo-router';
-import dayjs from 'dayjs';
 
 import { DiaryCalendar, WriteDiaryButton } from '@features/diary';
 import { useHome } from '@features/home';
 import { MDPage } from '@shared/ui/Layout';
 import { WeeklyEmotionCard } from './WeeklyEmotionCard';
 import { WeeklyReportCard } from './WeeklyReportCard';
-import { DatePickerModal } from '@shared/ui/Modal';
 
 export function HomePage() {
   const styles = PageStyles;

@@ -1,9 +1,9 @@
 import { authInstance } from '@shared/api/client';
 import { ApiResponse } from '@shared/api/types';
-import { WeeklyDiaries } from '../model/types';
+import { Diaries } from '../model/types';
 
 interface GetDiariesResponse {
-  weeks: WeeklyDiaries[];
+  weeks: Diaries[];
 }
 
 export const getDiaries = async (date: string): Promise<ApiResponse<GetDiariesResponse>> => {

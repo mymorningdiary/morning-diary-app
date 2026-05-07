@@ -4,7 +4,7 @@ import { useRef, useState } from 'react';
 import { Pressable, StyleSheet, TextInput } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
-import { useReadDiary, useUpdateDiary } from '@entities/diary';
+import { useGetDiary, useUpdateDiary } from '@entities/diary';
 import { selectTextGoal, useTextGoals } from '@entities/text-goal';
 import { useUser } from '@entities/user';
 import {
@@ -34,7 +34,7 @@ export function UpdateDiaryPage() {
 
   const formattedDate = diaryDate?.locale('ko').format('M월 D일 (ddd)') ?? '';
 
-  const { diary } = useReadDiary(diaryId);
+  const { diary } = useGetDiary(diaryId);
 
   const { user } = useUser();
   const { textGoals } = useTextGoals();
@@ -89,7 +89,7 @@ export function UpdateDiaryPage() {
                 variant="ghost"
                 size="small"
                 label="완료"
-                disabled={currentTextLen == 0}
+                disabled={currentTextLen === 0}
                 onPress={handleSubmit}
               />
             }

@@ -3,19 +3,21 @@ import React, { useState } from 'react';
 import {
   ActivityIndicator,
   SectionList,
+  SectionListData,
   SectionListRenderItem,
   StyleSheet,
   View,
 } from 'react-native';
 
-import type { Diary } from '@entities/diary';
-import { DiaryPreviewCard } from '@features/diary';
 import { useThemeColor } from '@shared/lib/theme';
 import { MDPage } from '@shared/ui/Layout';
-import { DiaryListSection, useDiaryList } from '../model/useDiaryList';
-import { DiaryListEmpty } from './DiaryListEmpty';
 import { DiaryListHeader } from './DiaryListHeader';
-import { DiaryListSectionHeader } from './DiaryListSectionHeader';
+import { useDiaryWeeklySections } from '../model/useDiaryWeeklySections';
+import { DiaryWeeklySectionHeader } from './DiaryWeeklySectionHeader';
+import { DiaryListEmpty } from './DiaryListEmpty';
+import { DiaryWeeklySection, DiaryWeeklySectionItem } from '../model/types';
+import { DiaryWeeklyReportItem } from './DiaryListWeeklyReportItem';
+import { DiaryListWeeklyDiaryItem } from './DiaryListWeeklyDiaryItem';
 
 export function DiaryListPage() {
   const colors = useThemeColor();
@@ -23,22 +25,35 @@ export function DiaryListPage() {
 
   const [currentDate, setCurrentDate] = useState(dayjs().format('YYYY-MM-DD'));
   const currentMonth = dayjs(currentDate).format('YYYY-MM');
-  const { sections, isLoading, isError } = useDiaryList(currentMonth);
+  const { sections, isPending, isError } = useDiaryWeeklySections(currentMonth);
 
-  const renderDiary: SectionListRenderItem<Diary, DiaryListSection> = ({ item }) => (
-    <DiaryPreviewCard
-      diaryId={item.diaryId}
-      emotion={item.emotionScore}
-      title={item.title}
-      date={item.writtenDate}
-      content={item.previewContent}
-      titleLines={1}
-    />
-  );
+  const renderSectionHeader = ({
+    section,
+  }: {
+    section: SectionListData<DiaryWeeklySectionItem, DiaryWeeklySection>;
+  }) => <DiaryWeeklySectionHeader title={section.title} />;
+
+  const renderItem: SectionListRenderItem<DiaryWeeklySectionItem, DiaryWeeklySection> = ({
+    item,
+  }) => {
+    if ('weeklyReportId' in item) {
+      return <DiaryWeeklyReportItem weeklyReportId={item.weeklyReportId} title={item.title} />;
+    }
+
+    return <DiaryListWeeklyDiaryItem diary={item} />;
+  };
+
+  const keyExtractor = (item: DiaryWeeklySectionItem) => {
+    if ('weeklyReportId' in item) {
+      return `weekly-report-${item.weeklyReportId}`;
+    }
+
+    return `diary-${item.diaryId}`;
+  };
 
   const renderEmpty = () => (
     <View style={styles.emptyContent}>
-      {isLoading ? (
+      {isPending ? (
         <ActivityIndicator color={colors.primary.normal} />
       ) : (
         <DiaryListEmpty
@@ -57,11 +72,10 @@ export function DiaryListPage() {
           sections.length === 0 && styles.emptyListContent,
         ]}
         sections={sections}
-        renderItem={renderDiary}
-        renderSectionHeader={({ section }) => (
-          <DiaryListSectionHeader isFirst={section.index == 0} title={section.title} />
-        )}
-        keyExtractor={(item) => `${item.diaryId}`}
+        keyExtractor={keyExtractor}
+        renderItem={renderItem}
+        renderSectionHeader={renderSectionHeader}
+        renderSectionFooter={() => <View style={styles.sectionSeparator} />}
         ItemSeparatorComponent={() => <View style={styles.itemSeparator} />}
         ListEmptyComponent={renderEmpty}
         showsVerticalScrollIndicator={false}
@@ -78,7 +92,6 @@ const PageStyles = StyleSheet.create({
   },
   listContent: {
     flexGrow: 1,
-    paddingHorizontal: 16,
   },
   emptyListContent: {
     justifyContent: 'center',
@@ -86,6 +99,9 @@ const PageStyles = StyleSheet.create({
   emptyContent: {
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  sectionSeparator: {
+    height: 24,
   },
   itemSeparator: {
     height: 12,

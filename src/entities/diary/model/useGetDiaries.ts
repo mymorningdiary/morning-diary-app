@@ -4,7 +4,7 @@ import { getDiaries } from '../api/get-diaries';
 export function useGetDiaries(date?: string) {
   const enabled = date != null && date.trim().length > 0;
 
-  const { data, error, isError, isLoading } = useQuery({
+  return useQuery({
     queryKey: ['diary', date ?? null],
     queryFn: () => {
       if (date == null || date.trim().length === 0) {
@@ -15,11 +15,4 @@ export function useGetDiaries(date?: string) {
     },
     enabled,
   });
-
-  return {
-    diary: data?.data ?? null,
-    error,
-    isError,
-    isLoading,
-  };
 }

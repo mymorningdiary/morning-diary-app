@@ -4,4 +4,4 @@ export { useGetDiaries } from './model/useGetDiaries';
 export { useDeleteDiary } from './model/useDeleteDiary';
 export { useUpdateDiary } from './model/useUpdateDiary';
 
-export type { Diary } from './model/types';
+export type { Diary, WeeklyReport, WeeklyDiaries } from './model/types';

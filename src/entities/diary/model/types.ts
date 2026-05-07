@@ -7,3 +7,15 @@ export interface Diary {
   title?: string | null;
   emotionScore?: number | null;
 }
+
+export interface WeeklyReport {
+  weeklyReportId: number;
+  title: string;
+}
+
+export interface WeeklyDiaries {
+  weekStartDate: string;
+  weekEndDate: string;
+  weeklyReport: WeeklyReport | null;
+  diaries: Diary[];
+}

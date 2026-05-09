@@ -1,7 +1,8 @@
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { Logger } from '@shared/lib/log';
 import { putUsersAlarmTime } from '../api/put-users-alarm-time';
+import { userQueryKeys } from './queryKeys';
 
 interface Options {
   onSuccess?: () => void;
@@ -9,10 +10,13 @@ interface Options {
 }
 
 export function useUpdateNotificationTime({ onSuccess, onError }: Options = {}) {
+  const queryClient = useQueryClient();
+
   const { mutateAsync, isPending } = useMutation({
     mutationFn: putUsersAlarmTime,
     onSuccess: (res) => {
       if (res.code === 2000) {
+        void queryClient.invalidateQueries({ queryKey: userQueryKeys.all });
         onSuccess?.();
       }
     },

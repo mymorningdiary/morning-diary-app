@@ -3,4 +3,5 @@ export interface User {
   textGoalId: number;
   email: string | null;
   loginType: string;
+  todayDiaryWritten: boolean;
 }

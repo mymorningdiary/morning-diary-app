@@ -2,9 +2,11 @@ import dayjs from 'dayjs';
 import { Redirect, router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
+import { useQueryClient } from '@tanstack/react-query';
 
 import { IconPen, IconTrash } from '@assets/icons';
 import { useDeleteDiary, useGetDiary } from '@entities/diary';
+import { userQueryKeys } from '@entities/user';
 import { useForeground } from '@shared/lib/app-state';
 import { parseNumberParam } from '@shared/lib/router';
 import { MDAppBar } from '@shared/ui/AppBar';
@@ -17,6 +19,7 @@ import { DiaryPreviewCard } from '@features/diary';
 
 export function ReadDiaryPage() {
   const styles = PageStyles;
+  const queryClient = useQueryClient();
 
   const params = useLocalSearchParams<{ date?: string; diaryId?: string }>();
   const diaryDate = params.date != null ? dayjs(params.date) : null;
@@ -28,7 +31,10 @@ export function ReadDiaryPage() {
 
   const { diary } = useGetDiary(diaryId);
   const { deleteDiary, isPending } = useDeleteDiary({
-    onSuccess: () => router.back(),
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: userQueryKeys.all });
+      router.back();
+    },
     onError: (message) => useToastStore.getState().show({ type: 'error', message }),
   });
 

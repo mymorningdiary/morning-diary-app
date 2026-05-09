@@ -1,6 +1,7 @@
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { deleteDiary } from '../api/delete-diaries';
 import { Logger } from '@shared/lib/log';
+import { userQueryKeys } from '../../user';
 
 interface Options {
   onSuccess?: () => void;
@@ -8,10 +9,13 @@ interface Options {
 }
 
 export function useDeleteDiary({ onSuccess, onError }: Options = {}) {
+  const queryClient = useQueryClient();
+
   const { mutateAsync, isPending } = useMutation({
     mutationFn: deleteDiary,
     onSuccess: (res) => {
       if (res.code === 2000) {
+        void queryClient.invalidateQueries({ queryKey: userQueryKeys.all });
         onSuccess?.();
       }
     },

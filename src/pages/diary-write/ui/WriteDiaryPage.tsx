@@ -3,11 +3,10 @@ import { Redirect, router, useLocalSearchParams } from 'expo-router';
 import { useRef, useState } from 'react';
 import { Pressable, StyleSheet, TextInput } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { useQueryClient } from '@tanstack/react-query';
 
 import { useWriteDiary } from '@entities/diary';
 import { selectTextGoal, useTextGoals } from '@entities/text-goal';
-import { userQueryKeys, useUser } from '@entities/user';
+import { useUser } from '@entities/user';
 import {
   DiaryAssistant,
   DiaryEditor,
@@ -26,7 +25,6 @@ import { TextGoalProgressBar } from '@shared/ui/ProgressBar';
 
 export function WriteDiaryPage() {
   const styles = PageStyles;
-  const queryClient = useQueryClient();
 
   const editorRef = useRef<TextInput>(null);
 
@@ -48,8 +46,6 @@ export function WriteDiaryPage() {
 
   const { writeDiary, isPending } = useWriteDiary({
     onSuccess: ({ isFirstWritten, writtenTextLen }) => {
-      void queryClient.invalidateQueries({ queryKey: userQueryKeys.all });
-
       if (isFirstWritten) {
         router.replace({
           pathname: '/diary-first',

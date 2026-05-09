@@ -8,9 +8,10 @@ import { useHome } from '@features/home';
 import { MDPage } from '@shared/ui/Layout';
 import { WeeklyEmotionCard } from './WeeklyEmotionCard';
 import { WeeklyReportCard } from './WeeklyReportCard';
+import { useUser } from '@entities/user';
 
 export function HomePage() {
-  const styles = PageStyles;
+  const { user } = useUser();
 
   const [currentDate, setCurrentDate] = useState(dayjs().format('YYYY-MM-DD'));
   const currentMonth = dayjs(currentDate).format('YYYY-MM');
@@ -45,6 +46,7 @@ export function HomePage() {
       </View>
 
       <WriteDiaryButton
+        disabled={user?.todayDiaryWritten ?? false}
         onPress={() => {
           router.push({
             pathname: '/diary-write',
@@ -58,7 +60,7 @@ export function HomePage() {
   );
 }
 
-const PageStyles = StyleSheet.create({
+const styles = StyleSheet.create({
   container: {
     gap: 16,
     paddingBottom: 60,

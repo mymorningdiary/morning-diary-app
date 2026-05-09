@@ -8,6 +8,7 @@ import {
   StyleSheet,
   View,
 } from 'react-native';
+import { router } from 'expo-router';
 
 import { useThemeColor } from '@shared/lib/theme';
 import { MDPage } from '@shared/ui/Layout';
@@ -18,10 +19,12 @@ import { DiaryListEmpty } from './DiaryListEmpty';
 import { DiaryWeeklySection, DiaryWeeklySectionItem } from '../model/types';
 import { DiaryWeeklyReportItem } from './DiaryListWeeklyReportItem';
 import { DiaryListWeeklyDiaryItem } from './DiaryListWeeklyDiaryItem';
+import { WriteDiaryButton } from '@features/diary';
+import { useUser } from '@entities/user';
 
 export function DiaryListPage() {
   const colors = useThemeColor();
-  const styles = PageStyles;
+  const { user } = useUser();
 
   const [currentDate, setCurrentDate] = useState(dayjs().format('YYYY-MM-DD'));
   const currentMonth = dayjs(currentDate).format('YYYY-MM');
@@ -82,11 +85,23 @@ export function DiaryListPage() {
         overScrollMode="never"
         bounces={false}
       />
+
+      <WriteDiaryButton
+        disabled={user?.todayDiaryWritten ?? false}
+        onPress={() => {
+          router.push({
+            pathname: '/diary-write',
+            params: {
+              date: dayjs().format('YYYY-MM-DD'),
+            },
+          });
+        }}
+      />
     </MDPage>
   );
 }
 
-const PageStyles = StyleSheet.create({
+const styles = StyleSheet.create({
   container: {
     paddingBottom: 60,
   },

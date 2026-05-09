@@ -1,6 +1,7 @@
 import { Logger } from '@shared/lib/log';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { putUsersTextGoal } from '../api/put-users-text-goal';
+import { userQueryKeys } from './queryKeys';
 
 interface Options {
   onSuccess?: () => void;
@@ -8,10 +9,13 @@ interface Options {
 }
 
 export function useUpdateTextGoal({ onSuccess, onError }: Options) {
+  const queryClient = useQueryClient();
+
   const { mutateAsync, isPending } = useMutation({
     mutationFn: putUsersTextGoal,
     onSuccess: (res) => {
       if (res.code === 2000) {
+        void queryClient.invalidateQueries({ queryKey: userQueryKeys.all });
         onSuccess?.();
       }
     },

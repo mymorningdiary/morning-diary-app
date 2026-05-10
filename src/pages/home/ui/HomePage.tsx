@@ -16,7 +16,9 @@ export function HomePage() {
   const [currentDate, setCurrentDate] = useState(dayjs().format('YYYY-MM-DD'));
   const currentMonth = dayjs(currentDate).format('YYYY-MM');
 
-  const { markedDates, weeklyEmotion, getDiaryId } = useHome({ date: currentMonth });
+  const { markedDates, weeklyEmotion, weeklyDiaryCount, getDiaryId } = useHome({
+    date: currentMonth,
+  });
 
   const handleDayPress = (date?: string) => {
     const diaryId = getDiaryId(date);
@@ -42,7 +44,7 @@ export function HomePage() {
 
       <View style={{ flexDirection: 'row', paddingHorizontal: 12, gap: 12 }}>
         <WeeklyEmotionCard style={{ flex: 1 }} emotion={weeklyEmotion} />
-        <WeeklyReportCard style={{ flex: 1 }} goal={3} count={2} />
+        <WeeklyReportCard style={{ flex: 1 }} goal={3} count={weeklyDiaryCount} />
       </View>
 
       <WriteDiaryButton

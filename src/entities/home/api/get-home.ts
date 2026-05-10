@@ -7,6 +7,7 @@ interface GetHomeResponse {
   diaries: Diary[];
   weeklyAverageEmotionScore: number;
   hasWrittenDiaryThisWeek: boolean;
+  weeklyDiaryCount: number;
 }
 
 export const getHome = async (date: string): Promise<ApiResponse<GetHomeResponse>> => {

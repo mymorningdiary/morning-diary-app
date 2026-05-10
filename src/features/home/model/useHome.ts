@@ -12,6 +12,7 @@ export function useHome({ date }: Options) {
     ? (home?.weeklyAverageEmotionScore ?? null)
     : null;
 
+  const weeklyDiaryCount = home?.weeklyDiaryCount ?? 0;
   const markedDates =
     diaries?.reduce((acc, it) => {
       acc[it.writtenDate] = {
@@ -23,5 +24,5 @@ export function useHome({ date }: Options) {
   const getDiaryId = (date?: string) =>
     diaries?.find((it) => it.writtenDate === date)?.diaryId ?? null;
 
-  return { diaries, markedDates, weeklyEmotion, getDiaryId };
+  return { diaries, markedDates, weeklyEmotion, weeklyDiaryCount, getDiaryId };
 }

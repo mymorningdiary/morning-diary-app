@@ -56,7 +56,7 @@ const buttonSizeConfigMap: Record<ButtonSize, ButtonSizeConfig> = {
       borderRadius: 12,
     },
     content: {
-      textType: 'labelRegular',
+      textType: 'caption1Regular',
       iconSize: 16,
       iconSpacing: 4,
     },

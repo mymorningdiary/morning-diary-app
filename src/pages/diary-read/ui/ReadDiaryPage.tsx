@@ -28,6 +28,7 @@ export function ReadDiaryPage() {
 
   const { diary } = useGetDiary(diaryId);
   const { deleteDiary, isPending } = useDeleteDiary({
+    date: diaryDate?.format('YYYY-MM'),
     onSuccess: () => {
       router.back();
     },

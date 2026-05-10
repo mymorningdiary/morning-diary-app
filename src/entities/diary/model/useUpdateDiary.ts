@@ -1,17 +1,22 @@
 import { Logger } from '@shared/lib/log';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { putDiaries } from '../api/put-diaries';
+import { diaryQueryKeys } from './queryKeys';
 
 interface Options {
+  date?: string; // YYYY-MM
   onSuccess?: () => void;
   onError?: (message: string) => void;
 }
 
-export function useUpdateDiary({ onSuccess, onError }: Options) {
+export function useUpdateDiary({ date, onSuccess, onError }: Options) {
+  const queryClient = useQueryClient();
+
   const { mutateAsync, isPending } = useMutation({
     mutationFn: putDiaries,
     onSuccess: (res) => {
       if (res.code === 2000) {
+        void queryClient.invalidateQueries({ queryKey: diaryQueryKeys.list(date) });
         onSuccess?.();
       }
     },

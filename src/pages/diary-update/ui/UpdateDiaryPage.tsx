@@ -50,13 +50,9 @@ export function UpdateDiaryPage() {
   useDiaryAssistantByProgress({ progress, showAssistant });
 
   const { updateDiary, isPending } = useUpdateDiary({
+    date: diaryDate?.format('YYYY-MM'),
     onSuccess: () => {
-      router.replace({
-        pathname: '/(app)/(main)',
-        params: {
-          writtenDate: diaryDate?.format('YYYY-MM-DD'),
-        },
-      });
+      router.back();
     },
     onError: (message) => useToastStore.getState().show({ type: 'error', message }),
   });

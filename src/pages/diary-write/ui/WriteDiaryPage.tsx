@@ -45,6 +45,7 @@ export function WriteDiaryPage() {
   useDiaryAssistantByProgress({ progress, showAssistant });
 
   const { writeDiary, isPending } = useWriteDiary({
+    date: dayjs(dateParam)?.format('YYYY-MM'),
     onSuccess: ({ isFirstWritten, writtenTextLen }) => {
       if (isFirstWritten) {
         router.replace({
@@ -55,12 +56,7 @@ export function WriteDiaryPage() {
           },
         });
       } else {
-        router.replace({
-          pathname: '/(app)/(main)',
-          params: {
-            writtenDate: dateParam,
-          },
-        });
+        router.back();
       }
     },
     onError: (message) => useToastStore.getState().show({ type: 'error', message }),

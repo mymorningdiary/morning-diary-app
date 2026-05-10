@@ -1,3 +1,4 @@
+export { diaryQueryKeys } from './model/queryKeys';
 export { useWriteDiary } from './model/useWriteDiary';
 export { useGetDiary } from './model/useGetDiary';
 export { useGetDiaries } from './model/useGetDiaries';

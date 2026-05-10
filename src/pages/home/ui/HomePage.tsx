@@ -46,7 +46,7 @@ export function HomePage() {
       </View>
 
       <WriteDiaryButton
-        disabled={user?.todayDiaryWritten ?? false}
+        // disabled={user?.todayDiaryWritten ?? false}
         onPress={() => {
           router.push({
             pathname: '/diary-write',

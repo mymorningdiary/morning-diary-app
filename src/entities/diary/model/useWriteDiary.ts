@@ -2,8 +2,10 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { postDiaries } from '../api/post-diary';
 import { Logger } from '@shared/lib/log';
 import { userQueryKeys } from '../../user';
+import { diaryQueryKeys } from './queryKeys';
 
 interface Options {
+  date?: string; // YYYY-MM
   onSuccess?: ({
     isFirstWritten,
     writtenTextLen,
@@ -14,7 +16,7 @@ interface Options {
   onError?: (message: string) => void;
 }
 
-export function useWriteDiary({ onSuccess, onError }: Options) {
+export function useWriteDiary({ date, onSuccess, onError }: Options) {
   const queryClient = useQueryClient();
 
   const { mutateAsync, isPending } = useMutation({
@@ -22,6 +24,8 @@ export function useWriteDiary({ onSuccess, onError }: Options) {
     onSuccess: (res) => {
       if (res.code === 2000) {
         void queryClient.invalidateQueries({ queryKey: userQueryKeys.all });
+        void queryClient.invalidateQueries({ queryKey: diaryQueryKeys.list(date) });
+
         const { isFirstWrittenDiary, textLength } = res.data;
         onSuccess?.({ isFirstWritten: isFirstWrittenDiary, writtenTextLen: textLength });
       }

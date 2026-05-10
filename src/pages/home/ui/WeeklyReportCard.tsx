@@ -1,7 +1,9 @@
 import dayjs from 'dayjs';
+import { useFocusEffect } from 'expo-router';
+import { useCallback, useMemo, useState } from 'react';
 import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
 
-import { MDColorsType, useThemeColor } from '@shared/lib/theme';
+import { useThemeColor } from '@shared/lib/theme';
 import { MDText } from '@shared/ui/Text';
 import { LightProgressBar } from '@shared/ui/ProgressBar';
 import { MDButton } from '@shared/ui/Button';
@@ -17,16 +19,17 @@ interface WeeklyReportCardState {
 const getWeeklyReportCardState = ({
   count,
   goal,
+  isSunday,
   isReportOpened,
 }: {
   count: number;
   goal: number;
+  isSunday: boolean;
   isReportOpened?: boolean;
 }): WeeklyReportCardState => {
   const safeGoal = Math.max(goal, 1);
   const remaining = Math.max(safeGoal - count, 0);
   const isGoalReached = remaining === 0;
-  const isSunday = dayjs().day() === 0;
 
   return {
     isBelowGoal: !isGoalReached,
@@ -86,8 +89,19 @@ interface Props {
 
 export function WeeklyReportCard({ style, count = 0, goal = 1, isReportOpened }: Props) {
   const colors = useThemeColor();
+  const [isSunday, setIsSunday] = useState(() => dayjs().day() === 0);
 
-  const reportState = getWeeklyReportCardState({ count, goal, isReportOpened });
+  useFocusEffect(
+    useCallback(() => {
+      setIsSunday(dayjs().day() === 0);
+    }, []),
+  );
+
+  const reportState = useMemo(
+    () => getWeeklyReportCardState({ count, goal, isSunday, isReportOpened }),
+    [isSunday, count, goal, isReportOpened],
+  );
+
   const { title, subtitle } = getTitleTexts(reportState);
 
   return (

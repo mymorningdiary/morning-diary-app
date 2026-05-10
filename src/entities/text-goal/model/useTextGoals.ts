@@ -1,10 +1,12 @@
 import { useQuery } from '@tanstack/react-query';
 import { getTextGoals } from '../api/get-text-goals';
+import { textGoalQueryKeys } from './queryKeys';
 
 export function useTextGoals() {
-  const { data, error, isError, isLoading } = useQuery({
-    queryKey: ['text-goals'],
+  const { data, error, isError, isLoading, isPending, isFetching } = useQuery({
+    queryKey: textGoalQueryKeys.list(),
     queryFn: getTextGoals,
+    staleTime: 1000 * 60 * 60,
   });
 
   const defaultTextGoal = data?.data.textGoals.find((textGoal) => textGoal.isDefault);
@@ -15,5 +17,7 @@ export function useTextGoals() {
     error,
     isError,
     isLoading,
+    isPending,
+    isFetching,
   };
 }

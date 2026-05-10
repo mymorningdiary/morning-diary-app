@@ -1,5 +1,6 @@
 import { Logger } from '@shared/lib/log';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { textGoalQueryKeys } from '@entities/text-goal';
 import { putUsersTextGoal } from '../api/put-users-text-goal';
 import { userQueryKeys } from './queryKeys';
 
@@ -16,6 +17,8 @@ export function useUpdateTextGoal({ onSuccess, onError }: Options) {
     onSuccess: (res) => {
       if (res.code === 2000) {
         void queryClient.invalidateQueries({ queryKey: userQueryKeys.all });
+        void queryClient.invalidateQueries({ queryKey: textGoalQueryKeys.all });
+
         onSuccess?.();
       }
     },

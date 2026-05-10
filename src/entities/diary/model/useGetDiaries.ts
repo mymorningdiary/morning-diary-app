@@ -14,6 +14,7 @@ export function useGetDiaries(date?: string) {
 
       return getDiaries(date);
     },
+    staleTime: 1000 * 60 * 5,
     enabled,
   });
 }

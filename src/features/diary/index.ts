@@ -1,3 +1,6 @@
+export type { DiaryState, AssistantState, DiaryProgressKey, MarkedDates } from './model/types';
+
+export { DiaryCalendarDay } from './ui/DiaryCalendar/DiaryCalendarDay';
 export { DiaryAssistant } from './ui/DiaryAssistant/DiaryAssistant';
 export { DiaryEditor } from './ui/DiaryEditor';
 export { WriteDiaryButton } from './ui/WriteDiaryButton';
@@ -16,4 +19,3 @@ export {
   ASSISTANT_PROGRESS_90_MESSAGES,
 } from './lib/diary-messages';
 export { INACTIVE_TEXT_LEN } from './config/constants';
-export type { DiaryState, AssistantState, DiaryProgressKey, MarkedDates } from './model/types';

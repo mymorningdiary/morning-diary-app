@@ -36,6 +36,11 @@ export const MDFonts = {
     fontSize: 24,
     lineHeight: 30,
   },
+  heading1SemiBold: {
+    ...PretendardSemiBold,
+    fontSize: 24,
+    lineHeight: 30,
+  },
   heading2SemiBold: {
     ...PretendardSemiBold,
     fontSize: 20,

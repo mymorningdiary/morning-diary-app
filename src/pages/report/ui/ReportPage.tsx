@@ -84,18 +84,26 @@ export function ReportPage() {
         overScrollMode="never"
         bounces={false}>
         <View>
-          <MDText style={styles.titleText} type="heading1SemiBold">
-            {title}
-          </MDText>
-          <MDText style={styles.summaryText} type="bodyRegular" color={colors.text.alternative}>
-            {summary}
-          </MDText>
-          <WeeklyCalendar
-            startDate={startDate}
-            endDate={endDate}
-            diaries={diaries}
-            onDayPress={handleDayPress}
-          />
+          <View style={styles.headerContent}>
+            {!!title && (
+              <MDText type="heading1SemiBold" color={colors.text.brand}>
+                {title}
+              </MDText>
+            )}
+
+            <WeeklyCalendar
+              startDate={startDate}
+              endDate={endDate}
+              diaries={diaries}
+              onDayPress={handleDayPress}
+            />
+
+            {!!summary && (
+              <MDText type="bodyRegular" color={colors.text.alternative}>
+                {`"${summary}"`}
+              </MDText>
+            )}
+          </View>
         </View>
       </ScrollView>
     </MDPage>
@@ -109,11 +117,8 @@ const styles = StyleSheet.create({
     paddingTop: 24,
     paddingBottom: 60,
   },
-  titleText: {
+  headerContent: {
     paddingHorizontal: 16,
-  },
-  summaryText: {
-    paddingHorizontal: 16,
-    marginTop: 12,
+    gap: 16,
   },
 });

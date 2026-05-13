@@ -5,8 +5,8 @@ import { useThemeColor } from '@shared/lib/theme';
 import { MDAppBar } from '@shared/ui/AppBar';
 import { MDPage } from '@shared/ui/Layout';
 import { MDText } from '@shared/ui/Text';
+import { ReportTopKeywordSection } from './ReportTopKeywordSection';
 import { WeeklyCalendar } from './WeeklyCalendar';
-import { Diary } from '@entities/diary';
 
 // "weeklyReportId": 1,
 //     "weekStartDate": "2025-05-05",
@@ -61,6 +61,29 @@ export function ReportPage() {
     },
   ];
 
+  const topKeywords = [
+    {
+      word: '아메리카노',
+      count: 5,
+    },
+    {
+      word: '학원',
+      count: 4,
+    },
+    {
+      word: '피그마',
+      count: 3,
+    },
+    {
+      word: '베이글',
+      count: 2,
+    },
+    {
+      word: '집',
+      count: 1,
+    },
+  ];
+
   const handleDayPress = (date?: string) => {
     const diary = diaries.find((d) => d.writtenDate === date);
     if (!diary) return;
@@ -105,6 +128,8 @@ export function ReportPage() {
             )}
           </View>
         </View>
+
+        <ReportTopKeywordSection style={styles.topKeywordContent} topKeywords={topKeywords} />
       </ScrollView>
     </MDPage>
   );
@@ -120,5 +145,8 @@ const styles = StyleSheet.create({
   headerContent: {
     paddingHorizontal: 16,
     gap: 16,
+  },
+  topKeywordContent: {
+    marginTop: 80,
   },
 });

@@ -5,6 +5,7 @@ import { useThemeColor } from '@shared/lib/theme';
 import { MDAppBar } from '@shared/ui/AppBar';
 import { MDPage } from '@shared/ui/Layout';
 import { MDText } from '@shared/ui/Text';
+import { ReportInsightSection } from './ReportInsightSection';
 import { ReportTopKeywordSection } from './ReportTopKeywordSection';
 import { WeeklyCalendar } from './WeeklyCalendar';
 
@@ -84,6 +85,24 @@ export function ReportPage() {
     },
   ];
 
+  const unconsciousInsights = [
+    {
+      title: '본질에 대한 완벽주의',
+      content:
+        '"단순해야 할까, 의미가 있어야 할까?"를 반복해서 묻는 모습에서, 적당히 타협하기보다 확실한 정체성을 만들고 싶어 하는 강한 책임감이 발견되었어요.',
+    },
+    {
+      title: '통제력을 통한 안도감',
+      content:
+        '먹고 싶은 욕구를 참고 건강한 식재료를 구체적으로 나열하는 행위는, 현재 불확실한 상황에서 나의 몸만큼은 확실히 통제하고 싶어 하는 심리가 반영된 것일 수 있어요.',
+    },
+    {
+      title: '졸음을 이겨내는 행동력',
+      content:
+        '모든 일기에 "졸리다"는 말이 빠지지 않지만, 결국 운동과 요가로 이어지는 흐름에서 피로감보다 성취감을 우선시하는 단단한 의지가 읽히고 있어요.',
+    },
+  ];
+
   const handleDayPress = (date?: string) => {
     const diary = diaries.find((d) => d.writtenDate === date);
     if (!diary) return;
@@ -130,6 +149,7 @@ export function ReportPage() {
         </View>
 
         <ReportTopKeywordSection style={styles.topKeywordContent} topKeywords={topKeywords} />
+        <ReportInsightSection style={styles.insightContent} insights={unconsciousInsights} />
       </ScrollView>
     </MDPage>
   );
@@ -147,6 +167,9 @@ const styles = StyleSheet.create({
     gap: 16,
   },
   topKeywordContent: {
+    marginTop: 80,
+  },
+  insightContent: {
     marginTop: 80,
   },
 });

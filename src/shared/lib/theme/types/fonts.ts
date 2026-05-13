@@ -1,7 +1,7 @@
 import { MDFonts } from '../const/typography';
 
 export type MDFontFamily = {
-  fontFamily: 'Pretendard' | 'Roboto' | 'Inter' | 'OngleLeafRadioPen';
+  fontFamily: 'Pretendard' | 'Roboto' | 'Inter' | 'Ownglyph_RDO_ballpen-Rg';
   fontWeight: 700 | 600 | 500 | 400;
 };
 

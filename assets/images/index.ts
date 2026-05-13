@@ -7,6 +7,7 @@ import ImgSunBasic from './img-sun-basic.png';
 import ImgSunTwitch from './img-sun-twitch.png';
 import ImgSunSmall from './img-sun-small.png';
 import ImgSunCongrats from './img-sun-congrats.png';
+import ImgSunCongrats2 from './img-sun-congrats2.png';
 
 import ImgEmotion1 from './img-emotion-1.png';
 import ImgEmotion2 from './img-emotion-2.png';
@@ -22,6 +23,7 @@ export {
   ImgSunTwitch,
   ImgSunSmall,
   ImgSunCongrats,
+  ImgSunCongrats2,
   ImgEmotion1,
   ImgEmotion2,
   ImgEmotion3,

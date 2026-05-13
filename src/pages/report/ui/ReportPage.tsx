@@ -5,6 +5,7 @@ import { useThemeColor } from '@shared/lib/theme';
 import { MDAppBar } from '@shared/ui/AppBar';
 import { MDPage } from '@shared/ui/Layout';
 import { MDText } from '@shared/ui/Text';
+import { ReportEmpathySection } from './ReportEmpathySection';
 import { ReportInsightSection } from './ReportInsightSection';
 import { ReportTopKeywordSection } from './ReportTopKeywordSection';
 import { WeeklyCalendar } from './WeeklyCalendar';
@@ -103,6 +104,14 @@ export function ReportPage() {
     },
   ];
 
+  const empathySentences = [
+    '졸린 아침마다 매일 아침 나를 만나러 온 거야?',
+    '그거 진짜진짜 대단한 거야!',
+    '이번 주에는 말이야, 너무 열심히 안 해도 돼.',
+    '일요일에 약속해 둔 건강한 밥, 냠냠 먹으면서 "아~ 나 잘 챙기고 있구나" 하는 느낌만 느껴봐도 충분해!',
+    '다음 주 아침에도 나랑 또 만나자! ☀️',
+  ];
+
   const handleDayPress = (date?: string) => {
     const diary = diaries.find((d) => d.writtenDate === date);
     if (!diary) return;
@@ -150,6 +159,7 @@ export function ReportPage() {
 
         <ReportTopKeywordSection style={styles.topKeywordContent} topKeywords={topKeywords} />
         <ReportInsightSection style={styles.insightContent} insights={unconsciousInsights} />
+        <ReportEmpathySection style={styles.empathySentenceContent} sentences={empathySentences} />
       </ScrollView>
     </MDPage>
   );
@@ -170,6 +180,9 @@ const styles = StyleSheet.create({
     marginTop: 80,
   },
   insightContent: {
+    marginTop: 80,
+  },
+  empathySentenceContent: {
     marginTop: 80,
   },
 });

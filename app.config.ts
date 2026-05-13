@@ -162,7 +162,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
               ],
             },
             {
-              fontFamily: 'OngleLeafRadioPen',
+              fontFamily: 'Ownglyph_RDO_ballpen-Rg',
               fontDefinitions: [
                 {
                   path: './assets/fonts/OngleLeafRadioPen.ttf',

@@ -31,7 +31,7 @@ const InterRegular: MDFontFamily = {
 };
 
 const OngleLeafRadioPenRegular: MDFontFamily = {
-  fontFamily: 'OngleLeafRadioPen',
+  fontFamily: 'Ownglyph_RDO_ballpen-Rg',
   fontWeight: 400,
 };
 

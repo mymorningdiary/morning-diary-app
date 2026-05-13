@@ -9,9 +9,9 @@ import { DiaryCalendarDay } from '@features/diary';
 
 interface Props {
   style?: StyleProp<ViewStyle>;
-  startDate: string;
-  endDate: string;
-  diaries: Diary[];
+  startDate?: string;
+  endDate?: string;
+  diaries?: Diary[];
   onDayPress?: (date?: string) => void;
 }
 
@@ -21,17 +21,25 @@ export function WeeklyCalendar({ style, startDate, endDate, diaries, onDayPress 
   const colors = useThemeColor();
 
   const diaryByDate = useMemo(
-    () => new Map(diaries.map((diary) => [diary.writtenDate, diary])),
+    () => new Map(diaries?.map((diary) => [diary.writtenDate, diary]) ?? []),
     [diaries],
   );
 
   const dates = useMemo(() => {
+    if (!startDate || !endDate) {
+      return [];
+    }
+
     const start = dayjs(startDate);
     const end = dayjs(endDate);
     const dayCount = Math.max(end.diff(start, 'day') + 1, 0);
 
     return Array.from({ length: dayCount }, (_, index) => start.add(index, 'day'));
   }, [startDate, endDate]);
+
+  if (!startDate || !endDate) {
+    return null;
+  }
 
   return (
     <View style={[styles.container, style]}>
@@ -73,9 +81,7 @@ export function WeeklyCalendar({ style, startDate, endDate, diaries, onDayPress 
 }
 
 const styles = StyleSheet.create({
-  container: {
-    paddingHorizontal: 16,
-  },
+  container: {},
   weekdayContent: {
     flexDirection: 'row',
   },

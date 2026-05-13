@@ -30,6 +30,11 @@ const InterRegular: MDFontFamily = {
   fontWeight: 400,
 };
 
+const OngleLeafRadioPenRegular: MDFontFamily = {
+  fontFamily: 'OngleLeafRadioPen',
+  fontWeight: 400,
+};
+
 export const MDFonts = {
   heading1Medium: {
     ...PretendardMedium,
@@ -111,5 +116,10 @@ export const MDFonts = {
     ...PretendardBold,
     fontSize: 11,
     lineHeight: 13,
+  },
+  brandRegular: {
+    ...OngleLeafRadioPenRegular,
+    fontSize: 19,
+    lineHeight: 29,
   },
 } as const;

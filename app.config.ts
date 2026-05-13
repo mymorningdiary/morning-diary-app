@@ -112,6 +112,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
           './assets/fonts/Pretendard-Regular.ttf',
           './assets/fonts/Roboto-Regular.ttf',
           './assets/fonts/Inter-Regular.ttf',
+          './assets/fonts/OngleLeafRadioPen.ttf',
         ],
         android: {
           fonts: [
@@ -155,6 +156,16 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
               fontDefinitions: [
                 {
                   path: './assets/fonts/Inter-Regular.ttf',
+                  weight: 400,
+                  style: 'normal',
+                },
+              ],
+            },
+            {
+              fontFamily: 'OngleLeafRadioPen',
+              fontDefinitions: [
+                {
+                  path: './assets/fonts/OngleLeafRadioPen.ttf',
                   weight: 400,
                   style: 'normal',
                 },

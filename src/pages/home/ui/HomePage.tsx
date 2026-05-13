@@ -50,12 +50,13 @@ export function HomePage() {
       <WriteDiaryButton
         // disabled={user?.todayDiaryWritten ?? false}
         onPress={() => {
-          router.push({
-            pathname: '/diary-write',
-            params: {
-              date: dayjs().format('YYYY-MM-DD'),
-            },
-          });
+          router.push('/report');
+          // router.push({
+          //   pathname: '/diary-write',
+          //   params: {
+          //     date: dayjs().format('YYYY-MM-DD'),
+          //   },
+          // });
         }}
       />
     </MDPage>

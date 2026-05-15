@@ -1,5 +1,5 @@
-import { router } from 'expo-router';
 import { ScrollView, StyleSheet, View } from 'react-native';
+import { router, useLocalSearchParams } from 'expo-router';
 
 import { useThemeColor } from '@shared/lib/theme';
 import { MDAppBar } from '@shared/ui/AppBar';
@@ -9,6 +9,8 @@ import { ReportEmpathySection } from './ReportEmpathySection';
 import { ReportInsightSection } from './ReportInsightSection';
 import { ReportTopKeywordSection } from './ReportTopKeywordSection';
 import { WeeklyCalendar } from './WeeklyCalendar';
+import { useEffect } from 'react';
+import { Logger } from '@shared/lib/log';
 
 // "weeklyReportId": 1,
 //     "weekStartDate": "2025-05-05",
@@ -41,6 +43,8 @@ import { WeeklyCalendar } from './WeeklyCalendar';
 
 export function ReportPage() {
   const colors = useThemeColor();
+  const { id } = useLocalSearchParams<{ id: string }>();
+
   const title = '이번주는 잔잔히 회복한 한 주 였어요.';
   const summary = '이번 주는 새로운 일과에 적응하며 작은 변화들을 만들어간 한 주였어요.';
   const startDate = '2026-05-11';
@@ -124,6 +128,10 @@ export function ReportPage() {
       },
     });
   };
+
+  useEffect(() => {
+    Logger('ReportPage').debug(`reportId: ${id}`);
+  }, [id]);
 
   return (
     <MDPage style={styles.container}>

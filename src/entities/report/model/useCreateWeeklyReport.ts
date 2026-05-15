@@ -18,12 +18,16 @@ export function useCreateWeeklyReport({ onSuccess, onError }: Options) {
     onError: (error: any) => {
       Logger('useCreateWeeklyReport').error('Failed to post weekly reports', error);
       switch (error.code) {
+        case 4220: {
+          onError?.('주간 리포트는 일요일에 열 수 있어요');
+          break;
+        }
         case 4221: {
-          onError?.('금주의 일기를 3번 이상 작성해야 주간 리포트를 받을 수 있어요');
+          onError?.('금주의 일기를 3번 이상 작성해야 주간 리포트를 열 수 있어요');
           break;
         }
         case 4222: {
-          onError?.('이미 주간 리포트를 받았어요');
+          onError?.('금주의 주간리포트를 이미 열었어요');
           break;
         }
         case 5000:
@@ -32,7 +36,7 @@ export function useCreateWeeklyReport({ onSuccess, onError }: Options) {
           break;
         }
         default: {
-          onError?.('주간 리포트 생성을 실패했어요');
+          onError?.('주간 리포트 여는데 실패했어요');
           break;
         }
       }

@@ -7,6 +7,8 @@ import { useThemeColor } from '@shared/lib/theme';
 import { MDText } from '@shared/ui/Text';
 import { LightProgressBar } from '@shared/ui/ProgressBar';
 import { MDButton } from '@shared/ui/Button';
+import { useCreateWeeklyReport } from '@entities/report';
+import { useToastStore } from '@shared/lib/toast';
 
 interface WeeklyReportCardState {
   isBelowGoal: boolean;
@@ -91,6 +93,13 @@ export function WeeklyReportCard({ style, count = 0, goal = 1, isReportOpened }:
   const colors = useThemeColor();
   const [isSunday, setIsSunday] = useState(() => dayjs().day() === 0);
 
+  const { createReport, isPending } = useCreateWeeklyReport({
+    onSuccess: (weeklyReportId: number) => {
+      // TODO 주간 리포트 화면 이동
+    },
+    onError: (message) => useToastStore.getState().show({ type: 'error', message }),
+  });
+
   useFocusEffect(
     useCallback(() => {
       setIsSunday(dayjs().day() === 0);
@@ -103,6 +112,18 @@ export function WeeklyReportCard({ style, count = 0, goal = 1, isReportOpened }:
   );
 
   const { title, subtitle } = getTitleTexts(reportState);
+
+  const handlePress = async () => {
+    if (isPending) return;
+
+    if (reportState.isGoalReachedOnSunday) {
+      await createReport();
+    }
+
+    if (reportState.isReportGeneratedOnSunday) {
+      // TODO 주간 리포트 화면 이동
+    }
+  };
 
   return (
     <View
@@ -121,6 +142,7 @@ export function WeeklyReportCard({ style, count = 0, goal = 1, isReportOpened }:
       ) : (
         <MDButton
           size="small"
+          loading={isPending}
           label={
             reportState.isGoalReachedOnWeekday
               ? '🔒 일요일에 열려요'
@@ -129,7 +151,7 @@ export function WeeklyReportCard({ style, count = 0, goal = 1, isReportOpened }:
                 : '주간 리포트 보기'
           }
           disabled={reportState.isBelowGoal || reportState.isGoalReachedOnWeekday}
-          onPress={() => {}}
+          onPress={handlePress}
         />
       )}
     </View>

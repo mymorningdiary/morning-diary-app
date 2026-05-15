@@ -87,7 +87,7 @@ export function WriteDiaryPage() {
             rightContent={
               <MDButton
                 variant="ghost"
-                size="small"
+                size="medium"
                 label="완료"
                 disabled={currentTextLen == 0}
                 onPress={handleSubmit}

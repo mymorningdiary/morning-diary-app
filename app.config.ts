@@ -182,6 +182,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
       {
         ios: {
           useFrameworks: 'static',
+          forceStaticLinking: ['RNFBApp'],
         },
       },
     ],

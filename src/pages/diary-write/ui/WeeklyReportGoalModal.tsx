@@ -16,7 +16,7 @@ export function WeeklyReportGoalModal({ visible = false, onConfirm }: Props) {
 
   return (
     <Modal animationType="fade" visible={visible} transparent onRequestClose={onConfirm}>
-      <View style={styles.overlay}>
+      <View style={[styles.overlay, { backgroundColor: colors.fill.dim }]}>
         <View
           style={[
             styles.container,
@@ -55,8 +55,6 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    paddingHorizontal: 16,
-    backgroundColor: 'rgba(0, 0, 0, 0.45)',
   },
   container: {
     borderRadius: 28,

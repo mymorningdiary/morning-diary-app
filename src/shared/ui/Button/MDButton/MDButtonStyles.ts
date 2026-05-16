@@ -91,7 +91,7 @@ const getVariantTokensMap = (colors: MDColorsType): Record<ButtonVariant, Button
   },
   ghost: {
     backgroundColor: 'transparent',
-    textColor: colors.text.brand,
+    textColor: colors.text.normal,
     iconColor: colors.icon.normal,
     borderColor: 'transparent',
     borderWidth: 0,

@@ -1,10 +1,11 @@
 import dayjs from 'dayjs';
 import { Redirect, router, useLocalSearchParams } from 'expo-router';
 import { useRef, useState } from 'react';
-import { Pressable, StyleSheet, TextInput } from 'react-native';
+import { ActivityIndicator, Pressable, StyleSheet, TextInput, View } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 import { useWriteDiary } from '@entities/diary';
+import { WEEKLY_REPORT_DIARY_GOAL } from '@entities/report';
 import { selectTextGoal, useTextGoals } from '@entities/text-goal';
 import { useUser } from '@entities/user';
 import {
@@ -16,14 +17,15 @@ import {
   useDiaryEditor,
 } from '@features/diary';
 import { getSingleParam } from '@shared/lib/router';
+import { useThemeColor } from '@shared/lib/theme';
 import { useToastStore } from '@shared/lib/toast';
 import { MDAppBar } from '@shared/ui/AppBar';
 import { MDButton } from '@shared/ui/Button';
 import { MDPage } from '@shared/ui/Layout';
 import { MDModal } from '@shared/ui/Modal';
 import { TextGoalProgressBar } from '@shared/ui/ProgressBar';
+import { MDText } from '@shared/ui/Text';
 import { WeeklyReportGoalModal } from './WeeklyReportGoalModal';
-import { WEEKLY_REPORT_DIARY_GOAL } from '@entities/report';
 
 interface DiaryWriteSuccessState {
   isFirstWritten: boolean;
@@ -32,6 +34,7 @@ interface DiaryWriteSuccessState {
 
 export function WriteDiaryPage() {
   const styles = PageStyles;
+  const colors = useThemeColor();
 
   const editorRef = useRef<TextInput>(null);
 
@@ -91,13 +94,18 @@ export function WriteDiaryPage() {
     return <Redirect href="/(app)/(main)" />;
   }
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (isPending) return;
+    editorRef?.current?.blur();
 
-    writeDiary({
-      writtenDate: dateParam,
-      content: diaryState.inactiveText + diaryState.activeText,
-    });
+    try {
+      await writeDiary({
+        writtenDate: dateParam,
+        content: diaryState.inactiveText + diaryState.activeText,
+      });
+    } catch {
+      // Error UI is handled by useWriteDiary.onError.
+    }
   };
 
   return (
@@ -136,6 +144,12 @@ export function WriteDiaryPage() {
 
         <DiaryAssistant {...assistantState} onHide={hideAssistant} />
 
+        {isPending && (
+          <View style={styles.loadingContent}>
+            <ActivityIndicator color={colors.primary.normal} />
+          </View>
+        )}
+
         <MDModal
           visible={showBackModal}
           subtitle={`일기쓰기를 종료할까요?\n종료 선택 시, 일기는 저장되지 않아요.`}
@@ -164,5 +178,10 @@ const PageStyles = StyleSheet.create({
   progressBar: {
     paddingHorizontal: 14,
     paddingBottom: 24,
+  },
+  loadingContent: {
+    ...StyleSheet.absoluteFillObject,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });

@@ -1,6 +1,7 @@
 import { Logger } from '@shared/lib/log';
 import { useMutation } from '@tanstack/react-query';
 import { postWeeklyReports } from '../api/post-weekly-reports';
+import { WEEKLY_REPORT_DIARY_GOAL } from '../config/constants';
 
 interface Options {
   onSuccess?: (weeklyReportId: number) => void;
@@ -23,7 +24,9 @@ export function useCreateWeeklyReport({ onSuccess, onError }: Options) {
           break;
         }
         case 4221: {
-          onError?.('금주의 일기를 3번 이상 작성해야 주간리포트를 열 수 있어요');
+          onError?.(
+            `금주의 일기를 ${WEEKLY_REPORT_DIARY_GOAL}번 이상 작성해야 주간리포트를 열 수 있어요`,
+          );
           break;
         }
         case 4222: {

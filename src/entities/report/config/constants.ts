@@ -1,0 +1,1 @@
+export const WEEKLY_REPORT_DIARY_GOAL = 3;

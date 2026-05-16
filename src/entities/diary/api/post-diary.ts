@@ -10,6 +10,7 @@ export interface PostDiariesResponse {
   diaryId: number;
   isFirstWrittenDiary: boolean;
   textLength: number;
+  weeklyDiaryCount: number;
 }
 
 export const postDiaries = async (

@@ -61,12 +61,7 @@ export function HomePage() {
 
         <View style={{ flexDirection: 'row', paddingHorizontal: 12, gap: 12 }}>
           <WeeklyEmotionCard style={{ flex: 1 }} emotion={weeklyEmotion} />
-          <WeeklyReportCard
-            style={{ flex: 1 }}
-            goal={3}
-            count={weeklyDiaryCount}
-            reportId={reportId}
-          />
+          <WeeklyReportCard style={{ flex: 1 }} count={weeklyDiaryCount} reportId={reportId} />
         </View>
       </ScrollView>
       <WriteDiaryButton

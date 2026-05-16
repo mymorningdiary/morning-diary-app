@@ -22,6 +22,13 @@ import { MDButton } from '@shared/ui/Button';
 import { MDPage } from '@shared/ui/Layout';
 import { MDModal } from '@shared/ui/Modal';
 import { TextGoalProgressBar } from '@shared/ui/ProgressBar';
+import { WeeklyReportGoalModal } from './WeeklyReportGoalModal';
+import { WEEKLY_REPORT_DIARY_GOAL } from '@entities/report';
+
+interface DiaryWriteSuccessState {
+  isFirstWritten: boolean;
+  writtenTextLen: number;
+}
 
 export function WriteDiaryPage() {
   const styles = PageStyles;
@@ -44,25 +51,41 @@ export function WriteDiaryPage() {
   useDiaryAssistantByPause({ currentTextLen, showAssistant });
   useDiaryAssistantByProgress({ progress, showAssistant });
 
+  const [showBackModal, setShowBackModal] = useState(false);
+  const [weeklyReportSuccess, setWeeklyReportSuccess] = useState<DiaryWriteSuccessState | null>(
+    null,
+  );
+
+  const completeDiaryWrite = ({ isFirstWritten, writtenTextLen }: DiaryWriteSuccessState) => {
+    setWeeklyReportSuccess(null);
+
+    if (isFirstWritten) {
+      router.replace({
+        pathname: '/diary-first',
+        params: {
+          writtenTextLen,
+          writtenDate: dateParam,
+        },
+      });
+    } else {
+      router.back();
+    }
+  };
+
   const { writeDiary, isPending } = useWriteDiary({
     date: dayjs(dateParam)?.format('YYYY-MM'),
-    onSuccess: ({ isFirstWritten, writtenTextLen }) => {
-      if (isFirstWritten) {
-        router.replace({
-          pathname: '/diary-first',
-          params: {
-            writtenTextLen,
-            writtenDate: dateParam,
-          },
-        });
-      } else {
-        router.back();
+    onSuccess: ({ isFirstWritten, writtenTextLen, weeklyDiaryCount }) => {
+      const successState = { isFirstWritten, writtenTextLen };
+
+      if (weeklyDiaryCount === WEEKLY_REPORT_DIARY_GOAL) {
+        setWeeklyReportSuccess(successState);
+        return;
       }
+
+      completeDiaryWrite(successState);
     },
     onError: (message) => useToastStore.getState().show({ type: 'error', message }),
   });
-
-  const [showBackModal, setShowBackModal] = useState(false);
 
   if (!dateParam) {
     return <Redirect href="/(app)/(main)" />;
@@ -89,7 +112,7 @@ export function WriteDiaryPage() {
                 variant="ghost"
                 size="medium"
                 label="완료"
-                disabled={currentTextLen == 0}
+                disabled={currentTextLen === 0}
                 onPress={handleSubmit}
               />
             }
@@ -119,6 +142,15 @@ export function WriteDiaryPage() {
           negative={{ text: '취소', onPress: () => setShowBackModal(false) }}
           positive={{ text: '종료', onPress: () => router.back() }}
           onClose={() => setShowBackModal(false)}
+        />
+
+        <WeeklyReportGoalModal
+          visible={weeklyReportSuccess !== null}
+          onConfirm={() => {
+            if (weeklyReportSuccess) {
+              completeDiaryWrite(weeklyReportSuccess);
+            }
+          }}
         />
       </MDPage>
     </GestureHandlerRootView>

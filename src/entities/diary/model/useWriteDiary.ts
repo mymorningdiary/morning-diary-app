@@ -10,9 +10,11 @@ interface Options {
   onSuccess?: ({
     isFirstWritten,
     writtenTextLen,
+    weeklyDiaryCount,
   }: {
     isFirstWritten: boolean;
     writtenTextLen: number;
+    weeklyDiaryCount: number;
   }) => void;
   onError?: (message: string) => void;
 }
@@ -28,8 +30,12 @@ export function useWriteDiary({ date, onSuccess, onError }: Options) {
         void queryClient.invalidateQueries({ queryKey: diaryQueryKeys.list(date) });
         void queryClient.invalidateQueries({ queryKey: homeQueryKeys.detail(date) });
 
-        const { isFirstWrittenDiary, textLength } = res.data;
-        onSuccess?.({ isFirstWritten: isFirstWrittenDiary, writtenTextLen: textLength });
+        const { isFirstWrittenDiary, textLength, weeklyDiaryCount } = res.data;
+        onSuccess?.({
+          isFirstWritten: isFirstWrittenDiary,
+          writtenTextLen: textLength,
+          weeklyDiaryCount,
+        });
       }
     },
     onError: (error: any) => {

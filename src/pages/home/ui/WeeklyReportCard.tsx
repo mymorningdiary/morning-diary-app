@@ -7,7 +7,7 @@ import { useThemeColor } from '@shared/lib/theme';
 import { MDText } from '@shared/ui/Text';
 import { LightProgressBar } from '@shared/ui/ProgressBar';
 import { MDButton } from '@shared/ui/Button';
-import { useCreateWeeklyReport } from '@entities/report';
+import { useCreateWeeklyReport, WEEKLY_REPORT_DIARY_GOAL } from '@entities/report';
 import { useToastStore } from '@shared/lib/toast';
 
 interface WeeklyReportCardState {
@@ -89,7 +89,12 @@ interface Props {
   reportId?: number | null;
 }
 
-export function WeeklyReportCard({ style, count = 0, goal = 1, reportId = null }: Props) {
+export function WeeklyReportCard({
+  style,
+  count = 0,
+  goal = WEEKLY_REPORT_DIARY_GOAL,
+  reportId = null,
+}: Props) {
   const colors = useThemeColor();
   const [isSunday, setIsSunday] = useState(() => dayjs().day() === 0);
 

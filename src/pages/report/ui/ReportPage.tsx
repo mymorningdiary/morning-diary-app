@@ -1,5 +1,6 @@
 import { ActivityIndicator, ScrollView, StyleSheet, View } from 'react-native';
 import { Redirect, router, useLocalSearchParams } from 'expo-router';
+import dayjs from 'dayjs';
 
 import { useGetWeeklyReports } from '@entities/report';
 import { parseNumberParam } from '@shared/lib/router';
@@ -17,6 +18,11 @@ export function ReportPage() {
   const { id } = useLocalSearchParams<{ id?: string }>();
   const weeklyReportId = parseNumberParam(id);
   const { weeklyReport, isPending, isError } = useGetWeeklyReports(weeklyReportId);
+  const weeklyReportDateRange = weeklyReport
+    ? `${dayjs(weeklyReport.weekStartDate).format('YYYY.MM.DD')} - ${dayjs(
+        weeklyReport.weekEndDate,
+      ).format('YYYY.MM.DD')}`
+    : '';
 
   const handleDayPress = (date?: string) => {
     const diary = weeklyReport?.writtenDates.find((d) => d.writtenDate === date);
@@ -57,6 +63,9 @@ export function ReportPage() {
           bounces={false}>
           <View>
             <View style={styles.headerContent}>
+              <MDText type="caption1Regular" color={colors.text.alternative}>
+                {weeklyReportDateRange}
+              </MDText>
               {!!weeklyReport.title && (
                 <MDText type="heading1SemiBold" color={colors.text.brand}>
                   {weeklyReport.title}
@@ -114,12 +123,12 @@ const styles = StyleSheet.create({
     gap: 16,
   },
   topKeywordContent: {
-    marginTop: 80,
+    marginTop: 40,
   },
   insightContent: {
-    marginTop: 80,
+    marginTop: 40,
   },
   empathySentenceContent: {
-    marginTop: 80,
+    marginTop: 40,
   },
 });

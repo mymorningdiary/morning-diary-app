@@ -5,17 +5,12 @@ import { StyleSheet, View } from 'react-native';
 
 import { DiaryCalendar, WriteDiaryButton } from '@features/diary';
 import { useHome } from '@features/home';
+import { shouldWeeklyReportRefresh } from '@entities/report';
 import { useUser } from '@entities/user';
 import { useRunOnFocusAndForeground } from '@shared/lib/app-state';
 import { MDPage } from '@shared/ui/Layout';
 import { WeeklyEmotionCard } from './WeeklyEmotionCard';
 import { WeeklyReportCard } from './WeeklyReportCard';
-
-const isWeeklyReportRefreshWindow = () => {
-  const now = dayjs();
-
-  return now.day() === 0 && now.hour() >= 20;
-};
 
 export function HomePage() {
   const { user } = useUser();
@@ -28,10 +23,10 @@ export function HomePage() {
       date: currentMonth,
     });
 
-  // 일요일 오후 8시 이후에만 포커스될 때마다 데이터 갱신
+  // 테스트를 위해 토요일 오후 1시 이후에만 포커스될 때마다 데이터 갱신
   useRunOnFocusAndForeground(
     useCallback(() => {
-      if (!isWeeklyReportRefreshWindow()) return;
+      if (!shouldWeeklyReportRefresh()) return;
 
       void refetchHome();
     }, [refetchHome]),

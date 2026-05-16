@@ -5,7 +5,7 @@ import dayjs from 'dayjs';
 import { DiaryWeeklySection } from './types';
 
 export function useDiaryWeeklySections(date: string) {
-  const { data, isPending, isError } = useGetDiaries(date);
+  const { data, isPending, isError, refetch } = useGetDiaries(date);
 
   const sections = useMemo<DiaryWeeklySection[]>(() => {
     const weeks = data?.data.weeks;
@@ -29,5 +29,5 @@ export function useDiaryWeeklySections(date: string) {
       });
   }, [data, date]);
 
-  return { sections, isPending, isError };
+  return { sections, isPending, isError, refetchDiaries: refetch };
 }

@@ -17,20 +17,20 @@
       <path d="M5.03869 1.30659C5.2077 0.926585 5.7282 0.908085 5.9322 1.24959L5.9617 1.30659L6.4827 2.47909C6.93763 3.50254 7.69419 4.36272 8.6512 4.94459L8.8122 5.03909L9.7372 5.55909C9.81073 5.60025 9.87279 5.65917 9.91773 5.73046C9.96267 5.80176 9.98904 5.88317 9.99446 5.96727C9.99988 6.05137 9.98416 6.13549 9.94875 6.21196C9.91333 6.28843 9.85934 6.35482 9.79169 6.40509L9.73769 6.44008L8.8122 6.96008C7.83589 7.50926 7.05054 8.34345 6.56119 9.35108L6.4827 9.52009L5.9617 10.6926C5.7927 11.0726 5.27219 11.0911 5.06819 10.7496L5.03869 10.6926L4.51769 9.52009C4.06276 8.49663 3.3062 7.63645 2.34919 7.05458L2.18819 6.96008L1.26319 6.44008C1.18966 6.39892 1.1276 6.34 1.08266 6.26871C1.03772 6.19741 1.01135 6.116 1.00593 6.0319C1.00051 5.9478 1.01623 5.86368 1.05164 5.78721C1.08706 5.71074 1.14105 5.64435 1.20869 5.59409L1.26269 5.55909L2.18819 5.03909C3.1645 4.48991 3.94985 3.65572 4.43919 2.64809L4.51769 2.47909L5.03869 1.30659ZM9.61069 1.06009C9.85883 1.62392 10.2821 2.09277 10.8177 2.39709C10.8977 2.44209 10.8977 2.55709 10.8177 2.60209C10.2818 2.90644 9.85837 3.37549 9.61019 3.93959C9.6007 3.96082 9.58526 3.97885 9.56574 3.9915C9.54622 4.00416 9.52346 4.01089 9.50019 4.01089C9.47693 4.01089 9.45417 4.00416 9.43465 3.9915C9.41513 3.97885 9.39969 3.96082 9.39019 3.93959C9.14193 3.37567 8.71849 2.90682 8.18269 2.60259C8.16461 2.59227 8.14958 2.57736 8.13912 2.55935C8.12866 2.54135 8.12316 2.5209 8.12316 2.50009C8.12316 2.47927 8.12866 2.45882 8.13912 2.44082C8.14958 2.42281 8.16461 2.4079 8.18269 2.39759C8.71865 2.0931 9.14211 1.62387 9.39019 1.05959C9.39969 1.03835 9.41513 1.02032 9.43465 1.00767C9.45417 0.995014 9.47693 0.988281 9.50019 0.988281C9.52346 0.988281 9.54622 0.995014 9.56574 1.00767C9.58526 1.02032 9.6007 1.03835 9.61019 1.05959L9.61069 1.06009Z"/>
     </clipPath>
     <linearGradient id="weeklyReportVerticalGradient" x1="5.5" y1="0.6" x2="5.5" y2="10.9" gradientUnits="userSpaceOnUse">
-      <stop offset="0" stop-color="#FF3B30"/>
-      <stop offset="0.33" stop-color="#FF6900"/>
-      <stop offset="0.74" stop-color="#FF9B54"/>
-      <stop offset="1" stop-color="#34A853"/>
+      <stop offset="0" stop-color="#FFD1B0"/>
+      <stop offset="0.34" stop-color="#FFBA8A"/>
+      <stop offset="0.72" stop-color="#FF8733"/>
+      <stop offset="1" stop-color="#FF6900"/>
     </linearGradient>
     <radialGradient id="weeklyReportLeftGlow" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(1.2 5.9) scale(6.2)">
-      <stop offset="0" stop-color="#FBBC05"/>
-      <stop offset="0.56" stop-color="#FBBC05" stop-opacity="0.75"/>
-      <stop offset="1" stop-color="#FBBC05" stop-opacity="0"/>
+      <stop offset="0" stop-color="#FDE1CD"/>
+      <stop offset="0.56" stop-color="#FFBA8A" stop-opacity="0.72"/>
+      <stop offset="1" stop-color="#FFBA8A" stop-opacity="0"/>
     </radialGradient>
     <radialGradient id="weeklyReportRightGlow" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(10.15 5.3) scale(4.25)">
-      <stop offset="0" stop-color="#4285F4"/>
-      <stop offset="0.5" stop-color="#4285F4" stop-opacity="0.58"/>
-      <stop offset="1" stop-color="#4285F4" stop-opacity="0"/>
+      <stop offset="0" stop-color="#FFF8F2"/>
+      <stop offset="0.5" stop-color="#FFD1B0" stop-opacity="0.58"/>
+      <stop offset="1" stop-color="#FFD1B0" stop-opacity="0"/>
     </radialGradient>
     <linearGradient id="weeklyReportPrimaryLightGradient" x1="8.1" y1="1" x2="10.9" y2="4.1" gradientUnits="userSpaceOnUse">
       <stop offset="0" stop-color="#FFBA8A"/>

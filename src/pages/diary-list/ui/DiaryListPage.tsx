@@ -12,7 +12,7 @@ import { router } from 'expo-router';
 
 import { useThemeColor } from '@shared/lib/theme';
 import { MDPage } from '@shared/ui/Layout';
-import { DiaryListHeader } from './DiaryListHeader';
+import { DiaryListAppBar } from './DiaryListAppBar';
 import { useDiaryWeeklySections } from '../model/useDiaryWeeklySections';
 import { DiaryWeeklySectionHeader } from './DiaryWeeklySectionHeader';
 import { DiaryListEmpty } from './DiaryListEmpty';
@@ -78,7 +78,7 @@ export function DiaryListPage() {
 
   return (
     <MDPage style={styles.container}>
-      <DiaryListHeader date={currentDate} onDateChange={setCurrentDate} />
+      <DiaryListAppBar date={currentDate} onDateChange={setCurrentDate} />
       <SectionList
         contentContainerStyle={[
           styles.listContent,

@@ -17,7 +17,7 @@ export function DiaryWeeklyReportItem({ style, title, reportId }: Props) {
   return (
     <View style={{ paddingHorizontal: 16 }}>
       <LinearGradient
-        colors={[colors.primary.normal, colors.primary.light, colors.primary.light]}
+        colors={['#FF8733', '#FFBA8A']}
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 1 }}
         style={[styles.gradientBorder, style]}>

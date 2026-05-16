@@ -67,6 +67,6 @@ const HeaderStyles = StyleSheet.create({
     flexDirection: 'row',
     paddingBottom: 4,
     alignItems: 'center',
-    gap: 12,
+    gap: 8,
   },
 });

@@ -31,7 +31,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   ...config,
   name: getAppName(),
   slug: 'morning-diary',
-  version: '1.0.2',
+  version: '1.1.0',
   orientation: 'portrait',
   icon: './assets/images/ic-app.png',
   scheme: 'morningdiary',
@@ -186,6 +186,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   ],
   experiments: {
     typedRoutes: true,
+    reactCompiler: true,
   },
   extra: {
     router: {

@@ -32,7 +32,7 @@ export function WeeklyReportGoalModal({ visible = false, onConfirm }: Props) {
 
             <View>
               <MDText type="labelRegular" color={colors.text.brand}>
-                ✨ 이번주 리포트는 일요일에 열 수 있어요
+                ✨ 리포트는 일요일에 열 수 있어요
               </MDText>
               <MDText type="labelRegular" color={colors.text.brand}>
                 ✨ 열지 않으면 일요일 오후 8시에 자동 생성 돼요

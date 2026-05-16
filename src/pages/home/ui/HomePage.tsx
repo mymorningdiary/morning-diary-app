@@ -1,7 +1,7 @@
 import dayjs from 'dayjs';
 import { router } from 'expo-router';
 import { useCallback, useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { ScrollView, StyleSheet, View } from 'react-native';
 
 import { DiaryCalendar, WriteDiaryButton } from '@features/diary';
 import { useHome } from '@features/home';
@@ -47,34 +47,38 @@ export function HomePage() {
 
   return (
     <MDPage style={styles.container}>
-      <DiaryCalendar
-        date={currentDate}
-        markedDates={markedDates}
-        onDateChange={setCurrentDate}
-        onDayPress={handleDayPress}
-      />
-
-      <View style={{ flexDirection: 'row', paddingHorizontal: 12, gap: 12 }}>
-        <WeeklyEmotionCard style={{ flex: 1 }} emotion={weeklyEmotion} />
-        <WeeklyReportCard
-          style={{ flex: 1 }}
-          goal={3}
-          count={weeklyDiaryCount}
-          reportId={reportId}
+      <ScrollView
+        style={styles.listContent}
+        overScrollMode="never"
+        bounces={false}
+        showsVerticalScrollIndicator={false}>
+        <DiaryCalendar
+          date={currentDate}
+          markedDates={markedDates}
+          onDateChange={setCurrentDate}
+          onDayPress={handleDayPress}
         />
-      </View>
 
+        <View style={{ flexDirection: 'row', paddingHorizontal: 12, gap: 12 }}>
+          <WeeklyEmotionCard style={{ flex: 1 }} emotion={weeklyEmotion} />
+          <WeeklyReportCard
+            style={{ flex: 1 }}
+            goal={3}
+            count={weeklyDiaryCount}
+            reportId={reportId}
+          />
+        </View>
+      </ScrollView>
       <WriteDiaryButton
         disabled={user?.todayDiaryWritten ?? false}
-        onPress={() => {
-          router.push('/report/1');
-          // router.push({
-          //   pathname: '/diary-write',
-          //   params: {
-          //     date: dayjs().format('YYYY-MM-DD'),
-          //   },
-          // });
-        }}
+        onPress={() =>
+          router.push({
+            pathname: '/diary-write',
+            params: {
+              date: dayjs().format('YYYY-MM-DD'),
+            },
+          })
+        }
       />
     </MDPage>
   );
@@ -84,5 +88,8 @@ const styles = StyleSheet.create({
   container: {
     gap: 16,
     paddingBottom: 60,
+  },
+  listContent: {
+    paddingBottom: 56 + 24, // 탭바 높이 + 패딩
   },
 });

@@ -91,6 +91,7 @@ export function DiaryListPage() {
         renderSectionFooter={() => <View style={styles.sectionSeparator} />}
         ItemSeparatorComponent={() => <View style={styles.itemSeparator} />}
         ListEmptyComponent={renderEmpty}
+        stickySectionHeadersEnabled={false}
         showsVerticalScrollIndicator={false}
         overScrollMode="never"
         bounces={false}
@@ -112,11 +113,10 @@ export function DiaryListPage() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    paddingBottom: 60,
-  },
+  container: {},
   listContent: {
     flexGrow: 1,
+    paddingBottom: 56 + 24, // 탭바 높이 + 패딩
   },
   emptyListContent: {
     justifyContent: 'center',

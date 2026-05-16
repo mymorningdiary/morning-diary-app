@@ -9,12 +9,10 @@ import { SettingsSystemSection } from './SettingsSystemSection';
 import { SettingsTestSection } from './SettingsTestSection';
 
 export function SettingsPage() {
-  const styles = PageStyles;
-
   return (
     <MDPage>
       <ScrollView
-        contentContainerStyle={styles.scrollContent}
+        contentContainerStyle={styles.listContent}
         overScrollMode="never"
         showsVerticalScrollIndicator={false}
         bounces={false}>
@@ -34,8 +32,8 @@ export function SettingsPage() {
   );
 }
 
-const PageStyles = StyleSheet.create({
-  scrollContent: {
-    paddingBottom: 60,
+const styles = StyleSheet.create({
+  listContent: {
+    paddingBottom: 56 + 24, // 탭바 높이 + 패딩
   },
 });

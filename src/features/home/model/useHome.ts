@@ -24,5 +24,12 @@ export function useHome({ date }: Options) {
   const getDiaryId = (date?: string) =>
     diaries?.find((it) => it.writtenDate === date)?.diaryId ?? null;
 
-  return { diaries, markedDates, weeklyEmotion, weeklyDiaryCount, getDiaryId };
+  return {
+    diaries,
+    markedDates,
+    weeklyEmotion,
+    weeklyDiaryCount,
+    reportId: home?.reportId ?? null,
+    getDiaryId,
+  };
 }

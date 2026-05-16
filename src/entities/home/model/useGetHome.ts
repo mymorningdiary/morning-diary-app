@@ -7,7 +7,7 @@ interface Options {
 }
 
 export function useGetHome({ date }: Options) {
-  const { data, error, isError, isLoading, isFetching, isPending } = useQuery({
+  const { data, error, isError, isLoading, isFetching, isPending, refetch } = useQuery({
     queryKey: homeQueryKeys.detail(date),
     queryFn: () => getHome(date),
     staleTime: 1000 * 60 * 5,
@@ -20,5 +20,6 @@ export function useGetHome({ date }: Options) {
     isLoading,
     isFetching,
     isPending,
+    refetch,
   };
 }

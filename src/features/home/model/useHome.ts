@@ -6,7 +6,7 @@ interface Options {
 }
 
 export function useHome({ date }: Options) {
-  const { home } = useGetHome({ date });
+  const { home, refetch } = useGetHome({ date });
   const diaries = home?.diaries ?? null;
   const weeklyEmotion = home?.hasWrittenDiaryThisWeek
     ? (home?.weeklyAverageEmotionScore ?? null)
@@ -31,5 +31,6 @@ export function useHome({ date }: Options) {
     weeklyDiaryCount,
     reportId: home?.reportId ?? null,
     getDiaryId,
+    refetchHome: refetch,
   };
 }

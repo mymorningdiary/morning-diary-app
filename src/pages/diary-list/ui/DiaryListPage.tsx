@@ -50,7 +50,7 @@ export function DiaryListPage() {
     item,
   }) => {
     if ('weeklyReportId' in item) {
-      return <DiaryWeeklyReportItem weeklyReportId={item.weeklyReportId} title={item.title} />;
+      return <DiaryWeeklyReportItem reportId={item.weeklyReportId} title={item.title} />;
     }
 
     return <DiaryListWeeklyDiaryItem diary={item} />;

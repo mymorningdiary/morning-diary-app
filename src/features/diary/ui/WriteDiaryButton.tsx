@@ -18,7 +18,8 @@ export function WriteDiaryButton({ style, disabled, onPress }: Props) {
   return (
     <View style={[styles.container, { bottom: bottom + 24 }, style]}>
       <MDButton
-        style={[styles.button, { backgroundColor: colors.fill.brand }]}
+        style={styles.button}
+        activeBackgroundColor={colors.fill.brand}
         prefix={IconPen}
         disabled={disabled}
         onPress={onPress}

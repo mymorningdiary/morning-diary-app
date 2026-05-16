@@ -27,6 +27,7 @@ export interface MDButtonProps extends Omit<PressableProps, 'style'> {
   loading?: boolean;
   prefix?: React.FC<SvgProps>;
   suffix?: React.FC<SvgProps>;
+  activeBackgroundColor?: ViewStyle['backgroundColor'];
   style?: StyleProp<ViewStyle>;
 }
 
@@ -38,6 +39,7 @@ export function MDButton({
   loading = false,
   prefix: PrefixIcon,
   suffix: SuffixIcon,
+  activeBackgroundColor,
   disabled,
   accessibilityRole,
   style,
@@ -47,10 +49,11 @@ export function MDButton({
   const isDisabled = disabled ?? false;
   const { container, content } = getButtonSizeConfig(size);
   const { textType, iconSize, iconSpacing } = content;
+  const isInactive = isDisabled || loading;
   const variantTokens = getVariantTokens({
     colors,
     variant,
-    disabled: isDisabled || loading,
+    disabled: isInactive,
   });
 
   return (
@@ -62,7 +65,10 @@ export function MDButton({
         container,
         fullWidth && ButtonBaseStyles.fullWidth,
         {
-          backgroundColor: variantTokens.backgroundColor,
+          backgroundColor:
+            activeBackgroundColor && !isInactive
+              ? activeBackgroundColor
+              : variantTokens.backgroundColor,
           borderColor: variantTokens.borderColor,
           borderWidth: variantTokens.borderWidth,
         },

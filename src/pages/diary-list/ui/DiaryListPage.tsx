@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import {
   ActivityIndicator,
   SectionList,
@@ -20,7 +20,9 @@ import { DiaryWeeklySection, DiaryWeeklySectionItem } from '../model/types';
 import { DiaryWeeklyReportItem } from './DiaryListWeeklyReportItem';
 import { DiaryListWeeklyDiaryItem } from './DiaryListWeeklyDiaryItem';
 import { WriteDiaryButton } from '@features/diary';
+import { shouldWeeklyReportRefresh } from '@entities/report';
 import { useUser } from '@entities/user';
+import { useRunOnFocusAndForeground } from '@shared/lib/app-state';
 
 export function DiaryListPage() {
   const colors = useThemeColor();
@@ -28,7 +30,15 @@ export function DiaryListPage() {
 
   const [currentDate, setCurrentDate] = useState(dayjs().format('YYYY-MM-DD'));
   const currentMonth = dayjs(currentDate).format('YYYY-MM');
-  const { sections, isPending, isError } = useDiaryWeeklySections(currentMonth);
+  const { sections, isPending, isError, refetchDiaries } = useDiaryWeeklySections(currentMonth);
+
+  useRunOnFocusAndForeground(
+    useCallback(() => {
+      if (!shouldWeeklyReportRefresh()) return;
+
+      void refetchDiaries();
+    }, [refetchDiaries]),
+  );
 
   const renderSectionHeader = ({
     section,

@@ -9,6 +9,7 @@ import IconCalendar from './ic-calendar.svg';
 import IconList from './ic-list.svg';
 import IconMore from './ic-more.svg';
 import IconLight from './ic-light.svg';
+import IconWeeklyReport from './ic-weekly-report.svg';
 
 export {
   IconMail,
@@ -22,4 +23,5 @@ export {
   IconList,
   IconMore,
   IconLight,
+  IconWeeklyReport,
 };

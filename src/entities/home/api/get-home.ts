@@ -8,6 +8,7 @@ interface GetHomeResponse {
   weeklyAverageEmotionScore: number;
   hasWrittenDiaryThisWeek: boolean;
   weeklyDiaryCount: number;
+  reportId: number | null;
 }
 
 export const getHome = async (date: string): Promise<ApiResponse<GetHomeResponse>> => {

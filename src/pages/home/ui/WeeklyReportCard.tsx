@@ -22,12 +22,12 @@ const getWeeklyReportCardState = ({
   count,
   goal,
   isSunday,
-  isReportOpened,
+  isReportGenerated,
 }: {
   count: number;
   goal: number;
   isSunday: boolean;
-  isReportOpened?: boolean;
+  isReportGenerated?: boolean;
 }): WeeklyReportCardState => {
   const safeGoal = Math.max(goal, 1);
   const remaining = Math.max(safeGoal - count, 0);
@@ -37,7 +37,7 @@ const getWeeklyReportCardState = ({
     isBelowGoal: !isGoalReached,
     isGoalReachedOnWeekday: isGoalReached && !isSunday,
     isGoalReachedOnSunday: isGoalReached && isSunday,
-    isReportGeneratedOnSunday: isGoalReached && isSunday && Boolean(isReportOpened),
+    isReportGeneratedOnSunday: isGoalReached && isSunday && Boolean(isReportGenerated),
     remaining,
   };
 };
@@ -86,10 +86,10 @@ interface Props {
   style?: StyleProp<ViewStyle>;
   count?: number;
   goal?: number;
-  isReportOpened?: boolean;
+  reportId?: number | null;
 }
 
-export function WeeklyReportCard({ style, count = 0, goal = 1, isReportOpened }: Props) {
+export function WeeklyReportCard({ style, count = 0, goal = 1, reportId = null }: Props) {
   const colors = useThemeColor();
   const [isSunday, setIsSunday] = useState(() => dayjs().day() === 0);
 
@@ -107,8 +107,8 @@ export function WeeklyReportCard({ style, count = 0, goal = 1, isReportOpened }:
   );
 
   const reportState = useMemo(
-    () => getWeeklyReportCardState({ count, goal, isSunday, isReportOpened }),
-    [isSunday, count, goal, isReportOpened],
+    () => getWeeklyReportCardState({ count, goal, isSunday, isReportGenerated: reportId != null }),
+    [isSunday, count, goal, reportId],
   );
 
   const { title, subtitle } = getTitleTexts(reportState);

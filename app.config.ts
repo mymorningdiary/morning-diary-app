@@ -198,7 +198,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     appVariant: process.env.APP_VARIANT,
   },
   owner: 'morning-diary',
-  runtimeVersion: '1.0.2', // OTA 호환성 버전, JS만 수정 -> 버전 그대로 / 패키지 설치 등 -> 버전 수정
+  runtimeVersion: '1.1.0', // OTA 호환성 버전, JS만 수정 -> 버전 그대로 / 패키지 설치 등 -> 버전 수정
   updates: {
     url: 'https://u.expo.dev/295098dc-51af-4553-b9ca-a7bbf5514d8c',
   },

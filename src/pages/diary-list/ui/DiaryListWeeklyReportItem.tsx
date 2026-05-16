@@ -1,6 +1,7 @@
 import { IconWeeklyReport } from '@assets/icons';
 import { useThemeColor } from '@shared/lib/theme';
 import { MDText } from '@shared/ui/Text';
+import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
 import { Pressable, StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
 
@@ -15,45 +16,42 @@ export function DiaryWeeklyReportItem({ style, title, weeklyReportId }: Props) {
 
   return (
     <View style={{ paddingHorizontal: 16 }}>
-      <Pressable
-        style={[
-          styles.container,
-          { backgroundColor: colors.fill.normal, borderColor: colors.primary.normal },
-          style,
-        ]}
-        onPress={() => router.push(`/report/${weeklyReportId}`)}>
-        <IconWeeklyReport width={32} height={32} />
+      <LinearGradient
+        colors={[colors.primary.normal, colors.primary.light, colors.primary.light]}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+        style={[styles.gradientBorder, style]}>
+        <Pressable
+          style={[styles.container, { backgroundColor: colors.fill.normal }]}
+          onPress={() => router.push(`/report/${weeklyReportId}`)}>
+          <IconWeeklyReport width={32} height={32} />
 
-        <View style={styles.textContent}>
-          <MDText type="caption1Regular" color={colors.text.alternative}>
-            주간리포트
-          </MDText>
-          <MDText type="labelSemiBold" color={colors.text.brand} numberOfLines={2}>
-            {title}
-          </MDText>
-        </View>
-      </Pressable>
+          <View style={styles.textContent}>
+            <MDText type="caption1Regular" color={colors.text.alternative}>
+              주간리포트
+            </MDText>
+            <MDText type="labelSemiBold" color={colors.text.brand} numberOfLines={2}>
+              {title}
+            </MDText>
+          </View>
+        </Pressable>
+      </LinearGradient>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
+  gradientBorder: {
+    borderRadius: 16,
+    padding: 1,
+  },
   container: {
     flexDirection: 'row',
     alignItems: 'center',
-
-    borderWidth: 1,
-    borderRadius: 16,
+    borderRadius: 15,
     paddingVertical: 12,
     paddingHorizontal: 16,
     gap: 10,
-  },
-  iconBox: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    alignItems: 'center',
-    justifyContent: 'center',
   },
   textContent: {
     flex: 1,

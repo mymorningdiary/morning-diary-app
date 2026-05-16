@@ -8,6 +8,7 @@ import { useThemeColor } from '@shared/lib/theme';
 import { MDAppBar } from '@shared/ui/AppBar';
 import { MDPage } from '@shared/ui/Layout';
 import { MDText } from '@shared/ui/Text';
+import { useScrollTriggeredSection } from './hooks/useScrollTriggeredSection';
 import { ReportEmpathySection } from './ReportEmpathySection';
 import { ReportInsightSection } from './ReportInsightSection';
 import { ReportTopKeywordSection } from './ReportTopKeywordSection';
@@ -18,11 +19,18 @@ export function ReportPage() {
   const { id } = useLocalSearchParams<{ id?: string }>();
   const weeklyReportId = parseNumberParam(id);
   const { weeklyReport, isPending, isError } = useGetWeeklyReports(weeklyReportId);
+  const {
+    isTriggered: isEmpathySectionVisible,
+    handleScrollViewLayout,
+    handleScroll,
+    handleTargetLayout: handleEmpathySectionLayout,
+  } = useScrollTriggeredSection({ resetKey: weeklyReportId });
   const weeklyReportDateRange = weeklyReport
     ? `${dayjs(weeklyReport.weekStartDate).format('YYYY.MM.DD')} - ${dayjs(
         weeklyReport.weekEndDate,
       ).format('YYYY.MM.DD')}`
     : '';
+  const hasEmpathySentences = !!weeklyReport?.empathySentences.length;
 
   const handleDayPress = (date?: string) => {
     const diary = weeklyReport?.writtenDates.find((d) => d.writtenDate === date);
@@ -57,6 +65,9 @@ export function ReportPage() {
         </View>
       ) : (
         <ScrollView
+          onLayout={handleScrollViewLayout}
+          onScroll={handleScroll}
+          scrollEventThrottle={16}
           contentContainerStyle={styles.scrollContent}
           showsVerticalScrollIndicator={false}
           overScrollMode="never"
@@ -95,10 +106,14 @@ export function ReportPage() {
             style={styles.insightContent}
             insights={weeklyReport.unconsciousInsights}
           />
-          <ReportEmpathySection
-            style={styles.empathySentenceContent}
-            sentences={weeklyReport.empathySentences}
-          />
+          {hasEmpathySentences && (
+            <View style={styles.empathySentenceContent} onLayout={handleEmpathySectionLayout}>
+              <ReportEmpathySection
+                sentences={weeklyReport.empathySentences}
+                isVisible={isEmpathySectionVisible}
+              />
+            </View>
+          )}
         </ScrollView>
       )}
     </MDPage>

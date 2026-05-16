@@ -8,10 +8,10 @@ import { Pressable, StyleProp, StyleSheet, View, ViewStyle } from 'react-native'
 interface Props {
   style?: StyleProp<ViewStyle>;
   title: string;
-  weeklyReportId: number;
+  reportId: number;
 }
 
-export function DiaryWeeklyReportItem({ style, title, weeklyReportId }: Props) {
+export function DiaryWeeklyReportItem({ style, title, reportId }: Props) {
   const colors = useThemeColor();
 
   return (
@@ -23,7 +23,7 @@ export function DiaryWeeklyReportItem({ style, title, weeklyReportId }: Props) {
         style={[styles.gradientBorder, style]}>
         <Pressable
           style={[styles.container, { backgroundColor: colors.fill.normal }]}
-          onPress={() => router.push(`/report/${weeklyReportId}`)}>
+          onPress={() => router.push(`/report/${reportId}`)}>
           <IconWeeklyReport width={32} height={32} />
 
           <View style={styles.textContent}>

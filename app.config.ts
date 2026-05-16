@@ -77,6 +77,10 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     [
       'expo-build-properties',
       {
+        ios: {
+          useFrameworks: 'static',
+          forceStaticLinking: ['RNFBApp'],
+        },
         android: {
           extraMavenRepos: ['https://devrepo.kakao.com/nexus/content/groups/public/'],
         },
@@ -177,15 +181,6 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     ],
     '@react-native-firebase/app',
     '@react-native-firebase/crashlytics',
-    [
-      'expo-build-properties',
-      {
-        ios: {
-          useFrameworks: 'static',
-          forceStaticLinking: ['RNFBApp'],
-        },
-      },
-    ],
     'expo-apple-authentication',
     'expo-web-browser',
   ],

@@ -37,7 +37,7 @@ export function ReportPage() {
 
   return (
     <MDPage style={styles.container}>
-      <MDAppBar title="주간 보고서" onBack={() => router.back()} />
+      <MDAppBar title="주간리포트" onBack={() => router.back()} />
 
       {isPending ? (
         <View style={styles.centerContent}>
@@ -46,7 +46,7 @@ export function ReportPage() {
       ) : isError || !weeklyReport ? (
         <View style={styles.centerContent}>
           <MDText type="bodyRegular" color={colors.text.alternative}>
-            주간 리포트를 불러오지 못했어요
+            주간리포트를 불러오지 못했어요
           </MDText>
         </View>
       ) : (

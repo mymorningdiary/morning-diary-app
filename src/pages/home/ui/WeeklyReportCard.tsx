@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import { useFocusEffect } from 'expo-router';
+import { router, useFocusEffect } from 'expo-router';
 import { useCallback, useMemo, useState } from 'react';
 import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
 
@@ -57,27 +57,27 @@ const getTitleTexts = (state: WeeklyReportCardState) => {
 
   if (state.isGoalReachedOnWeekday) {
     return {
-      title: '주간 리포트',
+      title: '주간리포트',
       subtitle: '기록 완료! 일기가 쌓이면 리포트가 더 풍성해져요',
     };
   }
 
   if (state.isBelowGoal && state.remaining === 1) {
     return {
-      title: '주간 리포트',
+      title: '주간리포트',
       subtitle: '마지막 1번! 일요일에 특별한 리포트를 만나보세요',
     };
   }
 
   if (state.isBelowGoal && state.remaining === 2) {
     return {
-      title: '주간 리포트',
+      title: '주간리포트',
       subtitle: '기분 좋은 시작! 2번 더 기록하면 무의식이 정리돼요',
     };
   }
 
   return {
-    title: '주간 리포트',
+    title: '주간리포트',
     subtitle: `${state.remaining}번만 기록하고 무의식을 확인해보세요`,
   };
 };
@@ -94,8 +94,8 @@ export function WeeklyReportCard({ style, count = 0, goal = 1, reportId = null }
   const [isSunday, setIsSunday] = useState(() => dayjs().day() === 0);
 
   const { createReport, isPending } = useCreateWeeklyReport({
-    onSuccess: (weeklyReportId: number) => {
-      // TODO 주간 리포트 화면 이동
+    onSuccess: (createdReportId: number) => {
+      router.push(`/report/${createdReportId}`);
     },
     onError: (message) => useToastStore.getState().show({ type: 'error', message }),
   });
@@ -120,8 +120,8 @@ export function WeeklyReportCard({ style, count = 0, goal = 1, reportId = null }
       await createReport();
     }
 
-    if (reportState.isReportGeneratedOnSunday) {
-      // TODO 주간 리포트 화면 이동
+    if (reportState.isReportGeneratedOnSunday && !!reportId) {
+      router.push(`/report/${reportId}`);
     }
   };
 
@@ -147,8 +147,8 @@ export function WeeklyReportCard({ style, count = 0, goal = 1, reportId = null }
             reportState.isGoalReachedOnWeekday
               ? '🔒 일요일에 열려요'
               : reportState.isGoalReachedOnSunday
-                ? '주간 리포트 열기'
-                : '주간 리포트 보기'
+                ? '주간리포트 열기'
+                : '주간리포트 보기'
           }
           disabled={reportState.isBelowGoal || reportState.isGoalReachedOnWeekday}
           onPress={handlePress}

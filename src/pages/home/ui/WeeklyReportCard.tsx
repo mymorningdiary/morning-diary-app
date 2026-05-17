@@ -1,15 +1,14 @@
 import dayjs from 'dayjs';
 import { router, useFocusEffect } from 'expo-router';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
 
-import { useThemeColor } from '@shared/lib/theme';
-import { MDText } from '@shared/ui/Text';
-import { LightProgressBar } from '@shared/ui/ProgressBar';
-import { MDButton } from '@shared/ui/Button';
 import { useCreateWeeklyReport, WEEKLY_REPORT_DIARY_GOAL } from '@entities/report';
+import { useThemeColor } from '@shared/lib/theme';
 import { useToastStore } from '@shared/lib/toast';
-import { Logger } from '@shared/lib/log';
+import { MDButton } from '@shared/ui/Button';
+import { LightProgressBar } from '@shared/ui/ProgressBar';
+import { MDText } from '@shared/ui/Text';
 
 interface WeeklyReportCardState {
   isBelowGoal: boolean;
@@ -121,11 +120,6 @@ export function WeeklyReportCard({
   );
 
   const { title, subtitle } = getTitleTexts(reportState);
-
-  useEffect(() => {
-    Logger('WeeklyReportCard').debug(reportState);
-    Logger('WeeklyReportCard').debug(`id: ${reportId}`);
-  }, [reportState, reportId]);
 
   const handlePress = async () => {
     if (isPending) return;

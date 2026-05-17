@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
 import { router, useFocusEffect } from 'expo-router';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
 
 import { useThemeColor } from '@shared/lib/theme';
@@ -9,6 +9,7 @@ import { LightProgressBar } from '@shared/ui/ProgressBar';
 import { MDButton } from '@shared/ui/Button';
 import { useCreateWeeklyReport, WEEKLY_REPORT_DIARY_GOAL } from '@entities/report';
 import { useToastStore } from '@shared/lib/toast';
+import { Logger } from '@shared/lib/log';
 
 interface WeeklyReportCardState {
   isBelowGoal: boolean;
@@ -118,15 +119,21 @@ export function WeeklyReportCard({
 
   const { title, subtitle } = getTitleTexts(reportState);
 
+  useEffect(() => {
+    Logger('WeeklyReportCard').debug(reportState);
+    Logger('WeeklyReportCard').debug(`id: ${reportId}`);
+  }, [reportState, reportId]);
+
   const handlePress = async () => {
     if (isPending) return;
 
-    if (reportState.isGoalReachedOnSunday) {
-      await createReport();
+    if (reportState.isReportGeneratedOnSunday) {
+      router.push(`/report/${reportId}`);
+      return;
     }
 
-    if (reportState.isReportGeneratedOnSunday && !!reportId) {
-      router.push(`/report/${reportId}`);
+    if (reportState.isGoalReachedOnSunday) {
+      await createReport();
     }
   };
 
@@ -151,9 +158,9 @@ export function WeeklyReportCard({
           label={
             reportState.isGoalReachedOnWeekday
               ? '🔒 일요일에 열려요'
-              : reportState.isGoalReachedOnSunday
-                ? '주간리포트 열기'
-                : '주간리포트 보기'
+              : reportState.isReportGeneratedOnSunday
+                ? '주간리포트 보기'
+                : '주간리포트 열기'
           }
           disabled={reportState.isBelowGoal || reportState.isGoalReachedOnWeekday}
           onPress={handlePress}

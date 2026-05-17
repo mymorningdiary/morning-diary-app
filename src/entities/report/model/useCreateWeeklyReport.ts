@@ -1,19 +1,27 @@
 import { Logger } from '@shared/lib/log';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { postWeeklyReports } from '../api/post-weekly-reports';
 import { WEEKLY_REPORT_DIARY_GOAL } from '../config/constants';
+import { diaryQueryKeys } from '@entities/diary';
+import { homeQueryKeys } from '@entities/home';
 
 interface Options {
+  date?: string;
   onSuccess?: (weeklyReportId: number) => void;
   onError?: (message: string) => void;
 }
 
-export function useCreateWeeklyReport({ onSuccess, onError }: Options) {
+export function useCreateWeeklyReport({ date, onSuccess, onError }: Options) {
+  const queryClient = useQueryClient();
+
   const { mutateAsync, isPending } = useMutation({
     mutationFn: postWeeklyReports,
     onSuccess: (res) => {
       if (res.code === 2000) {
         onSuccess?.(res.data.weeklyReportId);
+
+        void queryClient.invalidateQueries({ queryKey: diaryQueryKeys.list(date) });
+        void queryClient.invalidateQueries({ queryKey: homeQueryKeys.detail(date) });
       }
     },
     onError: (error: any) => {

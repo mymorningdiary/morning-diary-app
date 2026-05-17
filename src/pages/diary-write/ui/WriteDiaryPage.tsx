@@ -24,7 +24,6 @@ import { MDButton } from '@shared/ui/Button';
 import { MDPage } from '@shared/ui/Layout';
 import { MDModal } from '@shared/ui/Modal';
 import { TextGoalProgressBar } from '@shared/ui/ProgressBar';
-import { MDText } from '@shared/ui/Text';
 import { WeeklyReportGoalModal } from './WeeklyReportGoalModal';
 
 interface DiaryWriteSuccessState {

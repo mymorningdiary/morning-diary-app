@@ -85,6 +85,7 @@ const getTitleTexts = (state: WeeklyReportCardState) => {
 
 interface Props {
   style?: StyleProp<ViewStyle>;
+  date?: string; // YYYY-MM
   count?: number;
   goal?: number;
   reportId?: number | null;
@@ -92,6 +93,7 @@ interface Props {
 
 export function WeeklyReportCard({
   style,
+  date,
   count = 0,
   goal = WEEKLY_REPORT_DIARY_GOAL,
   reportId = null,
@@ -100,6 +102,7 @@ export function WeeklyReportCard({
   const [isSunday, setIsSunday] = useState(() => dayjs().day() === 0);
 
   const { createReport, isPending } = useCreateWeeklyReport({
+    date,
     onSuccess: (createdReportId: number) => {
       router.push(`/report/${createdReportId}`);
     },

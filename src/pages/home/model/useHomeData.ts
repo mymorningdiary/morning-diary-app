@@ -5,7 +5,7 @@ interface Options {
   date: string;
 }
 
-export function useHome({ date }: Options) {
+export function useHomeData({ date }: Options) {
   const { home, refetch } = useGetHome({ date });
   const diaries = home?.diaries ?? null;
   const weeklyEmotion = home?.hasWrittenDiaryThisWeek

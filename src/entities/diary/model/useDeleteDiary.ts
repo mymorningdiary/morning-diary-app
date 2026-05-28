@@ -1,9 +1,8 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { deleteDiary } from '../api/delete-diaries';
 import { Logger } from '@shared/lib/log';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { userQueryKeys } from '../../user';
+import { deleteDiary } from '../api/delete-diaries';
 import { diaryQueryKeys } from './queryKeys';
-import { homeQueryKeys } from '@entities/home/model/queryKeys';
 
 interface Options {
   date?: string; // YYYY-MM
@@ -20,7 +19,6 @@ export function useDeleteDiary({ date, onSuccess, onError }: Options = {}) {
       if (res.code === 2000) {
         void queryClient.invalidateQueries({ queryKey: userQueryKeys.all });
         void queryClient.invalidateQueries({ queryKey: diaryQueryKeys.list(date) });
-        void queryClient.invalidateQueries({ queryKey: homeQueryKeys.detail(date) });
 
         onSuccess?.();
       }

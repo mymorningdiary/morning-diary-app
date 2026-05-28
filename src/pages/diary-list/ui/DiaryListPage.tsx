@@ -20,7 +20,6 @@ import { DiaryWeeklySection, DiaryWeeklySectionItem } from '../model/types';
 import { DiaryWeeklyReportItem } from './DiaryListWeeklyReportItem';
 import { DiaryListWeeklyDiaryItem } from './DiaryListWeeklyDiaryItem';
 import { WriteDiaryButton } from '@features/diary';
-import { shouldWeeklyReportRefresh } from '@entities/report';
 import { useUser } from '@entities/user';
 import { useRunOnFocusAndForeground } from '@shared/lib/app-state';
 
@@ -34,8 +33,6 @@ export function DiaryListPage() {
 
   useRunOnFocusAndForeground(
     useCallback(() => {
-      if (!shouldWeeklyReportRefresh()) return;
-
       void refetchDiaries();
     }, [refetchDiaries]),
   );

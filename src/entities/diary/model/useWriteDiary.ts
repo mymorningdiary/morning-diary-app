@@ -2,7 +2,6 @@ import { Logger } from '@shared/lib/log';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { userQueryKeys } from '../../user';
 import { postDiaries } from '../api/post-diary';
-import { diaryQueryKeys } from './queryKeys';
 
 interface Options {
   date?: string; // YYYY-MM
@@ -26,8 +25,6 @@ export function useWriteDiary({ date, onSuccess, onError }: Options) {
     onSuccess: (res) => {
       if (res.code === 2000) {
         void queryClient.invalidateQueries({ queryKey: userQueryKeys.all });
-        void queryClient.invalidateQueries({ queryKey: diaryQueryKeys.list(date) });
-
         const { isFirstWrittenDiary, textLength, weeklyDiaryCount } = res.data;
         onSuccess?.({
           isFirstWritten: isFirstWrittenDiary,

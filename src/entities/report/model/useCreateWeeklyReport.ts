@@ -1,9 +1,8 @@
+import { homeQueryKeys } from '@entities/home';
 import { Logger } from '@shared/lib/log';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { postWeeklyReports } from '../api/post-weekly-reports';
 import { WEEKLY_REPORT_DIARY_GOAL } from '../config/constants';
-import { diaryQueryKeys } from '@entities/diary';
-import { homeQueryKeys } from '@entities/home';
 
 interface Options {
   date?: string;
@@ -19,8 +18,6 @@ export function useCreateWeeklyReport({ date, onSuccess, onError }: Options) {
     onSuccess: (res) => {
       if (res.code === 2000) {
         onSuccess?.(res.data.weeklyReportId);
-
-        void queryClient.invalidateQueries({ queryKey: diaryQueryKeys.list(date) });
         void queryClient.invalidateQueries({ queryKey: homeQueryKeys.detail(date) });
       }
     },

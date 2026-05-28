@@ -12,6 +12,7 @@ import {
   DiaryAssistant,
   DiaryEditor,
   useDiaryAssistant,
+  useDiaryAssistantByCommand,
   useDiaryAssistantByPause,
   useDiaryAssistantByProgress,
   useDiaryEditor,
@@ -52,6 +53,10 @@ export function WriteDiaryPage() {
   const { assistantState, showAssistant, hideAssistant } = useDiaryAssistant();
   useDiaryAssistantByPause({ currentTextLen, showAssistant });
   useDiaryAssistantByProgress({ progress, showAssistant });
+  useDiaryAssistantByCommand({
+    text: diaryState.inactiveText + diaryState.activeText,
+    showAssistant,
+  });
 
   const [showBackModal, setShowBackModal] = useState(false);
   const [weeklyReportSuccess, setWeeklyReportSuccess] = useState<DiaryWriteSuccessState | null>(

@@ -8,6 +8,7 @@ export { DiaryCalendar } from './ui/DiaryCalendar/DiaryCalendar';
 export { DiaryPreviewCard } from './ui/DiaryPreviewCard';
 export { useDiaryEditor } from './model/useDiaryEditor';
 export { useDiaryAssistant } from './model/useDiaryAssistant';
+export { useDiaryAssistantByCommand } from './model/useDiaryAssistantByCommand';
 export { useDiaryAssistantByPause } from './model/useDiaryAssistantByPause';
 export { useDiaryAssistantByProgress } from './model/useDiaryAssistantByProgress';
 export {

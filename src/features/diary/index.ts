@@ -1,4 +1,5 @@
 export type { DiaryState, AssistantState, DiaryProgressKey, MarkedDates } from './model/types';
+export type { AssistantOn } from './model/assistantOnStorage';
 
 export { DiaryCalendarDay } from './ui/DiaryCalendar/DiaryCalendarDay';
 export { DiaryAssistant } from './ui/DiaryAssistant/DiaryAssistant';
@@ -6,6 +7,7 @@ export { DiaryEditor } from './ui/DiaryEditor';
 export { WriteDiaryButton } from './ui/WriteDiaryButton';
 export { DiaryCalendar } from './ui/DiaryCalendar/DiaryCalendar';
 export { DiaryPreviewCard } from './ui/DiaryPreviewCard';
+export { useAssistantOn } from './model/useAssistantOn';
 export { useDiaryEditor } from './model/useDiaryEditor';
 export { useDiaryAssistant } from './model/useDiaryAssistant';
 export { useDiaryAssistantByCommand } from './model/useDiaryAssistantByCommand';

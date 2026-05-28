@@ -5,12 +5,18 @@ import { getDiaryAssistantCommandMessage } from '../lib/assistant-command-messag
 interface Options {
   text: string;
   showAssistant: (message: string) => void;
+  enabled?: boolean;
 }
 
-export function useDiaryAssistantByCommand({ text, showAssistant }: Options) {
+export function useDiaryAssistantByCommand({ text, showAssistant, enabled = true }: Options) {
   const lastTriggeredCommandRef = useRef<string | null>(null);
 
   useEffect(() => {
+    if (!enabled) {
+      lastTriggeredCommandRef.current = null;
+      return;
+    }
+
     const command = getLastAssistantCommand(text);
     if (!command) {
       lastTriggeredCommandRef.current = null;
@@ -24,7 +30,7 @@ export function useDiaryAssistantByCommand({ text, showAssistant }: Options) {
 
     lastTriggeredCommandRef.current = command;
     showAssistant(message);
-  }, [showAssistant, text]);
+  }, [enabled, showAssistant, text]);
 }
 
 function getLastAssistantCommand(text: string) {

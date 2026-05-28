@@ -11,6 +11,7 @@ import { useUser } from '@entities/user';
 import {
   DiaryAssistant,
   DiaryEditor,
+  useAssistantOn,
   useDiaryAssistant,
   useDiaryAssistantByCommand,
   useDiaryAssistantByPause,
@@ -50,12 +51,16 @@ export function WriteDiaryPage() {
     textGoalLen: userTextGoal?.textLength,
   });
 
+  const { assistantOn, isLoaded: isAssistantOnLoaded } = useAssistantOn();
+  const canShowAssistant = isAssistantOnLoaded && assistantOn === 'Y';
+
   const { assistantState, showAssistant, hideAssistant } = useDiaryAssistant();
-  useDiaryAssistantByPause({ currentTextLen, showAssistant });
-  useDiaryAssistantByProgress({ progress, showAssistant });
+  useDiaryAssistantByPause({ currentTextLen, showAssistant, enabled: canShowAssistant });
+  useDiaryAssistantByProgress({ progress, showAssistant, enabled: canShowAssistant });
   useDiaryAssistantByCommand({
     text: diaryState.inactiveText + diaryState.activeText,
     showAssistant,
+    enabled: canShowAssistant,
   });
 
   const [showBackModal, setShowBackModal] = useState(false);
@@ -143,10 +148,10 @@ export function WriteDiaryPage() {
           targetTextLen={userTextGoal?.textLength}
           currentTextLen={currentTextLen}
           onChangeText={handleDiaryTextChange}
-          onShowAssistant={showAssistant}
+          onShowAssistant={canShowAssistant ? showAssistant : undefined}
         />
 
-        <DiaryAssistant {...assistantState} onHide={hideAssistant} />
+        {canShowAssistant && <DiaryAssistant {...assistantState} onHide={hideAssistant} />}
 
         {isPending && (
           <View style={[styles.loadingContent]} pointerEvents="auto">

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { AssistantState } from './types';
 
 export function useDiaryAssistant() {
@@ -8,20 +8,20 @@ export function useDiaryAssistant() {
     version: 0,
   });
 
-  const showAssistant = (message: string) => {
+  const showAssistant = useCallback((message: string) => {
     setAssistantState((prev) => ({
       show: true,
       message,
       version: prev.version + 1,
     }));
-  };
+  }, []);
 
-  const hideAssistant = () => {
+  const hideAssistant = useCallback(() => {
     setAssistantState((prev) => ({
       ...prev,
       show: false,
     }));
-  };
+  }, []);
 
   return {
     assistantState,

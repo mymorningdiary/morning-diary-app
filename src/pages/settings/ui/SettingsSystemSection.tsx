@@ -3,6 +3,7 @@ import { useEffect } from 'react';
 import { Linking } from 'react-native';
 
 import { IconChevronRight } from '@assets/icons';
+import { useAssistantOn } from '@features/diary';
 import { useNotification } from '@features/notification';
 import { useForeground } from '@shared/lib/app-state';
 import { MDButton } from '@shared/ui/Button';
@@ -18,6 +19,7 @@ interface Props {
 export function SettingsSystemSection({ isLast }: Props) {
   const { isPushOn, disabledAsk, togglePushOn, setDisabledAsk, checkPermission } =
     useNotification();
+  const { assistantOn, isLoaded: isAssistantOnLoaded, setAssistantOn } = useAssistantOn();
 
   useForeground(checkPermission);
 
@@ -26,7 +28,17 @@ export function SettingsSystemSection({ isLast }: Props) {
   }, []);
 
   return (
-    <MDSection title="시스템 설정" isLast={isLast}>
+    <MDSection title="시스템" isLast={isLast}>
+      <MDListItem
+        label="아침일기 TIP"
+        rightContent={
+          <MDSwitch
+            checked={assistantOn === 'Y'}
+            disabled={!isAssistantOnLoaded}
+            onChange={(checked) => setAssistantOn(checked ? 'Y' : 'N')}
+          />
+        }
+      />
       <MDListItem
         label="알림"
         rightContent={<MDSwitch checked={isPushOn ?? false} onChange={togglePushOn} />}

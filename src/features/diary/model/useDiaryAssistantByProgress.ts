@@ -7,9 +7,10 @@ import { DiaryProgressKey } from './types';
 interface Options {
   progress: number;
   showAssistant: (message: string) => void;
+  enabled?: boolean;
 }
 
-export function useDiaryAssistantByProgress({ progress, showAssistant }: Options) {
+export function useDiaryAssistantByProgress({ progress, showAssistant, enabled = true }: Options) {
   const prevProgressRef = useRef(0);
   const [shownProgress, setShownProgress] = useState<Record<DiaryProgressKey, boolean>>({
     10: false,
@@ -18,6 +19,11 @@ export function useDiaryAssistantByProgress({ progress, showAssistant }: Options
   });
 
   useEffect(() => {
+    if (!enabled) {
+      prevProgressRef.current = progress;
+      return;
+    }
+
     const prevProgress = prevProgressRef.current;
 
     const showAssistantByProgress = (key: DiaryProgressKey) => {
@@ -38,5 +44,5 @@ export function useDiaryAssistantByProgress({ progress, showAssistant }: Options
     }
 
     prevProgressRef.current = progress;
-  }, [progress, shownProgress, showAssistant]);
+  }, [enabled, progress, shownProgress, showAssistant]);
 }

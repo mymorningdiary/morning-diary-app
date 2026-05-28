@@ -8,9 +8,14 @@ const PAUSE_MS = 8_000;
 interface Options {
   currentTextLen: number;
   showAssistant: (message: string) => void;
+  enabled?: boolean;
 }
 
-export function useDiaryAssistantByPause({ currentTextLen, showAssistant }: Options) {
+export function useDiaryAssistantByPause({
+  currentTextLen,
+  showAssistant,
+  enabled = true,
+}: Options) {
   const pauseTimer = useRef<ReturnType<typeof setTimeout>>(null);
   const isFirstRenderRef = useRef(true);
 
@@ -29,7 +34,7 @@ export function useDiaryAssistantByPause({ currentTextLen, showAssistant }: Opti
 
     clearPauseTimer();
 
-    if (currentTextLen == 0) {
+    if (!enabled || currentTextLen === 0) {
       return;
     }
 
@@ -38,5 +43,5 @@ export function useDiaryAssistantByPause({ currentTextLen, showAssistant }: Opti
     }, PAUSE_MS);
 
     return clearPauseTimer;
-  }, [currentTextLen]);
+  }, [currentTextLen, enabled, showAssistant]);
 }

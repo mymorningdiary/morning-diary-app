@@ -15,8 +15,9 @@ interface Props {
 }
 
 const MAX_KEYWORD_COUNT = 5;
-const MIN_ROW_HEIGHT = 60;
-const MAX_ROW_HEIGHT = 180;
+const MIN_ROW_HEIGHT = 40;
+const MAX_ROW_HEIGHT = 120;
+const ROW_HEIGHT_STEP = 20;
 const KEYWORD_COLORS = ['#7A2F00', '#FF8533', '#FFDC3D', '#F7DEC9', '#F7EEE7'];
 
 export function ReportTopKeywordSection({ style, topKeywords }: Props) {
@@ -31,8 +32,6 @@ export function ReportTopKeywordSection({ style, topKeywords }: Props) {
     [topKeywords],
   );
 
-  const maxCount = sortedKeywords[0]?.count ?? 0;
-
   if (sortedKeywords.length === 0) {
     return null;
   }
@@ -45,7 +44,7 @@ export function ReportTopKeywordSection({ style, topKeywords }: Props) {
 
       <View style={styles.chart}>
         {sortedKeywords.map((keyword, index) => {
-          const rowHeight = getRowHeight(keyword.count, maxCount);
+          const rowHeight = getRowHeight(index);
 
           return (
             <View
@@ -77,14 +76,8 @@ export function ReportTopKeywordSection({ style, topKeywords }: Props) {
   );
 }
 
-function getRowHeight(count: number, maxCount: number) {
-  if (maxCount <= 0) {
-    return MIN_ROW_HEIGHT;
-  }
-
-  const ratio = count / maxCount;
-
-  return MIN_ROW_HEIGHT + (MAX_ROW_HEIGHT - MIN_ROW_HEIGHT) * ratio;
+function getRowHeight(index: number) {
+  return Math.max(MIN_ROW_HEIGHT, MAX_ROW_HEIGHT - ROW_HEIGHT_STEP * index);
 }
 
 const styles = StyleSheet.create({

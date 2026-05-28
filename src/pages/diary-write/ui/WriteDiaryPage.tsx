@@ -25,6 +25,7 @@ import { MDPage } from '@shared/ui/Layout';
 import { MDModal } from '@shared/ui/Modal';
 import { TextGoalProgressBar } from '@shared/ui/ProgressBar';
 import { WeeklyReportGoalModal } from './WeeklyReportGoalModal';
+import { Logger } from '@shared/lib/log';
 
 interface DiaryWriteSuccessState {
   isFirstWritten: boolean;
@@ -32,7 +33,6 @@ interface DiaryWriteSuccessState {
 }
 
 export function WriteDiaryPage() {
-  const styles = PageStyles;
   const colors = useThemeColor();
 
   const editorRef = useRef<TextInput>(null);
@@ -102,8 +102,8 @@ export function WriteDiaryPage() {
         writtenDate: dateParam,
         content: diaryState.inactiveText + diaryState.activeText,
       });
-    } catch {
-      // Error UI is handled by useWriteDiary.onError.
+    } catch (e) {
+      Logger('WriteDiaryPage').error(e);
     }
   };
 
@@ -144,7 +144,7 @@ export function WriteDiaryPage() {
         <DiaryAssistant {...assistantState} onHide={hideAssistant} />
 
         {isPending && (
-          <View style={styles.loadingContent}>
+          <View style={[styles.loadingContent]} pointerEvents="auto">
             <ActivityIndicator color={colors.primary.normal} />
           </View>
         )}
@@ -170,7 +170,7 @@ export function WriteDiaryPage() {
   );
 }
 
-const PageStyles = StyleSheet.create({
+const styles = StyleSheet.create({
   container: {
     position: 'relative',
   },
@@ -181,6 +181,9 @@ const PageStyles = StyleSheet.create({
   loadingContent: {
     ...StyleSheet.absoluteFillObject,
     alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.32)',
+    elevation: 1,
     justifyContent: 'center',
+    zIndex: 1,
   },
 });

@@ -4,7 +4,7 @@ import {
   ASSISTANT_PROGRESS_90_MESSAGES,
 } from '../lib/diary-messages';
 
-export const INACTIVE_TEXT_LEN = 20;
+export const INACTIVE_TEXT_LEN = 32;
 
 export const ASSISTANT_PROGRESS_MESSAGES = {
   10: ASSISTANT_PROGRESS_10_MESSAGES,

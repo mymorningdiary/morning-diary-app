@@ -19,15 +19,17 @@ export function useDiaryEditor({ initialText = '', textGoalLen = DEFAULT_TEXT_GO
   const progress = Math.min(100, Math.floor((currentTextLen / textGoalLen) * 100));
 
   const inactivateText = (value: string) => {
+    const inactiveTextLen = Math.floor((value.length - 1) / INACTIVE_TEXT_LEN) * INACTIVE_TEXT_LEN;
+
     setState((prev) => ({
-      inactiveText: prev.inactiveText + value.slice(0, INACTIVE_TEXT_LEN),
-      activeText: value.slice(INACTIVE_TEXT_LEN),
+      inactiveText: prev.inactiveText + value.slice(0, inactiveTextLen),
+      activeText: value.slice(inactiveTextLen),
       version: prev.version + 1,
     }));
   };
 
   const handleDiaryTextChange = (value: string) => {
-    if (value.length < INACTIVE_TEXT_LEN) {
+    if (value.length <= INACTIVE_TEXT_LEN) {
       setState((prev) => ({ ...prev, activeText: value }));
       return;
     }

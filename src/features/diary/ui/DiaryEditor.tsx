@@ -14,7 +14,6 @@ import { getRandomMessage } from '@shared/lib/random';
 import { MDColorsType, MDFonts, useThemeColor } from '@shared/lib/theme';
 import { MDText } from '@shared/ui/Text';
 
-import { INACTIVE_TEXT_LEN } from '../config/constants';
 import { DiaryState } from '../model/types';
 import { ASSISTANT_INACTIVE_TEXT_MESSAGES, WRITING_PLACEHOLDERS } from '../lib/diary-messages';
 import { TextGoalCounter } from './TextGoalCounter';
@@ -82,7 +81,6 @@ export function DiaryEditor({
             placeholderTextColor={colors.text.alternative}
             cursorColor={colors.primary.light}
             selectionColor={colors.primary.light}
-            maxLength={INACTIVE_TEXT_LEN}
             multiline
             autoFocus
             autoCorrect={false}

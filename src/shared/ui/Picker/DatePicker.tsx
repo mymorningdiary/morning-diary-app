@@ -15,11 +15,9 @@ interface Props {
 
 export function DatePicker({ style, date = dayjs().format('YYYY-MM-DD'), onDateChange }: Props) {
   const colors = useThemeColor();
-  const styles = HeaderStyles;
-
-  const [showDatePicker, setShowDatePicker] = useState(false);
 
   const formattedDate = dayjs(date).format('YYYY년 MM월');
+  const [showDatePicker, setShowDatePicker] = useState(false);
 
   const handlePrevMonthChange = () => {
     const prev = dayjs(date).add(-1, 'month').startOf('month').format('YYYY-MM-DD');
@@ -39,7 +37,7 @@ export function DatePicker({ style, date = dayjs().format('YYYY-MM-DD'), onDateC
   return (
     <>
       <Pressable style={[styles.container, style]} onPress={() => setShowDatePicker(true)}>
-        <Pressable hitSlop={24} onPress={handlePrevMonthChange}>
+        <Pressable hitSlop={18} onPress={handlePrevMonthChange}>
           <IconChevronLeft width={16} height={16} color={colors.icon.normal} />
         </Pressable>
 
@@ -47,7 +45,7 @@ export function DatePicker({ style, date = dayjs().format('YYYY-MM-DD'), onDateC
           {formattedDate}
         </MDText>
 
-        <Pressable hitSlop={24} onPress={handleNextMonthChange}>
+        <Pressable hitSlop={18} onPress={handleNextMonthChange}>
           <IconChevronRight width={16} height={16} color={colors.icon.normal} />
         </Pressable>
       </Pressable>
@@ -62,7 +60,7 @@ export function DatePicker({ style, date = dayjs().format('YYYY-MM-DD'), onDateC
   );
 }
 
-const HeaderStyles = StyleSheet.create({
+const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     paddingBottom: 4,

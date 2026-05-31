@@ -47,6 +47,7 @@ export function ReportPage() {
       params: {
         date,
         diaryId: diary.diaryId,
+        readOnly: 'true',
       },
     });
   };

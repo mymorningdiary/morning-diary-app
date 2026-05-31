@@ -18,9 +18,14 @@ import { MDText } from '@shared/ui/Text';
 export function ReadDiaryPage() {
   const styles = PageStyles;
 
-  const params = useLocalSearchParams<{ date?: string; diaryId?: string }>();
+  const params = useLocalSearchParams<{
+    date?: string;
+    diaryId?: string;
+    readOnly?: string;
+  }>();
   const diaryDate = params.date != null ? dayjs(params.date) : null;
   const diaryId = parseNumberParam(params.diaryId);
+  const isReadOnly = params.readOnly === 'true';
 
   const formattedDate = diaryDate?.locale('ko').format('M월 D일 (ddd)') ?? '';
   const [now, setNow] = useState(() => dayjs());
@@ -57,7 +62,7 @@ export function ReadDiaryPage() {
         onBack={() => router.back()}
         rightContent={
           <View style={{ flexDirection: 'row', gap: 8 }}>
-            {isToday && (
+            {isToday && !isReadOnly && (
               <MDButton
                 style={{ width: 24 }}
                 variant="ghost"
@@ -71,13 +76,15 @@ export function ReadDiaryPage() {
                 hitSlop={8}
               />
             )}
-            <MDButton
-              style={{ width: 24 }}
-              variant="ghost"
-              prefix={IconTrash}
-              onPress={() => setShowDeleteModal(true)}
-              hitSlop={8}
-            />
+            {!isReadOnly && (
+              <MDButton
+                style={{ width: 24 }}
+                variant="ghost"
+                prefix={IconTrash}
+                onPress={() => setShowDeleteModal(true)}
+                hitSlop={8}
+              />
+            )}
           </View>
         }
       />

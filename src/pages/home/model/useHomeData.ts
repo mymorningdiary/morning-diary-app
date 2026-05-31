@@ -1,12 +1,13 @@
 import { useGetHome } from '@entities/home';
 import { MarkedDates } from '@features/diary';
+import { keepPreviousData } from '@tanstack/react-query';
 
 interface Options {
   date: string;
 }
 
 export function useHomeData({ date }: Options) {
-  const { home, refetch } = useGetHome({ date });
+  const { home, refetch } = useGetHome({ date, placeholderData: keepPreviousData });
   const diaries = home?.diaries ?? null;
   const weeklyEmotion = home?.hasWrittenDiaryThisWeek
     ? (home?.weeklyAverageEmotionScore ?? null)

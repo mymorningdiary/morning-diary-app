@@ -149,7 +149,7 @@ export function WeeklyReportCard({
         )}
         {subtitle && (
           <MDText type="caption1Regular" style={styles.text}>
-            {`기록 완료! 일기가 쌓이면 리포트가 더 풍성해져요`}
+            {subtitle}
           </MDText>
         )}
       </View>

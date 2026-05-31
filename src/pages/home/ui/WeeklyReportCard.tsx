@@ -32,12 +32,13 @@ const getWeeklyReportCardState = ({
   const safeGoal = Math.max(goal, 1);
   const remaining = Math.max(safeGoal - count, 0);
   const isGoalReached = remaining === 0;
+  const isReportGeneratedOnSunday = isSunday && Boolean(isReportGenerated);
 
   return {
     isBelowGoal: !isGoalReached,
     isGoalReachedOnWeekday: isGoalReached && !isSunday,
     isGoalReachedOnSunday: isGoalReached && isSunday,
-    isReportGeneratedOnSunday: isGoalReached && isSunday && Boolean(isReportGenerated),
+    isReportGeneratedOnSunday,
     remaining,
   };
 };
@@ -154,20 +155,23 @@ export function WeeklyReportCard({
         )}
       </View>
 
-      {reportState.isBelowGoal ? (
+      {reportState.isBelowGoal && !reportState.isReportGeneratedOnSunday ? (
         <LightProgressBar current={count} goal={goal} />
       ) : (
         <MDButton
           size="small"
           loading={isPending}
           label={
-            reportState.isGoalReachedOnWeekday
-              ? '🔒 일요일에 열려요'
-              : reportState.isReportGeneratedOnSunday
-                ? '주간리포트 보기'
+            reportState.isReportGeneratedOnSunday
+              ? '주간리포트 보기'
+              : reportState.isGoalReachedOnWeekday
+                ? '🔒 일요일에 열려요'
                 : '주간리포트 열기'
           }
-          disabled={reportState.isBelowGoal || reportState.isGoalReachedOnWeekday}
+          disabled={
+            !reportState.isReportGeneratedOnSunday &&
+            (reportState.isBelowGoal || reportState.isGoalReachedOnWeekday)
+          }
           onPress={handlePress}
         />
       )}

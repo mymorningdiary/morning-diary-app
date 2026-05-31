@@ -42,6 +42,21 @@ export function HomePage() {
     });
   };
 
+  const handleWriteDiaryPress = () => {
+    const today = dayjs().format('YYYY-MM-DD');
+
+    router.push({
+      pathname: '/diary-write',
+      params: {
+        date: today,
+      },
+    });
+
+    requestIdleCallback(() => {
+      setCurrentDate(today);
+    });
+  };
+
   return (
     <MDPage style={styles.container}>
       <ScrollView
@@ -68,14 +83,7 @@ export function HomePage() {
       </ScrollView>
       <WriteDiaryButton
         disabled={user?.todayDiaryWritten ?? false}
-        onPress={() =>
-          router.push({
-            pathname: '/diary-write',
-            params: {
-              date: dayjs().format('YYYY-MM-DD'),
-            },
-          })
-        }
+        onPress={handleWriteDiaryPress}
       />
     </MDPage>
   );

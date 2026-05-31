@@ -73,6 +73,21 @@ export function DiaryListPage() {
     </View>
   );
 
+  const handleWriteDiaryPress = () => {
+    const today = dayjs().format('YYYY-MM-DD');
+
+    router.push({
+      pathname: '/diary-write',
+      params: {
+        date: today,
+      },
+    });
+
+    requestIdleCallback(() => {
+      setCurrentDate(today);
+    });
+  };
+
   return (
     <MDPage style={styles.container}>
       <DiaryListAppBar date={currentDate} onDateChange={setCurrentDate} />
@@ -96,14 +111,7 @@ export function DiaryListPage() {
 
       <WriteDiaryButton
         disabled={user?.todayDiaryWritten ?? false}
-        onPress={() => {
-          router.push({
-            pathname: '/diary-write',
-            params: {
-              date: dayjs().format('YYYY-MM-DD'),
-            },
-          });
-        }}
+        onPress={handleWriteDiaryPress}
       />
     </MDPage>
   );

@@ -30,7 +30,7 @@ export function SettingsSystemSection({ isLast }: Props) {
   return (
     <MDSection title="시스템" isLast={isLast}>
       <MDListItem
-        label="아침일기 TIP"
+        label="글쓰기 가이드"
         rightContent={
           <MDSwitch
             checked={assistantOn === 'Y'}

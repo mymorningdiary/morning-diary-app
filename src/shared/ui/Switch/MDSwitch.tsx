@@ -13,7 +13,7 @@ export function MDSwitch({ checked, onChange, disabled = false }: Props) {
   const colors = useThemeColor();
   const styles = useMemo(() => SwitchStyles({ colors, checked }), [colors, checked]);
 
-  const translateX = useRef(new Animated.Value(checked ? 16 : 0)).current;
+  const translateX = useRef(new Animated.Value(checked ? 18 : 0)).current;
   const prevCheckedRef = useRef(checked);
 
   if (prevCheckedRef.current !== checked) {

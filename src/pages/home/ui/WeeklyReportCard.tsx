@@ -58,21 +58,21 @@ const getTitleTexts = (state: WeeklyReportCardState) => {
   if (state.isGoalReachedOnWeekday) {
     return {
       title: '주간리포트',
-      subtitle: '기록 완료! 일기가 쌓이면 리포트가 더 풍성해져요',
+      subtitle: `기록 완료!\n일기가 쌓이면 리포트가 더 풍성해져요`,
     };
   }
 
   if (state.isBelowGoal && state.remaining === 1) {
     return {
       title: '주간리포트',
-      subtitle: '마지막 1번! 일요일에 특별한 리포트를 만나보세요',
+      subtitle: `마지막 1번!\n일요일에 특별한 리포트를 만나보세요`,
     };
   }
 
   if (state.isBelowGoal && state.remaining === 2) {
     return {
       title: '주간리포트',
-      subtitle: '기분 좋은 시작! 2번 더 기록하면 무의식이 정리돼요',
+      subtitle: `기분 좋은 시작!\n2번 더 기록하면 무의식이 정리돼요`,
     };
   }
 
@@ -141,9 +141,17 @@ export function WeeklyReportCard({
         { backgroundColor: colors.fill.normal, borderColor: colors.line.normal },
         style,
       ]}>
-      <View>
-        {title && <MDText type="labelSemiBold">{title}</MDText>}
-        {subtitle && <MDText type="caption1Regular">{subtitle}</MDText>}
+      <View style={styles.textContent}>
+        {title && (
+          <MDText type="labelSemiBold" style={styles.text}>
+            {title}
+          </MDText>
+        )}
+        {subtitle && (
+          <MDText type="caption1Regular" style={styles.text}>
+            {subtitle}
+          </MDText>
+        )}
       </View>
 
       {reportState.isBelowGoal ? (
@@ -169,7 +177,6 @@ export function WeeklyReportCard({
 
 const styles = StyleSheet.create({
   container: {
-    minWidth: 165,
     minHeight: 120,
     paddingHorizontal: 16,
     paddingTop: 12,
@@ -177,5 +184,11 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     borderWidth: 1,
     justifyContent: 'space-between',
+  },
+  textContent: {
+    minWidth: 0,
+  },
+  text: {
+    flexShrink: 1,
   },
 });

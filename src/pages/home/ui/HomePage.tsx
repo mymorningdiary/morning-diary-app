@@ -56,10 +56,10 @@ export function HomePage() {
           onDayPress={handleDayPress}
         />
 
-        <View style={{ flexDirection: 'row', paddingHorizontal: 12, gap: 12 }}>
-          <WeeklyEmotionCard style={{ flex: 1 }} emotion={weeklyEmotion} />
+        <View style={styles.weeklyContent}>
+          <WeeklyEmotionCard style={styles.weeklyCard} emotion={weeklyEmotion} />
           <WeeklyReportCard
-            style={{ flex: 1 }}
+            style={styles.weeklyCard}
             date={dayjs(currentDate).format('YYYY-MM')}
             count={weeklyDiaryCount}
             reportId={reportId}
@@ -88,5 +88,14 @@ const styles = StyleSheet.create({
   },
   listContent: {
     paddingBottom: 56 + 24, // 탭바 높이 + 패딩
+  },
+  weeklyContent: {
+    flexDirection: 'row',
+    paddingHorizontal: 12,
+    gap: 12,
+  },
+  weeklyCard: {
+    flex: 1,
+    minWidth: 0,
   },
 });

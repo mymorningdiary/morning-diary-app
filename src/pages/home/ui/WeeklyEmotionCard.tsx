@@ -113,7 +113,6 @@ export function WeeklyEmotionCard({ style, emotion }: Props) {
 const CardStyles = ({ colors }: { colors: MDColorsType }) =>
   StyleSheet.create({
     container: {
-      minWidth: 165,
       minHeight: 120,
       paddingHorizontal: 16,
       paddingTop: 12,

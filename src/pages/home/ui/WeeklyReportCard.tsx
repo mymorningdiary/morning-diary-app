@@ -58,21 +58,21 @@ const getTitleTexts = (state: WeeklyReportCardState) => {
   if (state.isGoalReachedOnWeekday) {
     return {
       title: '주간리포트',
-      subtitle: `기록 완료!\n일기가 쌓이면 리포트가 더 풍성해져요`,
+      subtitle: `기록 완료! 일기가 쌓이면 리포트가 더 풍성해져요`,
     };
   }
 
   if (state.isBelowGoal && state.remaining === 1) {
     return {
       title: '주간리포트',
-      subtitle: `마지막 1번!\n일요일에 특별한 리포트를 만나보세요`,
+      subtitle: `마지막 1번! 일요일에 특별한 리포트를 만나보세요`,
     };
   }
 
   if (state.isBelowGoal && state.remaining === 2) {
     return {
       title: '주간리포트',
-      subtitle: `기분 좋은 시작!\n2번 더 기록하면 무의식이 정리돼요`,
+      subtitle: `기분 좋은 시작! 2번 더 기록하면 무의식이 정리돼요`,
     };
   }
 
@@ -149,7 +149,7 @@ export function WeeklyReportCard({
         )}
         {subtitle && (
           <MDText type="caption1Regular" style={styles.text}>
-            {subtitle}
+            {`기록 완료! 일기가 쌓이면 리포트가 더 풍성해져요`}
           </MDText>
         )}
       </View>

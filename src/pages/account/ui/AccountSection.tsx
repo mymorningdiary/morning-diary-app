@@ -31,7 +31,6 @@ export function AccountSection({ isLast }: Props) {
             {loginType}
           </MDText>
         }
-        onPress={() => router.push('/account')}
       />
     </MDSection>
   );

@@ -60,27 +60,30 @@ export function HomePage() {
   return (
     <MDPage style={styles.container}>
       <ScrollView
-        style={styles.listContent}
+        contentContainerStyle={styles.listContent}
         overScrollMode="never"
         bounces={false}
         showsVerticalScrollIndicator={false}>
-        <DiaryCalendar
-          date={currentDate}
-          markedDates={markedDates}
-          onDateChange={setCurrentDate}
-          onDayPress={handleDayPress}
-        />
-
-        <View style={styles.weeklyContent}>
-          <WeeklyEmotionCard style={styles.weeklyCard} emotion={weeklyEmotion} />
-          <WeeklyReportCard
-            style={styles.weeklyCard}
-            date={dayjs(currentDate).format('YYYY-MM')}
-            count={weeklyDiaryCount}
-            reportId={reportId}
+        <View style={styles.content}>
+          <DiaryCalendar
+            date={currentDate}
+            markedDates={markedDates}
+            onDateChange={setCurrentDate}
+            onDayPress={handleDayPress}
           />
+
+          <View style={styles.weeklyContent}>
+            <WeeklyEmotionCard style={styles.weeklyCard} emotion={weeklyEmotion} />
+            <WeeklyReportCard
+              style={styles.weeklyCard}
+              date={dayjs(currentDate).format('YYYY-MM')}
+              count={weeklyDiaryCount}
+              reportId={reportId}
+            />
+          </View>
         </View>
       </ScrollView>
+
       <WriteDiaryButton
         disabled={user?.todayDiaryWritten ?? false}
         onPress={handleWriteDiaryPress}
@@ -90,12 +93,13 @@ export function HomePage() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    gap: 16,
-    paddingBottom: 60,
-  },
+  container: {},
   listContent: {
-    paddingBottom: 56 + 24, // 탭바 높이 + 패딩
+    flexGrow: 1,
+    paddingBottom: 56 + 48, // 탭바 높이 + 패딩
+  },
+  content: {
+    gap: 12,
   },
   weeklyContent: {
     flexDirection: 'row',

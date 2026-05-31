@@ -53,6 +53,16 @@ export function DiaryListPage() {
     return <DiaryListWeeklyDiaryItem diary={item} />;
   };
 
+  const renderSectionFooter = ({
+    section,
+  }: {
+    section: SectionListData<DiaryWeeklySectionItem, DiaryWeeklySection>;
+  }) => {
+    const isLastSection = section === sections[sections.length - 1];
+
+    return isLastSection ? null : <View style={styles.sectionSeparator} />;
+  };
+
   const keyExtractor = (item: DiaryWeeklySectionItem) => {
     if ('weeklyReportId' in item) {
       return `weekly-report-${item.weeklyReportId}`;
@@ -100,7 +110,7 @@ export function DiaryListPage() {
         keyExtractor={keyExtractor}
         renderItem={renderItem}
         renderSectionHeader={renderSectionHeader}
-        renderSectionFooter={() => <View style={styles.sectionSeparator} />}
+        renderSectionFooter={renderSectionFooter}
         ItemSeparatorComponent={() => <View style={styles.itemSeparator} />}
         ListEmptyComponent={renderEmpty}
         stickySectionHeadersEnabled={false}
@@ -121,7 +131,7 @@ const styles = StyleSheet.create({
   container: {},
   listContent: {
     flexGrow: 1,
-    paddingBottom: 56 + 24, // 탭바 높이 + 패딩
+    paddingBottom: 56 + 48, // 탭바 높이 + 패딩
   },
   emptyListContent: {
     justifyContent: 'center',

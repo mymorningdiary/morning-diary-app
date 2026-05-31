@@ -25,7 +25,7 @@ export function AccountSection({ isLast }: Props) {
   return (
     <MDSection title="계정" isLast={isLast}>
       <MDListItem
-        label="계정 관리"
+        label={user?.email ?? ''}
         rightContent={
           <MDText type="bodyRegular" color={colors.text.alternative}>
             {loginType}

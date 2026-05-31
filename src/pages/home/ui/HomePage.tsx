@@ -92,7 +92,7 @@ const styles = StyleSheet.create({
   weeklyContent: {
     flexDirection: 'row',
     paddingHorizontal: 12,
-    gap: 12,
+    gap: 8,
   },
   weeklyCard: {
     flex: 1,

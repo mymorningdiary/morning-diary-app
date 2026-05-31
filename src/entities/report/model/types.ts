@@ -12,6 +12,7 @@ export interface WeeklyReportWrittenDate {
   diaryId: number;
   writtenDate: string;
   emotionScore: number;
+  isDeleted?: boolean | null;
 }
 
 export interface WeeklyReport {

@@ -8,6 +8,7 @@ export interface Diary {
   content?: string;
   title?: string | null;
   emotionScore?: number | null;
+  isDeleted?: boolean | null;
 }
 export interface Diaries {
   weekStartDate: string;

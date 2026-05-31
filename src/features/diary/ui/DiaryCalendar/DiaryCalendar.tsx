@@ -79,11 +79,11 @@ export function DiaryCalendar({
           },
           dayTextAtIndex5: {
             ...MDFonts['labelRegular'],
-            color: 'blue',
+            color: '#529deeff',
           },
           dayTextAtIndex6: {
             ...MDFonts['labelRegular'],
-            color: 'red',
+            color: '#f8544bff',
           },
         },
       }}

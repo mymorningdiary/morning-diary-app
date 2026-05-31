@@ -11,18 +11,18 @@ interface Props {
   style?: StyleProp<ViewStyle>;
   startDate?: string;
   endDate?: string;
-  diaries?: Diary[];
+  writtenDates?: Diary[];
   onDayPress?: (date?: string) => void;
 }
 
 const WEEKDAY_LABELS = ['월', '화', '수', '목', '금', '토', '일'];
 
-export function WeeklyCalendar({ style, startDate, endDate, diaries, onDayPress }: Props) {
+export function WeeklyCalendar({ style, startDate, endDate, writtenDates, onDayPress }: Props) {
   const colors = useThemeColor();
 
   const diaryByDate = useMemo(
-    () => new Map(diaries?.map((diary) => [diary.writtenDate, diary]) ?? []),
-    [diaries],
+    () => new Map(writtenDates?.map((diary) => [diary.writtenDate, diary]) ?? []),
+    [writtenDates],
   );
 
   const dates = useMemo(() => {
@@ -46,7 +46,7 @@ export function WeeklyCalendar({ style, startDate, endDate, diaries, onDayPress 
       <View style={styles.weekdayContent}>
         {WEEKDAY_LABELS.map((label) => {
           const labelColor =
-            label === '토' ? '#007AFF' : label === '일' ? '#FF3B30' : colors.text.alternative;
+            label === '토' ? '#529deeff' : label === '일' ? '#f8544bff' : colors.text.alternative;
 
           return (
             <View key={label} style={styles.cellBox}>

@@ -13,6 +13,7 @@ import { ReportEmpathySection } from './ReportEmpathySection';
 import { ReportInsightSection } from './ReportInsightSection';
 import { ReportTopKeywordSection } from './ReportTopKeywordSection';
 import { WeeklyCalendar } from './WeeklyCalendar';
+import { useToastStore } from '@shared/lib/toast';
 
 export function ReportPage() {
   const colors = useThemeColor();
@@ -35,6 +36,11 @@ export function ReportPage() {
   const handleDayPress = (date?: string) => {
     const diary = weeklyReport?.writtenDates.find((d) => d.writtenDate === date);
     if (!diary) return;
+
+    if (diary.isDeleted) {
+      useToastStore.getState().show({ type: 'error', message: '삭제된 일기에요' });
+      return;
+    }
 
     router.push({
       pathname: '/diary-read',
@@ -86,7 +92,7 @@ export function ReportPage() {
               <WeeklyCalendar
                 startDate={weeklyReport.weekStartDate}
                 endDate={weeklyReport.weekEndDate}
-                diaries={weeklyReport.writtenDates}
+                writtenDates={weeklyReport.writtenDates}
                 onDayPress={handleDayPress}
               />
 
